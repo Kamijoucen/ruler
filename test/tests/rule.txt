@@ -1,0 +1,31 @@
+
+// 类型后加感叹号表示允许为空，否则规则引擎将直接报错
+num !number = inner.get("num1")
+str !string = inner.get("str1")
+
+// 不允许使用可能为空的变量
+// 这个需要抽象解释器相关的技术才能做到，目前我还不知道如何在编译期间检查是否使用空变量，目前只能在运行期间检查-_-
+print number
+
+if number != null {
+    // 显式的空检查后可以使用
+    print number
+}
+
+if number == null
+{
+    print "huahua1"
+}
+
+// 外部传入的方法，可以在规则引擎内执行
+counter fun = inner.getMethod("counter")
+// 将外部的打印日志方法传入规则引擎
+log     fun = inner.getMethod("log")
+
+count num = counter(1, 2, 3)
+
+log(number)
+
+// 将规则引擎内的值传出到外部
+outer.put("number", num)
+
