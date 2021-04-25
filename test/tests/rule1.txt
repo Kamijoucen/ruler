@@ -1,0 +1,9 @@
+def name sex hehe; // 外部的变量
+
+print name;
+
+if name == null {
+    name = "";
+}
+
+return name, sex, hehe; // 变量名会作为key值会作为value传出外部
