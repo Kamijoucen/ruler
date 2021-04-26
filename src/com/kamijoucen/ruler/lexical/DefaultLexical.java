@@ -148,7 +148,7 @@ public class DefaultLexical implements Lexical {
     }
 
     private boolean isNotOver() {
-        return isNotOver();
+        return offset < content.length();
     }
 
     private void appendAndForward() {
