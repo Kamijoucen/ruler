@@ -1,4 +1,8 @@
-def name sex hehe; // 外部的变量
+def name sex hehe _log; // 外部的变量
+
+// 下划线开头的属于方法可以直接调用
+
+_log(name, sex, hehe)
 
 print name;
 

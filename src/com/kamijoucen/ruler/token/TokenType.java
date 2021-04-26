@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.token;
 public enum TokenType {
 
     IDENTIFIER,
+    FUN_IDENTIFIER,
     NUMBER,
     STRING,
     DOT,            // .
