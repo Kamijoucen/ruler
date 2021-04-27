@@ -10,4 +10,11 @@ public class TokenLocation {
         this.column = column;
     }
 
+    @Override
+    public String toString() {
+        return "TokenLocation{" +
+                "line=" + line +
+                ", column=" + column +
+                '}';
+    }
 }

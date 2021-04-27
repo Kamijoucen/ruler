@@ -12,8 +12,6 @@ public class IOUtil {
                 firstIdentifierFlags[c] = true;
             } else if (c >= 'a' && c <= 'z') {
                 firstIdentifierFlags[c] = true;
-            } else if (c == '_' || c == ':') {
-                firstIdentifierFlags[c] = true;
             }
         }
 
@@ -22,7 +20,7 @@ public class IOUtil {
                 identifierFlags[c] = true;
             } else if (c >= 'a' && c <= 'z') {
                 identifierFlags[c] = true;
-            } else if (c == '_' || c == '-') {
+            } else if (c == '_') {
                 identifierFlags[c] = true;
             } else if (c >= '0' && c <= '9') {
                 identifierFlags[c] = true;

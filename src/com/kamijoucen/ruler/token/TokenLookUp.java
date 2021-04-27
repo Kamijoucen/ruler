@@ -3,41 +3,50 @@ package com.kamijoucen.ruler.token;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum TokenLookUp {
+public class TokenLookUp {
 
-    INSTANCE;
+    private static final Map<String, TokenType> KEY_WORDS = new HashMap<String, TokenType>();
 
-    TokenLookUp() {
-        map.put(".", TokenType.DOT);
-        map.put("(", TokenType.LEFT_PAREN);
-        map.put(")", TokenType.RIGHT_PAREN);
-        map.put("<", TokenType.LT);
-        map.put(">", TokenType.GT);
-        map.put("<=", TokenType.LE);
-        map.put(">=", TokenType.GE);
-        map.put("=", TokenType.ASSIGN);
-        map.put("==", TokenType.EQ);
-        map.put("!=", TokenType.NE);
-        map.put("+", TokenType.ADD);
-        map.put("-", TokenType.SUB);
-        map.put("*", TokenType.MUL);
-        map.put("/", TokenType.DIV);
-        map.put("return", TokenType.KEY_RETURN);
-        map.put("def", TokenType.KEY_DEF);
-        map.put("if", TokenType.KEY_IF);
-        map.put("for", TokenType.KEY_FOR);
-        map.put("break", TokenType.KEY_BREAK);
-        map.put("continue", TokenType.KEY_CONTINUE);
-        map.put("list", TokenType.KEY_LIST);
-        map.put("map", TokenType.KEY_MAP);
-        map.put("false", TokenType.KEY_FALSE);
-        map.put("true", TokenType.KEY_TRUE);
+    private static final Map<String, TokenType> SYMBOL = new HashMap<String, TokenType>();
+
+    static {
+        SYMBOL.put(".", TokenType.DOT);
+        SYMBOL.put("(", TokenType.LEFT_PAREN);
+        SYMBOL.put(")", TokenType.RIGHT_PAREN);
+        SYMBOL.put("<", TokenType.LT);
+        SYMBOL.put(">", TokenType.GT);
+        SYMBOL.put("<=", TokenType.LE);
+        SYMBOL.put(">=", TokenType.GE);
+        SYMBOL.put("=", TokenType.ASSIGN);
+        SYMBOL.put("==", TokenType.EQ);
+        SYMBOL.put("!=", TokenType.NE);
+        SYMBOL.put("+", TokenType.ADD);
+        SYMBOL.put("-", TokenType.SUB);
+        SYMBOL.put("*", TokenType.MUL);
+        SYMBOL.put("/", TokenType.DIV);
+
+        KEY_WORDS.put("return", TokenType.KEY_RETURN);
+        KEY_WORDS.put("def", TokenType.KEY_DEF);
+        KEY_WORDS.put("if", TokenType.KEY_IF);
+        KEY_WORDS.put("for", TokenType.KEY_FOR);
+        KEY_WORDS.put("break", TokenType.KEY_BREAK);
+        KEY_WORDS.put("continue", TokenType.KEY_CONTINUE);
+        KEY_WORDS.put("list", TokenType.KEY_LIST);
+        KEY_WORDS.put("map", TokenType.KEY_MAP);
+        KEY_WORDS.put("false", TokenType.KEY_FALSE);
+        KEY_WORDS.put("true", TokenType.KEY_TRUE);
     }
 
-    private final Map<String, TokenType> map = new HashMap<String, TokenType>();
+    public static TokenType symbol(String str) {
+        TokenType type = SYMBOL.get(str);
+        if (type != null) {
+            return type;
+        }
+        return TokenType.UN_KNOW;
+    }
 
-    public TokenType lookup(String str) {
-        TokenType type = map.get(str);
+    public static TokenType keyWords(String str) {
+        TokenType type = KEY_WORDS.get(str);
         if (type != null) {
             return type;
         }

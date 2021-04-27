@@ -4,7 +4,8 @@ public enum TokenType {
 
     IDENTIFIER,
     FUN_IDENTIFIER,
-    NUMBER,
+    INTEGER,
+    DOUBLE,
     STRING,
     DOT,            // .
     LEFT_PAREN,     // (
@@ -30,6 +31,8 @@ public enum TokenType {
     KEY_MAP,        // map
     KEY_FALSE,          // false
     KEY_TRUE,           // true
+
+    EOF,
 
     UN_KNOW,
 }

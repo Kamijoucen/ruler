@@ -8,7 +8,6 @@ import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.util.MsgUtil;
-import com.kamijoucen.ruler.util.StringUtil;
 
 public class DefaultLexical implements Lexical {
 
@@ -46,6 +45,11 @@ public class DefaultLexical implements Lexical {
     public Token nextToken() {
 
         boolean match = false;
+
+        if (isOver()) {
+            makeEndToken();
+            return currentToken;
+        }
 
         while (isNotOver() && !match) {
 
@@ -90,14 +94,41 @@ public class DefaultLexical implements Lexical {
                 case COMMENT:
                     break;
             }
+        }
 
+        if (!match) {
+            makeEndToken();
         }
 
         return currentToken;
     }
 
     private void scanNumber() {
+        appendAndForward();
 
+        while (isNotOver() && Character.isDigit(charAt())) {
+            appendAndForward();
+        }
+
+        if (isOver() || charAt() != '.') {
+            makeToken(TokenType.INTEGER);
+            return;
+        }
+
+        appendAndForward();
+
+        int len = 0;
+        while (isNotOver() && Character.isDigit(charAt())) {
+            appendAndForward();
+            len++;
+        }
+
+        if (len == 0) {
+            throw SyntaxException.withLexical(
+                    MsgUtil.of("小数点后未跟其他数字", line, column));
+        }
+
+        makeToken(TokenType.DOUBLE);
     }
 
     private void scanFunIdentifier() {
@@ -139,9 +170,14 @@ public class DefaultLexical implements Lexical {
     }
 
     private void makeToken(TokenType type) {
-        currentToken = new Token(type, new TokenLocation(line, column));
+        currentToken = new Token(type, buffer.toString(), new TokenLocation(line, column));
+        buffer.delete(0, buffer.length());
     }
 
+    private void makeEndToken() {
+        currentToken = new Token(TokenType.EOF, "", new TokenLocation(line, column));
+        buffer.delete(0, buffer.length());
+    }
 
     private boolean isOver() {
         return !isNotOver();
