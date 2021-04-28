@@ -4,7 +4,7 @@ public enum State {
 
     IDENTIFIER,
 
-    FUN_IDENTIFIER,
+    OUT_IDENTIFIER,
 
     NUMBER,
 

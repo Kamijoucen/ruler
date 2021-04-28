@@ -12,6 +12,8 @@ public class IOUtil {
                 firstIdentifierFlags[c] = true;
             } else if (c >= 'a' && c <= 'z') {
                 firstIdentifierFlags[c] = true;
+            } else if (c == '_') {
+                firstIdentifierFlags[c] = true;
             }
         }
 

@@ -1,10 +1,11 @@
-package com.kamijoucen.ruler.lexical;
+package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.state.State;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenLocation;
+import com.kamijoucen.ruler.token.TokenLookUp;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.util.MsgUtil;
@@ -59,18 +60,20 @@ public class DefaultLexical implements Lexical {
                 state = State.NONE;
             } else if (IOUtil.isFirstIdentifierChar(ch)) {
                 state = State.IDENTIFIER;
-            } else if (ch == '_') {
-                state = State.FUN_IDENTIFIER;
+            } else if (ch == '$') {
+                state = State.OUT_IDENTIFIER;
             } else if (Character.isDigit(ch)) {
                 state = State.NUMBER;
             } else if (ch == '"' || ch == '\'') {
                 curStringFlag = ch;
                 state = State.STRING;
+            } else if (ch == '-' && peekChar() == '-') {
+                state = State.COMMENT;
             } else {
                 state = State.SYMBOL;
             }
 
-            if (state != State.NONE) {
+            if (state != State.NONE && state != State.COMMENT) {
                 match = true;
             }
 
@@ -81,17 +84,20 @@ public class DefaultLexical implements Lexical {
                 case IDENTIFIER:
                     scanIdentifier();
                     break;
-                case FUN_IDENTIFIER:
-                    scanFunIdentifier();
+                case OUT_IDENTIFIER:
+                    scanOutIdentifier();
                     break;
                 case NUMBER:
                     scanNumber();
                     break;
                 case STRING:
+                    scanString();
                     break;
                 case SYMBOL:
+                    scanSymbol();
                     break;
                 case COMMENT:
+                    scanComment();
                     break;
             }
         }
@@ -101,6 +107,53 @@ public class DefaultLexical implements Lexical {
         }
 
         return currentToken;
+    }
+
+    private void scanComment() {
+
+        forward();
+        forward();
+
+        while (isNotOver() && charAt() != '\n') {
+            forward();
+        }
+
+    }
+
+    private void scanSymbol() {
+
+        appendAndForward();
+
+        append(safeCharAt());
+
+        TokenType type = TokenLookUp.symbol(buffer.toString());
+
+        if (type == TokenType.UN_KNOW) {
+
+            buffer.delete(1, buffer.length());
+
+            type = TokenLookUp.symbol(buffer.toString());
+
+            if (type == TokenType.UN_KNOW) {
+                throw SyntaxException.withLexical(
+                        MsgUtil.of("未知的符号:" + buffer.toString(), line, column));
+            }
+        } else {
+            forward();
+        }
+        makeToken(type);
+    }
+
+    private void scanString() {
+        forward();
+
+        while (isNotOver() && charAt() != curStringFlag) {
+            appendAndForward();
+        }
+
+        forward();
+
+        makeToken(TokenType.STRING);
     }
 
     private void scanNumber() {
@@ -131,15 +184,13 @@ public class DefaultLexical implements Lexical {
         makeToken(TokenType.DOUBLE);
     }
 
-    private void scanFunIdentifier() {
+    private void scanOutIdentifier() {
         forward();
 
         if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
             throw SyntaxException.withLexical(
                     MsgUtil.of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
         }
-
-        append(Constant.FUN_START);
 
         int len = 0;
         while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
@@ -149,10 +200,10 @@ public class DefaultLexical implements Lexical {
 
         if (len == 0) {
             throw SyntaxException.withLexical(
-                    MsgUtil.of("函数标识符起始 '_' 后必须跟其他标识符", line, column));
+                    MsgUtil.of("标识符 '$' 后必须跟其他标识符", line, column));
         }
 
-        makeToken(TokenType.FUN_IDENTIFIER);
+        makeToken(TokenType.OUT_IDENTIFIER);
     }
 
     private void scanIdentifier() {
@@ -187,6 +238,10 @@ public class DefaultLexical implements Lexical {
         return offset < content.length();
     }
 
+    private boolean isNotOver(int i) {
+        return offset + i < content.length();
+    }
+
     private void appendAndForward() {
         append();
         forward();
@@ -194,6 +249,10 @@ public class DefaultLexical implements Lexical {
 
     private void append(char ch) {
         buffer.append(ch);
+    }
+
+    private void append(String str) {
+        buffer.append(str);
     }
 
     private void append() {
@@ -206,6 +265,14 @@ public class DefaultLexical implements Lexical {
         } else {
             column = 0;
             ++line;
+        }
+    }
+
+    private char peekChar() {
+        if (offset + 1 < content.length()) {
+            return charAt(1);
+        } else {
+            return Constant.EOF;
         }
     }
 
@@ -222,6 +289,6 @@ public class DefaultLexical implements Lexical {
     }
 
     private char charAt(int i) {
-        return content.charAt(i);
+        return content.charAt(offset + i);
     }
 }

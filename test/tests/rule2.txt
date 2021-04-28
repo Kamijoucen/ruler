@@ -1,0 +1,11 @@
+
+print($name); // $开头表示取外部的变量
+
+str = $name;
+
+$log(str);
+
+$log($name);
+
+return $name;
+
