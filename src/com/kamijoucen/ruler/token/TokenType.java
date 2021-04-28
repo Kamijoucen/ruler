@@ -7,6 +7,7 @@ public enum TokenType {
     INTEGER,
     DOUBLE,
     STRING,
+    SEMICOLON,      // ;
     DOT,            // .
     LEFT_PAREN,     // (
     RIGHT_PAREN,    // )
@@ -29,8 +30,8 @@ public enum TokenType {
     KEY_CONTINUE,   // continue
     KEY_LIST,       // list
     KEY_MAP,        // map
-    KEY_FALSE,          // false
-    KEY_TRUE,           // true
+    KEY_FALSE,      // false
+    KEY_TRUE,       // true
 
     EOF,
 
