@@ -7,6 +7,7 @@ public enum TokenType {
     INTEGER,
     DOUBLE,
     STRING,
+    COMMA,          // ,
     SEMICOLON,      // ;
     DOT,            // .
     LEFT_PAREN,     // (

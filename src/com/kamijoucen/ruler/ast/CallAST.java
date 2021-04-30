@@ -1,24 +1,23 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.env.Scope;
-import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.Value;
 
-public class NameAST implements BaseAST {
+import java.util.List;
 
-    public final Token name;
+public class CallAST implements BaseAST {
 
-    public final boolean isOut;
+    public final NameAST name;
 
-    public NameAST(Token name, boolean isOut) {
+    public final List<BaseAST> param;
+
+    public CallAST(NameAST name, List<BaseAST> param) {
         this.name = name;
-        this.isOut = isOut;
+        this.param = param;
     }
 
     @Override
-
     public Value eval(Scope scope) {
         return null;
     }
-
 }

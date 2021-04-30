@@ -10,7 +10,7 @@ public class Test1 {
 
     @Test
     public void test1() {
-        String str = "n $_n 3.5 7  = == - + ** 1.1  /   '55'   /**===()--  ";
+        String str = "n $_n 3.5 7  = == - + ** 1.1  /   '55' 1.f  /**===()-- 1. ";
 
         String str1 = " '11'  --";
 
