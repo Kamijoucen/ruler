@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.util.Utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Stack;
 
 public class DefaultParser implements Parser {
 
@@ -30,7 +31,6 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
 
         while (lexical.getToken().type != TokenType.EOF) {
-
 
         }
 
@@ -86,13 +86,13 @@ public class DefaultParser implements Parser {
             case ASSIGN:
                 return parseAssign(token);
             default:
-                throw SyntaxException.withSyntax("未知的语法", nextToken);
+                return new NameAST(token, isOut);
         }
     }
 
-    private BaseAST parseCall(Token identifier) {
+    public BaseAST parseCall(Token identifier) {
 
-        Utils.assertToken(identifier, TokenType.LEFT_PAREN);
+        Utils.assertToken(lexical, TokenType.LEFT_PAREN);
 
         NameAST nameAST = new NameAST(identifier,
                 identifier.type == TokenType.OUT_IDENTIFIER);
@@ -105,30 +105,23 @@ public class DefaultParser implements Parser {
         }
 
         BaseAST param1 = parseExpression();
-        if (param1 == null) {
-            throw SyntaxException.withSyntax("函数调用的参数格式不正确", identifier);
-        }
 
         List<BaseAST> params = new ArrayList<BaseAST>();
         params.add(param1);
 
         while (lexical.getToken().type != TokenType.EOF
                 && lexical.getToken().type != TokenType.RIGHT_PAREN) {
-            Utils.assertToken(identifier, TokenType.COMMA);
+            Utils.assertToken(lexical, TokenType.COMMA);
             lexical.nextToken();
-            BaseAST param = parseExpression();
-            if (param == null) {
-                throw SyntaxException.withSyntax("函数调用的参数格式不正确", identifier);
-            }
-            params.add(param);
+            params.add(parseExpression());
         }
 
         return new CallAST(nameAST, params);
     }
 
-    private BaseAST parseAssign(Token identifier) {
+    public BaseAST parseAssign(Token identifier) {
 
-        Utils.assertToken(identifier, TokenType.ASSIGN);
+        Utils.assertToken(lexical, TokenType.ASSIGN);
 
         lexical.nextToken();
 
@@ -136,28 +129,18 @@ public class DefaultParser implements Parser {
 
         BaseAST expression = parseExpression();
 
-        if (expression == null) {
-            throw SyntaxException.withSyntax("复制语句没有发现表达式", identifier);
-        }
-
         return new AssignAST(nameAST, expression);
     }
 
     public BaseAST parseParen() {
 
-        Token leftParenToken = lexical.getToken();
-
-        Utils.assertToken(leftParenToken, TokenType.LEFT_PAREN);
+        Utils.assertToken(lexical, TokenType.LEFT_PAREN);
 
         lexical.nextToken();
 
         BaseAST ast = parseExpression();
 
-        if (ast == null) {
-            throw SyntaxException.withSyntax("括号内没有发现表达式", leftParenToken);
-        }
-
-        Utils.assertToken(lexical.getToken(), TokenType.RIGHT_PAREN);
+        Utils.assertToken(lexical, TokenType.RIGHT_PAREN);
 
         lexical.nextToken();
         return ast;
@@ -165,6 +148,13 @@ public class DefaultParser implements Parser {
 
 
     public BaseAST parseBinary() {
+
+        Stack<BaseAST> valStack = new Stack<BaseAST>();
+
+        Stack<TokenType> opStack = new Stack<TokenType>();
+
+
+
         return null;
     }
 

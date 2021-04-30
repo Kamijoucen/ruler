@@ -10,6 +10,7 @@ public class TokenLookUp {
     private static final Map<String, TokenType> SYMBOL = new HashMap<String, TokenType>();
 
     static {
+        SYMBOL.put(",", TokenType.COMMA);
         SYMBOL.put(";", TokenType.SEMICOLON);
         SYMBOL.put(".", TokenType.DOT);
         SYMBOL.put("(", TokenType.LEFT_PAREN);
