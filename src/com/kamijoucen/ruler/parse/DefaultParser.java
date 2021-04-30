@@ -40,6 +40,32 @@ public class DefaultParser implements Parser {
 
     public BaseAST parseExpression() {
 
+        Stack<BaseAST> valStack = new Stack<BaseAST>();
+
+        Stack<TokenType> opStack = new Stack<TokenType>();
+
+        valStack.push(parsePrimaryExpression()); // first exp
+
+        while (lexical.getToken().type != TokenType.EOF
+                && lexical.getToken().type != TokenType.SEMICOLON) {
+
+            Token op = lexical.getToken();
+
+            opStack.push(op.type);
+
+            valStack.push(parsePrimaryExpression()); // rhs
+
+            TokenType peek = opStack.peek();
+            if (peek == null) {
+                // TODO: 2021/4/30
+            }
+        }
+
+        return null;
+    }
+
+    public BaseAST parsePrimaryExpression() {
+
         Token token = lexical.getToken();
 
         switch (token.type) {
@@ -145,18 +171,5 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
         return ast;
     }
-
-
-    public BaseAST parseBinary() {
-
-        Stack<BaseAST> valStack = new Stack<BaseAST>();
-
-        Stack<TokenType> opStack = new Stack<TokenType>();
-
-
-
-        return null;
-    }
-
 
 }
