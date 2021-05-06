@@ -42,4 +42,20 @@ public class Test1 {
 
     }
 
+    @Test
+    public void test3() {
+        String str = "(a + b) * c / c";
+
+        Lexical lexical = new DefaultLexical(str);
+
+        lexical.nextToken();
+
+        DefaultParser parser = new DefaultParser(lexical);
+
+        BaseAST baseAST = parser.parseExpression();
+
+        System.out.println(baseAST);
+
+    }
+
 }

@@ -9,16 +9,19 @@ public class OperationLookUp {
 
     static {
 
-        map.put(TokenType.LT, 1);       // <
-        map.put(TokenType.GT, 1);       // >
-        map.put(TokenType.LE, 1);       // <=
-        map.put(TokenType.GE, 1);       // >=
-        map.put(TokenType.EQ, 1);       // ==
-        map.put(TokenType.NE, 1);       // !=
-        map.put(TokenType.ADD, 1);      // +
-        map.put(TokenType.SUB, 1);      // -
-        map.put(TokenType.MUL, 1);      // *
-        map.put(TokenType.DIV, 1);      // /
+        map.put(TokenType.EQ, 10);       // ==
+        map.put(TokenType.NE, 10);       // !=
+
+        map.put(TokenType.LT, 20);       // <
+        map.put(TokenType.GT, 20);       // >
+        map.put(TokenType.LE, 20);       // <=
+        map.put(TokenType.GE, 20);       // >=
+
+        map.put(TokenType.ADD, 30);      // +
+        map.put(TokenType.SUB, 30);      // -
+
+        map.put(TokenType.MUL, 40);      // *
+        map.put(TokenType.DIV, 40);      // /
 
     }
 

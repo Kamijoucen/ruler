@@ -4,25 +4,19 @@ import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.Value;
 
-public class BinaryOperationAST implements BaseAST {
-
-    public final BaseAST exp1;
-
-    public final BaseAST exp2;
+public class UnaryOperationAST implements BaseAST {
 
     public final TokenType op;
 
-    public BinaryOperationAST(TokenType op, BaseAST exp1, BaseAST exp2) {
-        this.exp1 = exp1;
-        this.exp2 = exp2;
+    public final BaseAST exp;
+
+    public UnaryOperationAST(TokenType op, BaseAST exp) {
         this.op = op;
+        this.exp = exp;
     }
 
     @Override
     public Value eval(Scope scope) {
-
-
-
         return null;
     }
 }

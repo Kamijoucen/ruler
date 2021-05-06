@@ -1,10 +1,8 @@
 package com.kamijoucen.ruler.parse;
 
-import com.kamijoucen.ruler.ast.BaseAST;
-import com.kamijoucen.ruler.ast.CallAST;
-import com.kamijoucen.ruler.ast.NameAST;
-import com.kamijoucen.ruler.ast.AssignAST;
+import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.token.OperationLookUp;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Utils;
@@ -47,21 +45,46 @@ public class DefaultParser implements Parser {
         valStack.push(parsePrimaryExpression()); // first exp
 
         while (lexical.getToken().type != TokenType.EOF
-                && lexical.getToken().type != TokenType.SEMICOLON) {
+                && lexical.getToken().type != TokenType.SEMICOLON
+                && lexical.getToken().type != TokenType.RIGHT_PAREN) {
 
             Token op = lexical.getToken();
 
-            opStack.push(op.type);
-
-            valStack.push(parsePrimaryExpression()); // rhs
-
-            TokenType peek = opStack.peek();
-            if (peek == null) {
-                // TODO: 2021/4/30
+            int curPrecedence = OperationLookUp.lookUp(op.type);
+            if (curPrecedence == -1) {
+                throw SyntaxException.withSyntax("不支持的的二元操作符: " + op.type);
             }
-        }
+            lexical.nextToken();
 
-        return null;
+            BaseAST rls = parsePrimaryExpression();
+
+            if (opStack.size() != 0) {
+                TokenType peek = opStack.peek();
+                int peekPrecedence = OperationLookUp.lookUp(peek);
+                if (peekPrecedence == -1) {
+                    throw SyntaxException.withSyntax("不支持的的二元操作符:" + peek);
+                }
+                if (curPrecedence <= peekPrecedence) {
+                    BaseAST exp1 = valStack.pop();
+                    BaseAST exp2 = valStack.pop();
+
+                    TokenType binOp = opStack.pop();
+
+                    valStack.push(new BinaryOperationAST(binOp, exp2, exp1));
+                }
+            }
+            opStack.push(op.type);
+            valStack.push(rls);
+        }
+        while (opStack.size() != 0) {
+            BaseAST exp1 = valStack.pop();
+            BaseAST exp2 = valStack.pop();
+
+            TokenType binOp = opStack.pop();
+
+            valStack.push(new BinaryOperationAST(binOp, exp2, exp1));
+        }
+        return valStack.pop();
     }
 
     public BaseAST parsePrimaryExpression() {
@@ -73,10 +96,12 @@ public class DefaultParser implements Parser {
                 return parseIdentifier(false);
             case OUT_IDENTIFIER:
                 return parseIdentifier(true);
+            case ADD:
+            case SUB:
+                return parseUnaryExpression();
             case INTEGER:
-                break;
             case DOUBLE:
-                break;
+                return parseNumber();
             case STRING:
                 break;
             case LEFT_PAREN:
@@ -88,6 +113,16 @@ public class DefaultParser implements Parser {
             default:
                 break;
         }
+
+        return null;
+    }
+
+    public BaseAST parseUnaryExpression() {
+
+        Token token = lexical.getToken();
+        lexical.nextToken();
+
+
 
         return null;
     }
@@ -170,6 +205,11 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
         return ast;
+    }
+
+    public BaseAST parseNumber() {
+
+        return null;
     }
 
 }

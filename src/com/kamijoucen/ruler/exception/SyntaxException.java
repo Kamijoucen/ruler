@@ -9,6 +9,10 @@ public class SyntaxException extends RuntimeException {
         super(s);
     }
 
+    public static SyntaxException withSyntax(String msg) {
+        return new SyntaxException("syntax error! " + msg);
+    }
+
     public static SyntaxException withSyntax(String msg, Token token) {
         return new SyntaxException("syntax error! " + msg);
     }
