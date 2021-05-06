@@ -20,9 +20,6 @@ public class BinaryOperationAST implements BaseAST {
 
     @Override
     public Value eval(Scope scope) {
-
-
-
         return null;
     }
 }

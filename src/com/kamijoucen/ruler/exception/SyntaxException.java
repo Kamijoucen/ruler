@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.exception;
 
 import com.kamijoucen.ruler.token.Token;
-import com.kamijoucen.ruler.token.TokenLocation;
 
 public class SyntaxException extends RuntimeException {
 

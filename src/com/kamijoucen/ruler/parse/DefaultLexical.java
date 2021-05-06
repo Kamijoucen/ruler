@@ -67,7 +67,7 @@ public class DefaultLexical implements Lexical {
             } else if (ch == '"' || ch == '\'') {
                 curStringFlag = ch;
                 state = State.STRING;
-            } else if (ch == '-' && peekChar() == '-') {
+            } else if (ch == '/' && peekChar() == '/') {
                 state = State.COMMENT;
             } else {
                 state = State.SYMBOL;

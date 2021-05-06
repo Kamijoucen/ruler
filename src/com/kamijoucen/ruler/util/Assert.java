@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 
-public class Utils {
+public class Assert {
 
     public static NoImplException todo(String str) {
         return new NoImplException(str == null ? "还未实现" : str);
@@ -23,5 +23,4 @@ public class Utils {
             throw SyntaxException.withSyntax("预期符号为:" + type.toString() + ", 但是出现了'" + lexical.getToken().type.toString() + "'", lexical.getToken());
         }
     }
-
 }

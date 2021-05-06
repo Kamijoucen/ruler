@@ -58,4 +58,21 @@ public class Test1 {
 
     }
 
+    @Test
+    public void test4() {
+
+        String str = "a -- a --(-a-+b+-c)";
+
+        Lexical lexical = new DefaultLexical(str);
+
+        lexical.nextToken();
+
+        DefaultParser parser = new DefaultParser(lexical);
+
+        BaseAST baseAST = parser.parseExpression();
+
+        System.out.println(baseAST);
+
+    }
+
 }

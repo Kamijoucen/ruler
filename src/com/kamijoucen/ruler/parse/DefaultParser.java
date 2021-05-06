@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.OperationLookUp;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.util.Utils;
+import com.kamijoucen.ruler.util.Assert;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,8 +30,42 @@ public class DefaultParser implements Parser {
 
         while (lexical.getToken().type != TokenType.EOF) {
 
+            Token token = lexical.getToken();
+            switch (token.type) {
+                case IDENTIFIER:
+                case OUT_IDENTIFIER:
+                    astList.add(parseIdentifier(true));
+                    break;
+                case INTEGER:
+                case DOUBLE:
+                case STRING:
+                case LEFT_PAREN:
+                case ADD:
+                case SUB:
+                    astList.add(parseExpression());
+                    break;
+                case KEY_RETURN:
+                    break;
+                case KEY_DEF:
+                    break;
+                case KEY_IF:
+                    break;
+                case KEY_FOR:
+                    break;
+                case KEY_BREAK:
+                    break;
+                case KEY_CONTINUE:
+                    break;
+                case KEY_LIST:
+                    break;
+                case KEY_MAP:
+                    break;
+                case KEY_FALSE:
+                    break;
+                case KEY_TRUE:
+                    break;
+            }
         }
-
         return astList;
     }
 
@@ -93,9 +127,8 @@ public class DefaultParser implements Parser {
 
         switch (token.type) {
             case IDENTIFIER:
-                return parseIdentifier(false);
             case OUT_IDENTIFIER:
-                return parseIdentifier(true);
+                return parseIdentifier(false);
             case ADD:
             case SUB:
                 return parseUnaryExpression();
@@ -103,57 +136,56 @@ public class DefaultParser implements Parser {
             case DOUBLE:
                 return parseNumber();
             case STRING:
-                break;
+                return parseString();
             case LEFT_PAREN:
                 return parseParen();
             case KEY_FALSE:
-                break;
             case KEY_TRUE:
-                break;
-            default:
-                break;
+                return parseBool();
         }
-
-        return null;
+        throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
 
     public BaseAST parseUnaryExpression() {
-
         Token token = lexical.getToken();
+        if (token.type != TokenType.ADD
+                && token.type != TokenType.SUB) {
+            throw SyntaxException.withSyntax("不支持的单目运算符", token);
+        }
+
         lexical.nextToken();
-
-
-
-        return null;
+        return new UnaryOperationAST(token.type, parsePrimaryExpression());
     }
 
-    public BaseAST parseIdentifier(boolean isOut) {
+    public BaseAST parseIdentifier(boolean isStatement) {
 
         Token token = lexical.getToken();
 
-        if (isOut) {
-            Utils.assertToken(token, TokenType.OUT_IDENTIFIER);
-        } else {
-            Utils.assertToken(token, TokenType.IDENTIFIER);
+        if (token.type != TokenType.OUT_IDENTIFIER
+                && token.type != TokenType.IDENTIFIER) {
+            throw SyntaxException.withSyntax("不支持的单目运算符", token);
         }
 
         Token nextToken = lexical.nextToken();
 
         switch (nextToken.type) {
             case DOT:
-                throw Utils.todo("调用尚未实现");
+                throw Assert.todo("调用尚未实现");
             case LEFT_PAREN:
                 return parseCall(token);
             case ASSIGN:
+                if (!isStatement) {
+                    throw SyntaxException.withSyntax("赋值语句不能出现在表达式内");
+                }
                 return parseAssign(token);
             default:
-                return new NameAST(token, isOut);
+                return new NameAST(token, token.type == TokenType.OUT_IDENTIFIER);
         }
     }
 
     public BaseAST parseCall(Token identifier) {
 
-        Utils.assertToken(lexical, TokenType.LEFT_PAREN);
+        Assert.assertToken(lexical, TokenType.LEFT_PAREN);
 
         NameAST nameAST = new NameAST(identifier,
                 identifier.type == TokenType.OUT_IDENTIFIER);
@@ -172,7 +204,7 @@ public class DefaultParser implements Parser {
 
         while (lexical.getToken().type != TokenType.EOF
                 && lexical.getToken().type != TokenType.RIGHT_PAREN) {
-            Utils.assertToken(lexical, TokenType.COMMA);
+            Assert.assertToken(lexical, TokenType.COMMA);
             lexical.nextToken();
             params.add(parseExpression());
         }
@@ -182,7 +214,7 @@ public class DefaultParser implements Parser {
 
     public BaseAST parseAssign(Token identifier) {
 
-        Utils.assertToken(lexical, TokenType.ASSIGN);
+        Assert.assertToken(lexical, TokenType.ASSIGN);
 
         lexical.nextToken();
 
@@ -195,13 +227,13 @@ public class DefaultParser implements Parser {
 
     public BaseAST parseParen() {
 
-        Utils.assertToken(lexical, TokenType.LEFT_PAREN);
+        Assert.assertToken(lexical, TokenType.LEFT_PAREN);
 
         lexical.nextToken();
 
         BaseAST ast = parseExpression();
 
-        Utils.assertToken(lexical, TokenType.RIGHT_PAREN);
+        Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
 
         lexical.nextToken();
         return ast;
@@ -209,7 +241,39 @@ public class DefaultParser implements Parser {
 
     public BaseAST parseNumber() {
 
-        return null;
+        Token token = lexical.getToken();
+
+        if (token.type != TokenType.INTEGER
+                && token.type != TokenType.DOUBLE) {
+            throw SyntaxException.withSyntax("需要一个数字", token);
+        }
+        lexical.nextToken();
+
+        return new NumberAST(token);
+    }
+
+    public BaseAST parseString() {
+
+        Assert.assertToken(lexical, TokenType.STRING);
+
+        Token token = lexical.getToken();
+
+        lexical.nextToken();
+
+        return new StringAST(token);
+    }
+
+    public BaseAST parseBool() {
+
+        Token token = lexical.getToken();
+
+        if (token.type != TokenType.KEY_FALSE
+                && token.type != TokenType.KEY_TRUE) {
+            throw SyntaxException.withSyntax("需要一个bool", token);
+        }
+        lexical.nextToken();
+
+        return new BoolAST(token);
     }
 
 }
