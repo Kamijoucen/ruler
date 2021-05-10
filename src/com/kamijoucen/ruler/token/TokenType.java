@@ -12,6 +12,10 @@ public enum TokenType {
     DOT,            // .
     LEFT_PAREN,     // (
     RIGHT_PAREN,    // )
+    LEFT_BRACE,     // {
+    RIGHT_BRACE,    // }
+    LEFT_SQUARE,    // [
+    RIGHT_SQUARE,   // ]
     LT,             // <
     GT,             // >
     LE,             // <=
@@ -33,6 +37,7 @@ public enum TokenType {
     KEY_MAP,        // map
     KEY_FALSE,      // false
     KEY_TRUE,       // true
+    KEY_ELSE,       // else
 
     EOF,
 

@@ -15,6 +15,10 @@ public class TokenLookUp {
         SYMBOL.put(".", TokenType.DOT);
         SYMBOL.put("(", TokenType.LEFT_PAREN);
         SYMBOL.put(")", TokenType.RIGHT_PAREN);
+        SYMBOL.put("{", TokenType.LEFT_BRACE);
+        SYMBOL.put("}", TokenType.RIGHT_BRACE);
+        SYMBOL.put("[", TokenType.LEFT_SQUARE);
+        SYMBOL.put("]", TokenType.RIGHT_SQUARE);
         SYMBOL.put("<", TokenType.LT);
         SYMBOL.put(">", TokenType.GT);
         SYMBOL.put("<=", TokenType.LE);
@@ -37,6 +41,7 @@ public class TokenLookUp {
         KEY_WORDS.put("map", TokenType.KEY_MAP);
         KEY_WORDS.put("false", TokenType.KEY_FALSE);
         KEY_WORDS.put("true", TokenType.KEY_TRUE);
+        KEY_WORDS.put("else", TokenType.KEY_ELSE);
     }
 
     public static TokenType symbol(String str) {

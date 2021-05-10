@@ -1,6 +1,8 @@
 package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.ast.*;
+import com.kamijoucen.ruler.ast.statement.BlockAST;
+import com.kamijoucen.ruler.ast.statement.IfStatementAST;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.OperationLookUp;
 import com.kamijoucen.ruler.token.Token;
@@ -29,44 +31,42 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
 
         while (lexical.getToken().type != TokenType.EOF) {
-
-            Token token = lexical.getToken();
-            switch (token.type) {
-                case IDENTIFIER:
-                case OUT_IDENTIFIER:
-                    astList.add(parseIdentifier(true));
-                    break;
-                case INTEGER:
-                case DOUBLE:
-                case STRING:
-                case LEFT_PAREN:
-                case ADD:
-                case SUB:
-                    astList.add(parseExpression());
-                    break;
-                case KEY_RETURN:
-                    break;
-                case KEY_DEF:
-                    break;
-                case KEY_IF:
-                    break;
-                case KEY_FOR:
-                    break;
-                case KEY_BREAK:
-                    break;
-                case KEY_CONTINUE:
-                    break;
-                case KEY_LIST:
-                    break;
-                case KEY_MAP:
-                    break;
-                case KEY_FALSE:
-                    break;
-                case KEY_TRUE:
-                    break;
-            }
+            astList.add(parseStatement());
         }
         return astList;
+    }
+
+    public BaseAST parseStatement() {
+        Token token = lexical.getToken();
+        switch (token.type) {
+            case IDENTIFIER:
+            case OUT_IDENTIFIER:
+                return parseIdentifier(true);
+            case INTEGER:
+            case DOUBLE:
+            case STRING:
+            case LEFT_PAREN:
+            case ADD:
+            case SUB:
+                return parseExpression();
+            case KEY_RETURN:
+                break;
+            case KEY_DEF:
+                break;
+            case KEY_IF:
+                return parseIfStatement();
+            case KEY_FOR:
+                break;
+            case KEY_BREAK:
+                break;
+            case KEY_CONTINUE:
+                break;
+            case KEY_LIST:
+                break;
+            case KEY_MAP:
+                break;
+        }
+        return null;
     }
 
 
@@ -80,7 +80,8 @@ public class DefaultParser implements Parser {
 
         while (lexical.getToken().type != TokenType.EOF
                 && lexical.getToken().type != TokenType.SEMICOLON
-                && lexical.getToken().type != TokenType.RIGHT_PAREN) {
+                && lexical.getToken().type != TokenType.RIGHT_PAREN
+                && lexical.getToken().type != TokenType.LEFT_BRACE) {
 
             Token op = lexical.getToken();
 
@@ -144,6 +145,49 @@ public class DefaultParser implements Parser {
                 return parseBool();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
+    }
+
+    public BaseAST parseIfStatement() {
+
+        Assert.assertToken(lexical, TokenType.KEY_IF);
+
+        lexical.nextToken();
+
+        BaseAST condition = parseExpression();
+
+        BaseAST thenBlock = null;
+        if (lexical.getToken().type == TokenType.LEFT_BRACE) {
+            thenBlock = parseBlock();
+        } else {
+            thenBlock = parseStatement();
+        }
+
+        BaseAST elseBlock = null;
+        if (lexical.getToken().type == TokenType.KEY_ELSE) {
+            Token token = lexical.nextToken();
+            if (token.type == TokenType.LEFT_BRACE) {
+                elseBlock = parseBlock();
+            } else {
+                elseBlock = parseStatement();
+            }
+        }
+        return new IfStatementAST(condition, thenBlock, elseBlock);
+    }
+
+
+    public BaseAST parseBlock() {
+
+        Assert.assertToken(lexical, TokenType.LEFT_BRACE);
+
+        lexical.nextToken();
+
+        List<BaseAST> blocks = new ArrayList<BaseAST>();
+
+        while (lexical.getToken().type != TokenType.EOF
+                && lexical.getToken().type != TokenType.RIGHT_BRACE) {
+            blocks.add(parseStatement());
+        }
+        return new BlockAST(blocks);
     }
 
     public BaseAST parseUnaryExpression() {

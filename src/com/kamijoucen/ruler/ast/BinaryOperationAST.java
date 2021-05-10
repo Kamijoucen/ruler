@@ -6,11 +6,11 @@ import com.kamijoucen.ruler.value.Value;
 
 public class BinaryOperationAST implements BaseAST {
 
-    public final BaseAST exp1;
+    private BaseAST exp1;
 
-    public final BaseAST exp2;
+    private BaseAST exp2;
 
-    public final TokenType op;
+    private TokenType op;
 
     public BinaryOperationAST(TokenType op, BaseAST exp1, BaseAST exp2) {
         this.exp1 = exp1;
@@ -21,5 +21,29 @@ public class BinaryOperationAST implements BaseAST {
     @Override
     public Value eval(Scope scope) {
         return null;
+    }
+
+    public BaseAST getExp1() {
+        return exp1;
+    }
+
+    public void setExp1(BaseAST exp1) {
+        this.exp1 = exp1;
+    }
+
+    public BaseAST getExp2() {
+        return exp2;
+    }
+
+    public void setExp2(BaseAST exp2) {
+        this.exp2 = exp2;
+    }
+
+    public TokenType getOp() {
+        return op;
+    }
+
+    public void setOp(TokenType op) {
+        this.op = op;
     }
 }

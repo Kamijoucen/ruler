@@ -6,9 +6,9 @@ import com.kamijoucen.ruler.value.Value;
 
 public class BoolAST implements BaseAST {
 
-    public final Token token;
+    private Token token;
 
-    public final boolean value;
+    private boolean value;
 
     public BoolAST(Token token) {
         this.token = token;

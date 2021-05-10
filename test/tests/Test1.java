@@ -9,6 +9,8 @@ import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 public class Test1 {
 
     @Test
@@ -72,6 +74,21 @@ public class Test1 {
         BaseAST baseAST = parser.parseExpression();
 
         System.out.println(baseAST);
+
+    }
+
+
+    @Test
+    public void test5() {
+
+        String str = "a -- a --(-a-+b+-c)";
+
+        Lexical lexical = new DefaultLexical(str);
+
+        DefaultParser parser = new DefaultParser(lexical);
+
+        List<BaseAST> parse = parser.parse();
+
 
     }
 
