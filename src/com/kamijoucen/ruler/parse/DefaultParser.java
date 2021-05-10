@@ -1,10 +1,11 @@
 package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.ast.*;
+import com.kamijoucen.ruler.ast.statement.AssignAST;
 import com.kamijoucen.ruler.ast.statement.BlockAST;
 import com.kamijoucen.ruler.ast.statement.IfStatementAST;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.token.OperationLookUp;
+import com.kamijoucen.ruler.common.BinaryDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
@@ -85,7 +86,7 @@ public class DefaultParser implements Parser {
 
             Token op = lexical.getToken();
 
-            int curPrecedence = OperationLookUp.lookUp(op.type);
+            int curPrecedence = BinaryDefine.lookUp(op.type);
             if (curPrecedence == -1) {
                 throw SyntaxException.withSyntax("不支持的的二元操作符: " + op.type);
             }
@@ -95,7 +96,7 @@ public class DefaultParser implements Parser {
 
             if (opStack.size() != 0) {
                 TokenType peek = opStack.peek();
-                int peekPrecedence = OperationLookUp.lookUp(peek);
+                int peekPrecedence = BinaryDefine.lookUp(peek);
                 if (peekPrecedence == -1) {
                     throw SyntaxException.withSyntax("不支持的的二元操作符:" + peek);
                 }
@@ -287,13 +288,17 @@ public class DefaultParser implements Parser {
 
         Token token = lexical.getToken();
 
-        if (token.type != TokenType.INTEGER
-                && token.type != TokenType.DOUBLE) {
-            throw SyntaxException.withSyntax("需要一个数字", token);
-        }
         lexical.nextToken();
 
-        return new NumberAST(token);
+        if (token.type == TokenType.INTEGER) {
+            return new IntegerAST(Integer.parseInt(token.name));
+        }
+
+        if (token.type == TokenType.DOUBLE) {
+            return new DoubleAST(Double.parseDouble(token.name));
+        }
+
+        throw SyntaxException.withSyntax("需要一个数字", token);
     }
 
     public BaseAST parseString() {

@@ -1,7 +1,9 @@
-package com.kamijoucen.ruler.ast;
+package com.kamijoucen.ruler.ast.statement;
 
+import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.env.Scope;
-import com.kamijoucen.ruler.value.Value;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class AssignAST implements BaseAST {
 
@@ -15,7 +17,7 @@ public class AssignAST implements BaseAST {
     }
 
     @Override
-    public Value eval(Scope scope) {
+    public BaseValue eval(Scope scope) {
         return null;
     }
 

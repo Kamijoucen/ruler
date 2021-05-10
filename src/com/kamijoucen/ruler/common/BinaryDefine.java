@@ -1,9 +1,11 @@
-package com.kamijoucen.ruler.token;
+package com.kamijoucen.ruler.common;
+
+import com.kamijoucen.ruler.token.TokenType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class OperationLookUp {
+public class BinaryDefine {
 
     private static final Map<TokenType, Integer> map = new HashMap<TokenType, Integer>();
 

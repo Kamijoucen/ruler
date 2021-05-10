@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.ast.statement;
 
 import com.kamijoucen.ruler.ast.BaseAST;
 import com.kamijoucen.ruler.env.Scope;
-import com.kamijoucen.ruler.value.Value;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class IfStatementAST implements BaseAST {
 
@@ -19,7 +19,7 @@ public class IfStatementAST implements BaseAST {
     }
 
     @Override
-    public Value eval(Scope scope) {
+    public BaseValue eval(Scope scope) {
         return null;
     }
 

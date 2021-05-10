@@ -14,4 +14,6 @@ public enum ValueType {
 
     NONE,
 
+    NULL,
+
 }

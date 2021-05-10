@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.env.Scope;
-import com.kamijoucen.ruler.value.Value;
+import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class CallAST implements BaseAST {
     }
 
     @Override
-    public Value eval(Scope scope) {
+    public BaseValue eval(Scope scope) {
         return null;
     }
 }

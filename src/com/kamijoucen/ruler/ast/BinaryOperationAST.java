@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.value.Value;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class BinaryOperationAST implements BaseAST {
 
@@ -19,7 +19,7 @@ public class BinaryOperationAST implements BaseAST {
     }
 
     @Override
-    public Value eval(Scope scope) {
+    public BaseValue eval(Scope scope) {
         return null;
     }
 

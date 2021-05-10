@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.token.Token;
-import com.kamijoucen.ruler.value.Value;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class BoolAST implements BaseAST {
 
@@ -16,7 +16,7 @@ public class BoolAST implements BaseAST {
     }
 
     @Override
-    public Value eval(Scope scope) {
+    public BaseValue eval(Scope scope) {
         return null;
     }
 }
