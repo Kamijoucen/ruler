@@ -10,6 +10,8 @@ public enum ValueType {
 
     STRING,
 
+    BOOL,
+
     VOID,
 
     NONE,

@@ -1,13 +1,11 @@
 package com.kamijoucen.ruler.eval;
 
-import com.kamijoucen.ruler.ast.BinaryOperationAST;
-import com.kamijoucen.ruler.ast.DoubleAST;
-import com.kamijoucen.ruler.ast.NameAST;
-import com.kamijoucen.ruler.ast.IntegerAST;
+import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.basic.Operation;
 import com.kamijoucen.ruler.runtime.BinaryDefine;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.DoubleValue;
 import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.constant.NullValue;
@@ -31,6 +29,11 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     @Override
     public BaseValue eval(DoubleAST ast, Scope scope) {
         return new DoubleValue(ast.getValue());
+    }
+
+    @Override
+    public BaseValue eval(BoolAST ast, Scope scope) {
+        return new BoolValue(ast.getValue());
     }
 
     @Override

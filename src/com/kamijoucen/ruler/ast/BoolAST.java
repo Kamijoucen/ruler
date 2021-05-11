@@ -6,17 +6,22 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class BoolAST implements BaseAST {
 
-    private Token token;
-
     private boolean value;
 
-    public BoolAST(Token token) {
-        this.token = token;
-        this.value = Boolean.parseBoolean(token.name);
+    public BoolAST(boolean value) {
+        this.value = value;
     }
 
     @Override
     public BaseValue eval(Scope scope) {
         return null;
+    }
+
+    public boolean getValue() {
+        return value;
+    }
+
+    public void setValue(boolean value) {
+        this.value = value;
     }
 }

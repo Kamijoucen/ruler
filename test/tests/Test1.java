@@ -83,7 +83,7 @@ public class Test1 {
     @Test
     public void test5() {
 
-        String str = "1.158 - 3.559";
+        String str = "1.158 - 3.559;";
 
         Lexical lexical = new DefaultLexical(str);
 
@@ -93,6 +93,27 @@ public class Test1 {
 
         for (BaseAST baseAST : parse) {
             BaseValue eval = baseAST.eval(new Scope(null));
+            System.out.println(eval.toString());
+        }
+
+    }
+
+
+    @Test
+    public void test6() {
+
+        String str = "a = 15; b = 48; a = b-a;";
+
+        Lexical lexical = new DefaultLexical(str);
+
+        DefaultParser parser = new DefaultParser(lexical);
+
+        List<BaseAST> parse = parser.parse();
+
+
+        Scope scope = new Scope(null);
+        for (BaseAST baseAST : parse) {
+            BaseValue eval = baseAST.eval(scope);
             System.out.println(eval.toString());
         }
 

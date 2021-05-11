@@ -33,6 +33,8 @@ public class DefaultParser implements Parser {
 
         while (lexical.getToken().type != TokenType.EOF) {
             astList.add(parseStatement());
+            Assert.assertToken(lexical, TokenType.SEMICOLON);
+            lexical.nextToken();
         }
         return astList;
     }
@@ -210,7 +212,6 @@ public class DefaultParser implements Parser {
                 && token.type != TokenType.IDENTIFIER) {
             throw SyntaxException.withSyntax("不支持的单目运算符", token);
         }
-
         Token nextToken = lexical.nextToken();
 
         switch (nextToken.type) {
@@ -224,6 +225,9 @@ public class DefaultParser implements Parser {
                 }
                 return parseAssign(token);
             default:
+                if (isStatement) {
+                    throw SyntaxException.withSyntax("不是一个语句", token);
+                }
                 return new NameAST(token, token.type == TokenType.OUT_IDENTIFIER);
         }
     }
@@ -322,7 +326,7 @@ public class DefaultParser implements Parser {
         }
         lexical.nextToken();
 
-        return new BoolAST(token);
+        return new BoolAST(Boolean.parseBoolean(token.name));
     }
 
 }

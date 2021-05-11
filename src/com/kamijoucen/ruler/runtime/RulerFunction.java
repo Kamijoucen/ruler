@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.runtime;
 
 public interface RulerFunction {
 
-    Object call(String... param);
+    String getName();
 
+    Object call(Object... param);
 }
