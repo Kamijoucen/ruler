@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.ast.statement.AssignAST;
 import com.kamijoucen.ruler.ast.statement.BlockAST;
 import com.kamijoucen.ruler.ast.statement.IfStatementAST;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.common.BinaryDefine;
+import com.kamijoucen.ruler.runtime.BinaryDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
@@ -86,7 +86,7 @@ public class DefaultParser implements Parser {
 
             Token op = lexical.getToken();
 
-            int curPrecedence = BinaryDefine.lookUp(op.type);
+            int curPrecedence = BinaryDefine.findPrecedence(op.type);
             if (curPrecedence == -1) {
                 throw SyntaxException.withSyntax("不支持的的二元操作符: " + op.type);
             }
@@ -96,7 +96,7 @@ public class DefaultParser implements Parser {
 
             if (opStack.size() != 0) {
                 TokenType peek = opStack.peek();
-                int peekPrecedence = BinaryDefine.lookUp(peek);
+                int peekPrecedence = BinaryDefine.findPrecedence(peek);
                 if (peekPrecedence == -1) {
                     throw SyntaxException.withSyntax("不支持的的二元操作符:" + peek);
                 }

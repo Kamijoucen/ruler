@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.VisitorRepository;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class DoubleAST implements BaseAST {
@@ -13,7 +14,7 @@ public class DoubleAST implements BaseAST {
 
     @Override
     public BaseValue eval(Scope scope) {
-        return null;
+        return VisitorRepository.getExpressionVisitor().eval(this, scope);
     }
 
     public double getValue() {

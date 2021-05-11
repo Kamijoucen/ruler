@@ -13,6 +13,11 @@ public class DoubleValue implements BaseValue {
         return ValueType.DOUBLE;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
     public double getValue() {
         return value;
     }

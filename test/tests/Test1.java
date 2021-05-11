@@ -1,12 +1,14 @@
 package tests;
 
 import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -81,7 +83,7 @@ public class Test1 {
     @Test
     public void test5() {
 
-        String str = "a -- a --(-a-+b+-c)";
+        String str = "1.158 - 3.559";
 
         Lexical lexical = new DefaultLexical(str);
 
@@ -89,6 +91,10 @@ public class Test1 {
 
         List<BaseAST> parse = parser.parse();
 
+        for (BaseAST baseAST : parse) {
+            BaseValue eval = baseAST.eval(new Scope(null));
+            System.out.println(eval.toString());
+        }
 
     }
 

@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.eval;
 
+import com.kamijoucen.ruler.ast.BinaryOperationAST;
 import com.kamijoucen.ruler.ast.DoubleAST;
 import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.ast.IntegerAST;
@@ -13,5 +14,7 @@ public interface ExpressionVisitor {
     BaseValue eval(IntegerAST ast, Scope scope);
 
     BaseValue eval(DoubleAST ast, Scope scope);
+
+    BaseValue eval(BinaryOperationAST ast, Scope scope);
 
 }

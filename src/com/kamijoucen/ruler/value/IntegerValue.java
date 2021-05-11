@@ -13,6 +13,11 @@ public class IntegerValue implements BaseValue {
         return ValueType.INTEGER;
     }
 
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
+
     public int getValue() {
         return value;
     }
