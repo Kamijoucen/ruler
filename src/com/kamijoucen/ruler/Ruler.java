@@ -13,6 +13,12 @@ public class Ruler {
 
     private static final GlobalScope globalScope = new GlobalScope();
 
+    static {
+
+
+
+    }
+
     public static RuleScript compile(String text) {
 
         Lexical lexical = new DefaultLexical(text);

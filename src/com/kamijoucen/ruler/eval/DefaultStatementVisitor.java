@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.ast.statement.AssignAST;
 import com.kamijoucen.ruler.ast.statement.BlockAST;
 import com.kamijoucen.ruler.ast.statement.IfStatementAST;
+import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -19,7 +20,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(BlockAST ast, Scope scope) {
 
-        Scope blockScope = new Scope(scope);
+        DefaultScope blockScope = new DefaultScope(scope);
 
         List<BaseAST> blocks = ast.getBlocks();
 

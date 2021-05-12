@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.ast.statement;
 
 import com.kamijoucen.ruler.ast.BaseAST;
-import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;

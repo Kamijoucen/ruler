@@ -1,63 +1,25 @@
 package com.kamijoucen.ruler.env;
 
 import com.kamijoucen.ruler.ast.NameAST;
+import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class Scope {
+public interface Scope {
 
-    private Scope parent;
+    BaseValue find(NameAST name);
 
-    private Map<String, BaseValue> returnSpace;
+    void put(NameAST name, BaseValue baseValue);
 
-    private final Map<String, BaseValue> space = new HashMap<String, BaseValue>();
+    Map<String, BaseValue> getReturnSpace();
 
-    public Scope(Scope parent) {
-        this.parent = parent;
-    }
+    void setReturnSpace();
 
-    private boolean isContains(String name) {
-        if (space.containsKey(name)) {
-            return true;
-        } else if (parent != null) {
-            return parent.isContains(name);
-        }
-        return false;
-    }
+    RulerFunction findFunction(String name);
 
-    public BaseValue find(NameAST name) {
-        BaseValue baseValue = space.get(name.name.name);
-        if (baseValue == null && parent != null) {
-            return parent.find(name);
-        }
-        return baseValue;
-    }
+    void putReturnValue(String name, BaseValue value);
 
-    public void put(NameAST name, BaseValue baseValue) {
-        if (parent != null && parent.isContains(name.name.name)) {
-            parent.put(name, baseValue);
-        } else {
-            space.put(name.name.name, baseValue);
-        }
-    }
+    boolean isContains(String name);
 
-    public void putReturnValue(String name, BaseValue value) {
-        if (this.returnSpace == null) {
-            if (parent != null) {
-                parent.putReturnValue(name, value);
-            }
-        } else {
-            this.returnSpace.put(name, value);
-        }
-    }
-
-    public Map<String, BaseValue> getReturnSpace() {
-        return returnSpace;
-    }
-
-    public void setReturnSpace() {
-        this.returnSpace = new HashMap<String, BaseValue>();
-    }
 }
