@@ -103,7 +103,7 @@ public class Test1 {
     @Test
     public void test6() {
 
-        String str = "a = 0; if false { a = 1;} else if true {a=2;} else { a = 3;}";
+        String str = "a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
 
         Lexical lexical = new DefaultLexical(str);
 

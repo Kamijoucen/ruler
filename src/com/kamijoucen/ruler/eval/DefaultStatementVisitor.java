@@ -19,10 +19,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(BlockAST ast, Scope scope) {
 
+        Scope blockScope = new Scope(scope);
+
         List<BaseAST> blocks = ast.getBlocks();
 
         for (BaseAST block : blocks) {
-            block.eval(scope);
+            block.eval(blockScope);
         }
 
         return NoneValue.INSTANCE;

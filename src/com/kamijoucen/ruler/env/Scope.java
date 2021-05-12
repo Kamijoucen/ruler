@@ -16,6 +16,13 @@ public class Scope {
         this.parent = parent;
     }
 
+    private boolean isContains(String name) {
+        if (parent != null) {
+            return parent.isContains(name);
+        }
+        return space.containsKey(name);
+    }
+
     public BaseValue find(NameAST name) {
         BaseValue baseValue = space.get(name.name.name);
         if (baseValue == null && parent != null) {
@@ -25,6 +32,10 @@ public class Scope {
     }
 
     public void put(NameAST name, BaseValue baseValue) {
-        space.put(name.name.name, baseValue);
+        if (parent != null && parent.isContains(name.name.name)) {
+            parent.put(name, baseValue);
+        } else {
+            space.put(name.name.name, baseValue);
+        }
     }
 }

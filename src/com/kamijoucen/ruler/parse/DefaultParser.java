@@ -167,7 +167,7 @@ public class DefaultParser implements Parser {
         if (lexical.getToken().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock();
         } else {
-            thenBlock = parseStatement();
+            thenBlock = new BlockAST(Collections.singletonList(parseStatement()));
         }
 
         BaseAST elseBlock = null;
@@ -176,7 +176,7 @@ public class DefaultParser implements Parser {
             if (token.type == TokenType.LEFT_BRACE) {
                 elseBlock = parseBlock();
             } else {
-                elseBlock = parseStatement();
+                elseBlock = new BlockAST(Collections.singletonList(parseStatement()));
             }
         }
         return new IfStatementAST(condition, thenBlock, elseBlock);
@@ -295,6 +295,7 @@ public class DefaultParser implements Parser {
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
 
         lexical.nextToken();
+
         return ast;
     }
 
