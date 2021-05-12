@@ -10,6 +10,8 @@ public class Scope {
 
     private Scope parent;
 
+    private Map<String, BaseValue> returnSpace;
+
     private final Map<String, BaseValue> space = new HashMap<String, BaseValue>();
 
     public Scope(Scope parent) {
@@ -17,10 +19,12 @@ public class Scope {
     }
 
     private boolean isContains(String name) {
-        if (parent != null) {
+        if (space.containsKey(name)) {
+            return true;
+        } else if (parent != null) {
             return parent.isContains(name);
         }
-        return space.containsKey(name);
+        return false;
     }
 
     public BaseValue find(NameAST name) {
@@ -37,5 +41,23 @@ public class Scope {
         } else {
             space.put(name.name.name, baseValue);
         }
+    }
+
+    public void putReturnValue(String name, BaseValue value) {
+        if (this.returnSpace == null) {
+            if (parent != null) {
+                parent.putReturnValue(name, value);
+            }
+        } else {
+            this.returnSpace.put(name, value);
+        }
+    }
+
+    public Map<String, BaseValue> getReturnSpace() {
+        return returnSpace;
+    }
+
+    public void setReturnSpace() {
+        this.returnSpace = new HashMap<String, BaseValue>();
     }
 }

@@ -14,6 +14,8 @@ public interface ExpressionVisitor {
 
     BaseValue eval(BoolAST ast, Scope scope);
 
+    BaseValue eval(StringAST ast, Scope scope);
+
     BaseValue eval(BinaryOperationAST ast, Scope scope);
 
 }

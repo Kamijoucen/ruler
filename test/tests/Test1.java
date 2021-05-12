@@ -1,5 +1,7 @@
 package tests;
 
+import com.kamijoucen.ruler.RuleScript;
+import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseAST;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
@@ -120,5 +122,17 @@ public class Test1 {
         System.out.println(scope);
 
     }
+
+    @Test
+    public void test7() {
+
+        String str = "a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
+
+        RuleScript runner = Ruler.compile(str);
+
+        runner.run();
+
+    }
+
 
 }

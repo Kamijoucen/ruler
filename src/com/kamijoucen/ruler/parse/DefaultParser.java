@@ -324,7 +324,7 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new StringAST(token);
+        return new StringAST(token.name);
     }
 
     public BaseAST parseBool() {

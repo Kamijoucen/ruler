@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.runtime;
+package com.kamijoucen.ruler.common;
 
 import com.kamijoucen.ruler.eval.DefaultExpressionVisitor;
 import com.kamijoucen.ruler.eval.DefaultStatementVisitor;

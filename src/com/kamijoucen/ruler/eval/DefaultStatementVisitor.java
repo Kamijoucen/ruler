@@ -33,15 +33,15 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(IfStatementAST ast, Scope scope) {
 
-        BaseValue condition = ast.getCondition().eval(scope);
+        BaseValue conditionValue = ast.getCondition().eval(scope);
 
-        if (condition.getType() != ValueType.BOOL) {
+        if (conditionValue.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("需要一个bool类型");
         }
 
-        BoolValue conditionVal = (BoolValue) condition;
+        BoolValue boolValue = (BoolValue) conditionValue;
 
-        if (conditionVal.getValue()) {
+        if (boolValue.getValue()) {
             BaseAST thenBlock = ast.getThenBlock();
             thenBlock.eval(scope);
         } else {

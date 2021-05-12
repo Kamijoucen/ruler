@@ -7,5 +7,5 @@ $log(str);
 
 $log($name);
 
-return $name;
+return $name, str;
 
