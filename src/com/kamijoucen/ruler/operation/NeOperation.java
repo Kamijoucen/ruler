@@ -1,14 +1,9 @@
-package com.kamijoucen.ruler.basic;
+package com.kamijoucen.ruler.operation;
 
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.DoubleValue;
-import com.kamijoucen.ruler.value.IntegerValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
 
-import java.util.Arrays;
+public class NeOperation implements Operation {
 
-public class MulOperation implements Operation {
     @Override
     public BaseValue eval(BaseValue... param) {
         BaseValue tempVal1 = param[0];
@@ -19,27 +14,31 @@ public class MulOperation implements Operation {
             IntegerValue val1 = (IntegerValue) tempVal1;
             IntegerValue val2 = (IntegerValue) tempVal2;
 
-            return new IntegerValue(val1.getValue() * val2.getValue());
+            return new BoolValue(val1.getValue() != val2.getValue());
         } else if (tempVal1.getType() == ValueType.INTEGER && tempVal2.getType() == ValueType.DOUBLE) {
 
             IntegerValue val1 = (IntegerValue) tempVal1;
             DoubleValue val2 = (DoubleValue) tempVal2;
 
-            return new DoubleValue(val1.getValue() * val2.getValue());
+            return new BoolValue(val1.getValue() != val2.getValue());
         } else if (tempVal1.getType() == ValueType.DOUBLE && tempVal2.getType() == ValueType.INTEGER) {
 
             DoubleValue val1 = (DoubleValue) tempVal1;
             IntegerValue val2 = (IntegerValue) tempVal2;
 
-            return new DoubleValue(val1.getValue() * val2.getValue());
+            return new BoolValue(val1.getValue() != val2.getValue());
         } else if (tempVal1.getType() == ValueType.DOUBLE && tempVal2.getType() == ValueType.DOUBLE) {
 
             DoubleValue val1 = (DoubleValue) tempVal1;
             DoubleValue val2 = (DoubleValue) tempVal2;
 
-            return new DoubleValue(val1.getValue() * val2.getValue());
-        }
+            return new BoolValue(val1.getValue() != val2.getValue());
+        } else {
 
-        throw SyntaxException.withSyntax("该值不支持做乘法:" + Arrays.toString(param));
+            String strVal1 = tempVal1.toString();
+            String strVal2 = tempVal2.toString();
+
+            return new BoolValue(!strVal1.equals(strVal2));
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.basic;
+package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.value.BaseValue;
 

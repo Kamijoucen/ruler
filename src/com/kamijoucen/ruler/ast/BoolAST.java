@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.VisitorRepository;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -14,7 +15,7 @@ public class BoolAST implements BaseAST {
 
     @Override
     public BaseValue eval(Scope scope) {
-        return null;
+        return VisitorRepository.getExpressionVisitor().eval(this, scope);
     }
 
     public boolean getValue() {

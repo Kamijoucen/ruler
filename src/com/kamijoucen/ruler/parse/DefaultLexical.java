@@ -211,7 +211,14 @@ public class DefaultLexical implements Lexical {
         while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
             appendAndForward();
         }
-        makeToken(TokenType.IDENTIFIER);
+
+        TokenType tokenType = TokenLookUp.keyWords(buffer.toString());
+
+        if (tokenType != TokenType.UN_KNOW) {
+            makeToken(tokenType);
+        } else {
+            makeToken(TokenType.IDENTIFIER);
+        }
     }
 
     private void skipSpace() {

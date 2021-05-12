@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.runtime;
 
-import com.kamijoucen.ruler.basic.*;
+import com.kamijoucen.ruler.operation.*;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.TokenType;
 
@@ -26,12 +26,12 @@ public class BinaryDefine {
         PRECEDENCE.put(TokenType.MUL, 40);      // *
         PRECEDENCE.put(TokenType.DIV, 40);      // /
 
-//        OPERATION.put(TokenType.EQ, 10);       // ==
-//        OPERATION.put(TokenType.NE, 10);       // !=
-//        OPERATION.put(TokenType.LT, 20);       // <
-//        OPERATION.put(TokenType.GT, 20);       // >
-//        OPERATION.put(TokenType.LE, 20);       // <=
-//        OPERATION.put(TokenType.GE, 20);       // >=
+        OPERATION.put(TokenType.EQ, new EqOperation());       // ==
+        OPERATION.put(TokenType.NE, new NeOperation());       // !=
+        OPERATION.put(TokenType.LT, new LtOperation());       // <
+        OPERATION.put(TokenType.GT, new GtOperation());       // >
+        OPERATION.put(TokenType.LE, new LeOperation());       // <=
+        OPERATION.put(TokenType.GE, new GeOperation());       // >=
         OPERATION.put(TokenType.ADD, new AddOperation());      // +
         OPERATION.put(TokenType.SUB, new SubOperation());      // -
         OPERATION.put(TokenType.MUL, new MulOperation());      // *

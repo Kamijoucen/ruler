@@ -33,31 +33,29 @@ public class DefaultParser implements Parser {
 
         while (lexical.getToken().type != TokenType.EOF) {
             astList.add(parseStatement());
-            Assert.assertToken(lexical, TokenType.SEMICOLON);
-            lexical.nextToken();
         }
         return astList;
     }
 
     public BaseAST parseStatement() {
         Token token = lexical.getToken();
+
+        BaseAST statement = null;
+
+        boolean isNeedSemicolon = false;
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
-                return parseIdentifier(true);
-            case INTEGER:
-            case DOUBLE:
-            case STRING:
-            case LEFT_PAREN:
-            case ADD:
-            case SUB:
-                return parseExpression();
+                statement = parseIdentifier(true);
+                isNeedSemicolon = true;
+                break;
             case KEY_RETURN:
                 break;
             case KEY_DEF:
                 break;
             case KEY_IF:
-                return parseIfStatement();
+                statement = parseIfStatement();
+                break;
             case KEY_FOR:
                 break;
             case KEY_BREAK:
@@ -69,7 +67,14 @@ public class DefaultParser implements Parser {
             case KEY_MAP:
                 break;
         }
-        return null;
+        if (statement == null) {
+            throw SyntaxException.withSyntax("错误的语句");
+        }
+        if (isNeedSemicolon) {
+            Assert.assertToken(lexical, TokenType.SEMICOLON);
+            lexical.nextToken();
+        }
+        return statement;
     }
 
 
@@ -190,6 +195,11 @@ public class DefaultParser implements Parser {
                 && lexical.getToken().type != TokenType.RIGHT_BRACE) {
             blocks.add(parseStatement());
         }
+
+        Assert.assertToken(lexical, TokenType.RIGHT_BRACE);
+
+        lexical.nextToken();
+
         return new BlockAST(blocks);
     }
 

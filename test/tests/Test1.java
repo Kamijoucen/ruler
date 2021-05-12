@@ -93,6 +93,7 @@ public class Test1 {
 
         for (BaseAST baseAST : parse) {
             BaseValue eval = baseAST.eval(new Scope(null));
+
             System.out.println(eval.toString());
         }
 
@@ -102,7 +103,7 @@ public class Test1 {
     @Test
     public void test6() {
 
-        String str = "a = 15; b = 48; a = b-a;";
+        String str = "a = 0; if false { a = 1;} else if true {a=2;} else { a = 3;}";
 
         Lexical lexical = new DefaultLexical(str);
 
@@ -110,12 +111,13 @@ public class Test1 {
 
         List<BaseAST> parse = parser.parse();
 
-
         Scope scope = new Scope(null);
         for (BaseAST baseAST : parse) {
             BaseValue eval = baseAST.eval(scope);
             System.out.println(eval.toString());
         }
+
+        System.out.println(scope);
 
     }
 

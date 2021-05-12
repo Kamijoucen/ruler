@@ -4,8 +4,15 @@ public class IOUtil {
 
     public final static boolean[] firstIdentifierFlags = new boolean[256];
     public final static boolean[] identifierFlags = new boolean[256];
+    public final static boolean[] numberFlags = new boolean[256];
 
     static {
+
+        for (char c = 0; c < numberFlags.length; ++c) {
+            if (c >= '0' && c <= '9') {
+                numberFlags[c] = true;
+            }
+        }
 
         for (char c = 0; c < firstIdentifierFlags.length; ++c) {
             if (c >= 'A' && c <= 'Z') {

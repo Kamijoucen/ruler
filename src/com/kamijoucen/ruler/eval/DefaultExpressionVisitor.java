@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
-import com.kamijoucen.ruler.basic.Operation;
+import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.BinaryDefine;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
