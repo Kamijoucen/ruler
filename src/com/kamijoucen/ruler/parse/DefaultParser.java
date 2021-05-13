@@ -91,7 +91,8 @@ public class DefaultParser implements Parser {
         while (lexical.getToken().type != TokenType.EOF
                 && lexical.getToken().type != TokenType.SEMICOLON
                 && lexical.getToken().type != TokenType.RIGHT_PAREN
-                && lexical.getToken().type != TokenType.LEFT_BRACE) {
+                && lexical.getToken().type != TokenType.LEFT_BRACE
+                && lexical.getToken().type != TokenType.COMMA) {
 
             Token op = lexical.getToken();
 
