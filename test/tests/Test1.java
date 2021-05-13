@@ -137,7 +137,7 @@ public class Test1 {
     @Test
     public void test8() {
 
-        String str = "println(makeItPossible());";
+        String str = "str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible();} println(str);";
 
         RuleScript runner = Ruler.compile(str);
 

@@ -6,6 +6,8 @@ import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.ast.statement.AssignAST;
 import com.kamijoucen.ruler.ast.statement.BlockAST;
 import com.kamijoucen.ruler.ast.statement.IfStatementAST;
+import com.kamijoucen.ruler.ast.statement.WhileStatementAST;
+import com.kamijoucen.ruler.common.LoopBlockWrapper;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -15,7 +17,6 @@ import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultStatementVisitor implements StatementVisitor {
@@ -85,6 +86,16 @@ public class DefaultStatementVisitor implements StatementVisitor {
         }
 
         return (BaseValue) function.call(paramVal);
+    }
+
+    @Override
+    public BaseValue eval(WhileStatementAST ast, Scope scope) {
+
+        BaseAST condition = ast.getCondition();
+
+        LoopBlockWrapper blockWrapper = new LoopBlockWrapper((BlockAST) ast.getBlock());
+
+        return null;
     }
 
 

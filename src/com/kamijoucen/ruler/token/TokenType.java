@@ -31,6 +31,7 @@ public enum TokenType {
     KEY_DEF,        // def
     KEY_IF,         // if
     KEY_FOR,        // for
+    KEY_WHILE,      // while
     KEY_BREAK,      // break
     KEY_CONTINUE,   // continue
     KEY_LIST,       // list

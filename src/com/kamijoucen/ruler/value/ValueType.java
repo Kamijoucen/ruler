@@ -18,4 +18,10 @@ public enum ValueType {
 
     NULL,
 
+    BREAK,
+
+    CONTINUE,
+
+    RETURN,
+
 }

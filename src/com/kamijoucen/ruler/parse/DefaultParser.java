@@ -58,6 +58,8 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_FOR:
                 break;
+            case KEY_WHILE:
+                break;
             case KEY_BREAK:
                 break;
             case KEY_CONTINUE:
@@ -153,6 +155,11 @@ public class DefaultParser implements Parser {
                 return parseBool();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
+    }
+
+    public BaseAST parseWhileStatement() {
+
+        return null;
     }
 
     public BaseAST parseIfStatement() {

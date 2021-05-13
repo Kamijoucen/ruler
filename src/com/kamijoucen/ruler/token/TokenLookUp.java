@@ -35,6 +35,7 @@ public class TokenLookUp {
         KEY_WORDS.put("def", TokenType.KEY_DEF);
         KEY_WORDS.put("if", TokenType.KEY_IF);
         KEY_WORDS.put("for", TokenType.KEY_FOR);
+        KEY_WORDS.put("while", TokenType.KEY_WHILE);
         KEY_WORDS.put("break", TokenType.KEY_BREAK);
         KEY_WORDS.put("continue", TokenType.KEY_CONTINUE);
         KEY_WORDS.put("list", TokenType.KEY_LIST);
