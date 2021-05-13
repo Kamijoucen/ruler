@@ -21,6 +21,6 @@ public class PrintFunction implements RulerFunction {
         } else {
             System.out.println(Arrays.toString(param));
         }
-        return VoidValue.INSTANCE;
+        return null;
     }
 }

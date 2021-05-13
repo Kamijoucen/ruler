@@ -1,16 +1,16 @@
 package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.StringValue;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
-public class StringConvert implements ValueConvert {
+public class NullConvert implements ValueConvert {
     @Override
     public BaseValue realToBase(Object value) {
-        return new StringValue((String) value);
+        return NullValue.INSTANCE;
     }
 
     @Override
     public Object baseToReal(BaseValue value) {
-        return value.toString();
+        return null;
     }
 }

@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.runtime.RulerFunctionProxy;
+import com.kamijoucen.ruler.runtime.function.MakeItPossibleFunction;
 import com.kamijoucen.ruler.runtime.function.PrintFunction;
 
 import java.util.List;
@@ -38,6 +39,8 @@ public class Ruler {
 
     private static void engineInit() {
         Ruler.registerFunction(new PrintFunction());
+
+        Ruler.registerFunction(new MakeItPossibleFunction());
     }
 
 
