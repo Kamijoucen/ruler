@@ -11,7 +11,7 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
     public BaseValue eval(NameAST ast, Scope scope) {
-        BaseValue baseValue = scope.find(ast);
+        BaseValue baseValue = scope.findValue(ast);
         if (baseValue == null) {
             return NullValue.INSTANCE;
         }

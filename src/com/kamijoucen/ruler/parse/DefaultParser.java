@@ -268,6 +268,10 @@ public class DefaultParser implements Parser {
             params.add(parseExpression());
         }
 
+        Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
+
+        lexical.nextToken();
+
         return new CallAST(nameAST, params);
     }
 

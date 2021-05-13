@@ -21,13 +21,14 @@ class RulerInterpreter {
 
     public List<Object> run(Map<String, Object> param) {
 
-        scope.setReturnSpace();
+        scope.initReturnSpace();
 
         for (BaseAST ast : asts) {
             ast.eval(scope);
         }
 
         Map<String, BaseValue> returnValue = scope.getReturnSpace();
+
         return null;
     }
 

@@ -8,18 +8,23 @@ import java.util.Map;
 
 public interface Scope {
 
-    BaseValue find(NameAST name);
+    //------------------------------------------------------
+    boolean isContains(NameAST name);
 
-    void put(NameAST name, BaseValue baseValue);
+    BaseValue findValue(NameAST name);
 
-    Map<String, BaseValue> getReturnSpace();
+    void putValue(NameAST name, BaseValue baseValue);
 
-    void setReturnSpace();
-
-    RulerFunction findFunction(String name);
+    //------------------------------------------------------
+    void initReturnSpace();
 
     void putReturnValue(String name, BaseValue value);
 
-    boolean isContains(String name);
+    Map<String, BaseValue> getReturnSpace();
+
+    //------------------------------------------------------
+    RulerFunction findFunction(NameAST name);
+
+    void putFunction(RulerFunction function);
 
 }

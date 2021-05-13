@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.eval;
 
+import com.kamijoucen.ruler.ast.CallAST;
 import com.kamijoucen.ruler.ast.statement.AssignAST;
 import com.kamijoucen.ruler.ast.statement.BlockAST;
 import com.kamijoucen.ruler.ast.statement.IfStatementAST;
@@ -13,5 +14,7 @@ public interface StatementVisitor {
     BaseValue eval(IfStatementAST ast, Scope scope);
 
     BaseValue eval(AssignAST ast, Scope scope);
+
+    BaseValue eval(CallAST ast, Scope scope);
 
 }

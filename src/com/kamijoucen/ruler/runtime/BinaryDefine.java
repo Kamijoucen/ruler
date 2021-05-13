@@ -26,16 +26,16 @@ public class BinaryDefine {
         PRECEDENCE.put(TokenType.MUL, 40);      // *
         PRECEDENCE.put(TokenType.DIV, 40);      // /
 
-        OPERATION.put(TokenType.EQ, new EqOperation());       // ==
-        OPERATION.put(TokenType.NE, new NeOperation());       // !=
-        OPERATION.put(TokenType.LT, new LtOperation());       // <
-        OPERATION.put(TokenType.GT, new GtOperation());       // >
-        OPERATION.put(TokenType.LE, new LeOperation());       // <=
-        OPERATION.put(TokenType.GE, new GeOperation());       // >=
-        OPERATION.put(TokenType.ADD, new AddOperation());      // +
-        OPERATION.put(TokenType.SUB, new SubOperation());      // -
-        OPERATION.put(TokenType.MUL, new MulOperation());      // *
-        OPERATION.put(TokenType.DIV, new DivOperation());      // /
+        OPERATION.put(TokenType.EQ, new EqOperation());     // ==
+        OPERATION.put(TokenType.NE, new NeOperation());     // !=
+        OPERATION.put(TokenType.LT, new LtOperation());     // <
+        OPERATION.put(TokenType.GT, new GtOperation());     // >
+        OPERATION.put(TokenType.LE, new LeOperation());     // <=
+        OPERATION.put(TokenType.GE, new GeOperation());     // >=
+        OPERATION.put(TokenType.ADD, new AddOperation());   // +
+        OPERATION.put(TokenType.SUB, new SubOperation());   // -
+        OPERATION.put(TokenType.MUL, new MulOperation());   // *
+        OPERATION.put(TokenType.DIV, new DivOperation());   // /
 
     }
 

@@ -6,31 +6,36 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DefaultScope implements Scope {
 
-    private Scope parent;
+    private final Scope parent;
 
     private Map<String, BaseValue> returnSpace;
 
-    private Map<String, BaseValue> space;
+    private final Map<String, BaseValue> valueSpace;
 
-    private Map<String, RulerFunction> functionSpace;
+    private final Map<String, BaseValue> outValueSpace;
+
+    private final Map<String, RulerFunction> functionSpace;
+
+    private final Map<String, RulerFunction> outFunctionSpace;
 
     public DefaultScope(Scope parent) {
-        this.parent = parent;
-        this.space = new HashMap<String, BaseValue>();
-        this.functionSpace = new HashMap<String, RulerFunction>();
+        this(parent, false, false);
     }
 
-    public DefaultScope(Scope parent, Map<String, BaseValue> space, Map<String, RulerFunction> functionMap) {
+    public DefaultScope(Scope parent, boolean isValueShared, boolean isFunctionShared) {
         this.parent = parent;
-        this.space = space;
-        this.functionSpace = functionMap;
+        this.valueSpace = isValueShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
+        this.outValueSpace = isValueShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
+        this.functionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
+        this.outFunctionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
     }
 
-    public boolean isContains(String name) {
-        if (space.containsKey(name)) {
+    public boolean isContains(NameAST name) {
+        if (getValueSpace(name.isOut).containsKey(name.name.name)) {
             return true;
         } else if (parent != null) {
             return parent.isContains(name);
@@ -39,20 +44,20 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public BaseValue find(NameAST name) {
-        BaseValue baseValue = space.get(name.name.name);
+    public BaseValue findValue(NameAST name) {
+        BaseValue baseValue = getValueSpace(name.isOut).get(name.name.name);
         if (baseValue == null && parent != null) {
-            return parent.find(name);
+            return parent.findValue(name);
         }
         return baseValue;
     }
 
     @Override
-    public void put(NameAST name, BaseValue baseValue) {
-        if (parent != null && parent.isContains(name.name.name)) {
-            parent.put(name, baseValue);
+    public void putValue(NameAST name, BaseValue baseValue) {
+        if (parent != null && parent.isContains(name)) {
+            parent.putValue(name, baseValue);
         } else {
-            space.put(name.name.name, baseValue);
+            getValueSpace(name.isOut).put(name.name.name, baseValue);
         }
     }
 
@@ -73,16 +78,30 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public void setReturnSpace() {
+    public void initReturnSpace() {
         this.returnSpace = new HashMap<String, BaseValue>();
     }
 
     @Override
-    public RulerFunction findFunction(String name) {
-        RulerFunction function = functionSpace.get(name);
+    public RulerFunction findFunction(NameAST name) {
+        RulerFunction function = getFunctionSpace(name.isOut).get(name.name.name);
         if (function == null && parent != null) {
             return parent.findFunction(name);
         }
         return function;
     }
+
+    @Override
+    public void putFunction(RulerFunction function) {
+        this.functionSpace.put(function.getName(), function);
+    }
+
+    private Map<String, BaseValue> getValueSpace(boolean isOut) {
+        return isOut ? outValueSpace : valueSpace;
+    }
+
+    private Map<String, RulerFunction> getFunctionSpace(boolean isOut) {
+        return isOut ? outFunctionSpace : functionSpace;
+    }
+
 }

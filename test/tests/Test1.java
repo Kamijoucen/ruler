@@ -134,4 +134,15 @@ public class Test1 {
     }
 
 
+    @Test
+    public void test8() {
+
+        String str = "$println(1556);";
+
+        RuleScript runner = Ruler.compile(str);
+
+        runner.run();
+
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.ast;
 
+import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -7,9 +8,9 @@ import java.util.List;
 
 public class CallAST implements BaseAST {
 
-    public final NameAST name;
+    private NameAST name;
 
-    public final List<BaseAST> param;
+    private List<BaseAST> param;
 
     public CallAST(NameAST name, List<BaseAST> param) {
         this.name = name;
@@ -18,6 +19,22 @@ public class CallAST implements BaseAST {
 
     @Override
     public BaseValue eval(Scope scope) {
-        return null;
+        return VisitorRepository.getStatementVisitor().eval(this, scope);
+    }
+
+    public NameAST getName() {
+        return name;
+    }
+
+    public void setName(NameAST name) {
+        this.name = name;
+    }
+
+    public List<BaseAST> getParam() {
+        return param;
+    }
+
+    public void setParam(List<BaseAST> param) {
+        this.param = param;
     }
 }
