@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.ast.statement.AssignAST;
 import com.kamijoucen.ruler.ast.statement.BlockAST;
 import com.kamijoucen.ruler.ast.statement.IfStatementAST;
 import com.kamijoucen.ruler.ast.statement.WhileStatementAST;
-import com.kamijoucen.ruler.common.LoopBlockWrapper;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -29,7 +28,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
         List<BaseAST> blocks = ast.getBlocks();
 
         for (BaseAST block : blocks) {
-            block.eval(blockScope);
+            BaseValue val = block.eval(blockScope);
+            if (val.getType() == ValueType.CONTINUE) {
+                break;
+            } else if (val.getType() == ValueType.BREAK) {
+                return val;
+            }
         }
 
         return NoneValue.INSTANCE;
@@ -51,7 +55,9 @@ public class DefaultStatementVisitor implements StatementVisitor {
             thenBlock.eval(scope);
         } else {
             BaseAST elseBlock = ast.getElseBlock();
-            elseBlock.eval(scope);
+            if (elseBlock != null) {
+                elseBlock.eval(scope);
+            }
         }
         return NoneValue.INSTANCE;
     }
@@ -91,11 +97,21 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(WhileStatementAST ast, Scope scope) {
 
-        BaseAST condition = ast.getCondition();
+        BaseValue conditionValue = ast.getCondition().eval(scope);
 
-        LoopBlockWrapper blockWrapper = new LoopBlockWrapper((BlockAST) ast.getBlock());
+        if (conditionValue.getType() != ValueType.BOOL) {
+            throw SyntaxException.withSyntax("需要一个bool类型");
+        }
 
-        return null;
+        BaseAST block = ast.getBlock();
+
+        while (((BoolValue) ast.getCondition().eval(scope)).getValue()) {
+            BaseValue blockValue = block.eval(scope);
+            if (blockValue.getType() == ValueType.BREAK) {
+                break;
+            }
+        }
+        return NoneValue.INSTANCE;
     }
 
 

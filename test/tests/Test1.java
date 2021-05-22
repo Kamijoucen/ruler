@@ -139,7 +139,21 @@ public class Test1 {
 
         String str = "str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible();} println(str, 1, 2, 3, '李思岑');";
 
-        RuleScript runner = Ruler.compile(str);
+        String str2 = "text = \"hello world!\"; println(text);";
+
+        RuleScript runner = Ruler.compile(str2);
+
+        runner.run();
+
+    }
+
+    @Test
+    public void test9() {
+
+
+        String str2 = "i = 0; while i <= 5 { println(i); if i == 3 { println('33333333333333333333333'); } i = i + 1;  }";
+
+        RuleScript runner = Ruler.compile(str2);
 
         runner.run();
 
