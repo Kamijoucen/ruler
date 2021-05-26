@@ -21,4 +21,6 @@ public interface StatementVisitor {
 
     BaseValue eval(ContinueAST ast, Scope scope);
 
+    BaseValue eval(CallLinkedAST ast, Scope scope);
+
 }

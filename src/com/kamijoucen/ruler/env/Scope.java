@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.env;
 import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.Map;
 
@@ -23,8 +24,8 @@ public interface Scope {
     Map<String, BaseValue> getReturnSpace();
 
     //------------------------------------------------------
-    RulerFunction findFunction(NameAST name);
+    FunctionValue findFunction(NameAST name);
 
-    void putFunction(RulerFunction function, boolean isOut);
+    void putFunction(FunctionValue function, boolean isOut);
 
 }

@@ -2,8 +2,8 @@ package com.kamijoucen.ruler.env;
 
 import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.runtime.RulerFunction;
-import com.kamijoucen.ruler.runtime.RulerFunctionProxy;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,9 +19,9 @@ public class DefaultScope implements Scope {
 
     private final Map<String, BaseValue> outValueSpace;
 
-    private final Map<String, RulerFunction> functionSpace;
+    private final Map<String, BaseValue> functionSpace;
 
-    private final Map<String, RulerFunction> outFunctionSpace;
+    private final Map<String, BaseValue> outFunctionSpace;
 
     public DefaultScope(Scope parent) {
         this(parent, false, false);
@@ -31,8 +31,8 @@ public class DefaultScope implements Scope {
         this.parent = parent;
         this.valueSpace = isValueShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
         this.outValueSpace = isValueShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
-        this.functionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
-        this.outFunctionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
+        this.functionSpace = isFunctionShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
+        this.outFunctionSpace = isFunctionShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
     }
 
     public boolean isContains(NameAST name) {
@@ -84,24 +84,24 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public RulerFunction findFunction(NameAST name) {
-        RulerFunction function = getFunctionSpace(name.isOut).get(name.name.name);
+    public FunctionValue findFunction(NameAST name) {
+        BaseValue function = getFunctionSpace(name.isOut).get(name.name.name);
         if (function == null && parent != null) {
             return parent.findFunction(name);
         }
-        return function;
+        return (FunctionValue) function;
     }
 
     @Override
-    public void putFunction(RulerFunction function, boolean isOut) {
-        this.getFunctionSpace(isOut).put(function.getName(), new RulerFunctionProxy(function));
+    public void putFunction(FunctionValue function, boolean isOut) {
+        this.functionSpace.put(function.getValue().getName(), function);
     }
 
     private Map<String, BaseValue> getValueSpace(boolean isOut) {
         return isOut ? outValueSpace : valueSpace;
     }
 
-    private Map<String, RulerFunction> getFunctionSpace(boolean isOut) {
+    private Map<String, BaseValue> getFunctionSpace(boolean isOut) {
         return isOut ? outFunctionSpace : functionSpace;
     }
 

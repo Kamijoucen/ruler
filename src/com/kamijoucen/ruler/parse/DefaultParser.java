@@ -267,6 +267,22 @@ public class DefaultParser implements Parser {
         }
     }
 
+    public BaseAST parseIndex() {
+
+        Assert.assertToken(lexical, TokenType.LEFT_SQUARE);
+
+        lexical.nextToken();
+
+        BaseAST name = parsePrimaryExpression();
+
+        Assert.assertToken(lexical, TokenType.RIGHT_SQUARE);
+
+        lexical.nextToken();
+
+        return null;
+    }
+
+
     public BaseAST parseCall(Token identifier) {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);

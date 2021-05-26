@@ -10,6 +10,7 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
+import com.kamijoucen.ruler.value.FunctionValue;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
@@ -76,7 +77,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(CallAST ast, Scope scope) {
 
-        RulerFunction function = scope.findFunction(ast.getName());
+        FunctionValue function = scope.findFunction(ast.getName());
 
         if (function == null) {
             throw SyntaxException.withSyntax("函数未定义: " + ast.getName().name);
@@ -90,7 +91,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
             paramVal[i] = param.get(i).eval(scope);
         }
 
-        return (BaseValue) function.call(paramVal);
+        return (BaseValue) function.getValue().call(paramVal);
     }
 
     @Override
@@ -121,6 +122,28 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(ContinueAST ast, Scope scope) {
         return ContinueValue.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(CallLinkedAST ast, Scope scope) {
+        // a[]()[]
+        // a, [], (), []
+
+        // name = a[].name.str()[5]
+        // name, =, a, [], .str, ()
+
+        BaseValue statementValue = ast.getFirst().eval(scope);
+
+        List<BaseAST> calls = ast.getCalls();
+
+        DefaultScope callScope = new DefaultScope(scope);
+//        callScope.putFunction();
+
+        for (BaseAST call : calls) {
+//            call.eval();
+        }
+
+        return null;
     }
 
 
