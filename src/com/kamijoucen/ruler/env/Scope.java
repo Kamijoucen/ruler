@@ -25,6 +25,6 @@ public interface Scope {
     //------------------------------------------------------
     RulerFunction findFunction(NameAST name);
 
-    void putFunction(RulerFunction function);
+    void putFunction(RulerFunction function, boolean isOut);
 
 }

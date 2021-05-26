@@ -27,6 +27,8 @@ public enum TokenType {
     SUB,            // -
     MUL,            // *
     DIV,            // /
+    CALL,           // ()
+    INDEX,          // []
     KEY_RETURN,     // return
     KEY_DEF,        // def
     KEY_IF,         // if

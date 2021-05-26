@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Test1 {
@@ -156,6 +157,18 @@ public class Test1 {
         RuleScript runner = Ruler.compile(str2);
 
         runner.run();
+
+    }
+
+    @Test
+    public void test10() {
+
+        Integer[] param = new Integer[] {1};
+
+        Integer[] funcParam = Arrays.copyOfRange(param, 1, param.length);
+
+        System.out.println(Arrays.toString(funcParam));
+
 
     }
 

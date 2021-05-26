@@ -4,6 +4,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public interface Operation {
 
-    BaseValue eval(BaseValue... param);
+    BaseValue compute(BaseValue... param);
 
 }

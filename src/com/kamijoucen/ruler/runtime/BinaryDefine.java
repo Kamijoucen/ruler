@@ -37,6 +37,8 @@ public class BinaryDefine {
         OPERATION.put(TokenType.MUL, new MulOperation());   // *
         OPERATION.put(TokenType.DIV, new DivOperation());   // /
 
+        OPERATION.put(TokenType.CALL, new CallOperation());
+
     }
 
     public static Operation findOperation(TokenType type) {

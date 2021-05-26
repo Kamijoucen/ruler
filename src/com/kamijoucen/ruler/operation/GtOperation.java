@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class GtOperation implements Operation {
 
     @Override
-    public BaseValue eval(BaseValue... param) {
+    public BaseValue compute(BaseValue... param) {
         BaseValue tempVal1 = param[0];
         BaseValue tempVal2 = param[1];
 

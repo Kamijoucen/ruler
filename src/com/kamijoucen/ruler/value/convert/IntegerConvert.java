@@ -1,11 +1,12 @@
 package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.IntegerValue;
 
 public class IntegerConvert implements ValueConvert {
     @Override
     public BaseValue realToBase(Object value) {
-        return null;
+        return new IntegerValue(Integer.parseInt(value.toString()));
     }
 
     @Override

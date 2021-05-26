@@ -4,6 +4,8 @@ public enum ValueType {
 
     FUNCTION,
 
+    CLOSURE,
+
     INTEGER,
 
     DOUBLE,

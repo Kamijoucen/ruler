@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.env;
 
 import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.runtime.RulerFunction;
+import com.kamijoucen.ruler.runtime.RulerFunctionProxy;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.HashMap;
@@ -92,8 +93,8 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public void putFunction(RulerFunction function) {
-        this.functionSpace.put(function.getName(), function);
+    public void putFunction(RulerFunction function, boolean isOut) {
+        this.getFunctionSpace(isOut).put(function.getName(), new RulerFunctionProxy(function));
     }
 
     private Map<String, BaseValue> getValueSpace(boolean isOut) {

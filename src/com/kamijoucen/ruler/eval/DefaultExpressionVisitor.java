@@ -46,6 +46,6 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
 
         Operation operation = BinaryDefine.findOperation(ast.getOp());
 
-        return operation.eval(val1, val2);
+        return operation.compute(val1, val2);
     }
 }

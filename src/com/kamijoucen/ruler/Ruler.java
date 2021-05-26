@@ -1,28 +1,22 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseAST;
-import com.kamijoucen.ruler.env.GlobalScope;
+import com.kamijoucen.ruler.env.DefaultScope;
+import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.runtime.RulerFunction;
-import com.kamijoucen.ruler.runtime.RulerFunctionProxy;
-import com.kamijoucen.ruler.runtime.function.MakeItPossibleFunction;
-import com.kamijoucen.ruler.runtime.function.PrintFunction;
 
 import java.util.List;
 
 public class Ruler {
 
-    private static final GlobalScope globalScope = new GlobalScope();
+    private static final Scope globalScope = new DefaultScope(null, true, true);
 
     static {
-        engineInit();
-    }
-
-    public static void registerFunction(RulerFunction function) {
-        Ruler.globalScope.putFunction(new RulerFunctionProxy(function));
+        Init.engineInit();
     }
 
     public static RuleScript compile(String text) {
@@ -37,11 +31,11 @@ public class Ruler {
     }
 
 
-    private static void engineInit() {
-        Ruler.registerFunction(new PrintFunction());
-
-        Ruler.registerFunction(new MakeItPossibleFunction());
+    public static void registerFunction(RulerFunction function) {
+        Ruler.globalScope.putFunction(function, true);
     }
 
-
+    static void registerInnerFunction(RulerFunction function) {
+        Ruler.globalScope.putFunction(function, false);
+    }
 }
