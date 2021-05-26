@@ -1,10 +1,7 @@
 package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.ast.*;
-import com.kamijoucen.ruler.ast.statement.AssignAST;
-import com.kamijoucen.ruler.ast.statement.BlockAST;
-import com.kamijoucen.ruler.ast.statement.IfStatementAST;
-import com.kamijoucen.ruler.ast.statement.WhileStatementAST;
+import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.BinaryDefine;
 import com.kamijoucen.ruler.token.Token;
@@ -63,8 +60,12 @@ public class DefaultParser implements Parser {
                 statement = parseWhileStatement();
                 break;
             case KEY_BREAK:
+                statement = parseBreak();
+                isNeedSemicolon = true;
                 break;
             case KEY_CONTINUE:
+                statement = parseContinueAST();
+                isNeedSemicolon = true;
                 break;
             case KEY_LIST:
                 break;
@@ -368,13 +369,22 @@ public class DefaultParser implements Parser {
         return new BoolAST(Boolean.parseBoolean(token.name));
     }
 
+    public BaseAST parseContinueAST() {
+
+        Assert.assertToken(lexical, TokenType.KEY_CONTINUE);
+
+        lexical.nextToken();
+
+        return new ContinueAST();
+    }
+
     public BaseAST parseBreak() {
 
         Assert.assertToken(lexical, TokenType.KEY_BREAK);
 
         lexical.nextToken();
 
-        return null;
+        return new BreakAST();
 
     }
 

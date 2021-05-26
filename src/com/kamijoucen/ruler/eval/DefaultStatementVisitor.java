@@ -3,10 +3,7 @@ package com.kamijoucen.ruler.eval;
 import com.kamijoucen.ruler.ast.BaseAST;
 import com.kamijoucen.ruler.ast.CallAST;
 import com.kamijoucen.ruler.ast.NameAST;
-import com.kamijoucen.ruler.ast.statement.AssignAST;
-import com.kamijoucen.ruler.ast.statement.BlockAST;
-import com.kamijoucen.ruler.ast.statement.IfStatementAST;
-import com.kamijoucen.ruler.ast.statement.WhileStatementAST;
+import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -14,6 +11,8 @@ import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.constant.BreakValue;
+import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 
 import java.util.List;
@@ -52,11 +51,11 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         if (boolValue.getValue()) {
             BaseAST thenBlock = ast.getThenBlock();
-            thenBlock.eval(scope);
+            return thenBlock.eval(scope);
         } else {
             BaseAST elseBlock = ast.getElseBlock();
             if (elseBlock != null) {
-                elseBlock.eval(scope);
+                return elseBlock.eval(scope);
             }
         }
         return NoneValue.INSTANCE;
@@ -112,6 +111,16 @@ public class DefaultStatementVisitor implements StatementVisitor {
             }
         }
         return NoneValue.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(BreakAST ast, Scope scope) {
+        return BreakValue.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(ContinueAST ast, Scope scope) {
+        return ContinueValue.INSTANCE;
     }
 
 

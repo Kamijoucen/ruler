@@ -151,7 +151,7 @@ public class Test1 {
     public void test9() {
 
 
-        String str2 = "i = 0; while i <= 5 { println(i); if i == 3 { println('33333333333333333333333'); } i = i + 1;  }";
+        String str2 = "i = 0; while i <= 5 { println(i); if i == 3 { break; } i = i + 1;  }";
 
         RuleScript runner = Ruler.compile(str2);
 
