@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.runtime.RulerFunction;
+import com.kamijoucen.ruler.runtime.RulerFunctionProxy;
 
 import java.util.List;
 
@@ -32,10 +33,10 @@ public class Ruler {
 
 
     public static void registerFunction(RulerFunction function) {
-//        Ruler.globalScope.putFunction(function, true);
+        Ruler.globalScope.putFunction(new RulerFunctionProxy(function), true);
     }
 
     static void registerInnerFunction(RulerFunction function) {
-//        Ruler.globalScope.putFunction(function, false);
+        Ruler.globalScope.putFunction(new RulerFunctionProxy(function), false);
     }
 }

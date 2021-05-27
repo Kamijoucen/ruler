@@ -24,8 +24,8 @@ public interface Scope {
     Map<String, BaseValue> getReturnSpace();
 
     //------------------------------------------------------
-    FunctionValue findFunction(NameAST name);
+    RulerFunction findFunction(NameAST name);
 
-    void putFunction(FunctionValue function, boolean isOut);
+    void putFunction(RulerFunction function, boolean isOut);
 
 }

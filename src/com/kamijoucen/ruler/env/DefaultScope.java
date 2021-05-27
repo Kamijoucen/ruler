@@ -19,9 +19,9 @@ public class DefaultScope implements Scope {
 
     private final Map<String, BaseValue> outValueSpace;
 
-    private final Map<String, BaseValue> functionSpace;
+    private final Map<String, RulerFunction> functionSpace;
 
-    private final Map<String, BaseValue> outFunctionSpace;
+    private final Map<String, RulerFunction> outFunctionSpace;
 
     public DefaultScope(Scope parent) {
         this(parent, false, false);
@@ -31,8 +31,8 @@ public class DefaultScope implements Scope {
         this.parent = parent;
         this.valueSpace = isValueShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
         this.outValueSpace = isValueShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
-        this.functionSpace = isFunctionShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
-        this.outFunctionSpace = isFunctionShared ? new ConcurrentHashMap<String, BaseValue>() : new HashMap<String, BaseValue>();
+        this.functionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
+        this.outFunctionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
     }
 
     public boolean isContains(NameAST name) {
@@ -84,24 +84,24 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public FunctionValue findFunction(NameAST name) {
-        BaseValue function = getFunctionSpace(name.isOut).get(name.name.name);
+    public RulerFunction findFunction(NameAST name) {
+        RulerFunction function = getFunctionSpace(name.isOut).get(name.name.name);
         if (function == null && parent != null) {
             return parent.findFunction(name);
         }
-        return (FunctionValue) function;
+        return function;
     }
 
     @Override
-    public void putFunction(FunctionValue function, boolean isOut) {
-        this.functionSpace.put(function.getValue().getName(), function);
+    public void putFunction(RulerFunction function, boolean isOut) {
+        this.functionSpace.put(function.getName(), function);
     }
 
     private Map<String, BaseValue> getValueSpace(boolean isOut) {
         return isOut ? outValueSpace : valueSpace;
     }
 
-    private Map<String, BaseValue> getFunctionSpace(boolean isOut) {
+    private Map<String, RulerFunction> getFunctionSpace(boolean isOut) {
         return isOut ? outFunctionSpace : functionSpace;
     }
 

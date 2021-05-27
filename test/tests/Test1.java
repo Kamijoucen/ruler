@@ -142,7 +142,7 @@ public class Test1 {
 
         String str2 = "text = \"hello world!\"; println(text);";
 
-        RuleScript runner = Ruler.compile(str2);
+        RuleScript runner = Ruler.compile(str);
 
         runner.run();
 
@@ -150,7 +150,6 @@ public class Test1 {
 
     @Test
     public void test9() {
-
 
         String str2 = "i = 0; while i <= 5 { println(i); if i == 3 { break; } i = i + 1;  }";
 

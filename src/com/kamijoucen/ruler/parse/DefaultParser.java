@@ -251,9 +251,9 @@ public class DefaultParser implements Parser {
 
         switch (nextToken.type) {
             case DOT:
-                throw Assert.todo("调用尚未实现");
             case LEFT_PAREN:
-                return parseCall(token);
+            case LEFT_SQUARE:
+                return parseCallLink(token);
             case ASSIGN:
                 if (!isStatement) {
                     throw SyntaxException.withSyntax("赋值语句不能出现在表达式内");
@@ -265,6 +265,30 @@ public class DefaultParser implements Parser {
                 }
                 return new NameAST(token, token.type == TokenType.OUT_IDENTIFIER);
         }
+    }
+
+    public BaseAST parseCallLink(Token identifier) {
+
+        List<BaseAST> calls = new ArrayList<BaseAST>();
+
+        while (lexical.getToken().type != TokenType.SEMICOLON) {
+
+            switch (lexical.getToken().type) {
+                case LEFT_PAREN:
+                    calls.add(parseCall());
+                    break;
+                case LEFT_SQUARE:
+                    calls.add(parseIndex());
+                    break;
+                case DOT:
+                    break;
+                default:
+                    throw SyntaxException.withSyntax("不支持的调用", lexical.getToken());
+            }
+        }
+
+
+        return null;
     }
 
     public BaseAST parseIndex() {
@@ -283,18 +307,15 @@ public class DefaultParser implements Parser {
     }
 
 
-    public BaseAST parseCall(Token identifier) {
+    public BaseAST parseCall() {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
-
-        NameAST nameAST = new NameAST(identifier,
-                identifier.type == TokenType.OUT_IDENTIFIER);
 
         lexical.nextToken();
 
         if (lexical.getToken().type == TokenType.RIGHT_PAREN) {
             lexical.nextToken();
-            return new CallAST(nameAST, Collections.<BaseAST>emptyList());
+            return new CallAST(Collections.<BaseAST>emptyList());
         }
 
         BaseAST param1 = parseExpression();
@@ -313,7 +334,7 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new CallAST(nameAST, params);
+        return new CallAST(params);
     }
 
     public BaseAST parseAssign(Token identifier) {

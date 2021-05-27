@@ -77,21 +77,23 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(CallAST ast, Scope scope) {
 
-        FunctionValue function = scope.findFunction(ast.getName());
+        RulerFunction function = scope.findFunction(ast.getName());
 
-        if (function == null) {
-            throw SyntaxException.withSyntax("函数未定义: " + ast.getName().name);
+        if (function != null) {
+
+            List<BaseAST> param = ast.getParam();
+
+            Object[] paramVal = new BaseValue[param.size()];
+
+            for (int i = 0; i < param.size(); i++) {
+                paramVal[i] = param.get(i).eval(scope);
+            }
+
+            return (BaseValue) function.call(paramVal);
+
         }
 
-        List<BaseAST> param = ast.getParam();
-
-        Object[] paramVal = new BaseValue[param.size()];
-
-        for (int i = 0; i < param.size(); i++) {
-            paramVal[i] = param.get(i).eval(scope);
-        }
-
-        return (BaseValue) function.getValue().call(paramVal);
+        throw SyntaxException.withSyntax("函数未定义: " + ast.getName().name);
     }
 
     @Override

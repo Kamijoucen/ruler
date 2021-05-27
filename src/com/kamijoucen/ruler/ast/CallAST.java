@@ -8,26 +8,15 @@ import java.util.List;
 
 public class CallAST implements BaseAST {
 
-    private NameAST name;
-
     private List<BaseAST> param;
 
-    public CallAST(NameAST name, List<BaseAST> param) {
-        this.name = name;
+    public CallAST(List<BaseAST> param) {
         this.param = param;
     }
 
     @Override
     public BaseValue eval(Scope scope) {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
-    }
-
-    public NameAST getName() {
-        return name;
-    }
-
-    public void setName(NameAST name) {
-        this.name = name;
     }
 
     public List<BaseAST> getParam() {
