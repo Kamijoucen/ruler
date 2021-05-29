@@ -1,0 +1,11 @@
+
+test1 = fun(a, b) {
+    return println(a, b);
+}
+
+fun test() {
+    return test1;
+}
+
+test()(1 ,2);
+

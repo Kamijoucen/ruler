@@ -43,6 +43,7 @@ public class TokenLookUp {
         KEY_WORDS.put("false", TokenType.KEY_FALSE);
         KEY_WORDS.put("true", TokenType.KEY_TRUE);
         KEY_WORDS.put("else", TokenType.KEY_ELSE);
+        KEY_WORDS.put("fun", TokenType.KEY_FUN);
     }
 
     public static TokenType symbol(String str) {

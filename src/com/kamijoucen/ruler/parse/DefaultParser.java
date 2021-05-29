@@ -69,6 +69,9 @@ public class DefaultParser implements Parser {
                 statement = parseContinueAST();
                 isNeedSemicolon = true;
                 break;
+            case KEY_FUN:
+                statement = parseFunDefine();
+                break;
             case KEY_LIST:
                 break;
             case KEY_MAP:
@@ -207,6 +210,35 @@ public class DefaultParser implements Parser {
             }
         }
         return new IfStatementNode(condition, thenBlock, elseBlock);
+    }
+
+    public BaseNode parseFunDefine() {
+
+        Assert.assertToken(lexical, TokenType.KEY_FUN);
+        lexical.nextToken();
+
+        Token name = lexical.nextToken();
+
+        Assert.assertToken(lexical, TokenType.IDENTIFIER);
+        lexical.nextToken();
+
+        Assert.assertToken(lexical, TokenType.LEFT_PAREN);
+        lexical.nextToken();
+
+
+        List<String> param = new ArrayList<String>();
+
+        if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
+            Assert.assertToken(lexical, TokenType.IDENTIFIER);
+            Token token = lexical.getToken();
+            Assert.assertToken(lexical, TokenType.IDENTIFIER);
+        }
+
+        while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
+
+        }
+
+        return null;
     }
 
 

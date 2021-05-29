@@ -138,7 +138,7 @@ public class Test1 {
     @Test
     public void test8() {
 
-        String str = "str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible();} println(str, 1, 2, 3, '李思岑');";
+        String str = "str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible()('1');} println(str, 1, 2, 3, '李思岑');";
 
         String str2 = "text = \"hello world!\"; println(text);";
 
@@ -151,7 +151,7 @@ public class Test1 {
     @Test
     public void test9() {
 
-        String str2 = "println('李思岑');";
+        String str2 = "println = '123'; println(55);";
 
         RuleScript runner = Ruler.compile(str2);
 
