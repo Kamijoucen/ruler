@@ -2,7 +2,7 @@ package tests;
 
 import com.kamijoucen.ruler.RuleScript;
 import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
@@ -42,9 +42,9 @@ public class Test1 {
 
         DefaultParser parser = new DefaultParser(lexical);
 
-        BaseAST baseAST = parser.parseExpression();
+        BaseNode baseNode = parser.parseExpression();
 
-        System.out.println(baseAST);
+        System.out.println(baseNode);
 
     }
 
@@ -58,9 +58,9 @@ public class Test1 {
 
         DefaultParser parser = new DefaultParser(lexical);
 
-        BaseAST baseAST = parser.parseExpression();
+        BaseNode baseNode = parser.parseExpression();
 
-        System.out.println(baseAST);
+        System.out.println(baseNode);
 
     }
 
@@ -75,9 +75,9 @@ public class Test1 {
 
         DefaultParser parser = new DefaultParser(lexical);
 
-        BaseAST baseAST = parser.parseExpression();
+        BaseNode baseNode = parser.parseExpression();
 
-        System.out.println(baseAST);
+        System.out.println(baseNode);
 
     }
 
@@ -91,10 +91,10 @@ public class Test1 {
 
         DefaultParser parser = new DefaultParser(lexical);
 
-        List<BaseAST> parse = parser.parse();
+        List<BaseNode> parse = parser.parse();
 
-        for (BaseAST baseAST : parse) {
-            BaseValue eval = baseAST.eval(new DefaultScope(null));
+        for (BaseNode baseNode : parse) {
+            BaseValue eval = baseNode.eval(new DefaultScope(null));
 
             System.out.println(eval.toString());
         }
@@ -111,11 +111,11 @@ public class Test1 {
 
         DefaultParser parser = new DefaultParser(lexical);
 
-        List<BaseAST> parse = parser.parse();
+        List<BaseNode> parse = parser.parse();
 
         DefaultScope scope = new DefaultScope(null);
-        for (BaseAST baseAST : parse) {
-            BaseValue eval = baseAST.eval(scope);
+        for (BaseNode baseNode : parse) {
+            BaseValue eval = baseNode.eval(scope);
             System.out.println(eval.toString());
         }
 
@@ -151,7 +151,7 @@ public class Test1 {
     @Test
     public void test9() {
 
-        String str2 = "i = 0; while i <= 5 { println(i); if i == 3 { break; } i = i + 1;  }";
+        String str2 = "println('李思岑');";
 
         RuleScript runner = Ruler.compile(str2);
 

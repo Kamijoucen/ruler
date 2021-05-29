@@ -4,13 +4,13 @@ import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class UnaryOperationAST implements BaseAST {
+public class UnaryOperationNode implements BaseNode {
 
     public final TokenType op;
 
-    public final BaseAST exp;
+    public final BaseNode exp;
 
-    public UnaryOperationAST(TokenType op, BaseAST exp) {
+    public UnaryOperationNode(TokenType op, BaseNode exp) {
         this.op = op;
         this.exp = exp;
     }

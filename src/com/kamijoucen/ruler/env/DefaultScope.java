@@ -1,9 +1,7 @@
 package com.kamijoucen.ruler.env;
 
-import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,30 +33,30 @@ public class DefaultScope implements Scope {
         this.outFunctionSpace = isFunctionShared ? new ConcurrentHashMap<String, RulerFunction>() : new HashMap<String, RulerFunction>();
     }
 
-    public boolean isContains(NameAST name) {
-        if (getValueSpace(name.isOut).containsKey(name.name.name)) {
+    public boolean isContains(String name, boolean isOut) {
+        if (getValueSpace(isOut).containsKey(name)) {
             return true;
         } else if (parent != null) {
-            return parent.isContains(name);
+            return parent.isContains(name, isOut);
         }
         return false;
     }
 
     @Override
-    public BaseValue findValue(NameAST name) {
-        BaseValue baseValue = getValueSpace(name.isOut).get(name.name.name);
+    public BaseValue findValue(String name, boolean isOut) {
+        BaseValue baseValue = getValueSpace(isOut).get(name);
         if (baseValue == null && parent != null) {
-            return parent.findValue(name);
+            return parent.findValue(name, isOut);
         }
         return baseValue;
     }
 
     @Override
-    public void putValue(NameAST name, BaseValue baseValue) {
-        if (parent != null && parent.isContains(name)) {
-            parent.putValue(name, baseValue);
+    public void putValue(String name, boolean isOut, BaseValue baseValue) {
+        if (parent != null && parent.isContains(name, isOut)) {
+            parent.putValue(name, isOut, baseValue);
         } else {
-            getValueSpace(name.isOut).put(name.name.name, baseValue);
+            getValueSpace(isOut).put(name, baseValue);
         }
     }
 
@@ -84,10 +82,10 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public RulerFunction findFunction(NameAST name) {
-        RulerFunction function = getFunctionSpace(name.isOut).get(name.name.name);
+    public RulerFunction findFunction(String name, boolean isOut) {
+        RulerFunction function = getFunctionSpace(isOut).get(name);
         if (function == null && parent != null) {
-            return parent.findFunction(name);
+            return parent.findFunction(name, isOut);
         }
         return function;
     }

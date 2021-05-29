@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler;
 
-import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 
@@ -12,9 +12,9 @@ public class RuleScript {
 
     private Scope scope;
 
-    private List<BaseAST> asts;
+    private List<BaseNode> asts;
 
-    public RuleScript(Scope globalScope, List<BaseAST> asts) {
+    public RuleScript(Scope globalScope, List<BaseNode> asts) {
         this.asts = asts;
         this.scope = new DefaultScope(globalScope, true, true);
     }

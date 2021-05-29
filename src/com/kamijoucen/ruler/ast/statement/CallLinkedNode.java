@@ -1,20 +1,21 @@
 package com.kamijoucen.ruler.ast.statement;
 
-import com.kamijoucen.ruler.ast.BaseAST;
-import com.kamijoucen.ruler.ast.NameAST;
+import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.NameNode;
+import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 
-public class CallLinkedAST implements BaseAST {
+public class CallLinkedNode implements BaseNode {
 
-    private NameAST first;
+    private NameNode first;
 
-    private List<BaseAST> calls;
+    private List<OperationNode> calls;
 
-    public CallLinkedAST(NameAST first, List<BaseAST> calls) {
+    public CallLinkedNode(NameNode first, List<OperationNode> calls) {
         this.first = first;
         this.calls = calls;
     }
@@ -24,19 +25,19 @@ public class CallLinkedAST implements BaseAST {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
-    public NameAST getFirst() {
+    public NameNode getFirst() {
         return first;
     }
 
-    public void setFirst(NameAST first) {
+    public void setFirst(NameNode first) {
         this.first = first;
     }
 
-    public List<BaseAST> getCalls() {
+    public List<OperationNode> getCalls() {
         return calls;
     }
 
-    public void setCalls(List<BaseAST> calls) {
+    public void setCalls(List<OperationNode> calls) {
         this.calls = calls;
     }
 }

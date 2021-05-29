@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler;
 
-import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
@@ -26,7 +26,7 @@ public class Ruler {
 
         Parser parser = new DefaultParser(lexical);
 
-        List<BaseAST> asts = parser.parse();
+        List<BaseNode> asts = parser.parse();
 
         return new RuleScript(globalScope, asts);
     }

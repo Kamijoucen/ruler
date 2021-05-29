@@ -1,20 +1,18 @@
 package com.kamijoucen.ruler.env;
 
-import com.kamijoucen.ruler.ast.NameAST;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.Map;
 
 public interface Scope {
 
     //------------------------------------------------------
-    boolean isContains(NameAST name);
+    boolean isContains(String name, boolean isOut);
 
-    BaseValue findValue(NameAST name);
+    BaseValue findValue(String name, boolean isOut);
 
-    void putValue(NameAST name, BaseValue baseValue);
+    void putValue(String name, boolean isOut, BaseValue baseValue);
 
     //------------------------------------------------------
     void initReturnSpace();
@@ -24,7 +22,7 @@ public interface Scope {
     Map<String, BaseValue> getReturnSpace();
 
     //------------------------------------------------------
-    RulerFunction findFunction(NameAST name);
+    RulerFunction findFunction(String name, boolean isOut);
 
     void putFunction(RulerFunction function, boolean isOut);
 

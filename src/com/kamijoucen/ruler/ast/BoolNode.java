@@ -2,18 +2,14 @@ package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
-import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class NameAST implements BaseAST {
+public class BoolNode implements BaseNode {
 
-    public final Token name;
+    private boolean value;
 
-    public final boolean isOut;
-
-    public NameAST(Token name, boolean isOut) {
-        this.name = name;
-        this.isOut = isOut;
+    public BoolNode(boolean value) {
+        this.value = value;
     }
 
     @Override
@@ -21,4 +17,11 @@ public class NameAST implements BaseAST {
         return VisitorRepository.getExpressionVisitor().eval(this, scope);
     }
 
+    public boolean getValue() {
+        return value;
+    }
+
+    public void setValue(boolean value) {
+        this.value = value;
+    }
 }

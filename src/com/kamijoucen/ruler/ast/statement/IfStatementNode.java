@@ -1,19 +1,19 @@
 package com.kamijoucen.ruler.ast.statement;
 
-import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class IfStatementAST implements BaseAST {
+public class IfStatementNode implements BaseNode {
 
-    private BaseAST condition;
+    private BaseNode condition;
 
-    private BaseAST thenBlock;
+    private BaseNode thenBlock;
 
-    private BaseAST elseBlock;
+    private BaseNode elseBlock;
 
-    public IfStatementAST(BaseAST condition, BaseAST thenBlock, BaseAST elseBlock) {
+    public IfStatementNode(BaseNode condition, BaseNode thenBlock, BaseNode elseBlock) {
         this.condition = condition;
         this.thenBlock = thenBlock;
         this.elseBlock = elseBlock;
@@ -24,27 +24,27 @@ public class IfStatementAST implements BaseAST {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
-    public BaseAST getCondition() {
+    public BaseNode getCondition() {
         return condition;
     }
 
-    public void setCondition(BaseAST condition) {
+    public void setCondition(BaseNode condition) {
         this.condition = condition;
     }
 
-    public BaseAST getThenBlock() {
+    public BaseNode getThenBlock() {
         return thenBlock;
     }
 
-    public void setThenBlock(BaseAST thenBlock) {
+    public void setThenBlock(BaseNode thenBlock) {
         this.thenBlock = thenBlock;
     }
 
-    public BaseAST getElseBlock() {
+    public BaseNode getElseBlock() {
         return elseBlock;
     }
 
-    public void setElseBlock(BaseAST elseBlock) {
+    public void setElseBlock(BaseNode elseBlock) {
         this.elseBlock = elseBlock;
     }
 }

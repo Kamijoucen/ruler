@@ -1,18 +1,18 @@
 package com.kamijoucen.ruler.ast.statement;
 
-import com.kamijoucen.ruler.ast.BaseAST;
-import com.kamijoucen.ruler.ast.NameAST;
+import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class AssignAST implements BaseAST {
+public class AssignNode implements BaseNode {
 
-    private NameAST name;
+    private NameNode name;
 
-    private BaseAST expression;
+    private BaseNode expression;
 
-    public AssignAST(NameAST name, BaseAST expression) {
+    public AssignNode(NameNode name, BaseNode expression) {
         this.name = name;
         this.expression = expression;
     }
@@ -22,19 +22,19 @@ public class AssignAST implements BaseAST {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
-    public NameAST getName() {
+    public NameNode getName() {
         return name;
     }
 
-    public void setName(NameAST name) {
+    public void setName(NameNode name) {
         this.name = name;
     }
 
-    public BaseAST getExpression() {
+    public BaseNode getExpression() {
         return expression;
     }
 
-    public void setExpression(BaseAST expression) {
+    public void setExpression(BaseNode expression) {
         this.expression = expression;
     }
 }

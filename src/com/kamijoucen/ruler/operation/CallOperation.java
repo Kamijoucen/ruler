@@ -14,7 +14,7 @@ public class CallOperation implements Operation {
     @Override
     public BaseValue compute(BaseValue... param) {
 
-        BaseValue name = param[1];
+        BaseValue name = param[0];
 
         Object[] funcParam = Arrays.copyOfRange(param, 1, param.length);
 

@@ -1,17 +1,19 @@
 package com.kamijoucen.ruler.eval;
 
-import com.kamijoucen.ruler.ast.BaseAST;
-import com.kamijoucen.ruler.ast.CallAST;
-import com.kamijoucen.ruler.ast.NameAST;
+import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.op.CallNode;
+import com.kamijoucen.ruler.ast.NameNode;
+import com.kamijoucen.ruler.ast.op.IndexNode;
+import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
+import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.runtime.RulerFunction;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.BoolValue;
-import com.kamijoucen.ruler.value.FunctionValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
@@ -21,13 +23,13 @@ import java.util.List;
 public class DefaultStatementVisitor implements StatementVisitor {
 
     @Override
-    public BaseValue eval(BlockAST ast, Scope scope) {
+    public BaseValue eval(BlockNode ast, Scope scope) {
 
         Scope blockScope = new DefaultScope(scope);
 
-        List<BaseAST> blocks = ast.getBlocks();
+        List<BaseNode> blocks = ast.getBlocks();
 
-        for (BaseAST block : blocks) {
+        for (BaseNode block : blocks) {
             BaseValue val = block.eval(blockScope);
             if (val.getType() == ValueType.CONTINUE) {
                 break;
@@ -40,7 +42,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(IfStatementAST ast, Scope scope) {
+    public BaseValue eval(IfStatementNode ast, Scope scope) {
 
         BaseValue conditionValue = ast.getCondition().eval(scope);
 
@@ -51,10 +53,10 @@ public class DefaultStatementVisitor implements StatementVisitor {
         BoolValue boolValue = (BoolValue) conditionValue;
 
         if (boolValue.getValue()) {
-            BaseAST thenBlock = ast.getThenBlock();
+            BaseNode thenBlock = ast.getThenBlock();
             return thenBlock.eval(scope);
         } else {
-            BaseAST elseBlock = ast.getElseBlock();
+            BaseNode elseBlock = ast.getElseBlock();
             if (elseBlock != null) {
                 return elseBlock.eval(scope);
             }
@@ -63,41 +65,36 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(AssignAST ast, Scope scope) {
+    public BaseValue eval(AssignNode ast, Scope scope) {
 
-        NameAST name = ast.getName();
+        NameNode name = ast.getName();
 
         BaseValue expBaseValue = ast.getExpression().eval(scope);
 
-        scope.putValue(name, expBaseValue);
+        scope.putValue(name.name.name, name.isOut, expBaseValue);
 
         return NoneValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(CallAST ast, Scope scope) {
+    public BaseValue eval(CallNode node, Scope scope) {
 
-        RulerFunction function = scope.findFunction(ast.getName());
+        List<BaseNode> param = node.getParam();
 
-        if (function != null) {
+        BaseValue[] paramVal = new BaseValue[param.size() + 1];
 
-            List<BaseAST> param = ast.getParam();
+        paramVal[0] = node.getOperationValue();
 
-            Object[] paramVal = new BaseValue[param.size()];
-
-            for (int i = 0; i < param.size(); i++) {
-                paramVal[i] = param.get(i).eval(scope);
-            }
-
-            return (BaseValue) function.call(paramVal);
-
+        for (int i = 0; i < param.size(); i++) {
+            paramVal[i + 1] = param.get(i).eval(scope);
         }
 
-        throw SyntaxException.withSyntax("函数未定义: " + ast.getName().name);
+        return node.getOperation().compute(paramVal);
+
     }
 
     @Override
-    public BaseValue eval(WhileStatementAST ast, Scope scope) {
+    public BaseValue eval(WhileStatementNode ast, Scope scope) {
 
         BaseValue conditionValue = ast.getCondition().eval(scope);
 
@@ -105,7 +102,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
             throw SyntaxException.withSyntax("需要一个bool类型");
         }
 
-        BaseAST block = ast.getBlock();
+        BaseNode block = ast.getBlock();
 
         while (((BoolValue) ast.getCondition().eval(scope)).getValue()) {
             BaseValue blockValue = block.eval(scope);
@@ -117,33 +114,32 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(BreakAST ast, Scope scope) {
+    public BaseValue eval(BreakNode ast, Scope scope) {
         return BreakValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(ContinueAST ast, Scope scope) {
+    public BaseValue eval(ContinueNode ast, Scope scope) {
         return ContinueValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(CallLinkedAST ast, Scope scope) {
-        // a[]()[]
-        // a, [], (), []
-
-        // name = a[].name.str()[5]
-        // name, =, a, [], .str, ()
-
+    public BaseValue eval(CallLinkedNode ast, Scope scope) {
         BaseValue statementValue = ast.getFirst().eval(scope);
 
-        List<BaseAST> calls = ast.getCalls();
+        List<OperationNode> calls = ast.getCalls();
 
-        DefaultScope callScope = new DefaultScope(scope);
-//        callScope.putFunction();
+        for (OperationNode call : calls) {
+            call.putOperationValue(statementValue);
+            call.putOperation(OperationDefine.findOperation(call.getOperationType()));
 
-        for (BaseAST call : calls) {
-//            call.eval();
+            statementValue = call.eval(scope);
         }
+        return statementValue;
+    }
+
+    @Override
+    public BaseValue eval(IndexNode node, Scope scope) {
 
         return null;
     }

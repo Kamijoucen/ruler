@@ -4,11 +4,11 @@ import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class StringAST implements BaseAST {
+public class IntegerNode implements BaseNode {
 
-    private String value;
+    public int value;
 
-    public StringAST(String value) {
+    public IntegerNode(int value) {
         this.value = value;
     }
 
@@ -17,11 +17,11 @@ public class StringAST implements BaseAST {
         return VisitorRepository.getExpressionVisitor().eval(this, scope);
     }
 
-    public String getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(int value) {
         this.value = value;
     }
 }

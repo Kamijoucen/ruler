@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.token.TokenType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BinaryDefine {
+public class OperationDefine {
 
     private static final Map<TokenType, Integer> PRECEDENCE = new HashMap<TokenType, Integer>();
 
@@ -38,7 +38,6 @@ public class BinaryDefine {
         OPERATION.put(TokenType.DIV, new DivOperation());   // /
 
         OPERATION.put(TokenType.CALL, new CallOperation());
-
     }
 
     public static Operation findOperation(TokenType type) {

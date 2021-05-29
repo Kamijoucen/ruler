@@ -1,9 +1,11 @@
 package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.ast.*;
+import com.kamijoucen.ruler.ast.op.CallNode;
+import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.runtime.BinaryDefine;
+import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
@@ -17,15 +19,15 @@ public class DefaultParser implements Parser {
 
     private Lexical lexical;
 
-    private List<BaseAST> astList;
+    private List<BaseNode> astList;
 
     public DefaultParser(Lexical lexical) {
         this.lexical = lexical;
-        this.astList = new ArrayList<BaseAST>();
+        this.astList = new ArrayList<BaseNode>();
     }
 
     @Override
-    public List<BaseAST> parse() {
+    public List<BaseNode> parse() {
 
         lexical.nextToken();
 
@@ -35,10 +37,10 @@ public class DefaultParser implements Parser {
         return astList;
     }
 
-    public BaseAST parseStatement() {
+    public BaseNode parseStatement() {
         Token token = lexical.getToken();
 
-        BaseAST statement = null;
+        BaseNode statement = null;
 
         boolean isNeedSemicolon = false;
         switch (token.type) {
@@ -83,9 +85,9 @@ public class DefaultParser implements Parser {
     }
 
 
-    public BaseAST parseExpression() {
+    public BaseNode parseExpression() {
 
-        Stack<BaseAST> valStack = new Stack<BaseAST>();
+        Stack<BaseNode> valStack = new Stack<BaseNode>();
 
         Stack<TokenType> opStack = new Stack<TokenType>();
 
@@ -99,44 +101,44 @@ public class DefaultParser implements Parser {
 
             Token op = lexical.getToken();
 
-            int curPrecedence = BinaryDefine.findPrecedence(op.type);
+            int curPrecedence = OperationDefine.findPrecedence(op.type);
             if (curPrecedence == -1) {
                 throw SyntaxException.withSyntax("不支持的的二元操作符: " + op.type);
             }
             lexical.nextToken();
 
-            BaseAST rls = parsePrimaryExpression();
+            BaseNode rls = parsePrimaryExpression();
 
             if (opStack.size() != 0) {
                 TokenType peek = opStack.peek();
-                int peekPrecedence = BinaryDefine.findPrecedence(peek);
+                int peekPrecedence = OperationDefine.findPrecedence(peek);
                 if (peekPrecedence == -1) {
                     throw SyntaxException.withSyntax("不支持的的二元操作符:" + peek);
                 }
                 if (curPrecedence <= peekPrecedence) {
-                    BaseAST exp1 = valStack.pop();
-                    BaseAST exp2 = valStack.pop();
+                    BaseNode exp1 = valStack.pop();
+                    BaseNode exp2 = valStack.pop();
 
                     TokenType binOp = opStack.pop();
 
-                    valStack.push(new BinaryOperationAST(binOp, exp2, exp1));
+                    valStack.push(new BinaryOperationNode(binOp, exp2, exp1));
                 }
             }
             opStack.push(op.type);
             valStack.push(rls);
         }
         while (opStack.size() != 0) {
-            BaseAST exp1 = valStack.pop();
-            BaseAST exp2 = valStack.pop();
+            BaseNode exp1 = valStack.pop();
+            BaseNode exp2 = valStack.pop();
 
             TokenType binOp = opStack.pop();
 
-            valStack.push(new BinaryOperationAST(binOp, exp2, exp1));
+            valStack.push(new BinaryOperationNode(binOp, exp2, exp1));
         }
         return valStack.pop();
     }
 
-    public BaseAST parsePrimaryExpression() {
+    public BaseNode parsePrimaryExpression() {
 
         Token token = lexical.getToken();
 
@@ -161,60 +163,60 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
 
-    public BaseAST parseWhileStatement() {
+    public BaseNode parseWhileStatement() {
 
         Assert.assertToken(lexical, TokenType.KEY_WHILE);
 
         lexical.nextToken();
 
-        BaseAST condition = parseExpression();
+        BaseNode condition = parseExpression();
 
-        BaseAST blockAST = null;
+        BaseNode blockAST = null;
 
         if (lexical.getToken().type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock();
         } else {
-            blockAST = new BlockAST(Collections.singletonList(parseStatement()));
+            blockAST = new BlockNode(Collections.singletonList(parseStatement()));
         }
 
-        return new WhileStatementAST(condition, blockAST);
+        return new WhileStatementNode(condition, blockAST);
     }
 
-    public BaseAST parseIfStatement() {
+    public BaseNode parseIfStatement() {
 
         Assert.assertToken(lexical, TokenType.KEY_IF);
 
         lexical.nextToken();
 
-        BaseAST condition = parseExpression();
+        BaseNode condition = parseExpression();
 
-        BaseAST thenBlock = null;
+        BaseNode thenBlock = null;
         if (lexical.getToken().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock();
         } else {
-            thenBlock = new BlockAST(Collections.singletonList(parseStatement()));
+            thenBlock = new BlockNode(Collections.singletonList(parseStatement()));
         }
 
-        BaseAST elseBlock = null;
+        BaseNode elseBlock = null;
         if (lexical.getToken().type == TokenType.KEY_ELSE) {
             Token token = lexical.nextToken();
             if (token.type == TokenType.LEFT_BRACE) {
                 elseBlock = parseBlock();
             } else {
-                elseBlock = new BlockAST(Collections.singletonList(parseStatement()));
+                elseBlock = new BlockNode(Collections.singletonList(parseStatement()));
             }
         }
-        return new IfStatementAST(condition, thenBlock, elseBlock);
+        return new IfStatementNode(condition, thenBlock, elseBlock);
     }
 
 
-    public BaseAST parseBlock() {
+    public BaseNode parseBlock() {
 
         Assert.assertToken(lexical, TokenType.LEFT_BRACE);
 
         lexical.nextToken();
 
-        List<BaseAST> blocks = new ArrayList<BaseAST>();
+        List<BaseNode> blocks = new ArrayList<BaseNode>();
 
         while (lexical.getToken().type != TokenType.EOF
                 && lexical.getToken().type != TokenType.RIGHT_BRACE) {
@@ -225,10 +227,10 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new BlockAST(blocks);
+        return new BlockNode(blocks);
     }
 
-    public BaseAST parseUnaryExpression() {
+    public BaseNode parseUnaryExpression() {
         Token token = lexical.getToken();
         if (token.type != TokenType.ADD
                 && token.type != TokenType.SUB) {
@@ -236,10 +238,10 @@ public class DefaultParser implements Parser {
         }
 
         lexical.nextToken();
-        return new UnaryOperationAST(token.type, parsePrimaryExpression());
+        return new UnaryOperationNode(token.type, parsePrimaryExpression());
     }
 
-    public BaseAST parseIdentifier(boolean isStatement) {
+    public BaseNode parseIdentifier(boolean isStatement) {
 
         Token token = lexical.getToken();
 
@@ -263,22 +265,22 @@ public class DefaultParser implements Parser {
                 if (isStatement) {
                     throw SyntaxException.withSyntax("不是一个语句", token);
                 }
-                return new NameAST(token, token.type == TokenType.OUT_IDENTIFIER);
+                return new NameNode(token, token.type == TokenType.OUT_IDENTIFIER);
         }
     }
 
-    public BaseAST parseCallLink(Token identifier) {
+    public BaseNode parseCallLink(Token identifier) {
 
-        List<BaseAST> calls = new ArrayList<BaseAST>();
+        List<OperationNode> calls = new ArrayList<OperationNode>();
 
         while (lexical.getToken().type != TokenType.SEMICOLON) {
 
             switch (lexical.getToken().type) {
                 case LEFT_PAREN:
-                    calls.add(parseCall());
+                    calls.add((OperationNode) parseCall());
                     break;
                 case LEFT_SQUARE:
-                    calls.add(parseIndex());
+                    calls.add((OperationNode) parseIndex());
                     break;
                 case DOT:
                     break;
@@ -286,18 +288,16 @@ public class DefaultParser implements Parser {
                     throw SyntaxException.withSyntax("不支持的调用", lexical.getToken());
             }
         }
-
-
-        return null;
+        return new CallLinkedNode(new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), calls);
     }
 
-    public BaseAST parseIndex() {
+    public BaseNode parseIndex() {
 
         Assert.assertToken(lexical, TokenType.LEFT_SQUARE);
 
         lexical.nextToken();
 
-        BaseAST name = parsePrimaryExpression();
+        BaseNode name = parsePrimaryExpression();
 
         Assert.assertToken(lexical, TokenType.RIGHT_SQUARE);
 
@@ -307,7 +307,7 @@ public class DefaultParser implements Parser {
     }
 
 
-    public BaseAST parseCall() {
+    public BaseNode parseCall() {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
 
@@ -315,12 +315,12 @@ public class DefaultParser implements Parser {
 
         if (lexical.getToken().type == TokenType.RIGHT_PAREN) {
             lexical.nextToken();
-            return new CallAST(Collections.<BaseAST>emptyList());
+            return new CallNode(Collections.<BaseNode>emptyList());
         }
 
-        BaseAST param1 = parseExpression();
+        BaseNode param1 = parseExpression();
 
-        List<BaseAST> params = new ArrayList<BaseAST>();
+        List<BaseNode> params = new ArrayList<BaseNode>();
         params.add(param1);
 
         while (lexical.getToken().type != TokenType.EOF
@@ -334,29 +334,29 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new CallAST(params);
+        return new CallNode(params);
     }
 
-    public BaseAST parseAssign(Token identifier) {
+    public BaseNode parseAssign(Token identifier) {
 
         Assert.assertToken(lexical, TokenType.ASSIGN);
 
         lexical.nextToken();
 
-        NameAST nameAST = new NameAST(identifier, identifier.type == TokenType.OUT_IDENTIFIER);
+        NameNode nameAST = new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER);
 
-        BaseAST expression = parseExpression();
+        BaseNode expression = parseExpression();
 
-        return new AssignAST(nameAST, expression);
+        return new AssignNode(nameAST, expression);
     }
 
-    public BaseAST parseParen() {
+    public BaseNode parseParen() {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
 
         lexical.nextToken();
 
-        BaseAST ast = parseExpression();
+        BaseNode ast = parseExpression();
 
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
 
@@ -365,24 +365,24 @@ public class DefaultParser implements Parser {
         return ast;
     }
 
-    public BaseAST parseNumber() {
+    public BaseNode parseNumber() {
 
         Token token = lexical.getToken();
 
         lexical.nextToken();
 
         if (token.type == TokenType.INTEGER) {
-            return new IntegerAST(Integer.parseInt(token.name));
+            return new IntegerNode(Integer.parseInt(token.name));
         }
 
         if (token.type == TokenType.DOUBLE) {
-            return new DoubleAST(Double.parseDouble(token.name));
+            return new DoubleNode(Double.parseDouble(token.name));
         }
 
         throw SyntaxException.withSyntax("需要一个数字", token);
     }
 
-    public BaseAST parseString() {
+    public BaseNode parseString() {
 
         Assert.assertToken(lexical, TokenType.STRING);
 
@@ -390,10 +390,10 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new StringAST(token.name);
+        return new StringNode(token.name);
     }
 
-    public BaseAST parseBool() {
+    public BaseNode parseBool() {
 
         Token token = lexical.getToken();
 
@@ -403,25 +403,25 @@ public class DefaultParser implements Parser {
         }
         lexical.nextToken();
 
-        return new BoolAST(Boolean.parseBoolean(token.name));
+        return new BoolNode(Boolean.parseBoolean(token.name));
     }
 
-    public BaseAST parseContinueAST() {
+    public BaseNode parseContinueAST() {
 
         Assert.assertToken(lexical, TokenType.KEY_CONTINUE);
 
         lexical.nextToken();
 
-        return new ContinueAST();
+        return new ContinueNode();
     }
 
-    public BaseAST parseBreak() {
+    public BaseNode parseBreak() {
 
         Assert.assertToken(lexical, TokenType.KEY_BREAK);
 
         lexical.nextToken();
 
-        return new BreakAST();
+        return new BreakNode();
 
     }
 

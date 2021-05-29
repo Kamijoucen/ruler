@@ -1,17 +1,17 @@
 package com.kamijoucen.ruler.ast.statement;
 
-import com.kamijoucen.ruler.ast.BaseAST;
+import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class WhileStatementAST implements BaseAST {
+public class WhileStatementNode implements BaseNode {
 
-    private BaseAST condition;
+    private BaseNode condition;
 
-    private BaseAST block;
+    private BaseNode block;
 
-    public WhileStatementAST(BaseAST condition, BaseAST block) {
+    public WhileStatementNode(BaseNode condition, BaseNode block) {
         this.condition = condition;
         this.block = block;
     }
@@ -21,19 +21,19 @@ public class WhileStatementAST implements BaseAST {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
-    public BaseAST getCondition() {
+    public BaseNode getCondition() {
         return condition;
     }
 
-    public void setCondition(BaseAST condition) {
+    public void setCondition(BaseNode condition) {
         this.condition = condition;
     }
 
-    public BaseAST getBlock() {
+    public BaseNode getBlock() {
         return block;
     }
 
-    public void setBlock(BaseAST block) {
+    public void setBlock(BaseNode block) {
         this.block = block;
     }
 }

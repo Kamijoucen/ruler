@@ -3,48 +3,53 @@ package com.kamijoucen.ruler.eval;
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.operation.Operation;
-import com.kamijoucen.ruler.runtime.BinaryDefine;
+import com.kamijoucen.ruler.runtime.OperationDefine;
+import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
-    public BaseValue eval(NameAST ast, Scope scope) {
-        BaseValue baseValue = scope.findValue(ast);
+    public BaseValue eval(NameNode node, Scope scope) {
+        BaseValue baseValue = scope.findValue(node.name.name, node.isOut);
         if (baseValue == null) {
+            RulerFunction function = scope.findFunction(node.name.name, node.isOut);
+            if (function != null) {
+                return new FunctionValue(function);
+            }
             return NullValue.INSTANCE;
         }
         return baseValue;
     }
 
     @Override
-    public BaseValue eval(IntegerAST ast, Scope scope) {
+    public BaseValue eval(IntegerNode ast, Scope scope) {
         return new IntegerValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(DoubleAST ast, Scope scope) {
+    public BaseValue eval(DoubleNode ast, Scope scope) {
         return new DoubleValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(BoolAST ast, Scope scope) {
+    public BaseValue eval(BoolNode ast, Scope scope) {
         return new BoolValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(StringAST ast, Scope scope) {
+    public BaseValue eval(StringNode ast, Scope scope) {
         return new StringValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(BinaryOperationAST ast, Scope scope) {
+    public BaseValue eval(BinaryOperationNode ast, Scope scope) {
 
         BaseValue val1 = ast.getExp1().eval(scope);
         BaseValue val2 = ast.getExp2().eval(scope);
 
-        Operation operation = BinaryDefine.findOperation(ast.getOp());
+        Operation operation = OperationDefine.findOperation(ast.getOp());
 
         return operation.compute(val1, val2);
     }
