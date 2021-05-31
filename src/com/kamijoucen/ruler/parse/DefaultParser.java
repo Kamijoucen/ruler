@@ -70,7 +70,7 @@ public class DefaultParser implements Parser {
                 isNeedSemicolon = true;
                 break;
             case KEY_FUN:
-                statement = parseFunDefine();
+//                statement = parseFunDefine();
                 break;
             case KEY_LIST:
                 break;
@@ -212,33 +212,66 @@ public class DefaultParser implements Parser {
         return new IfStatementNode(condition, thenBlock, elseBlock);
     }
 
+    public BaseNode parseFunction() {
+
+        // eat fun
+        Assert.assertToken(lexical, TokenType.KEY_FUN);
+
+        lexical.nextToken();
+
+        Token token = lexical.getToken();
+
+        if (token.type == TokenType.IDENTIFIER) {
+            return parseFunDefine();
+        }
+
+        if (token.type == TokenType.LEFT_PAREN) {
+            return parseClosure();
+        }
+
+        throw SyntaxException.withSyntax("错误的函数定义");
+    }
+
+    public BaseNode parseClosure() {
+
+
+
+        return null;
+    }
+
     public BaseNode parseFunDefine() {
 
-        Assert.assertToken(lexical, TokenType.KEY_FUN);
+        Token name = lexical.getToken();
         lexical.nextToken();
 
-        Token name = lexical.nextToken();
-
-        Assert.assertToken(lexical, TokenType.IDENTIFIER);
-        lexical.nextToken();
-
+        // eat (
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
         lexical.nextToken();
-
 
         List<String> param = new ArrayList<String>();
 
         if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
             Assert.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
-            Assert.assertToken(lexical, TokenType.IDENTIFIER);
+            param.add(token.name);
         }
 
         while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
+            Assert.assertToken(lexical, TokenType.COMMA);
+            lexical.nextToken();
 
+            Assert.assertToken(lexical, TokenType.IDENTIFIER);
+            Token token = lexical.getToken();
+            param.add(token.name);
         }
 
-        return null;
+        // eat )
+        Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
+        lexical.nextToken();
+
+        BaseNode block = parseBlock();
+
+        return new FunctionDefineNode(name.name, param, block);
     }
 
 

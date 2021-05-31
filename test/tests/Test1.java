@@ -150,9 +150,7 @@ public class Test1 {
 
     @Test
     public void test9() {
-
-        String str2 = "println = '123'; println(55);";
-
+        String str2 = "name = 'lisicen'; age = 123456; ss = 55555; println(name); println(age - (ss + 1)); println(name + age);";
         RuleScript runner = Ruler.compile(str2);
 
         runner.run();
