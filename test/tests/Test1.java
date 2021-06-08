@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.util.FileUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.jupiter.api.Test;
 
@@ -150,7 +151,7 @@ public class Test1 {
 
     @Test
     public void test9() {
-        String str2 = "name = 'lisicen'; age = 123456; ss = 55555; println(name); println(age - (ss + 1)); println(name + age);";
+        String str2 = "println = 15; println(15);";
         RuleScript runner = Ruler.compile(str2);
 
         runner.run();
@@ -165,7 +166,22 @@ public class Test1 {
         Integer[] funcParam = Arrays.copyOfRange(param, 1, param.length);
 
         System.out.println(Arrays.toString(funcParam));
+    }
 
+
+    @Test
+    public void test11() {
+
+        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule4.txt");
+
+        String str1 = "f = fun() {println(123);};";
+
+
+        RuleScript runner = Ruler.compile(text);
+
+        runner.run();
+
+        System.out.println(runner);
 
     }
 

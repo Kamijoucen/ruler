@@ -70,7 +70,7 @@ public class DefaultParser implements Parser {
                 isNeedSemicolon = true;
                 break;
             case KEY_FUN:
-//                statement = parseFunDefine();
+                statement = parseFunDefine();
                 break;
             case KEY_LIST:
                 break;
@@ -162,6 +162,8 @@ public class DefaultParser implements Parser {
             case KEY_FALSE:
             case KEY_TRUE:
                 return parseBool();
+            case KEY_FUN:
+                return parseFunDefine();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -212,48 +214,29 @@ public class DefaultParser implements Parser {
         return new IfStatementNode(condition, thenBlock, elseBlock);
     }
 
-    public BaseNode parseFunction() {
+    public BaseNode parseFunDefine() {
 
         // eat fun
         Assert.assertToken(lexical, TokenType.KEY_FUN);
 
         lexical.nextToken();
 
-        Token token = lexical.getToken();
-
-        if (token.type == TokenType.IDENTIFIER) {
-            return parseFunDefine();
+        String name = null;
+        if (lexical.getToken().type == TokenType.IDENTIFIER) {
+            name = lexical.getToken().name;
+            lexical.nextToken();
         }
-
-        if (token.type == TokenType.LEFT_PAREN) {
-            return parseClosure();
-        }
-
-        throw SyntaxException.withSyntax("错误的函数定义");
-    }
-
-    public BaseNode parseClosure() {
-
-
-
-        return null;
-    }
-
-    public BaseNode parseFunDefine() {
-
-        Token name = lexical.getToken();
-        lexical.nextToken();
 
         // eat (
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
         lexical.nextToken();
 
-        List<String> param = new ArrayList<String>();
+        List<BaseNode> param = new ArrayList<BaseNode>();
 
         if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
             Assert.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
-            param.add(token.name);
+            param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
         }
 
         while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
@@ -262,8 +245,8 @@ public class DefaultParser implements Parser {
 
             Assert.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
-            param.add(token.name);
-        }
+            param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
+        }// 哈希表
 
         // eat )
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
@@ -271,7 +254,7 @@ public class DefaultParser implements Parser {
 
         BaseNode block = parseBlock();
 
-        return new FunctionDefineNode(name.name, param, block);
+        return new ClosureDefineNode(name, param, block);
     }
 
 

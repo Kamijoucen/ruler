@@ -1,0 +1,15 @@
+
+
+name = '德玛西亚';
+
+age = 15;
+
+func = fun() {
+    println(name, age);
+};
+
+name = 1111;
+
+age = 1111;
+
+func();

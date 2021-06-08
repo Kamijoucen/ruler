@@ -1,9 +1,12 @@
 package com.kamijoucen.ruler.operation;
 
+import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.util.Assert;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 import com.kamijoucen.ruler.value.ValueType;
 
@@ -14,18 +17,32 @@ public class CallOperation implements Operation {
     @Override
     public BaseValue compute(BaseValue... param) {
 
-        BaseValue name = param[0];
+        BaseValue func = param[0];
 
         Object[] funcParam = Arrays.copyOfRange(param, 1, param.length);
 
-        if (name.getType() == ValueType.FUNCTION) {
-            RulerFunction function = ((FunctionValue) name).getValue();
+        if (func.getType() == ValueType.FUNCTION) {
+            RulerFunction function = ((FunctionValue) func).getValue();
             return (BaseValue) function.call(funcParam);
         }
 
-        if (name.getType() == ValueType.CLOSURE) {
-            throw Assert.todo("闭包暂未实现");
+        if (func.getType() == ValueType.CLOSURE) {
+
+            ClosureValue function = ((ClosureValue) func);
+
+            return callClosure(function);
         }
-        throw SyntaxException.withSyntax(name + " 不是一个函数");
+        throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
+
+
+    private BaseValue callClosure(ClosureValue closure) {
+
+        Scope defineScope = closure.getDefineScope();
+
+        BaseNode block = closure.getBlock();
+
+        return block.eval(defineScope);
+    }
+
 }

@@ -6,13 +6,10 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.OperationDefine;
-import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
@@ -136,6 +133,28 @@ public class DefaultStatementVisitor implements StatementVisitor {
             statementValue = call.eval(scope);
         }
         return statementValue;
+    }
+
+    @Override
+    public BaseValue eval(ClosureDefineNode node, Scope scope) {
+
+        Scope closureScope = new DefaultScope(scope);
+
+        List<BaseNode> param = node.getParam();
+
+        for (BaseNode p : param) {
+            NameNode nameNode = (NameNode) p;
+            closureScope.putValue(nameNode.name.name, false, p.eval(scope));
+        }
+
+        String funName = node.getName();
+
+        if (funName != null) {
+            scope.putValue(funName, false, new ClosureValue(closureScope, node.getBlock()));
+        } else {
+            return new ClosureValue(closureScope, node.getBlock());
+        }
+        return NoneValue.INSTANCE;
     }
 
     @Override
