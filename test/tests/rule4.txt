@@ -8,8 +8,15 @@ func = fun() {
     println(name, age);
 };
 
+fun test1() {
+    println(1234);
+}
+
 name = 1111;
 
 age = 1111;
 
 func();
+
+test1();
+// netty

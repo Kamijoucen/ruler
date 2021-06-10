@@ -3,7 +3,9 @@ package com.kamijoucen.ruler.env;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -11,7 +13,7 @@ public class DefaultScope implements Scope {
 
     private final Scope parent;
 
-    private Map<String, BaseValue> returnSpace;
+    private List<BaseValue> returnSpace;
 
     private final Map<String, BaseValue> valueSpace;
 
@@ -61,24 +63,24 @@ public class DefaultScope implements Scope {
     }
 
     @Override
-    public void putReturnValue(String name, BaseValue value) {
+    public void putReturnValue(BaseValue value) {
         if (this.returnSpace == null) {
             if (parent != null) {
-                parent.putReturnValue(name, value);
+                parent.putReturnValue(value);
             }
         } else {
-            this.returnSpace.put(name, value);
+            this.returnSpace.add(value);
         }
     }
 
     @Override
-    public Map<String, BaseValue> getReturnSpace() {
+    public List<BaseValue> getReturnSpace() {
         return returnSpace;
     }
 
     @Override
     public void initReturnSpace() {
-        this.returnSpace = new HashMap<String, BaseValue>();
+        this.returnSpace = new ArrayList<BaseValue>();
     }
 
     @Override

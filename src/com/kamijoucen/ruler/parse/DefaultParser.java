@@ -50,6 +50,8 @@ public class DefaultParser implements Parser {
                 isNeedSemicolon = true;
                 break;
             case KEY_RETURN:
+                statement = parseReturn();
+                isNeedSemicolon = true;
                 break;
             case KEY_DEF:
                 break;
@@ -471,6 +473,27 @@ public class DefaultParser implements Parser {
 
         return new BreakNode();
 
+    }
+
+    public BaseNode parseReturn() {
+
+        Assert.assertToken(lexical, TokenType.KEY_RETURN);
+
+        lexical.nextToken();
+
+        List<BaseNode> param = new ArrayList<BaseNode>();
+
+        if (lexical.getToken().type != TokenType.SEMICOLON) {
+            param.add(parseExpression());
+        }
+
+        while (lexical.getToken().type != TokenType.SEMICOLON) {
+            Assert.assertToken(lexical, TokenType.COMMA);
+            lexical.nextToken();
+            param.add(parseExpression());
+        }
+
+        return new ReturnNode(param);
     }
 
 }

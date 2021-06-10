@@ -14,6 +14,7 @@ import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
+import com.kamijoucen.ruler.value.constant.ReturnValue;
 
 import java.util.List;
 
@@ -158,7 +159,21 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
+    public BaseValue eval(ReturnNode node, Scope scope) {
+
+        List<BaseNode> param = node.getParam();
+
+        for (BaseNode baseNode : param) {
+            scope.putReturnValue(baseNode.eval(scope));
+        }
+
+        return ReturnValue.INSTANCE;
+    }
+
+    @Override
     public BaseValue eval(IndexNode node, Scope scope) {
+
+
 
         return null;
     }

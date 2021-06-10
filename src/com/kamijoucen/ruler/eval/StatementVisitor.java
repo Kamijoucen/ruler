@@ -28,4 +28,6 @@ public interface StatementVisitor {
 
     BaseValue eval(ClosureDefineNode node, Scope scope);
 
+    BaseValue eval(ReturnNode node, Scope scope);
+
 }

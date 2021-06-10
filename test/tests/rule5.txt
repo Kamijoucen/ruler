@@ -1,0 +1,9 @@
+
+arr = [1, 2, 3];
+
+map = {name: 'lisicen', age: 15};
+
+println(arr, arr[0], arr[100]);
+
+
+println(map, map.name, map.age);

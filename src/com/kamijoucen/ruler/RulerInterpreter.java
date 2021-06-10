@@ -27,7 +27,7 @@ class RulerInterpreter {
             ast.eval(scope);
         }
 
-        Map<String, BaseValue> returnValue = scope.getReturnSpace();
+        List<BaseValue> returnValue = scope.getReturnSpace();
 
         return null;
     }

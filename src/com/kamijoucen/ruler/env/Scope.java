@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.env;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.Map;
+import java.util.List;
 
 public interface Scope {
 
@@ -17,9 +17,9 @@ public interface Scope {
     //------------------------------------------------------
     void initReturnSpace();
 
-    void putReturnValue(String name, BaseValue value);
+    void putReturnValue(BaseValue value);
 
-    Map<String, BaseValue> getReturnSpace();
+    List<BaseValue> getReturnSpace();
 
     //------------------------------------------------------
     RulerFunction findFunction(String name, boolean isOut);

@@ -9,8 +9,10 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class CallOperation implements Operation {
 
@@ -40,9 +42,15 @@ public class CallOperation implements Operation {
 
         Scope defineScope = closure.getDefineScope();
 
+        defineScope.initReturnSpace();
+
         BaseNode block = closure.getBlock();
 
-        return block.eval(defineScope);
+        block.eval(defineScope);
+
+        List<BaseValue> returnSpace = defineScope.getReturnSpace();
+
+        return NullValue.INSTANCE;
     }
 
 }
