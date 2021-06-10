@@ -1,6 +1,7 @@
 
 arr = [1, 2, 3];
 
+// 要解析这种json结构还得写json解析器，手写太烦了考虑下就用fastjson或者gson吧。。。
 map = {name: 'lisicen', age: 15};
 
 println(arr, arr[0], arr[100]);
