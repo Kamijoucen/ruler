@@ -18,4 +18,6 @@ public interface ExpressionVisitor {
 
     BaseValue eval(BinaryOperationNode ast, Scope scope);
 
+    BaseValue eval(ArrayNode node, Scope scope);
+
 }

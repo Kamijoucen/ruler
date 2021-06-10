@@ -101,7 +101,10 @@ public class DefaultParser implements Parser {
         while (lexical.getToken().type != TokenType.EOF
                 && lexical.getToken().type != TokenType.SEMICOLON
                 && lexical.getToken().type != TokenType.RIGHT_PAREN
+                && lexical.getToken().type != TokenType.RIGHT_SQUARE
+                && lexical.getToken().type != TokenType.LEFT_SQUARE
                 && lexical.getToken().type != TokenType.LEFT_BRACE
+                && lexical.getToken().type != TokenType.RIGHT_BRACE
                 && lexical.getToken().type != TokenType.COMMA) {
 
             Token op = lexical.getToken();
@@ -166,6 +169,8 @@ public class DefaultParser implements Parser {
                 return parseBool();
             case KEY_FUN:
                 return parseFunDefine();
+            case LEFT_SQUARE:
+                return parseArray();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -494,6 +499,34 @@ public class DefaultParser implements Parser {
         }
 
         return new ReturnNode(param);
+    }
+
+    public BaseNode parseArray() {
+
+        Assert.assertToken(lexical, TokenType.LEFT_SQUARE);
+
+        lexical.nextToken();
+
+        List<BaseNode> arrValues = new ArrayList<BaseNode>();
+
+        if (lexical.getToken().type != TokenType.RIGHT_SQUARE) {
+            arrValues.add(parseExpression());
+        }
+
+        while (lexical.getToken().type != TokenType.RIGHT_SQUARE) {
+
+            Assert.assertToken(lexical, TokenType.COMMA);
+
+            lexical.nextToken();
+
+            arrValues.add(parseExpression());
+        }
+
+        Assert.assertToken(lexical, TokenType.RIGHT_SQUARE);
+
+        lexical.nextToken();
+
+        return new ArrayNode(arrValues);
     }
 
 }

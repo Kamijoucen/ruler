@@ -14,6 +14,8 @@ public enum ValueType {
 
     BOOL,
 
+    ARRAY,
+
     VOID,
 
     NONE,

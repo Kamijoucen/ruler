@@ -185,4 +185,19 @@ public class Test1 {
 
     }
 
+    @Test
+    public void test12() {
+
+
+        String str1 = "arr = [[1, 2], 2, [2,3]];";
+
+
+        RuleScript runner = Ruler.compile(str1);
+
+        runner.run();
+
+        System.out.println(runner);
+
+    }
+
 }

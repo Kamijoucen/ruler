@@ -8,6 +8,9 @@ import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
@@ -52,5 +55,23 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
         Operation operation = OperationDefine.findOperation(ast.getOp());
 
         return operation.compute(val1, val2);
+    }
+
+    @Override
+    public BaseValue eval(ArrayNode node, Scope scope) {
+
+        List<BaseNode> nodes = node.getValues();
+
+        if (nodes.size() == 0) {
+            return new ArrayValue(new ArrayList<BaseValue>());
+        }
+
+        List<BaseValue> values = new ArrayList<BaseValue>(nodes.size());
+
+        for (BaseNode tempNode : nodes) {
+            values.add(tempNode.eval(scope));
+        }
+
+        return new ArrayValue(values);
     }
 }
