@@ -8,7 +8,7 @@ rson = {
     name: fun(name, age) {
         println(name, age);
     }
-}
+};
 
 rson.name('lsc', 15);
 

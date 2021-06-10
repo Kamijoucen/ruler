@@ -38,6 +38,7 @@ public class OperationDefine {
         OPERATION.put(TokenType.DIV, new DivOperation());   // /
 
         OPERATION.put(TokenType.CALL, new CallOperation());
+        OPERATION.put(TokenType.INDEX, new IndexOperation());
     }
 
     public static Operation findOperation(TokenType type) {

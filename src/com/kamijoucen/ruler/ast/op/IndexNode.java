@@ -10,10 +10,14 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class IndexNode implements OperationNode {
 
-    private BaseNode param;
+    private Operation operation;
 
-    public IndexNode(BaseNode param) {
-        this.param = param;
+    private BaseValue operationValue;
+
+    private BaseNode index;
+
+    public IndexNode(BaseNode index) {
+        this.index = index;
     }
 
     @Override
@@ -28,19 +32,28 @@ public class IndexNode implements OperationNode {
 
     @Override
     public void putOperation(Operation operation) {
-
+        this.operation = operation;
     }
 
     @Override
     public void putOperationValue(BaseValue value) {
-
+        this.operationValue = value;
     }
 
-    public BaseNode getParam() {
-        return param;
+    public BaseNode getIndex() {
+        return index;
     }
 
-    public void setParam(BaseNode param) {
-        this.param = param;
+    public void setIndex(BaseNode index) {
+        this.index = index;
     }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public BaseValue getOperationValue() {
+        return operationValue;
+    }
+
 }

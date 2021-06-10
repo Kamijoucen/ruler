@@ -173,9 +173,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(IndexNode node, Scope scope) {
 
+        BaseValue[] computeVals = new BaseValue[2];
 
+        computeVals[0] = node.getOperationValue();
+        computeVals[1] = node.getIndex().eval(scope);
 
-        return null;
+        return node.getOperation().compute(computeVals);
     }
 
 

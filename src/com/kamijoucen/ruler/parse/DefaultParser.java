@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.ast.op.CallNode;
+import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -352,13 +353,13 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        BaseNode name = parsePrimaryExpression();
+        BaseNode index = parsePrimaryExpression();
 
         Assert.assertToken(lexical, TokenType.RIGHT_SQUARE);
 
         lexical.nextToken();
 
-        return null;
+        return new IndexNode(index);
     }
 
 
