@@ -99,20 +99,13 @@ public class DefaultParser implements Parser {
 
         valStack.push(parsePrimaryExpression()); // first exp
 
-        while (lexical.getToken().type != TokenType.EOF
-                && lexical.getToken().type != TokenType.SEMICOLON
-                && lexical.getToken().type != TokenType.RIGHT_PAREN
-                && lexical.getToken().type != TokenType.RIGHT_SQUARE
-                && lexical.getToken().type != TokenType.LEFT_SQUARE
-                && lexical.getToken().type != TokenType.LEFT_BRACE
-                && lexical.getToken().type != TokenType.RIGHT_BRACE
-                && lexical.getToken().type != TokenType.COMMA) {
+        while (true) {
 
             Token op = lexical.getToken();
 
             int curPrecedence = OperationDefine.findPrecedence(op.type);
             if (curPrecedence == -1) {
-                throw SyntaxException.withSyntax("不支持的的二元操作符: " + op.type);
+                break;
             }
             lexical.nextToken();
 
@@ -254,7 +247,7 @@ public class DefaultParser implements Parser {
             Assert.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
             param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
-        }// 哈希表
+        }
 
         // eat )
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);

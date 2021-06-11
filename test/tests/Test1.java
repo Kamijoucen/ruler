@@ -13,6 +13,7 @@ import com.kamijoucen.ruler.util.FileUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -161,7 +162,7 @@ public class Test1 {
     @Test
     public void test10() {
 
-        Integer[] param = new Integer[] {1};
+        Integer[] param = new Integer[]{1};
 
         Integer[] funcParam = Arrays.copyOfRange(param, 1, param.length);
 
@@ -188,7 +189,7 @@ public class Test1 {
     @Test
     public void test12() {
 
-        String str1 = "arr = [[1, 2], 2, [2,3]]; println(arr['']);";
+        String str1 = "arr = [[1, 2], 2, [2,3]]; println(arr[0][1][2]);";
 
         RuleScript runner = Ruler.compile(str1);
 
@@ -197,5 +198,17 @@ public class Test1 {
         System.out.println(runner);
 
     }
+
+    @Test
+    public void test13() {
+
+        Object[] a = new Object[]{1};
+        Object[][] b = new Object[][]{{1}};
+
+        System.out.println(a.getClass().isArray());
+        System.out.println(b.getClass().isArray());
+
+    }
+
 
 }

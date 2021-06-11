@@ -29,11 +29,10 @@ public class CallOperation implements Operation {
         }
 
         if (func.getType() == ValueType.CLOSURE) {
-
             ClosureValue function = ((ClosureValue) func);
-
             return callClosure(function);
         }
+
         throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
 
