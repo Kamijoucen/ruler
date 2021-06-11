@@ -188,9 +188,7 @@ public class Test1 {
     @Test
     public void test12() {
 
-
-        String str1 = "arr = [[1, 2], 2, [2,3]];";
-
+        String str1 = "arr = [[1, 2], 2, [2,3]]; println(arr['']);";
 
         RuleScript runner = Ruler.compile(str1);
 

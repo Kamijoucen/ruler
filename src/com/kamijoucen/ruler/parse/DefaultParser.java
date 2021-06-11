@@ -329,8 +329,9 @@ public class DefaultParser implements Parser {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
-        while (lexical.getToken().type != TokenType.SEMICOLON) {
-
+        while (lexical.getToken().type == TokenType.LEFT_PAREN
+                || lexical.getToken().type == TokenType.LEFT_SQUARE
+                || lexical.getToken().type == TokenType.DOT) {
             switch (lexical.getToken().type) {
                 case LEFT_PAREN:
                     calls.add((OperationNode) parseCall());
@@ -340,8 +341,6 @@ public class DefaultParser implements Parser {
                     break;
                 case DOT:
                     break;
-                default:
-                    throw SyntaxException.withSyntax("不支持的调用", lexical.getToken());
             }
         }
         return new CallLinkedNode(new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), calls);

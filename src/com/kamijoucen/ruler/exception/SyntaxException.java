@@ -13,7 +13,7 @@ public class SyntaxException extends RuntimeException {
     }
 
     public static SyntaxException withSyntax(String msg, Token token) {
-        return new SyntaxException("syntax error! " + msg);
+        return new SyntaxException("syntax error! " + msg + "\t token=" + token);
     }
 
     public static SyntaxException withLexical(String msg) {

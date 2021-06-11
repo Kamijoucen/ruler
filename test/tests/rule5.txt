@@ -14,6 +14,6 @@ rson.name('lsc', 15);
 
 println(arr, arr[0], arr[100]);
 
-println(map, map.name, map.age);
+println(map, map.name, map.age);// xm-json
 
 println();
