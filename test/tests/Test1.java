@@ -202,12 +202,11 @@ public class Test1 {
     @Test
     public void test13() {
 
-        Object[] a = new Object[]{1};
-        Object[][] b = new Object[][]{{1}};
+        String str = "arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
 
-        System.out.println(a.getClass().isArray());
-        System.out.println(b.getClass().isArray());
+        RuleScript script = Ruler.compile(str);
 
+        script.run();
     }
 
 

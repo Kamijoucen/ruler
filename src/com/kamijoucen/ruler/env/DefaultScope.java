@@ -94,7 +94,7 @@ public class DefaultScope implements Scope {
 
     @Override
     public void putFunction(RulerFunction function, boolean isOut) {
-        this.functionSpace.put(function.getName(), function);
+        this.getFunctionSpace(isOut).put(function.getName(), function);
     }
 
     private Map<String, BaseValue> getValueSpace(boolean isOut) {
