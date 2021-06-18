@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class IndexOperation implements Operation {
 
@@ -21,6 +22,10 @@ public class IndexOperation implements Operation {
         ArrayValue array = (ArrayValue) tempArray;
 
         IntegerValue index = (IntegerValue) tempIndex;
+
+        if (index.getValue() >= array.getValues().size()) {
+            return NullValue.INSTANCE;
+        }
 
         return array.getValues().get(index.getValue());
     }

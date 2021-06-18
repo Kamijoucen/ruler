@@ -30,12 +30,14 @@ public class ConvertRepository {
         CLASS_MAP.put(Integer.class, integerConvert);
         CLASS_MAP.put(Double.class, doubleConvert);
         CLASS_MAP.put(String.class, stringConvert);
-        CLASS_MAP.put(Array.class, arrayConvert);
     }
 
     public static ValueConvert getConverter(Object obj) {
         if (obj == null) {
             return VALUE_TYPE_MAP.get(ValueType.NULL);
+        }
+        if (obj.getClass().isArray()) {
+            return VALUE_TYPE_MAP.get(ValueType.ARRAY);
         }
         return CLASS_MAP.get(obj.getClass());
     }
