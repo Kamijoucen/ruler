@@ -6,11 +6,12 @@ func = fun() {
     return fun() {
         a = '3';
         return fun() {
-            return "大海啊！你全是水；骏马啊！你四条腿。";
+            return a, "大海啊！你全是水；骏马啊！你四条腿。";
         };
     };
 };
 
 a = '4';
 
-println(func()()());
+println(func()()()[0]);
+println(func()()()[1]);
