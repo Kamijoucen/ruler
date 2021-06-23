@@ -14,6 +14,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -202,11 +203,25 @@ public class Test1 {
     @Test
     public void test13() {
 
-        String str = "arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
+        String str = "arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2] + arr[3]);";
 
         RuleScript script = Ruler.compile(str);
 
         script.run();
+    }
+
+
+    @Test
+    public void test14() {
+
+        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule6.txt");
+
+        String str = "fun test() { a = 'lisicen'; return a; }  a = test(); println(a);";
+
+        RuleScript script = Ruler.compile(text);
+
+        script.run();
+
     }
 
 

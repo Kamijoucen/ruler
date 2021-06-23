@@ -5,10 +5,7 @@ import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.util.Assert;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.ClosureValue;
-import com.kamijoucen.ruler.value.FunctionValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.Arrays;
@@ -49,7 +46,15 @@ public class CallOperation implements Operation {
 
         List<BaseValue> returnSpace = defineScope.getReturnSpace();
 
-        return NullValue.INSTANCE;
+        if (returnSpace == null || returnSpace.size() == 0) {
+            return NullValue.INSTANCE;
+        }
+
+        if (returnSpace.size() == 1) {
+            return returnSpace.get(0);
+        }
+
+        return new ArrayValue(returnSpace);
     }
 
 }

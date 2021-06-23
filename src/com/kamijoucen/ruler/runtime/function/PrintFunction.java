@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.runtime.function;
 
 import com.kamijoucen.ruler.runtime.RulerFunction;
-import com.kamijoucen.ruler.value.constant.VoidValue;
 
 import java.util.Arrays;
 

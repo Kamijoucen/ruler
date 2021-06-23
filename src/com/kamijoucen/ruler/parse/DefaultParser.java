@@ -522,4 +522,10 @@ public class DefaultParser implements Parser {
         return new ArrayNode(arrValues);
     }
 
+
+    public BaseNode parseObject() {
+
+        return null;
+    }
+
 }

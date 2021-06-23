@@ -1,0 +1,16 @@
+
+a = "1";
+
+func = fun() {
+    a = '2';
+    return fun() {
+        a = '3';
+        return fun() {
+            return "大海啊！你全是水；骏马啊！你四条腿。";
+        };
+    };
+};
+
+a = '4';
+
+println(func()()());
