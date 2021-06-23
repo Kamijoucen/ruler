@@ -29,9 +29,11 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         for (BaseNode block : blocks) {
             BaseValue val = block.eval(blockScope);
-            if (val.getType() == ValueType.CONTINUE) {
+            if (ValueType.CONTINUE == val.getType()) {
                 break;
-            } else if (val.getType() == ValueType.BREAK) {
+            } else if (ValueType.BREAK == val.getType()) {
+                return val;
+            } else if (ValueType.RETURN == val.getType()) {
                 return val;
             }
         }
@@ -104,8 +106,10 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         while (((BoolValue) ast.getCondition().eval(scope)).getValue()) {
             BaseValue blockValue = block.eval(scope);
-            if (blockValue.getType() == ValueType.BREAK) {
+            if (ValueType.BREAK == blockValue.getType()) {
                 break;
+            } else if (ValueType.RETURN == blockValue.getType()) {
+                return ReturnValue.INSTANCE;
             }
         }
         return NoneValue.INSTANCE;

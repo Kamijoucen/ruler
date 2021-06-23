@@ -11,7 +11,24 @@ func = fun() {
     };
 };
 
+func2 = fun() {
+    i = 0;
+    while true {
+        if i == 100 {
+            return i, 'done';
+        }
+        i = i + 1;
+    }
+};
+
 a = '4';
 
-println(func()()()[0]);
-println(func()()()[1]);
+val1 = func()()();
+println(val1[0]);
+println(val1[1]);
+
+println();
+
+val2 = func2();
+println(val2[0]);
+println(val2[1]);
