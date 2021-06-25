@@ -333,10 +333,32 @@ public class DefaultParser implements Parser {
                     calls.add((OperationNode) parseIndex());
                     break;
                 case DOT:
+                    calls.add((OperationNode) parseDot());
                     break;
             }
         }
         return new CallLinkedNode(new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), calls);
+    }
+
+    public BaseNode parseDot() {
+
+        Assert.assertToken(lexical, TokenType.DOT);
+
+        lexical.nextToken();
+
+        Assert.assertToken(lexical, TokenType.IDENTIFIER);
+
+        Token name = lexical.getToken();
+
+        lexical.nextToken();
+
+        if (TokenType.LEFT_PAREN == lexical.getToken().type) {
+
+
+
+        }
+
+        return null;
     }
 
     public BaseNode parseIndex() {

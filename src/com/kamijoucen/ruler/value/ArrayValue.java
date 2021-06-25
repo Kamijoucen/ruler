@@ -22,4 +22,9 @@ public class ArrayValue implements BaseValue {
     public void setValues(List<BaseValue> values) {
         this.values = values;
     }
+
+    @Override
+    public String toString() {
+        return "[" + values + "]";
+    }
 }

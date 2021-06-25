@@ -203,7 +203,7 @@ public class Test1 {
     @Test
     public void test13() {
 
-        String str = "arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2] + arr[3]);";
+        String str = "arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
 
         RuleScript script = Ruler.compile(str);
 
@@ -216,7 +216,7 @@ public class Test1 {
 
         String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule6.txt");
 
-        String str = "fun test() { a = 'lisicen'; return a; }  a = test(); println(a);";
+        String str = "arr = [1, 2, 3]; arr[1] = 4; println(arr);";
 
         RuleScript script = Ruler.compile(text);
 
