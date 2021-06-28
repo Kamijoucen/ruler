@@ -216,9 +216,10 @@ public class Test1 {
 
         String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule6.txt");
 
-        String str = "arr = [1, 2, 3]; arr[1] = 4; println(arr);";
+        String str = "arr = [1, 2, 3]; arr[3] = 4; println(arr);";
+        String str1 = "a[1] = 1;";
 
-        RuleScript script = Ruler.compile(text);
+        RuleScript script = Ruler.compile(str);
 
         script.run();
 

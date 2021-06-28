@@ -25,6 +25,6 @@ public class ArrayValue implements BaseValue {
 
     @Override
     public String toString() {
-        return "[" + values + "]";
+        return values.toString();
     }
 }

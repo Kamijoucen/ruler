@@ -9,13 +9,16 @@ import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.env.DefaultScope;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.OperationDefine;
+import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class DefaultStatementVisitor implements StatementVisitor {
@@ -79,7 +82,27 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(ArrayAssignNode node, Scope scope) {
 
-        return null;
+        BaseValue tempValue = node.getCalls().eval(scope);
+
+        if (tempValue.getType() != ValueType.ARRAY) {
+            throw SyntaxException.withSyntax(tempValue.getType() + "不是一个数组");
+        }
+
+        ArrayValue arrayValue = (ArrayValue) tempValue;
+
+        BaseValue tempIndexValue = node.getIndex().getIndex().eval(scope);
+
+        if (tempIndexValue.getType() != ValueType.INTEGER) {
+            throw SyntaxException.withSyntax("数组的索引必须是数字");
+        }
+
+        IntegerValue indexValue = (IntegerValue) tempIndexValue;
+
+        BaseValue value = node.getExpression().eval(scope);
+
+        arrayValue.getValues().set(indexValue.getValue(), value);
+
+        return NoneValue.INSTANCE;
     }
 
     @Override

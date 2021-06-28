@@ -5,16 +5,14 @@ import com.kamijoucen.ruler.ast.op.CallNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
+import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class DefaultParser implements Parser {
 
@@ -322,30 +320,27 @@ public class DefaultParser implements Parser {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
-        OperationNode lastNode = null;
-
         while (lexical.getToken().type == TokenType.LEFT_PAREN
                 || lexical.getToken().type == TokenType.LEFT_SQUARE
-                || lexical.getToken().type == TokenType.DOT) {
+                || lexical.getToken().type == TokenType.DOT
+                || lexical.getToken().type == TokenType.ASSIGN) {
             switch (lexical.getToken().type) {
                 case LEFT_PAREN:
-                    lastNode = (OperationNode) parseCall();
-                    calls.add(lastNode);
+                    calls.add((OperationNode) parseCall());
                     break;
                 case LEFT_SQUARE:
-                    lastNode = (OperationNode) parseIndex();
-                    calls.add(lastNode);
+                    calls.add((OperationNode) parseIndex());
                     break;
                 case DOT:
-                    lastNode = (OperationNode) parseDot();
-                    calls.add(lastNode);
+                    calls.add((OperationNode) parseDot());
                     break;
                 case ASSIGN:
+                    OperationNode lastNode = CollectionUtil.last(calls);
                     if (lastNode == null || lastNode.getOperationType() != TokenType.INDEX) {
                         throw SyntaxException.withSyntax("赋值运算左侧的表达式无效");
                     }
-                    return parseArrayAssign(
-                            new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), (IndexNode) lastNode);
+                    NameNode name = new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER);
+                    return parseArrayAssign(name, calls);
             }
         }
         return new CallLinkedNode(new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), calls);
@@ -364,7 +359,6 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
 
         if (TokenType.LEFT_PAREN == lexical.getToken().type) {
-
 
 
         }
@@ -418,11 +412,24 @@ public class DefaultParser implements Parser {
         return new CallNode(params);
     }
 
-    public BaseNode parseArrayAssign(NameNode name, IndexNode indexNode) {
+    public BaseNode parseArrayAssign(NameNode name, List<OperationNode> callList) {
 
-        BaseNode indexValue = indexNode.getIndex();
+        Assert.assertToken(lexical, TokenType.ASSIGN);
 
-        return null;
+        lexical.nextToken();
+
+        OperationNode indexNode = CollectionUtil.last(callList);
+
+        if (indexNode == null || indexNode.getOperationType() != TokenType.INDEX) {
+            throw SyntaxException.withSyntax("对数组元素赋值需要指定下标");
+        }
+        CollectionUtil.removeLast(callList);
+
+        CallLinkedNode calls = new CallLinkedNode(name, callList);
+
+        BaseNode rls = parseExpression();
+
+        return new ArrayAssignNode(calls, (IndexNode) indexNode, rls);
     }
 
     public BaseNode parseAssign(Token identifier) {
