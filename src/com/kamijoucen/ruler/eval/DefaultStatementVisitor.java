@@ -77,6 +77,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
+    public BaseValue eval(ArrayAssignNode node, Scope scope) {
+
+        return null;
+    }
+
+    @Override
     public BaseValue eval(CallNode node, Scope scope) {
 
         List<BaseNode> param = node.getParam();

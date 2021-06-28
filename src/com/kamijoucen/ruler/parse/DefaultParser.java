@@ -322,19 +322,30 @@ public class DefaultParser implements Parser {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
+        OperationNode lastNode = null;
+
         while (lexical.getToken().type == TokenType.LEFT_PAREN
                 || lexical.getToken().type == TokenType.LEFT_SQUARE
                 || lexical.getToken().type == TokenType.DOT) {
             switch (lexical.getToken().type) {
                 case LEFT_PAREN:
-                    calls.add((OperationNode) parseCall());
+                    lastNode = (OperationNode) parseCall();
+                    calls.add(lastNode);
                     break;
                 case LEFT_SQUARE:
-                    calls.add((OperationNode) parseIndex());
+                    lastNode = (OperationNode) parseIndex();
+                    calls.add(lastNode);
                     break;
                 case DOT:
-                    calls.add((OperationNode) parseDot());
+                    lastNode = (OperationNode) parseDot();
+                    calls.add(lastNode);
                     break;
+                case ASSIGN:
+                    if (lastNode == null || lastNode.getOperationType() != TokenType.INDEX) {
+                        throw SyntaxException.withSyntax("赋值运算左侧的表达式无效");
+                    }
+                    return parseArrayAssign(
+                            new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), (IndexNode) lastNode);
             }
         }
         return new CallLinkedNode(new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), calls);
@@ -405,6 +416,13 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
 
         return new CallNode(params);
+    }
+
+    public BaseNode parseArrayAssign(NameNode name, IndexNode indexNode) {
+
+        BaseNode indexValue = indexNode.getIndex();
+
+        return null;
     }
 
     public BaseNode parseAssign(Token identifier) {
