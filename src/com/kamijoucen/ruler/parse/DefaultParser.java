@@ -236,6 +236,8 @@ public class DefaultParser implements Parser {
             Assert.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
             param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
+
+            lexical.nextToken();
         }
 
         while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
@@ -245,6 +247,8 @@ public class DefaultParser implements Parser {
             Assert.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
             param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
+
+            lexical.nextToken();
         }
 
         // eat )

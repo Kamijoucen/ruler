@@ -1,22 +1,49 @@
 
 
-
-fun partition() {
-
+fun swap(arr, i, j) {
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
 }
 
-fun sort() {
+fun partition(arr, begin, end) {
+    mid = arr[end];
 
+    i = begin;
+    j = begin;
+
+    while j < end {
+
+        if arr[j] < mid {
+            swap(arr, i, j);
+            i = i + 1;
+        }
+
+        j = j + 1;
+    }
+    swap(arr, i, end);
+    return i;
 }
 
-fun quickSort(arr) {
-
+fun sort(subArr, begin, end) {
+    if begin >= end {
+        return;
+    }
+    p = partition(subArr, begin, end);
+    sort(arr, begin, p - 1);
+    sort(arr, p + 1, end);
 }
 
-arr = [22, 1, 3, 5, 4, 17, 54, 2, 8, 33, 7, 5];
+fun quickSort(arr, len) {
+    sort(arr, 0, len - 1);
+}
+
+arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+len = 10;
 
 println(arr);
 
-quickSort(arr);
+quickSort(arr, len);
 
 println(arr);

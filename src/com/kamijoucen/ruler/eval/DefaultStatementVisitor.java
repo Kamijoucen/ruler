@@ -172,21 +172,16 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope) {
 
-        Scope closureScope = new DefaultScope(scope);
-
         List<BaseNode> param = node.getParam();
-
-        for (BaseNode p : param) {
-            NameNode nameNode = (NameNode) p;
-            closureScope.putValue(nameNode.name.name, false, p.eval(scope));
-        }
 
         String funName = node.getName();
 
+        ClosureValue closureValue = new ClosureValue(new DefaultScope(scope), param, node.getBlock());
+
         if (funName != null) {
-            scope.putValue(funName, false, new ClosureValue(closureScope, node.getBlock()));
+            scope.putValue(funName, false, closureValue);
         } else {
-            return new ClosureValue(closureScope, node.getBlock());
+            return closureValue;
         }
         return NoneValue.INSTANCE;
     }

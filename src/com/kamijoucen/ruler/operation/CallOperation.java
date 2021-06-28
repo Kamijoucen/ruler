@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RulerFunction;
-import com.kamijoucen.ruler.util.Assert;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
@@ -27,16 +27,23 @@ public class CallOperation implements Operation {
 
         if (func.getType() == ValueType.CLOSURE) {
             ClosureValue function = ((ClosureValue) func);
-            return callClosure(function);
+
+            return callClosure(function, (BaseValue[]) funcParam);
         }
 
         throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
 
 
-    private BaseValue callClosure(ClosureValue closure) {
+    private BaseValue callClosure(ClosureValue closure, BaseValue[] funcParam) {
 
         Scope defineScope = closure.getDefineScope();
+
+        List<BaseNode> defineParam = closure.getParam();
+        for (int i = 0; i < defineParam.size(); i++) {
+            NameNode name = (NameNode) defineParam.get(i);
+            defineScope.putValue(name.name.name, false, funcParam[i]);
+        }
 
         defineScope.initReturnSpace();
 
