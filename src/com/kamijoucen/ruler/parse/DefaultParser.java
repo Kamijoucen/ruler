@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
@@ -121,7 +122,7 @@ public class DefaultParser implements Parser {
 
                     TokenType binOp = opStack.pop();
 
-                    valStack.push(new BinaryOperationNode(binOp, exp2, exp1));
+                    valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
                 }
             }
             opStack.push(op.type);
@@ -133,7 +134,7 @@ public class DefaultParser implements Parser {
 
             TokenType binOp = opStack.pop();
 
-            valStack.push(new BinaryOperationNode(binOp, exp2, exp1));
+            valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
         }
         return valStack.pop();
     }

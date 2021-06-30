@@ -52,9 +52,7 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
         BaseValue val1 = ast.getExp1().eval(scope);
         BaseValue val2 = ast.getExp2().eval(scope);
 
-        Operation operation = OperationDefine.findOperation(ast.getOp());
-
-        return operation.compute(val1, val2);
+        return ast.getOperation().compute(val1, val2);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -13,10 +14,13 @@ public class BinaryOperationNode implements BaseNode {
 
     private TokenType op;
 
-    public BinaryOperationNode(TokenType op, BaseNode exp1, BaseNode exp2) {
+    private Operation operation;
+
+    public BinaryOperationNode(TokenType op, BaseNode exp1, BaseNode exp2, Operation operation) {
         this.exp1 = exp1;
         this.exp2 = exp2;
         this.op = op;
+        this.operation = operation;
     }
 
     @Override
@@ -46,5 +50,13 @@ public class BinaryOperationNode implements BaseNode {
 
     public void setOp(TokenType op) {
         this.op = op;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
     }
 }
