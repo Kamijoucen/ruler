@@ -174,12 +174,12 @@ public class Test1 {
     @Test
     public void test11() {
 
-        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule4.txt");
+//        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule4.txt");
 
         String str1 = "f = fun() {println(123);};";
 
 
-        RuleScript runner = Ruler.compile(text);
+        RuleScript runner = Ruler.compile(str1);
 
         runner.run();
 
@@ -227,9 +227,20 @@ public class Test1 {
     @Test
     public void test15() {
 
-        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\quick_sort.txt");
+        String text = FileUtil.read("D:\\code\\ruler\\test\\tests\\rule7.txt");
 
         RuleScript script = Ruler.compile(text);
+
+        script.run();
+
+    }
+
+    @Test
+    public void test16() {
+
+        String str = "i = 10; fun test(i) { println(i); if i == 0 return; test(i - 1); } test(i);";
+
+        RuleScript script = Ruler.compile(str);
 
         script.run();
 

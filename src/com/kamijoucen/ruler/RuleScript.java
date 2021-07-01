@@ -19,7 +19,6 @@ public class RuleScript {
         this.scope = new DefaultScope(globalScope, true, true);
     }
 
-
     public List<Object> run() {
         return run(null);
     }
@@ -30,9 +29,7 @@ public class RuleScript {
         }
         RulerInterpreter interpreter = new RulerInterpreter(asts, scope);
 
-        List<Object> returnValue = interpreter.run(param);
-
-        return null;
+        return interpreter.run(param);
     }
 
 }

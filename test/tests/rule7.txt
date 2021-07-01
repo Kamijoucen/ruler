@@ -1,0 +1,18 @@
+
+nn = 4;
+
+f = fun(f1, f2) {
+    return fun(num) {
+        return f1() + f2() + num + nn;
+    };
+};
+
+n = f(
+fun() {
+    return 1;
+},
+fun() {
+    return 2;
+})(3);
+
+println(n);
