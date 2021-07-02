@@ -20,4 +20,6 @@ public interface ExpressionVisitor {
 
     BaseValue eval(ArrayNode node, Scope scope);
 
+    BaseValue eval(NullNode node, Scope scope);
+
 }

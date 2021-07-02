@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.*;
 
@@ -162,6 +163,8 @@ public class DefaultParser implements Parser {
                 return parseBool();
             case KEY_FUN:
                 return parseFunDefine();
+            case KEY_NULL:
+                return parseNull();
             case LEFT_SQUARE:
                 return parseArray();
         }
@@ -506,6 +509,15 @@ public class DefaultParser implements Parser {
         return new BoolNode(Boolean.parseBoolean(token.name));
     }
 
+    public BaseNode parseNull() {
+
+        Assert.assertToken(lexical, TokenType.KEY_NULL);
+
+        lexical.nextToken();
+
+        return NullNode.NULL_NODE;
+    }
+
     public BaseNode parseContinueAST() {
 
         Assert.assertToken(lexical, TokenType.KEY_CONTINUE);
@@ -522,7 +534,6 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
 
         return new BreakNode();
-
     }
 
     public BaseNode parseReturn() {

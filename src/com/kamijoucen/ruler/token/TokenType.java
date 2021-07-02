@@ -42,6 +42,7 @@ public enum TokenType {
     KEY_TRUE,       // true
     KEY_ELSE,       // else
     KEY_FUN,        // fun
+    KEY_NULL,       // null
 
     EOF,
 

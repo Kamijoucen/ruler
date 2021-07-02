@@ -72,4 +72,10 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
 
         return new ArrayValue(values);
     }
+
+    @Override
+    public BaseValue eval(NullNode node, Scope scope) {
+        return NullValue.INSTANCE;
+    }
+
 }
