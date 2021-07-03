@@ -1,0 +1,55 @@
+
+
+fun swap(arr, i, j) {
+    temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
+}
+
+fun partition(arr, begin, end) {
+
+    println("1---------    ", arr, begin, end);
+
+    base = arr[begin];
+
+    while(begin < end) {
+
+        println("    2---------    ", begin, end);
+
+        while(begin < end && arr[end] >= base)
+            end = end - 1;
+
+        arr[begin] = arr[end];
+
+        while (begin < end && arr[begin] <= base)
+            begin = begin + 1;
+
+        arr[end] = arr[begin];
+    }
+
+    arr[begin] = base;
+    return begin;
+}
+
+fun sort(subArr, begin, end) {
+    if begin >= end {
+        return;
+    }
+    p = partition(subArr, begin, end);
+    sort(arr, begin, p - 1);
+    sort(arr, p + 1, end);
+}
+
+fun quickSort(arr, len) {
+    sort(arr, 0, len - 1);
+}
+
+arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+
+len = 10;
+
+println(arr);
+
+quickSort(arr, len);
+
+println(arr);
