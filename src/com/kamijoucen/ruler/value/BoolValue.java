@@ -2,9 +2,13 @@ package com.kamijoucen.ruler.value;
 
 public class BoolValue implements BaseValue {
 
-    private boolean value;
+    public static final BoolValue TRUE = new BoolValue(true);
 
-    public BoolValue(boolean value) {
+    public static final BoolValue FALSE = new BoolValue(false);
+    
+    private final boolean value;
+
+    private BoolValue(boolean value) {
         this.value = value;
     }
 
@@ -22,7 +26,8 @@ public class BoolValue implements BaseValue {
         return value;
     }
 
-    public void setValue(boolean value) {
-        this.value = value;
+    public static BoolValue get(boolean bool) {
+        return bool ? TRUE : FALSE;
     }
+    
 }

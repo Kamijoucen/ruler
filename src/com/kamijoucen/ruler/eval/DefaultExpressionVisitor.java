@@ -2,8 +2,6 @@ package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.env.Scope;
-import com.kamijoucen.ruler.operation.Operation;
-import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
@@ -38,7 +36,7 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
     public BaseValue eval(BoolNode ast, Scope scope) {
-        return new BoolValue(ast.getValue());
+        return BoolValue.get(ast.getValue());
     }
 
     @Override
@@ -53,6 +51,15 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
         BaseValue val2 = ast.getExp2().eval(scope);
 
         return ast.getOperation().compute(val1, val2);
+    }
+
+    @Override
+    public BaseValue eval(LogicBinaryOperationNode node, Scope scope) {
+
+        BaseNode exp1 = node.getExp1();
+        BaseNode exp2 = node.getExp2();
+
+        return node.getLogicOperation().compute(scope, exp1, exp2);
     }
 
     @Override

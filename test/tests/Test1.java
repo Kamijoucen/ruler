@@ -246,5 +246,17 @@ public class Test1 {
 
     }
 
+    @Test
+    public void test17() {
+
+
+        String str = "i = !false || true && true; println(i);";
+
+        RuleScript script = Ruler.compile(str);
+
+        script.run();
+
+    }
+
 
 }

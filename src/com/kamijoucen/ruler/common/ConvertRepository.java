@@ -14,22 +14,24 @@ public class ConvertRepository {
     private static final Map<Class<?>, ValueConvert> CLASS_MAP = new HashMap<Class<?>, ValueConvert>();
 
     static {
-
         IntegerConvert integerConvert = new IntegerConvert();
         DoubleConvert doubleConvert = new DoubleConvert();
         StringConvert stringConvert = new StringConvert();
         NullConvert nullConvert = new NullConvert();
         ArrayConvert arrayConvert = new ArrayConvert();
+        BoolConvert boolConvert = new BoolConvert();
 
         VALUE_TYPE_MAP.put(ValueType.INTEGER, integerConvert);
         VALUE_TYPE_MAP.put(ValueType.DOUBLE, doubleConvert);
         VALUE_TYPE_MAP.put(ValueType.STRING, stringConvert);
         VALUE_TYPE_MAP.put(ValueType.NULL, nullConvert);
         VALUE_TYPE_MAP.put(ValueType.ARRAY, arrayConvert);
+        VALUE_TYPE_MAP.put(ValueType.BOOL, boolConvert);
 
         CLASS_MAP.put(Integer.class, integerConvert);
         CLASS_MAP.put(Double.class, doubleConvert);
         CLASS_MAP.put(String.class, stringConvert);
+        CLASS_MAP.put(Boolean.class, boolConvert);
     }
 
     public static ValueConvert getConverter(Object obj) {

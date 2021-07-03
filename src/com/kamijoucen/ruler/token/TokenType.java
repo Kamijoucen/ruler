@@ -23,6 +23,9 @@ public enum TokenType {
     ASSIGN,         // =
     EQ,             // ==
     NE,             // <> or !=
+    AND,            // &&
+    OR,             // ||
+    NOT,            // !
     ADD,            // +
     SUB,            // -
     MUL,            // *

@@ -1,25 +1,42 @@
 package com.kamijoucen.ruler.operation;
 
+import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.env.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-public class OrOperation implements Operation {
+public class OrOperation implements LogicOperation {
     @Override
-    public BaseValue compute(BaseValue... param) {
-        BaseValue tempVal1 = param[0];
-        BaseValue tempVal2 = param[1];
+    public BaseValue compute(Scope scope, BaseNode... nodes) {
+        
+        BaseNode exp1 = nodes[0];
+        BaseNode exp2 = nodes[1];
 
-        if (tempVal1.getType() != ValueType.BOOL
-                || tempVal2.getType() != ValueType.BOOL) {
-
-            throw SyntaxException.withSyntax("仅bool类型支持&&运算");
+        BaseValue tempExp1Val = exp1.eval(scope);
+        if (tempExp1Val.getType() != ValueType.BOOL) {
+            throw SyntaxException.withSyntax("该值不支持&&:" + tempExp1Val);
         }
 
-        BoolValue lVal = (BoolValue) tempVal1;
-        BoolValue rVal = (BoolValue) tempVal2;
+        BoolValue exp1Val = (BoolValue) tempExp1Val;
 
-        return new BoolValue(lVal.getValue() && rVal.getValue());
+        if (exp1Val.getValue()) {
+            return BoolValue.get(true);
+        }
+
+        BaseValue tempExp2Val = exp2.eval(scope);
+        if (tempExp1Val.getType() != ValueType.BOOL) {
+            throw SyntaxException.withSyntax("该值不支持&&:" + tempExp2Val);
+        }
+
+        BoolValue exp2Val = (BoolValue) tempExp2Val;
+
+        if (exp2Val.getValue()) {
+            return BoolValue.get(true);
+        }
+
+        return BoolValue.get(false);
+
     }
 }

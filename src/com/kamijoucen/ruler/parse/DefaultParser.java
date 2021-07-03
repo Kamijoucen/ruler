@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
+import com.kamijoucen.ruler.util.CheckUtil;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.*;
@@ -123,7 +124,11 @@ public class DefaultParser implements Parser {
 
                     TokenType binOp = opStack.pop();
 
-                    valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
+                    if (CheckUtil.isLogicOperation(binOp)) {
+                        valStack.push(new LogicBinaryOperationNode(binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp)));
+                    } else {
+                        valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
+                    }
                 }
             }
             opStack.push(op.type);
@@ -135,7 +140,11 @@ public class DefaultParser implements Parser {
 
             TokenType binOp = opStack.pop();
 
-            valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
+            if (CheckUtil.isLogicOperation(binOp)) {
+                valStack.push(new LogicBinaryOperationNode(binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp)));
+            } else {
+                valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
+            }
         }
         return valStack.pop();
     }
@@ -150,6 +159,7 @@ public class DefaultParser implements Parser {
                 return parseIdentifier(false);
             case ADD:
             case SUB:
+            case NOT:
                 return parseUnaryExpression();
             case INTEGER:
             case DOUBLE:
@@ -287,13 +297,15 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseUnaryExpression() {
         Token token = lexical.getToken();
-        if (token.type != TokenType.ADD
-                && token.type != TokenType.SUB) {
-            throw SyntaxException.withSyntax("不支持的单目运算符", token);
-        }
-
         lexical.nextToken();
-        return new UnaryOperationNode(token.type, parsePrimaryExpression());
+
+        if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
+            return new UnaryOperationNode(token.type, parsePrimaryExpression());
+        } else if (token.type == TokenType.NOT) {
+            return new LogicBinaryOperationNode(TokenType.NOT,
+                    parsePrimaryExpression(), null, OperationDefine.findLogicOperation(TokenType.NOT));
+        }
+        throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
 
     public BaseNode parseIdentifier(boolean isStatement) {
