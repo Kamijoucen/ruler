@@ -1,0 +1,25 @@
+
+fun test1(arr, i) {
+    arr[i] = 666;
+    return;
+}
+
+fun test(arr, i) {
+    test1(arr, i);
+
+    if(i != 0) {
+        i = i - 1;
+        test(arr, i);
+    } else {
+        return;
+    }
+}
+
+arr = [1, 2, 3];
+
+println(arr);
+
+test(arr, 2);
+
+println(arr);
+
