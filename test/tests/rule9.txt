@@ -1,0 +1,11 @@
+fun foo() {
+    println(a);
+}
+
+fun bar() {
+    a = 3;
+    foo();
+}
+
+a = 2;
+bar();

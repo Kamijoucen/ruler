@@ -1,60 +1,48 @@
+
+
 fun partition(arr, begin, end) {
 
-    println("1---------    ", arr, begin, end);
+    println("-----------", begin, end);
 
     base = arr[begin];
 
-    println("2---------    ", base);
-
     while begin < end {
 
-        println("3---------    ", begin, end);
-
-        while(begin < end && arr[end] >= base) {
-            println("4--end", end, "arr[end]", arr[end]);
+        while begin < end && arr[end] >= base {
             end = end - 1;
         }
 
+        println(begin, end);
         arr[begin] = arr[end];
 
-        while (begin < end && arr[begin] <= base) {
-            println("5--begin", begin, "arr[begin]", arr[begin]);
+        while begin < end && arr[begin] <= base {
             begin = begin + 1;
         }
-
+        println(end, begin);
         arr[end] = arr[begin];
     }
 
     arr[begin] = base;
-
-    println();
-    println();
 
     return begin;
 }
 
 fun sort(subArr, begin, end) {
     if begin >= end {
-        println("out--", begin, end);
         return;
     }
-    println("1sort ", subArr, begin, end);
     p = partition(subArr, begin, end);
-    println("2sort ", subArr, begin, end);
-    println("3sort ", p);
-    sort(arr, begin, p - 1);
-    sort(arr, p + 1, end);
+    println("out", begin, end);
+    sort(subArr, begin, p - 1);
+    sort(subArr, p + 1, end);
 }
 
-fun quickSort(arr, len) {
-    sort(arr, 0, len - 1);
-}
+len = 6;
 
-arr = [4, 3, 2, 1];
+arr2 = [1, 5, 4, 3, 2, 6];
 
-len = 4;
+println(arr2);
 
-quickSort(arr, len);
+sort(arr2, 0, len - 1);
 
-println("------------------------------------");
-println(arr);
+println(arr2);

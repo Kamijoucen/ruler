@@ -250,7 +250,7 @@ public class Test1 {
     public void test17() {
 
 
-        String str = "i = !false || true && true; println(i);";
+        String str = "a = false || false; println(a);";
 
         RuleScript script = Ruler.compile(str);
 

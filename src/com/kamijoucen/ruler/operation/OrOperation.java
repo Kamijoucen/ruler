@@ -26,7 +26,7 @@ public class OrOperation implements LogicOperation {
         }
 
         BaseValue tempExp2Val = exp2.eval(scope);
-        if (tempExp1Val.getType() != ValueType.BOOL) {
+        if (tempExp2Val.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("该值不支持&&:" + tempExp2Val);
         }
 

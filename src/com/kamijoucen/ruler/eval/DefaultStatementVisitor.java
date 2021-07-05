@@ -125,12 +125,6 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(WhileStatementNode ast, Scope scope) {
 
-        BaseValue conditionValue = ast.getCondition().eval(scope);
-
-        if (conditionValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("需要一个bool类型");
-        }
-
         BaseNode block = ast.getBlock();
 
         while (((BoolValue) ast.getCondition().eval(scope)).getValue()) {
@@ -162,6 +156,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         for (OperationNode call : calls) {
             call.putOperationValue(statementValue);
+            // todo 这里可以编译时查找
             call.putOperation(OperationDefine.findOperation(call.getOperationType()));
 
             statementValue = call.eval(scope);
