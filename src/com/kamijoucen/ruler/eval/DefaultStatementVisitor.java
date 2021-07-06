@@ -171,7 +171,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         String funName = node.getName();
 
-        ClosureValue closureValue = new ClosureValue(new DefaultScope(scope), param, node.getBlock());
+        ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
 
         if (funName != null) {
             scope.putValue(funName, false, closureValue);

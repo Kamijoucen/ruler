@@ -14,6 +14,8 @@ public interface Scope {
 
     void putValue(String name, boolean isOut, BaseValue baseValue);
 
+    void putLocalValue(String name, boolean isOut, BaseValue baseValue);
+
     //------------------------------------------------------
     void initReturnSpace();
 

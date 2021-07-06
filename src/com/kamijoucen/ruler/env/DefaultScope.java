@@ -55,11 +55,21 @@ public class DefaultScope implements Scope {
 
     @Override
     public void putValue(String name, boolean isOut, BaseValue baseValue) {
-        if (parent != null && parent.isContains(name, isOut)) {
-            parent.putValue(name, isOut, baseValue);
-        } else {
+
+        if (getValueSpace(isOut).containsKey(name)) {
             getValueSpace(isOut).put(name, baseValue);
+        } else {
+            if (parent != null && parent.isContains(name, isOut)) {
+                parent.putValue(name, isOut, baseValue);
+            } else {
+                getValueSpace(isOut).put(name, baseValue);
+            }
         }
+    }
+
+    @Override
+    public void putLocalValue(String name, boolean isOut, BaseValue baseValue) {
+        getValueSpace(isOut).put(name, baseValue);
     }
 
     @Override

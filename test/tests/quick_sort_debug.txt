@@ -1,4 +1,4 @@
-
+count = 0;
 
 fun partition(arr, begin, end) {
 
@@ -9,14 +9,19 @@ fun partition(arr, begin, end) {
     while begin < end {
 
         while begin < end && arr[end] >= base {
+            println("1w 1", begin, end, "condition", arr[end], base);
             end = end - 1;
+            println("1w 2", begin, end);
+            println();
         }
 
         println(begin, end);
         arr[begin] = arr[end];
 
         while begin < end && arr[begin] <= base {
+            println("2w 1", begin, end);
             begin = begin + 1;
+            println("2w 2", begin, end);
         }
         println(end, begin);
         arr[end] = arr[begin];
@@ -28,13 +33,19 @@ fun partition(arr, begin, end) {
 }
 
 fun sort(subArr, begin, end) {
+    count = count + 1;
+    println("count:", count);
     if begin >= end {
         return;
     }
     p = partition(subArr, begin, end);
     println("out", begin, end);
+    println("111111111111");
     sort(subArr, begin, p - 1);
+    println("222222222222");
+    println(subArr, p + 1, end);
     sort(subArr, p + 1, end);
+    println("33333333333333");
 }
 
 len = 6;
