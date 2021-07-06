@@ -7,13 +7,12 @@ import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
 import com.kamijoucen.ruler.util.CheckUtil;
-import com.kamijoucen.ruler.value.constant.NullValue;
+import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.*;
 
@@ -21,11 +20,14 @@ public class DefaultParser implements Parser {
 
     private Lexical lexical;
 
-    private List<BaseNode> astList;
+    private List<BaseNode> statements;
+
+    private ParseContext parseContext;
 
     public DefaultParser(Lexical lexical) {
         this.lexical = lexical;
-        this.astList = new ArrayList<BaseNode>();
+        this.statements = new ArrayList<BaseNode>();
+        this.parseContext = new ParseContext();
     }
 
     @Override
@@ -34,9 +36,9 @@ public class DefaultParser implements Parser {
         lexical.nextToken();
 
         while (lexical.getToken().type != TokenType.EOF) {
-            astList.add(parseStatement());
+            statements.add(parseStatement());
         }
-        return astList;
+        return statements;
     }
 
     public BaseNode parseStatement() {
@@ -75,6 +77,8 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_FUN:
                 statement = parseFunDefine();
+                break;
+            case KEY_VAR:
                 break;
             case KEY_LIST:
                 break;
@@ -227,6 +231,28 @@ public class DefaultParser implements Parser {
         return new IfStatementNode(condition, thenBlock, elseBlock);
     }
 
+    public BaseValue parseVariableDefine() {
+
+        // eat var
+        Assert.assertToken(lexical, TokenType.KEY_VAR);
+
+        lexical.nextToken();
+
+        Token token = lexical.getToken();
+
+        if (token.type != TokenType.OUT_IDENTIFIER
+                && token.type != TokenType.IDENTIFIER) {
+            throw SyntaxException.withSyntax("不支持的单目运算符", token);
+        }
+
+        Token nextToken = lexical.nextToken();
+
+
+
+
+        return null;
+    }
+
     public BaseNode parseFunDefine() {
 
         // eat fun
@@ -268,7 +294,6 @@ public class DefaultParser implements Parser {
         // eat )
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
         lexical.nextToken();
-
         BaseNode block = parseBlock();
 
         return new ClosureDefineNode(name, param, block);
@@ -314,7 +339,7 @@ public class DefaultParser implements Parser {
 
         if (token.type != TokenType.OUT_IDENTIFIER
                 && token.type != TokenType.IDENTIFIER) {
-            throw SyntaxException.withSyntax("不支持的单目运算符", token);
+            throw SyntaxException.withSyntax("不支持的标识符", token);
         }
         Token nextToken = lexical.nextToken();
 
