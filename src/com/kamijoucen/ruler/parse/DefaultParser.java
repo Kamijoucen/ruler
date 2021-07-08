@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.common.CollectionUtil;
+import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
@@ -98,9 +99,9 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseExpression() {
 
-        Stack<BaseNode> valStack = new Stack<BaseNode>();
+        RStack<BaseNode> valStack = new RStack<BaseNode>();
 
-        Stack<TokenType> opStack = new Stack<TokenType>();
+        RStack<TokenType> opStack = new RStack<TokenType>();
 
         valStack.push(parsePrimaryExpression()); // first exp
 
