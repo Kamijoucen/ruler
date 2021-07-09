@@ -246,8 +246,13 @@ public class DefaultParser implements Parser {
             throw SyntaxException.withSyntax("不支持的单目运算符", token);
         }
 
-        Token nextToken = lexical.nextToken();
+        Token name = lexical.nextToken();
 
+        lexical.nextToken();
+
+        Assert.assertToken(lexical, TokenType.ASSIGN);
+
+        lexical.nextToken();
 
 
 
