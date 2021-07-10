@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.ast;
 
-import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 

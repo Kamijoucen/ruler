@@ -6,19 +6,16 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.env.DefaultScope;
-import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.OperationDefine;
-import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DefaultStatementVisitor implements StatementVisitor {
@@ -191,6 +188,18 @@ public class DefaultStatementVisitor implements StatementVisitor {
         }
 
         return ReturnValue.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(VariableDefineNode node, Scope scope) {
+
+        NameNode name = node.getName();
+
+        BaseValue value = node.getExpression().eval(scope);
+
+        scope.putLocalValue(name.name.name, false, value);
+
+        return NoneValue.INSTANCE;
     }
 
     @Override

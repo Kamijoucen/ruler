@@ -2,8 +2,8 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.NameNode;
-import com.kamijoucen.ruler.env.DefaultScope;
-import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RulerFunction;
 import com.kamijoucen.ruler.value.*;

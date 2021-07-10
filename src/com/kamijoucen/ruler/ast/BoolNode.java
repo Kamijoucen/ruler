@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.common.VisitorRepository;
-import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class BoolNode implements BaseNode {

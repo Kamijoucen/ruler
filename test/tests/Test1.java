@@ -3,7 +3,7 @@ package tests;
 import com.kamijoucen.ruler.RuleScript;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.env.DefaultScope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
@@ -13,8 +13,6 @@ import com.kamijoucen.ruler.util.FileUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

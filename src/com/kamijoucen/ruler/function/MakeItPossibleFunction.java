@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.runtime.function;
+package com.kamijoucen.ruler.function;
 
 import com.kamijoucen.ruler.runtime.RulerFunction;
 

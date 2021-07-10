@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.env.DefaultScope;
-import com.kamijoucen.ruler.env.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
