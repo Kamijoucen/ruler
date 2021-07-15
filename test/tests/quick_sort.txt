@@ -38,9 +38,9 @@ fun quickSort(arr, len) {
     sort(arr, 0, len - 1);
 }
 
-arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+var arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
 
-len = 10;
+var len = 10;
 
 println(arr);
 

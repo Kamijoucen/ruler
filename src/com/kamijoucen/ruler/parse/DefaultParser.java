@@ -80,6 +80,7 @@ public class DefaultParser implements Parser {
                 statement = parseFunDefine();
                 break;
             case KEY_VAR:
+                statement = parseVariableDefine();
                 break;
             case KEY_LIST:
                 break;
@@ -232,7 +233,7 @@ public class DefaultParser implements Parser {
         return new IfStatementNode(condition, thenBlock, elseBlock);
     }
 
-    public BaseValue parseVariableDefine() {
+    public BaseNode parseVariableDefine() {
 
         // eat var
         Assert.assertToken(lexical, TokenType.KEY_VAR);

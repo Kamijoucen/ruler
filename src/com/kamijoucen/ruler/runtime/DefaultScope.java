@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.runtime;
 
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ public class DefaultScope implements Scope {
             if (parent != null && parent.isContains(name, isOut)) {
                 parent.putValue(name, isOut, baseValue);
             } else {
-                getValueSpace(isOut).put(name, baseValue);
+                throw SyntaxException.withSyntax(name + " 未定义");
             }
         }
     }
