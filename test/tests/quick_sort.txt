@@ -1,16 +1,16 @@
 
 
 fun swap(arr, i, j) {
-    temp = arr[i];
+    var temp = arr[i];
     arr[i] = arr[j];
     arr[j] = temp;
 }
 
 fun partition(arr, begin, end) {
-    mid = arr[end];
+    var mid = arr[end];
 
-    i = begin;
-    j = begin;
+    var i = begin;
+    var j = begin;
 
     while j < end {
 
@@ -29,7 +29,7 @@ fun sort(subArr, begin, end) {
     if begin >= end {
         return;
     }
-    p = partition(subArr, begin, end);
+    var p = partition(subArr, begin, end);
     sort(arr, begin, p - 1);
     sort(arr, p + 1, end);
 }

@@ -81,6 +81,7 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_VAR:
                 statement = parseVariableDefine();
+                isNeedSemicolon = true;
                 break;
             case KEY_LIST:
                 break;
@@ -240,14 +241,12 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        Token token = lexical.getToken();
+        Token name = lexical.getToken();
 
-        if (token.type != TokenType.OUT_IDENTIFIER
-                && token.type != TokenType.IDENTIFIER) {
-            throw SyntaxException.withSyntax("不支持的单目运算符", token);
+        if (name.type != TokenType.OUT_IDENTIFIER
+                && name.type != TokenType.IDENTIFIER) {
+            throw SyntaxException.withSyntax("不支持的单目运算符", name);
         }
-
-        Token name = lexical.nextToken();
 
         lexical.nextToken();
 
@@ -255,9 +254,9 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
+        BaseNode exp = parseExpression();
 
-
-        return null;
+        return new VariableDefineNode(new NameNode(name, name.type == TokenType.OUT_IDENTIFIER), exp);
     }
 
     public BaseNode parseFunDefine() {
