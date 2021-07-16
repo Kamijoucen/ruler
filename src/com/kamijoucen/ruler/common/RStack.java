@@ -1,11 +1,11 @@
 package com.kamijoucen.ruler.common;
 
 import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Iterator;
 
-public class RStack<T> {
+public class RStack<T> implements Iterable<T> {
 
-    private Deque<T> queue;
+    private ArrayDeque<T> queue;
 
     public RStack() {
         queue = new ArrayDeque<T>();
@@ -27,4 +27,16 @@ public class RStack<T> {
         return queue.peek();
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return queue.iterator();
+    }
+
+    public RStack<T> copy() {
+        RStack<T> newStack = new RStack<T>();
+        for (T t : this) {
+            newStack.queue.add(t);
+        }
+        return newStack;
+    }
 }
