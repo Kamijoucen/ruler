@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -10,12 +9,12 @@ import com.kamijoucen.ruler.value.ValueType;
 
 public class OrOperation implements LogicOperation {
     @Override
-    public BaseValue compute(RuntimeContext context, BaseNode... nodes) {
+    public BaseValue compute(Scope scope, BaseNode... nodes) {
         
         BaseNode exp1 = nodes[0];
         BaseNode exp2 = nodes[1];
 
-        BaseValue tempExp1Val = exp1.eval(context);
+        BaseValue tempExp1Val = exp1.eval(scope);
         if (tempExp1Val.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("该值不支持&&:" + tempExp1Val);
         }
@@ -26,7 +25,7 @@ public class OrOperation implements LogicOperation {
             return BoolValue.get(true);
         }
 
-        BaseValue tempExp2Val = exp2.eval(context);
+        BaseValue tempExp2Val = exp2.eval(scope);
         if (tempExp2Val.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("该值不支持&&:" + tempExp2Val);
         }

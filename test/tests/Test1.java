@@ -3,7 +3,6 @@ package tests;
 import com.kamijoucen.ruler.RuleScript;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
@@ -249,28 +248,12 @@ public class Test1 {
     public void test17() {
 
 
-        String str = "var a = false || false; println(a);";
+        String str = "a = false || false; println(a);";
 
         RuleScript script = Ruler.compile(str);
 
         script.run();
 
-    }
-
-    @Test
-    public void test18() {
-
-        RStack<String> stack = new RStack<String>();
-
-        stack.push("1");
-        stack.push("2");
-        stack.push("3");
-        stack.push("4");
-        stack.push("5");
-
-        for (String s : stack) {
-            System.out.println(s);
-        }
     }
 
 
