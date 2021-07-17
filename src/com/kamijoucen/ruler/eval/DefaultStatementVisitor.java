@@ -6,7 +6,8 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.DefaultScope;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.value.*;
@@ -15,19 +16,19 @@ import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultStatementVisitor implements StatementVisitor {
 
     @Override
-    public BaseValue eval(BlockNode ast, RuntimeContext context) {
-        context.push("block");
+    public BaseValue eval(BlockNode ast, Scope scope) {
+
+        Scope blockScope = new DefaultScope(scope);
 
         List<BaseNode> blocks = ast.getBlocks();
 
         for (BaseNode block : blocks) {
-            BaseValue val = block.eval(context);
+            BaseValue val = block.eval(blockScope);
             if (ValueType.CONTINUE == val.getType()) {
                 break;
             } else if (ValueType.BREAK == val.getType()) {
@@ -36,15 +37,14 @@ public class DefaultStatementVisitor implements StatementVisitor {
                 return val;
             }
         }
-        context.pop();
 
         return NoneValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(IfStatementNode ast, RuntimeContext context) {
+    public BaseValue eval(IfStatementNode ast, Scope scope) {
 
-        BaseValue conditionValue = ast.getCondition().eval(context);
+        BaseValue conditionValue = ast.getCondition().eval(scope);
 
         if (conditionValue.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("需要一个bool类型");
@@ -54,32 +54,32 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         if (boolValue.getValue()) {
             BaseNode thenBlock = ast.getThenBlock();
-            return thenBlock.eval(context);
+            return thenBlock.eval(scope);
         } else {
             BaseNode elseBlock = ast.getElseBlock();
             if (elseBlock != null) {
-                return elseBlock.eval(context);
+                return elseBlock.eval(scope);
             }
         }
         return NoneValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(AssignNode ast, RuntimeContext context) {
+    public BaseValue eval(AssignNode ast, Scope scope) {
 
         NameNode name = ast.getName();
 
-        BaseValue value = ast.getExpression().eval(context);
+        BaseValue expBaseValue = ast.getExpression().eval(scope);
 
-        context.updateValue(name.name.name, value);
+        scope.putValue(name.name.name, name.isOut, expBaseValue);
 
-        return value;
+        return NoneValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(ArrayAssignNode node, RuntimeContext context) {
+    public BaseValue eval(ArrayAssignNode node, Scope scope) {
 
-        BaseValue tempValue = node.getCalls().eval(context);
+        BaseValue tempValue = node.getCalls().eval(scope);
 
         if (tempValue.getType() != ValueType.ARRAY) {
             throw SyntaxException.withSyntax(tempValue.getType() + "不是一个数组");
@@ -87,7 +87,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         ArrayValue arrayValue = (ArrayValue) tempValue;
 
-        BaseValue tempIndexValue = node.getIndex().getIndex().eval(context);
+        BaseValue tempIndexValue = node.getIndex().getIndex().eval(scope);
 
         if (tempIndexValue.getType() != ValueType.INTEGER) {
             throw SyntaxException.withSyntax("数组的索引必须是数字");
@@ -95,7 +95,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         IntegerValue indexValue = (IntegerValue) tempIndexValue;
 
-        BaseValue value = node.getExpression().eval(context);
+        BaseValue value = node.getExpression().eval(scope);
 
         arrayValue.getValues().set(indexValue.getValue(), value);
 
@@ -103,7 +103,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(CallNode node, RuntimeContext context) {
+    public BaseValue eval(CallNode node, Scope scope) {
 
         List<BaseNode> param = node.getParam();
 
@@ -112,7 +112,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
         paramVal[0] = node.getOperationValue();
 
         for (int i = 0; i < param.size(); i++) {
-            paramVal[i + 1] = param.get(i).eval(context);
+            paramVal[i + 1] = param.get(i).eval(scope);
         }
 
         return node.getOperation().compute(paramVal);
@@ -120,12 +120,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(WhileStatementNode ast, RuntimeContext context) {
+    public BaseValue eval(WhileStatementNode ast, Scope scope) {
 
         BaseNode block = ast.getBlock();
 
-        while (((BoolValue) ast.getCondition().eval(context)).getValue()) {
-            BaseValue blockValue = block.eval(context);
+        while (((BoolValue) ast.getCondition().eval(scope)).getValue()) {
+            BaseValue blockValue = block.eval(scope);
             if (ValueType.BREAK == blockValue.getType()) {
                 break;
             } else if (ValueType.RETURN == blockValue.getType()) {
@@ -136,18 +136,18 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(BreakNode ast, RuntimeContext context) {
+    public BaseValue eval(BreakNode ast, Scope scope) {
         return BreakValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(ContinueNode ast, RuntimeContext context) {
+    public BaseValue eval(ContinueNode ast, Scope scope) {
         return ContinueValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(CallLinkedNode ast, RuntimeContext context) {
-        BaseValue statementValue = ast.getFirst().eval(context);
+    public BaseValue eval(CallLinkedNode ast, Scope scope) {
+        BaseValue statementValue = ast.getFirst().eval(scope);
 
         List<OperationNode> calls = ast.getCalls();
 
@@ -156,22 +156,22 @@ public class DefaultStatementVisitor implements StatementVisitor {
             // todo 这里可以编译时查找
             call.putOperation(OperationDefine.findOperation(call.getOperationType()));
 
-            statementValue = call.eval(context);
+            statementValue = call.eval(scope);
         }
         return statementValue;
     }
 
     @Override
-    public BaseValue eval(ClosureDefineNode node, RuntimeContext context) {
+    public BaseValue eval(ClosureDefineNode node, Scope scope) {
 
         List<BaseNode> param = node.getParam();
 
         String funName = node.getName();
 
-        ClosureValue closureValue = new ClosureValue(context.copyStackRef(), param, node.getBlock());
+        ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
 
         if (funName != null) {
-            context.putLocalValue(funName, closureValue);
+            scope.putLocalValue(funName, false, closureValue);
         } else {
             return closureValue;
         }
@@ -179,40 +179,36 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(ReturnNode node, RuntimeContext context) {
+    public BaseValue eval(ReturnNode node, Scope scope) {
 
         List<BaseNode> param = node.getParam();
 
-        List<BaseValue> values = new ArrayList<BaseValue>(param.size());
-
         for (BaseNode baseNode : param) {
-            values.add(baseNode.eval(context));
+            scope.putReturnValue(baseNode.eval(scope));
         }
-
-        context.putReturnValues(values);
 
         return ReturnValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(VariableDefineNode node, RuntimeContext context) {
+    public BaseValue eval(VariableDefineNode node, Scope scope) {
 
         NameNode name = node.getName();
 
-        BaseValue value = node.getExpression().eval(context);
+        BaseValue value = node.getExpression().eval(scope);
 
-        context.putLocalValue(name.name.name, value);
+        scope.putLocalValue(name.name.name, false, value);
 
         return NoneValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(IndexNode node, RuntimeContext context) {
+    public BaseValue eval(IndexNode node, Scope scope) {
 
         BaseValue[] computeVals = new BaseValue[2];
 
         computeVals[0] = node.getOperationValue();
-        computeVals[1] = node.getIndex().eval(context);
+        computeVals[1] = node.getIndex().eval(scope);
 
         return node.getOperation().compute(computeVals);
     }
