@@ -6,12 +6,15 @@ public class FileUtil {
 
     public static String read(String path) {
         StringBuilder sb = new StringBuilder();
-        BufferedReader reader = null;
+        Reader reader = null;
         try {
             reader = new BufferedReader(new FileReader(path));
-            String line = null;
-            while ((line = reader.readLine()) != null) {
-                sb.append(line);
+
+            char[] buf = new char[2048];
+
+            int len = 0;
+            while ((len = reader.read(buf)) != -1) {
+                sb.append(buf, 0, len);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

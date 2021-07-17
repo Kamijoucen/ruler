@@ -56,7 +56,7 @@ public class DefaultLexical implements Lexical {
 
             char ch = charAt();
 
-            if (Character.isSpaceChar(ch)) {
+            if (Character.isWhitespace(ch)) {
                 state = State.NONE;
             } else if (IOUtil.isFirstIdentifierChar(ch)) {
                 state = State.IDENTIFIER;
@@ -222,7 +222,7 @@ public class DefaultLexical implements Lexical {
     }
 
     private void skipSpace() {
-        while (isNotOver() && Character.isSpaceChar(charAt())) {
+        while (isNotOver() && Character.isWhitespace(charAt())) {
             forward();
         }
     }

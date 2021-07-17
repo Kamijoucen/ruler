@@ -213,7 +213,7 @@ public class Test1 {
     public void test14() {
 
 //        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule6.txt");
-        String str = "arr = [1, 2, 3]; arr[2] = 4; println(arr);";
+        String str = "var arr = [1, 2, 3]; arr[2] = 4; println(arr);";
 //        String str1 = "a[1] = 1;";
 
         RuleScript script = Ruler.compile(str);
