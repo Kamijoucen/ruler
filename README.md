@@ -2,7 +2,7 @@
 ```java
 StringBuffer buffer = new StringBuffer();
 
-buffer.append("var text = 'hello world!'; ");
+buffer.append("text = 'hello world!'; ");
 buffer.append("println(text);         ");
 
 RuleScript runner = Ruler.compile(buffer.toString());

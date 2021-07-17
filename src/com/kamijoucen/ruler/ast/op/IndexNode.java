@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.ast.op;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.token.TokenType;
@@ -22,7 +21,7 @@ public class IndexNode implements OperationNode {
     }
 
     @Override
-    public BaseValue eval(RuntimeContext scope) {
+    public BaseValue eval(Scope scope) {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 

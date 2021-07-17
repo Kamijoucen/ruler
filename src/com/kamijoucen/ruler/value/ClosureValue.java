@@ -1,24 +1,19 @@
 package com.kamijoucen.ruler.value;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.common.RStack;
-import com.kamijoucen.ruler.runtime.ContextScope;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 
 import java.util.List;
 
 public class ClosureValue implements BaseValue {
 
-    private RStack<ContextScope> defineScope;
-
-    private ContextScope closureScope;
+    private Scope defineScope;
 
     private List<BaseNode> param;
 
     private BaseNode block;
 
-    public ClosureValue(RStack<ContextScope> defineScope, List<BaseNode> param, BaseNode block) {
+    public ClosureValue(Scope defineScope, List<BaseNode> param, BaseNode block) {
         this.defineScope = defineScope;
         this.param = param;
         this.block = block;
@@ -29,11 +24,11 @@ public class ClosureValue implements BaseValue {
         return ValueType.CLOSURE;
     }
 
-    public RStack<ContextScope> getDefineScope() {
+    public Scope getDefineScope() {
         return defineScope;
     }
 
-    public void setDefineScope(RStack<ContextScope> defineScope) {
+    public void setDefineScope(Scope defineScope) {
         this.defineScope = defineScope;
     }
 
