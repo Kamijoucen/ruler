@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
@@ -16,6 +15,7 @@ import com.kamijoucen.ruler.value.constant.ContinueValue;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultStatementVisitor implements StatementVisitor {
@@ -23,7 +23,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(BlockNode ast, Scope scope) {
 
-        Scope blockScope = new DefaultScope(scope);
+        Scope blockScope = new Scope("block", scope);
 
         List<BaseNode> blocks = ast.getBlocks();
 
@@ -71,7 +71,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         BaseValue expBaseValue = ast.getExpression().eval(scope);
 
-        scope.putValue(name.name.name, name.isOut, expBaseValue);
+        scope.update(name.name.name, expBaseValue);
 
         return NoneValue.INSTANCE;
     }
@@ -171,7 +171,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
         ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
 
         if (funName != null) {
-            scope.putLocalValue(funName, false, closureValue);
+            scope.putLocal(funName, closureValue);
         } else {
             return closureValue;
         }
@@ -183,10 +183,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         List<BaseNode> param = node.getParam();
 
+        List<BaseValue> values = new ArrayList<BaseValue>(param.size());
         for (BaseNode baseNode : param) {
-            scope.putReturnValue(baseNode.eval(scope));
+            values.add(baseNode.eval(scope));
         }
 
+        scope.putReturnValues(values);
         return ReturnValue.INSTANCE;
     }
 
@@ -195,9 +197,13 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         NameNode name = node.getName();
 
+        if (name.isOut) {
+            throw SyntaxException.withSyntax("不能定义一个外部变量" + name.name.name);
+        }
+
         BaseValue value = node.getExpression().eval(scope);
 
-        scope.putLocalValue(name.name.name, false, value);
+        scope.putLocal(name.name.name, value);
 
         return NoneValue.INSTANCE;
     }

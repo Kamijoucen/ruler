@@ -23,12 +23,9 @@ public class DefaultParser implements Parser {
 
     private List<BaseNode> statements;
 
-    private ParseContext parseContext;
-
     public DefaultParser(Lexical lexical) {
         this.lexical = lexical;
         this.statements = new ArrayList<BaseNode>();
-        this.parseContext = new ParseContext();
     }
 
     @Override

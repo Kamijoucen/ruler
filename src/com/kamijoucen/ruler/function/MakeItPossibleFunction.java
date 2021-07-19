@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.function;
 
-import com.kamijoucen.ruler.runtime.RulerFunction;
-
 public class MakeItPossibleFunction implements RulerFunction {
 
     @Override

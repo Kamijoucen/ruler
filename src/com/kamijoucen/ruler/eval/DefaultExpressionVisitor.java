@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.runtime.RulerFunction;
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
@@ -13,12 +13,8 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
     public BaseValue eval(NameNode node, Scope scope) {
-        BaseValue baseValue = scope.findValue(node.name.name, node.isOut);
+        BaseValue baseValue = scope.find(node.name.name);
         if (baseValue == null) {
-            RulerFunction function = scope.findFunction(node.name.name, node.isOut);
-            if (function != null) {
-                return new FunctionValue(function);
-            }
             return NullValue.INSTANCE;
         }
         return baseValue;

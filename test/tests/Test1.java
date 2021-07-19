@@ -3,10 +3,10 @@ package tests;
 import com.kamijoucen.ruler.RuleScript;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.FileUtil;
@@ -95,7 +95,7 @@ public class Test1 {
         List<BaseNode> parse = parser.parse();
 
         for (BaseNode baseNode : parse) {
-            BaseValue eval = baseNode.eval(new DefaultScope(null));
+            BaseValue eval = baseNode.eval(new Scope("", null));
 
             System.out.println(eval.toString());
         }
@@ -114,7 +114,7 @@ public class Test1 {
 
         List<BaseNode> parse = parser.parse();
 
-        DefaultScope scope = new DefaultScope(null);
+        Scope scope = new Scope("", null);
         for (BaseNode baseNode : parse) {
             BaseValue eval = baseNode.eval(scope);
             System.out.println(eval.toString());

@@ -1,20 +1,20 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.parse.DefaultLexical;
 import com.kamijoucen.ruler.parse.DefaultParser;
 import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.parse.Parser;
-import com.kamijoucen.ruler.runtime.RulerFunction;
-import com.kamijoucen.ruler.runtime.RulerFunctionProxy;
+import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.function.RulerFunctionProxy;
+import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.List;
 
 public class Ruler {
 
-    private static final Scope globalScope = new DefaultScope(null, true, true);
+    private static final Scope globalScope = new Scope("root", null);
 
     static {
         Init.engineInit();
@@ -33,10 +33,12 @@ public class Ruler {
 
 
     public static void registerFunction(RulerFunction function) {
-        Ruler.globalScope.putFunction(new RulerFunctionProxy(function), true);
+        FunctionValue fun = new FunctionValue(new RulerFunctionProxy(function));
+        Ruler.globalScope.putLocal(fun.getValue().getName(), fun);
     }
 
     static void registerInnerFunction(RulerFunction function) {
-        Ruler.globalScope.putFunction(new RulerFunctionProxy(function), false);
+        FunctionValue fun = new FunctionValue(new RulerFunctionProxy(function));
+        Ruler.globalScope.putLocal(fun.getValue().getName(), fun);
     }
 }
