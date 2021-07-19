@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.runtime;
+package com.kamijoucen.ruler.function;
 
 public interface RulerFunction {
 

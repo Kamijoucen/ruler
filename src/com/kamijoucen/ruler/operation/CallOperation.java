@@ -2,10 +2,9 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.NameNode;
-import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.runtime.RulerFunction;
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
@@ -38,12 +37,12 @@ public class CallOperation implements Operation {
 
     private BaseValue callClosure(ClosureValue closure, BaseValue[] funcParam) {
 
-        Scope defineScope = new DefaultScope(closure.getDefineScope());
+        Scope defineScope = new Scope("closure", closure.getDefineScope());
 
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {
             NameNode name = (NameNode) defineParam.get(i);
-            defineScope.putLocalValue(name.name.name, false, funcParam[i]);
+            defineScope.putLocal(name.name.name, funcParam[i]);
         }
 
         defineScope.initReturnSpace();
@@ -52,17 +51,17 @@ public class CallOperation implements Operation {
 
         block.eval(defineScope);
 
-        List<BaseValue> returnSpace = defineScope.getReturnSpace();
+        List<BaseValue> returnValues = defineScope.getReturnSpace();
 
-        if (returnSpace == null || returnSpace.size() == 0) {
+        if (returnValues == null || returnValues.size() == 0) {
             return NullValue.INSTANCE;
         }
 
-        if (returnSpace.size() == 1) {
-            return returnSpace.get(0);
+        if (returnValues.size() == 1) {
+            return returnValues.get(0);
         }
 
-        return new ArrayValue(returnSpace);
+        return new ArrayValue(returnValues);
     }
 
 }

@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.function;
 
-import com.kamijoucen.ruler.runtime.RulerFunction;
-
 import java.util.Arrays;
 
 public class PrintFunction implements RulerFunction {

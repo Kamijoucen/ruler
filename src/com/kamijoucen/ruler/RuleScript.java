@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.runtime.Scope;
 
 import java.util.Collections;
@@ -16,7 +15,7 @@ public class RuleScript {
 
     public RuleScript(Scope globalScope, List<BaseNode> asts) {
         this.asts = asts;
-        this.scope = new DefaultScope(globalScope, true, true);
+        this.scope = new Scope("file", globalScope);
     }
 
     public List<Object> run() {

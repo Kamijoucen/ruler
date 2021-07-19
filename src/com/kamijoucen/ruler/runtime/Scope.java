@@ -1,31 +1,73 @@
 package com.kamijoucen.ruler.runtime;
 
-import com.kamijoucen.ruler.runtime.RulerFunction;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public interface Scope {
+public class Scope {
 
-    //------------------------------------------------------
-    boolean isContains(String name, boolean isOut);
+    private String stackName;
 
-    BaseValue findValue(String name, boolean isOut);
+    private Scope parentScope;
 
-    void putValue(String name, boolean isOut, BaseValue baseValue);
+    private List<BaseValue> returnSpace;
 
-    void putLocalValue(String name, boolean isOut, BaseValue baseValue);
+    private Map<String, BaseValue> valueSpace;
 
-    //------------------------------------------------------
-    void initReturnSpace();
+    public Scope(String stackName, Scope parentScope) {
+        this.stackName = stackName;
+        this.parentScope = parentScope;
+        this.valueSpace = new HashMap<String, BaseValue>();
+    }
 
-    void putReturnValue(BaseValue value);
+    public BaseValue find(String name) {
+        BaseValue value = valueSpace.get(name);
+        if (value != null) {
+            return value;
+        } else if (parentScope != null) {
+            return parentScope.find(name);
+        } else {
+            return null;
+        }
+    }
 
-    List<BaseValue> getReturnSpace();
+    public void update(String name, BaseValue value) {
+        if (valueSpace.containsKey(name)) {
+            putLocal(name, value);
+        } else if (parentScope != null) {
+            parentScope.update(name, value);
+        } else {
+            throw SyntaxException.withSyntax(name + " 未定义");
+        }
+    }
 
-    //------------------------------------------------------
-    RulerFunction findFunction(String name, boolean isOut);
+    public void putLocal(String name, BaseValue value) {
+        valueSpace.put(name, value);
+    }
 
-    void putFunction(RulerFunction function, boolean isOut);
+    public boolean hasLocalReturnSpace() {
+        return returnSpace != null;
+    }
 
+    public void initReturnSpace() {
+        returnSpace = new ArrayList<BaseValue>();
+    }
+
+    public void putReturnValues(List<BaseValue> values) {
+        if (hasLocalReturnSpace()) {
+            this.returnSpace.addAll(values);
+        } else if (parentScope != null) {
+            this.parentScope.putReturnValues(values);
+        } else {
+            throw SyntaxException.withSyntax("未找到返回值空间");
+        }
+    }
+
+    public List<BaseValue> getReturnSpace() {
+        return returnSpace;
+    }
 }

@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -16,7 +15,7 @@ class RulerInterpreter {
 
     public RulerInterpreter(List<BaseNode> asts, Scope scope) {
         this.asts = asts;
-        this.scope = new DefaultScope(scope);
+        this.scope = new Scope("interpreter", scope);
     }
 
     public List<Object> run(Map<String, Object> param) {
