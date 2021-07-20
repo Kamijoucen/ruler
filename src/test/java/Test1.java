@@ -1,5 +1,3 @@
-package tests;
-
 import com.kamijoucen.ruler.RuleScript;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseNode;
@@ -11,7 +9,7 @@ import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.FileUtil;
 import com.kamijoucen.ruler.value.BaseValue;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
@@ -248,7 +246,7 @@ public class Test1 {
     public void test17() {
 
 
-        String str = "a = false || false; println(a);";
+        String str = "var a = false || false; println(a);";
 
         RuleScript script = Ruler.compile(str);
 
