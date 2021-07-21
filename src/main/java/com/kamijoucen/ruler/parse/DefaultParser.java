@@ -12,7 +12,7 @@ import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
-import com.kamijoucen.ruler.util.CheckUtil;
+import com.kamijoucen.ruler.util.TokenUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.*;
@@ -95,7 +95,6 @@ public class DefaultParser implements Parser {
         return statement;
     }
 
-
     public BaseNode parseExpression() {
 
         RStack<BaseNode> valStack = new RStack<BaseNode>();
@@ -128,8 +127,9 @@ public class DefaultParser implements Parser {
 
                     TokenType binOp = opStack.pop();
 
-                    if (CheckUtil.isLogicOperation(binOp)) {
-                        valStack.push(new LogicBinaryOperationNode(binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp)));
+                    if (TokenUtil.isLogicOperation(binOp)) {
+                        valStack.push(new LogicBinaryOperationNode(binOp, exp2, exp1,
+                                OperationDefine.findLogicOperation(binOp)));
                     } else {
                         valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
                     }
@@ -144,8 +144,9 @@ public class DefaultParser implements Parser {
 
             TokenType binOp = opStack.pop();
 
-            if (CheckUtil.isLogicOperation(binOp)) {
-                valStack.push(new LogicBinaryOperationNode(binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp)));
+            if (TokenUtil.isLogicOperation(binOp)) {
+                valStack.push(
+                        new LogicBinaryOperationNode(binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp)));
             } else {
                 valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
             }
@@ -181,6 +182,8 @@ public class DefaultParser implements Parser {
                 return parseNull();
             case LEFT_SQUARE:
                 return parseArray();
+            case LEFT_BRACE:
+                return parseRsonNode();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -240,8 +243,7 @@ public class DefaultParser implements Parser {
 
         Token name = lexical.getToken();
 
-        if (name.type != TokenType.OUT_IDENTIFIER
-                && name.type != TokenType.IDENTIFIER) {
+        if (name.type != TokenType.OUT_IDENTIFIER && name.type != TokenType.IDENTIFIER) {
             throw SyntaxException.withSyntax("不支持的单目运算符", name);
         }
 
@@ -302,7 +304,6 @@ public class DefaultParser implements Parser {
         return new ClosureDefineNode(name, param, block);
     }
 
-
     public BaseNode parseBlock() {
 
         Assert.assertToken(lexical, TokenType.LEFT_BRACE);
@@ -311,8 +312,7 @@ public class DefaultParser implements Parser {
 
         List<BaseNode> blocks = new ArrayList<BaseNode>();
 
-        while (lexical.getToken().type != TokenType.EOF
-                && lexical.getToken().type != TokenType.RIGHT_BRACE) {
+        while (lexical.getToken().type != TokenType.EOF && lexical.getToken().type != TokenType.RIGHT_BRACE) {
             blocks.add(parseStatement());
         }
 
@@ -330,8 +330,8 @@ public class DefaultParser implements Parser {
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(token.type, parsePrimaryExpression());
         } else if (token.type == TokenType.NOT) {
-            return new LogicBinaryOperationNode(TokenType.NOT,
-                    parsePrimaryExpression(), null, OperationDefine.findLogicOperation(TokenType.NOT));
+            return new LogicBinaryOperationNode(TokenType.NOT, parsePrimaryExpression(), null,
+                    OperationDefine.findLogicOperation(TokenType.NOT));
         }
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
@@ -340,8 +340,7 @@ public class DefaultParser implements Parser {
 
         Token token = lexical.getToken();
 
-        if (token.type != TokenType.OUT_IDENTIFIER
-                && token.type != TokenType.IDENTIFIER) {
+        if (token.type != TokenType.OUT_IDENTIFIER && token.type != TokenType.IDENTIFIER) {
             throw SyntaxException.withSyntax("不支持的标识符", token);
         }
         Token nextToken = lexical.nextToken();
@@ -368,10 +367,8 @@ public class DefaultParser implements Parser {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
-        while (lexical.getToken().type == TokenType.LEFT_PAREN
-                || lexical.getToken().type == TokenType.LEFT_SQUARE
-                || lexical.getToken().type == TokenType.DOT
-                || lexical.getToken().type == TokenType.ASSIGN) {
+        while (lexical.getToken().type == TokenType.LEFT_PAREN || lexical.getToken().type == TokenType.LEFT_SQUARE
+                || lexical.getToken().type == TokenType.DOT || lexical.getToken().type == TokenType.ASSIGN) {
             switch (lexical.getToken().type) {
                 case LEFT_PAREN:
                     calls.add((OperationNode) parseCall());
@@ -408,7 +405,6 @@ public class DefaultParser implements Parser {
 
         if (TokenType.LEFT_PAREN == lexical.getToken().type) {
 
-
         }
 
         return null;
@@ -429,7 +425,6 @@ public class DefaultParser implements Parser {
         return new IndexNode(index);
     }
 
-
     public BaseNode parseCall() {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
@@ -446,8 +441,7 @@ public class DefaultParser implements Parser {
         List<BaseNode> params = new ArrayList<BaseNode>();
         params.add(param1);
 
-        while (lexical.getToken().type != TokenType.EOF
-                && lexical.getToken().type != TokenType.RIGHT_PAREN) {
+        while (lexical.getToken().type != TokenType.EOF && lexical.getToken().type != TokenType.RIGHT_PAREN) {
             Assert.assertToken(lexical, TokenType.COMMA);
             lexical.nextToken();
             params.add(parseExpression());
@@ -540,8 +534,7 @@ public class DefaultParser implements Parser {
 
         Token token = lexical.getToken();
 
-        if (token.type != TokenType.KEY_FALSE
-                && token.type != TokenType.KEY_TRUE) {
+        if (token.type != TokenType.KEY_FALSE && token.type != TokenType.KEY_TRUE) {
             throw SyntaxException.withSyntax("需要一个bool", token);
         }
         lexical.nextToken();
@@ -625,10 +618,58 @@ public class DefaultParser implements Parser {
         return new ArrayNode(arrValues);
     }
 
+    public BaseNode parseRsonNode() {
 
-    public BaseNode parseObject() {
+        Assert.assertToken(lexical, TokenType.LEFT_BRACE);
 
-        return null;
+        lexical.nextToken();
+
+        Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
+
+        if (lexical.getToken().type != TokenType.RIGHT_BRACE) {
+
+            if (lexical.getToken().type != TokenType.IDENTIFIER && lexical.getToken().type != TokenType.STRING) {
+                throw SyntaxException.withSyntax("无效的key", lexical.getToken());
+            }
+
+            Token name = lexical.getToken();
+            lexical.nextToken();
+
+            Assert.assertToken(lexical, TokenType.COLON);
+            lexical.nextToken();
+
+            BaseNode value = parseExpression();
+
+            properties.put(name.name, value);
+
+        }
+
+        while (lexical.getToken().type != TokenType.RIGHT_BRACE) {
+
+            Assert.assertToken(lexical, TokenType.COMMA);
+
+            lexical.nextToken();
+
+            if (lexical.getToken().type != TokenType.IDENTIFIER && lexical.getToken().type != TokenType.STRING) {
+                throw SyntaxException.withSyntax("无效的key", lexical.getToken());
+            }
+
+            Token name = lexical.getToken();
+            lexical.nextToken();
+
+            Assert.assertToken(lexical, TokenType.COLON);
+            lexical.nextToken();
+
+            BaseNode value = parseExpression();
+
+            properties.put(name.name, value);
+        }
+
+        Assert.assertToken(lexical, TokenType.RIGHT_BRACE);
+
+        lexical.nextToken();
+
+        return new RsonNode(properties);
     }
 
 }

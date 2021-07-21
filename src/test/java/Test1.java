@@ -245,13 +245,23 @@ public class Test1 {
     @Test
     public void test17() {
 
-
         String str = "var a = false || false; println(a);";
 
         RuleScript script = Ruler.compile(str);
 
         script.run();
 
+    }
+
+    @Test
+    public void test_rson_parse() {
+        
+        String str = "var rson = {name:name};";
+
+        RuleScript script = Ruler.compile(str);
+
+        System.out.println(script);
+        
     }
 
 

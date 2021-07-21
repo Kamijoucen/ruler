@@ -12,6 +12,7 @@ public class TokenLookUp {
     static {
         SYMBOL.put(",", TokenType.COMMA);
         SYMBOL.put(";", TokenType.SEMICOLON);
+        SYMBOL.put(":", TokenType.COLON);
         SYMBOL.put(".", TokenType.DOT);
         SYMBOL.put("(", TokenType.LEFT_PAREN);
         SYMBOL.put(")", TokenType.RIGHT_PAREN);
@@ -41,8 +42,8 @@ public class TokenLookUp {
         KEY_WORDS.put("while", TokenType.KEY_WHILE);
         KEY_WORDS.put("break", TokenType.KEY_BREAK);
         KEY_WORDS.put("continue", TokenType.KEY_CONTINUE);
-        KEY_WORDS.put("list", TokenType.KEY_LIST);
-        KEY_WORDS.put("map", TokenType.KEY_MAP);
+        // KEY_WORDS.put("list", TokenType.KEY_LIST);
+        // KEY_WORDS.put("map", TokenType.KEY_MAP);
         KEY_WORDS.put("false", TokenType.KEY_FALSE);
         KEY_WORDS.put("true", TokenType.KEY_TRUE);
         KEY_WORDS.put("else", TokenType.KEY_ELSE);

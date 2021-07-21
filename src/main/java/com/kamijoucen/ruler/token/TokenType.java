@@ -9,6 +9,7 @@ public enum TokenType {
     STRING,
     COMMA,          // ,
     SEMICOLON,      // ;
+    COLON,          // :
     DOT,            // .
     LEFT_PAREN,     // (
     RIGHT_PAREN,    // )
