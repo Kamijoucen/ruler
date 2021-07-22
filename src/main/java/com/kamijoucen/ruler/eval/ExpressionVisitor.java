@@ -24,4 +24,6 @@ public interface ExpressionVisitor {
 
     BaseValue eval(NullNode node, Scope scope);
 
+    BaseValue eval(RsonNode node, Scope scope);
+
 }

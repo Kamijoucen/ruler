@@ -28,4 +28,6 @@ public enum ValueType {
 
     RETURN,
 
+    RSON,
+
 }

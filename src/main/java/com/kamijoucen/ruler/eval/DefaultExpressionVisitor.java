@@ -2,12 +2,14 @@ package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 public class DefaultExpressionVisitor implements ExpressionVisitor {
 
@@ -79,6 +81,23 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     @Override
     public BaseValue eval(NullNode node, Scope scope) {
         return NullValue.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(RsonNode node, Scope scope) {
+
+        RsonValue value = new RsonValue();
+        
+        Map<String, BaseNode> properties = node.getProperties();
+
+        for (Entry<String, BaseNode> entry : properties.entrySet()) {
+
+            // value.
+
+        }
+
+        
+        return null;
     }
 
 }

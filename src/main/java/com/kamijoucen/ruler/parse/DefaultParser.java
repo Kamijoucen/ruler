@@ -650,6 +650,10 @@ public class DefaultParser implements Parser {
 
             lexical.nextToken();
 
+            if (lexical.getToken().type == TokenType.RIGHT_BRACE) {
+                break;
+            }
+
             if (lexical.getToken().type != TokenType.IDENTIFIER && lexical.getToken().type != TokenType.STRING) {
                 throw SyntaxException.withSyntax("无效的key", lexical.getToken());
             }

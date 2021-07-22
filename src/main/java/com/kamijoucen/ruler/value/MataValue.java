@@ -1,9 +1,10 @@
 package com.kamijoucen.ruler.value;
 
+import com.kamijoucen.ruler.runtime.MataData;
 
 public interface MataValue extends BaseValue {
 
-    Object getMataData();
+    MataData getMataData();
 
     BaseValue invoke(String name);
 
