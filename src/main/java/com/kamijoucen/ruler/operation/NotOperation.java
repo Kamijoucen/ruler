@@ -16,7 +16,7 @@ public class NotOperation implements LogicOperation {
         BaseValue tempExpVal = exp.eval(scope);
 
         if (tempExpVal.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持!:" + tempExpVal);
+            throw SyntaxException.withSyntax("该值不支持'!'操作:" + tempExpVal);
         }
         BoolValue expVal = (BoolValue) tempExpVal;
         return BoolValue.get(!expVal.getValue());

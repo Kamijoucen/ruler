@@ -27,9 +27,6 @@ public abstract class AbstractMataValue implements MataValue {
 
     @Override
     public BaseValue invoke(String name) {
-
-        // callOperation.compute()
-        
         return null;
     }
 }

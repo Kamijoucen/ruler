@@ -255,8 +255,19 @@ public class Test1 {
 
     @Test
     public void test_rson_parse() {
-        
+
         String str = "var rson = {name:name, age:1, doit:fun() { println('gogogogo'); },};";
+
+        RuleScript script = Ruler.compile(str);
+
+        System.out.println(script);
+
+    }
+
+    @Test
+    public void test_rson_parse2() {
+
+        String str = "var rson = {f: { ff: fun() {println('go!');} }};";
 
         RuleScript script = Ruler.compile(str);
 

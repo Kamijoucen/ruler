@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.parse;
 
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.ast.op.CallNode;
+import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
@@ -397,16 +398,8 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        Assert.assertToken(lexical, TokenType.IDENTIFIER);
-
-        Token name = lexical.getToken();
-
-        lexical.nextToken();
-
-        if (TokenType.LEFT_PAREN == lexical.getToken().type) {
-
-        }
-
+        BaseNode operation = parseIdentifier(false);
+        
         return null;
     }
 

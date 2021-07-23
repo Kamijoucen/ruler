@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
+import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
@@ -43,12 +44,12 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public BaseValue eval(BinaryOperationNode ast, Scope scope) {
+    public BaseValue eval(BinaryOperationNode node, Scope scope) {
 
-        BaseValue val1 = ast.getExp1().eval(scope);
-        BaseValue val2 = ast.getExp2().eval(scope);
+        BaseValue val1 = node.getExp1().eval(scope);
+        BaseValue val2 = node.getExp2().eval(scope);
 
-        return ast.getOperation().compute(val1, val2);
+        return node.getOperation().compute(val1, val2);
     }
 
     @Override
@@ -85,19 +86,17 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
     public BaseValue eval(RsonNode node, Scope scope) {
-
-        RsonValue value = new RsonValue();
+        MataData mataData = new MataData();
         
-        Map<String, BaseNode> properties = node.getProperties();
+        for (Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
+            
+            String name = entry.getKey();
+            
+            BaseValue value = entry.getValue().eval(scope);
 
-        for (Entry<String, BaseNode> entry : properties.entrySet()) {
-
-            // value.
-
+            mataData.put(name, value);
         }
-
-        
-        return null;
+        return new RsonValue(mataData);
     }
 
 }

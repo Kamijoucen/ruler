@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.op.CallNode;
+import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
@@ -116,7 +117,13 @@ public class DefaultStatementVisitor implements StatementVisitor {
         }
 
         return node.getOperation().compute(paramVal);
+    }
 
+    @Override
+    public BaseValue eval(DotNode node, Scope scope) {
+        // TODO Auto-generated method stub
+        
+        return null;
     }
 
     @Override

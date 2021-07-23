@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.op.CallNode;
+import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -25,6 +26,8 @@ public interface StatementVisitor {
     BaseValue eval(CallNode node, Scope scope);
 
     BaseValue eval(IndexNode node, Scope scope);
+
+    BaseValue eval(DotNode node, Scope scope);
 
     BaseValue eval(CallLinkedNode node, Scope scope);
 
