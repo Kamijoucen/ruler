@@ -9,4 +9,3 @@ gen
 .vscode
 **/.*
 target
-src/main/java/com/kamijoucen/ruler/value/RsonValue.java
