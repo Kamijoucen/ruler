@@ -500,11 +500,15 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseAssign(Token identifier) {
 
+        if (identifier.type == TokenType.OUT_IDENTIFIER) {
+            throw SyntaxException.withSyntax("外部变量不允许进行赋值操作", identifier);
+        }
+
         Assert.assertToken(lexical, TokenType.ASSIGN);
 
         lexical.nextToken();
 
-        NameNode nameAST = new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER);
+        NameNode nameAST = new NameNode(identifier, false);
 
         BaseNode expression = parseExpression();
 
