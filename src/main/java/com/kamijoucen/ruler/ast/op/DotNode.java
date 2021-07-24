@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.ast.op;
 import java.util.List;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
@@ -15,17 +16,23 @@ public class DotNode implements OperationNode {
      */
     private TokenType dotType;
 
+    private String name;
+
     private List<BaseNode> param;
 
-    public DotNode(TokenType dotType, List<BaseNode> param) {
+    private Operation operation;
+
+    private BaseValue operationValue;
+
+    public DotNode(TokenType dotType, String name, List<BaseNode> param) {
         this.dotType = dotType;
+        this.name = name;
         this.param = param;
     }
 
     @Override
     public BaseValue eval(Scope scope) {
-        // TODO Auto-generated method stub
-        return null;
+        return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
     @Override
@@ -35,14 +42,12 @@ public class DotNode implements OperationNode {
 
     @Override
     public void putOperation(Operation operation) {
-        // TODO Auto-generated method stub
-        
+        this.operation = operation;
     }
 
     @Override
     public void putOperationValue(BaseValue value) {
-        // TODO Auto-generated method stub
-
+        this.operationValue = value;
     }
 
     public TokenType getDotType() {
@@ -59,6 +64,30 @@ public class DotNode implements OperationNode {
 
     public void setParam(List<BaseNode> param) {
         this.param = param;
-    }    
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Operation getOperation() {
+        return operation;
+    }
+
+    public void setOperation(Operation operation) {
+        this.operation = operation;
+    }
+
+    public BaseValue getOperationValue() {
+        return operationValue;
+    }
+
+    public void setOperationValue(BaseValue operationValue) {
+        this.operationValue = operationValue;
+    }
     
 }

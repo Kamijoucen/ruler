@@ -267,7 +267,10 @@ public class DefaultLexical implements Lexical {
     }
 
     private void forward() {
-        if (++offset != '\n') {
+
+        offset = offset + 1;
+        
+        if (safeCharAt() != '\n') {
             ++column;
         } else {
             column = 0;

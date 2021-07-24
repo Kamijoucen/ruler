@@ -398,9 +398,34 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        BaseNode operation = parseIdentifier(false);
-        
-        return null;
+        Assert.assertToken(lexical, TokenType.IDENTIFIER);
+
+        Token name = lexical.getToken();
+
+        lexical.nextToken();
+
+        if (lexical.getToken().type == TokenType.LEFT_PAREN) {
+
+            lexical.nextToken();
+
+            List<BaseNode> param = new ArrayList<BaseNode>();
+
+            if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
+                param.add(parseExpression());
+            }
+
+            while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
+                Assert.assertToken(lexical, TokenType.COMMA);
+                param.add(parseExpression());
+            }
+
+            Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
+            lexical.nextToken();
+
+            return new DotNode(TokenType.CALL, name.name, param);
+        } else {
+            return new DotNode(TokenType.IDENTIFIER, name.name, null);
+        }
     }
 
     public BaseNode parseIndex() {
@@ -415,7 +440,10 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new IndexNode(index);
+        IndexNode indexNode = new IndexNode(index);
+        indexNode.putOperation(OperationDefine.findOperation(TokenType.INDEX));
+
+        return indexNode;
     }
 
     public BaseNode parseCall() {
@@ -444,7 +472,10 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
-        return new CallNode(params);
+        CallNode callNode = new CallNode(params);
+        callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
+        
+        return callNode;
     }
 
     public BaseNode parseArrayAssign(NameNode name, List<OperationNode> callList) {

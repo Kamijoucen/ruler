@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.value.*;
@@ -121,9 +122,26 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
     @Override
     public BaseValue eval(DotNode node, Scope scope) {
-        // TODO Auto-generated method stub
-        
-        return null;
+
+        TokenType dotType = node.getDotType();
+
+        BaseValue operationValue = node.getOperationValue();
+
+        if (!(operationValue instanceof MataValue)) {
+            throw SyntaxException.withSyntax(operationValue + "不支持进行'.'操作");
+        }
+        MataValue mataValue = (MataValue) operationValue;
+
+        if (dotType == TokenType.IDENTIFIER) {
+            return mataValue.getProperty(node.getName());
+        } else if (dotType == TokenType.CALL) {
+            List<BaseValue> values = new ArrayList<BaseValue>(node.getParam().size());
+            for (BaseNode p : node.getParam()) {
+                values.add(p.eval(scope));
+            }
+            return mataValue.invoke(node.getName(), values);
+        }
+        throw SyntaxException.withSyntax("不支持的DOT调用类型:" + dotType);
     }
 
     @Override
@@ -160,9 +178,6 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         for (OperationNode call : calls) {
             call.putOperationValue(statementValue);
-            // todo 这里可以编译时查找
-            call.putOperation(OperationDefine.findOperation(call.getOperationType()));
-
             statementValue = call.eval(scope);
         }
         return statementValue;

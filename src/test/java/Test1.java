@@ -272,7 +272,26 @@ public class Test1 {
         RuleScript script = Ruler.compile(str);
 
         System.out.println(script);
-        
+
+    }
+    
+    @Test
+    public void test_dot_call1() {
+        String str = "obj.name().name[1] = 5;";
+
+        RuleScript script = Ruler.compile(str);
+
+        System.out.println(script);
+
+    }
+    
+    @Test
+    public void test_dot_call2() {
+        String str = "var name = {getAge: fun() { return 19; }, name: '哈哈哈哈'}; println(name.name()); println(name.getAge());";
+
+        RuleScript script = Ruler.compile(str);
+
+        script.run();
     }
 
 

@@ -1,6 +1,8 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.operation.Operation;
+import java.util.List;
+
+import com.kamijoucen.ruler.operation.CallOperation;
 import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.TokenType;
@@ -9,7 +11,7 @@ public abstract class AbstractMataValue implements MataValue {
 
     protected MataData mataData;
 
-    private static Operation callOperation = OperationDefine.findOperation(TokenType.CALL);
+    private static CallOperation callOperation = (CallOperation) OperationDefine.findOperation(TokenType.CALL);
     
     public AbstractMataValue(MataData mataData) {
         this.mataData = mataData;
@@ -26,7 +28,15 @@ public abstract class AbstractMataValue implements MataValue {
     }
 
     @Override
-    public BaseValue invoke(String name) {
-        return null;
+    public BaseValue invoke(String name, List<BaseValue> param) {
+
+        BaseValue fun = mataData.get(name);
+
+        BaseValue[] realParam = new BaseValue[param.size() + 1];
+        realParam[0] = fun;
+
+        System.arraycopy(param.toArray(), 0, realParam, 1, param.size());
+        
+        return callOperation.compute(realParam);
     }
 }
