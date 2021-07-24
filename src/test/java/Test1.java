@@ -287,7 +287,7 @@ public class Test1 {
     
     @Test
     public void test_dot_call2() {
-        String str = "var name = {getAge: fun() { return 19; }, name: '哈哈哈哈'}; println(name.name()); println(name.getAge());";
+        String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
 
         RuleScript script = Ruler.compile(str);
 
