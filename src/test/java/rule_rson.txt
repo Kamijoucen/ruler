@@ -1,0 +1,12 @@
+
+// 1
+var list = {
+    length : 0,
+    data   : [],
+    subList: fun() {
+        // code...
+    }
+};
+
+
+

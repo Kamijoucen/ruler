@@ -6,4 +6,6 @@
 *.iml
 out
 gen
+.vscode
 **/.*
+target
