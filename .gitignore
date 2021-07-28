@@ -9,3 +9,5 @@ gen
 .vscode
 **/.*
 target
+**.jar
+lib

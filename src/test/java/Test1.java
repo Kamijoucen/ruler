@@ -223,7 +223,7 @@ public class Test1 {
     @Test
     public void test15() {
 
-        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\quick_sort.txt");
+        String text = FileUtil.read("D:\\code\\ruler\\src\\test\\java\\dot_call.txt");
 
         RuleScript script = Ruler.compile(text);
 

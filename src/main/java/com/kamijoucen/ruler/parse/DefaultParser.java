@@ -454,7 +454,9 @@ public class DefaultParser implements Parser {
 
         if (lexical.getToken().type == TokenType.RIGHT_PAREN) {
             lexical.nextToken();
-            return new CallNode(Collections.<BaseNode>emptyList());
+            CallNode callNode = new CallNode(Collections.<BaseNode>emptyList());
+            callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
+            return callNode;
         }
 
         BaseNode param1 = parseExpression();

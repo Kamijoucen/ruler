@@ -37,21 +37,21 @@ public class CallOperation implements Operation {
 
     private BaseValue callClosure(ClosureValue closure, BaseValue[] funcParam) {
 
-        Scope defineScope = new Scope("closure", closure.getDefineScope());
+        Scope callScope = new Scope("closure", closure.getDefineScope());
 
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {
             NameNode name = (NameNode) defineParam.get(i);
-            defineScope.putLocal(name.name.name, funcParam[i]);
+            callScope.putLocal(name.name.name, funcParam[i]);
         }
 
-        defineScope.initReturnSpace();
+        callScope.initReturnSpace();
 
         BaseNode block = closure.getBlock();
 
-        block.eval(defineScope);
+        block.eval(callScope);
 
-        List<BaseValue> returnValues = defineScope.getReturnSpace();
+        List<BaseValue> returnValues = callScope.getReturnSpace();
 
         if (returnValues == null || returnValues.size() == 0) {
             return NullValue.INSTANCE;

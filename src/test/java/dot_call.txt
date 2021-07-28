@@ -1,2 +1,13 @@
+fun counter(c) {
+    return fun() {
+        c = c + 1;
+        return c;
+    };
+}
 
-native function length(list);
+var c1 = counter(0);
+var c2 = counter(0);
+
+println(c1());
+println(c1());
+println(c2());
