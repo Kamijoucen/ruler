@@ -15,6 +15,8 @@ public interface StatementVisitor {
 
     BaseValue eval(AssignNode node, Scope scope);
 
+    BaseValue eval(AssignNode2 node, Scope Scope);
+
     BaseValue eval(ArrayAssignNode node, Scope scope);
 
     BaseValue eval(WhileStatementNode node, Scope scope);

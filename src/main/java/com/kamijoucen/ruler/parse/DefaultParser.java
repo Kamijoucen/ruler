@@ -14,7 +14,6 @@ import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.Assert;
 import com.kamijoucen.ruler.util.TokenUtil;
-import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.*;
 
@@ -38,6 +37,22 @@ public class DefaultParser implements Parser {
             statements.add(parseStatement());
         }
         return statements;
+    }
+
+    public BaseNode parseCallLinkAssignNode() {
+
+        BaseNode first = parsePrimaryExpression();
+
+        BaseNode callLinkNode = parseCallLink(first);
+
+        if (lexical.getToken().type != TokenType.ASSIGN) {
+            return callLinkNode;
+        }
+
+        lexical.nextToken();
+
+        BaseNode expression = parseExpression();
+        return new AssignNode2(callLinkNode, expression);
     }
 
     public BaseNode parseStatement() {
@@ -350,7 +365,7 @@ public class DefaultParser implements Parser {
             case DOT:
             case LEFT_PAREN:
             case LEFT_SQUARE:
-                return parseCallLink(token);
+                return parseCallLink(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
             case ASSIGN:
                 if (!isStatement) {
                     throw SyntaxException.withSyntax("赋值语句不能出现在表达式内");
@@ -364,12 +379,13 @@ public class DefaultParser implements Parser {
         }
     }
 
-    public BaseNode parseCallLink(Token identifier) {
+    public BaseNode parseCallLink(BaseNode firstNode) {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
-        while (lexical.getToken().type == TokenType.LEFT_PAREN || lexical.getToken().type == TokenType.LEFT_SQUARE
-                || lexical.getToken().type == TokenType.DOT || lexical.getToken().type == TokenType.ASSIGN) {
+        while (lexical.getToken().type == TokenType.LEFT_PAREN
+                || lexical.getToken().type == TokenType.LEFT_SQUARE
+                || lexical.getToken().type == TokenType.DOT) {
             switch (lexical.getToken().type) {
                 case LEFT_PAREN:
                     calls.add((OperationNode) parseCall());
@@ -380,16 +396,9 @@ public class DefaultParser implements Parser {
                 case DOT:
                     calls.add((OperationNode) parseDot());
                     break;
-                case ASSIGN:
-                    OperationNode lastNode = CollectionUtil.last(calls);
-                    if (lastNode == null || lastNode.getOperationType() != TokenType.INDEX) {
-                        throw SyntaxException.withSyntax("赋值运算左侧的表达式无效");
-                    }
-                    NameNode name = new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER);
-                    return parseArrayAssign(name, calls);
             }
         }
-        return new CallLinkedNode(new NameNode(identifier, identifier.type == TokenType.OUT_IDENTIFIER), calls);
+        return new CallLinkedNode(firstNode, calls);
     }
 
     public BaseNode parseDot() {
@@ -476,7 +485,7 @@ public class DefaultParser implements Parser {
 
         CallNode callNode = new CallNode(params);
         callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
-        
+
         return callNode;
     }
 
@@ -684,7 +693,8 @@ public class DefaultParser implements Parser {
                 break;
             }
 
-            if (lexical.getToken().type != TokenType.IDENTIFIER && lexical.getToken().type != TokenType.STRING) {
+            if (lexical.getToken().type != TokenType.IDENTIFIER
+                    && lexical.getToken().type != TokenType.STRING) {
                 throw SyntaxException.withSyntax("无效的key", lexical.getToken());
             }
 

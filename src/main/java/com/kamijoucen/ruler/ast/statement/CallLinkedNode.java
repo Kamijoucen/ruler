@@ -11,11 +11,11 @@ import java.util.List;
 
 public class CallLinkedNode implements BaseNode {
 
-    private NameNode first;
+    private BaseNode first;
 
     private List<OperationNode> calls;
 
-    public CallLinkedNode(NameNode first, List<OperationNode> calls) {
+    public CallLinkedNode(BaseNode first, List<OperationNode> calls) {
         this.first = first;
         this.calls = calls;
     }
@@ -25,11 +25,11 @@ public class CallLinkedNode implements BaseNode {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
-    public NameNode getFirst() {
+    public BaseNode getFirst() {
         return first;
     }
 
-    public void setFirst(NameNode first) {
+    public void setFirst(BaseNode first) {
         this.first = first;
     }
 

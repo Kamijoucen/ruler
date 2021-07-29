@@ -67,15 +67,23 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(AssignNode ast, Scope scope) {
+    public BaseValue eval(AssignNode node, Scope scope) {
 
-        NameNode name = ast.getName();
+        NameNode name = node.getName();
 
-        BaseValue expBaseValue = ast.getExpression().eval(scope);
+        BaseValue expBaseValue = node.getExpression().eval(scope);
 
         scope.update(name.name.name, expBaseValue);
 
         return NoneValue.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(AssignNode2 node, Scope Scope) {
+
+        CallLinkedNode leftNode = (CallLinkedNode) node.getLeftNode();
+
+        return null;
     }
 
     @Override
