@@ -1,12 +1,28 @@
 
-// 1
-var list = {
-    length : 0,
-    data   : [],
-    subList: fun() {
-        // code...
-    }
-};
+var name = "gogogogo";
 
+fun make() {
+    return {
+       left: null,
+       right: null,
+       data: -1,
+       log: fun() {
+           println(name);
+       }
+    };
+}
 
+var node1 = make();
+var node2 = make();
 
+node1.data = 100;
+node2.data = 200;
+
+node1.left = node2;
+
+println(node1.data);
+println(node1.left.data);
+
+node1.left.log();
+
+return node1;
