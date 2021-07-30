@@ -149,7 +149,7 @@ public class Test1 {
 
     @Test
     public void test9() {
-        String str2 = "println = 15; println(15);";
+        String str2 = "var i = 15; println(i);";
         RuleScript runner = Ruler.compile(str2);
 
         runner.run();
@@ -223,7 +223,7 @@ public class Test1 {
     @Test
     public void test15() {
 
-        String text = FileUtil.read("D:\\code\\ruler\\src\\test\\java\\dot_call.txt");
+        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\quick_sort.txt");
 
         RuleScript script = Ruler.compile(text);
 
@@ -280,6 +280,8 @@ public class Test1 {
         String str = "obj.name().name[1] = 5;";
 
         RuleScript script = Ruler.compile(str);
+
+        script.run();
 
         System.out.println(script);
 

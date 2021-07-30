@@ -9,20 +9,24 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 
-public class CallLinkedNode implements BaseNode {
+public class CallLinkNode implements BaseNode {
 
     private BaseNode first;
 
     private List<OperationNode> calls;
 
-    public CallLinkedNode(BaseNode first, List<OperationNode> calls) {
+    public CallLinkNode(BaseNode first, List<OperationNode> calls) {
         this.first = first;
         this.calls = calls;
     }
 
     @Override
     public BaseValue eval(Scope scope) {
-        return VisitorRepository.getStatementVisitor().eval(this, scope);
+        return VisitorRepository.getStatementVisitor().eval(this, false, scope);
+    }
+
+    public BaseValue evalAssign(Scope scope) {
+        return VisitorRepository.getStatementVisitor().eval(this, true, scope);
     }
 
     public BaseNode getFirst() {

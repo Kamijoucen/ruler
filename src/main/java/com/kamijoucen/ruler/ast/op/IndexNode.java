@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.ast.op;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.token.TokenType;
@@ -12,9 +13,9 @@ public class IndexNode implements OperationNode {
 
     private Operation operation;
 
-    private BaseValue operationValue;
-
     private BaseNode index;
+
+    private AssignOperation assignOperation;
 
     public IndexNode(BaseNode index) {
         this.index = index;
@@ -36,8 +37,13 @@ public class IndexNode implements OperationNode {
     }
 
     @Override
-    public void putOperationValue(BaseValue value) {
-        this.operationValue = value;
+    public void putAssignOperation(AssignOperation operation) {
+        this.assignOperation = operation;
+    }
+
+    @Override
+    public void assign(BaseNode expression, Scope scope) {
+        this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope);
     }
 
     public BaseNode getIndex() {
@@ -52,8 +58,11 @@ public class IndexNode implements OperationNode {
         return operation;
     }
 
-    public BaseValue getOperationValue() {
-        return operationValue;
+    public AssignOperation getAssignOperation() {
+        return assignOperation;
     }
 
+    public void setAssignOperation(AssignOperation assignOperation) {
+        this.assignOperation = assignOperation;
+    }
 }

@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.ast.op;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.token.TokenType;
@@ -12,8 +13,6 @@ import java.util.List;
 public class CallNode implements OperationNode {
 
     private Operation operation;
-
-    private BaseValue operationValue;
 
     private List<BaseNode> param;
 
@@ -37,16 +36,17 @@ public class CallNode implements OperationNode {
     }
 
     @Override
-    public void putOperationValue(BaseValue value) {
-        this.operationValue = value;
+    public void putAssignOperation(AssignOperation operation) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void assign(BaseNode expression, Scope scope) {
+        throw new UnsupportedOperationException();
     }
 
     public Operation getOperation() {
         return operation;
-    }
-
-    public BaseValue getOperationValue() {
-        return operationValue;
     }
 
     public List<BaseNode> getParam() {

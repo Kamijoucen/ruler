@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
@@ -22,7 +23,7 @@ public class DotNode implements OperationNode {
 
     private Operation operation;
 
-    private BaseValue operationValue;
+    private AssignOperation assignOperation;
 
     public DotNode(TokenType dotType, String name, List<BaseNode> param) {
         this.dotType = dotType;
@@ -46,8 +47,13 @@ public class DotNode implements OperationNode {
     }
 
     @Override
-    public void putOperationValue(BaseValue value) {
-        this.operationValue = value;
+    public void putAssignOperation(AssignOperation operation) {
+        this.assignOperation = operation;
+    }
+
+    @Override
+    public void assign(BaseNode expression, Scope scope) {
+        this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope);
     }
 
     public TokenType getDotType() {
@@ -82,12 +88,11 @@ public class DotNode implements OperationNode {
         this.operation = operation;
     }
 
-    public BaseValue getOperationValue() {
-        return operationValue;
+    public AssignOperation getAssignOperation() {
+        return assignOperation;
     }
 
-    public void setOperationValue(BaseValue operationValue) {
-        this.operationValue = operationValue;
+    public void setAssignOperation(AssignOperation assignOperation) {
+        this.assignOperation = assignOperation;
     }
-    
 }

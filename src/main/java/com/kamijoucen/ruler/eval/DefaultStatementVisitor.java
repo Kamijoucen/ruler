@@ -7,10 +7,10 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
+import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.BreakValue;
 import com.kamijoucen.ruler.value.constant.ContinueValue;
@@ -69,45 +69,20 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(AssignNode node, Scope scope) {
 
-        NameNode name = node.getName();
+        CallLinkNode leftNode = (CallLinkNode) node.getLeftNode();
 
-        BaseValue expBaseValue = node.getExpression().eval(scope);
-
-        scope.update(name.name.name, expBaseValue);
-
-        return NoneValue.INSTANCE;
-    }
-
-    @Override
-    public BaseValue eval(AssignNode2 node, Scope Scope) {
-
-        CallLinkedNode leftNode = (CallLinkedNode) node.getLeftNode();
-
-        return null;
-    }
-
-    @Override
-    public BaseValue eval(ArrayAssignNode node, Scope scope) {
-
-        BaseValue tempValue = node.getCalls().eval(scope);
-
-        if (tempValue.getType() != ValueType.ARRAY) {
-            throw SyntaxException.withSyntax(tempValue.getType() + "不是一个数组");
+        int callLength = leftNode.getCalls().size();
+        if (callLength == 0) {
+            NameNode name = (NameNode) leftNode.getFirst();
+            BaseValue expBaseValue = node.getExpression().eval(scope);
+            scope.update(name.name.name, expBaseValue);
+            return NoneValue.INSTANCE;
+        } else {
+            leftNode.evalAssign(scope);
+            OperationNode lastNode = CollectionUtil.last(leftNode.getCalls());
+            assert lastNode != null;
+            lastNode.assign(node.getExpression(), scope);
         }
-
-        ArrayValue arrayValue = (ArrayValue) tempValue;
-
-        BaseValue tempIndexValue = node.getIndex().getIndex().eval(scope);
-
-        if (tempIndexValue.getType() != ValueType.INTEGER) {
-            throw SyntaxException.withSyntax("数组的索引必须是数字");
-        }
-
-        IntegerValue indexValue = (IntegerValue) tempIndexValue;
-
-        BaseValue value = node.getExpression().eval(scope);
-
-        arrayValue.getValues().set(indexValue.getValue(), value);
 
         return NoneValue.INSTANCE;
     }
@@ -119,7 +94,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         BaseValue[] paramVal = new BaseValue[param.size() + 1];
 
-        paramVal[0] = node.getOperationValue();
+        paramVal[0] = scope.getCallLinkPreviousValue();
 
         for (int i = 0; i < param.size(); i++) {
             paramVal[i + 1] = param.get(i).eval(scope);
@@ -133,7 +108,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         TokenType dotType = node.getDotType();
 
-        BaseValue operationValue = node.getOperationValue();
+        BaseValue operationValue = scope.getCallLinkPreviousValue();
 
         if (!(operationValue instanceof MataValue)) {
             throw SyntaxException.withSyntax(operationValue + "不支持进行'.'操作");
@@ -179,15 +154,25 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(CallLinkedNode ast, Scope scope) {
+    public BaseValue eval(CallLinkNode ast, boolean isAssign, Scope scope) {
+
         BaseValue statementValue = ast.getFirst().eval(scope);
 
         List<OperationNode> calls = ast.getCalls();
+        int length = ast.getCalls().size();
 
-        for (OperationNode call : calls) {
-            call.putOperationValue(statementValue);
-            statementValue = call.eval(scope);
+        if (isAssign) {
+            length--;
         }
+        for (int i = 0; i < length; i++) {
+            scope.putCallLinkPreviousValue(statementValue);
+            statementValue = calls.get(i).eval(scope);
+        }
+
+        if (isAssign) {
+            scope.putCallLinkPreviousValue(statementValue);
+        }
+
         return statementValue;
     }
 
@@ -243,7 +228,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         BaseValue[] computeVals = new BaseValue[2];
 
-        computeVals[0] = node.getOperationValue();
+        computeVals[0] = scope.getCallLinkPreviousValue();
         computeVals[1] = node.getIndex().eval(scope);
 
         return node.getOperation().compute(computeVals);

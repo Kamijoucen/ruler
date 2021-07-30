@@ -1,9 +1,10 @@
 package com.kamijoucen.ruler.ast.op;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.value.BaseValue;
 
 public interface OperationNode extends BaseNode {
 
@@ -11,6 +12,8 @@ public interface OperationNode extends BaseNode {
 
     void putOperation(Operation operation);
 
-    void putOperationValue(BaseValue value);
+    void putAssignOperation(AssignOperation operation);
+
+    void assign(BaseNode expression, Scope scope);
 
 }

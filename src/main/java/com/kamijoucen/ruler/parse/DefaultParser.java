@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
@@ -39,20 +38,15 @@ public class DefaultParser implements Parser {
         return statements;
     }
 
-    public BaseNode parseCallLinkAssignNode() {
+    public BaseNode parseCallLinkAssignNode(CallLinkNode callLinkNode) {
 
-        BaseNode first = parsePrimaryExpression();
-
-        BaseNode callLinkNode = parseCallLink(first);
-
-        if (lexical.getToken().type != TokenType.ASSIGN) {
-            return callLinkNode;
-        }
+        Assert.assertToken(lexical.getToken(), TokenType.ASSIGN);
 
         lexical.nextToken();
 
         BaseNode expression = parseExpression();
-        return new AssignNode2(callLinkNode, expression);
+
+        return new AssignNode(callLinkNode, expression);
     }
 
     public BaseNode parseStatement() {
@@ -64,7 +58,7 @@ public class DefaultParser implements Parser {
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
-                statement = parseIdentifier(true);
+                statement = parseCallLink();
                 isNeedSemicolon = true;
                 break;
             case KEY_RETURN:
@@ -177,7 +171,7 @@ public class DefaultParser implements Parser {
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
-                return parseIdentifier(false);
+                return parseCallLink();
             case ADD:
             case SUB:
             case NOT:
@@ -352,34 +346,17 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
 
-    public BaseNode parseIdentifier(boolean isStatement) {
+    public BaseNode parseCallLink() {
 
-        Token token = lexical.getToken();
-
-        if (token.type != TokenType.OUT_IDENTIFIER && token.type != TokenType.IDENTIFIER) {
-            throw SyntaxException.withSyntax("不支持的标识符", token);
+        BaseNode firstNode = null;
+        if (lexical.getToken().type == TokenType.IDENTIFIER
+                || lexical.getToken().type == TokenType.OUT_IDENTIFIER) {
+            firstNode = new NameNode(lexical.getToken(),
+                    lexical.getToken().type == TokenType.OUT_IDENTIFIER);
+            lexical.nextToken();
+        } else {
+            firstNode = parsePrimaryExpression();
         }
-        Token nextToken = lexical.nextToken();
-
-        switch (nextToken.type) {
-            case DOT:
-            case LEFT_PAREN:
-            case LEFT_SQUARE:
-                return parseCallLink(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
-            case ASSIGN:
-                if (!isStatement) {
-                    throw SyntaxException.withSyntax("赋值语句不能出现在表达式内");
-                }
-                return parseAssign(token);
-            default:
-                if (isStatement) {
-                    throw SyntaxException.withSyntax("不是一个语句", token);
-                }
-                return new NameNode(token, token.type == TokenType.OUT_IDENTIFIER);
-        }
-    }
-
-    public BaseNode parseCallLink(BaseNode firstNode) {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
@@ -398,19 +375,23 @@ public class DefaultParser implements Parser {
                     break;
             }
         }
-        return new CallLinkedNode(firstNode, calls);
+
+        CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
+
+        if (lexical.getToken().type == TokenType.ASSIGN) {
+            return parseCallLinkAssignNode(callLinkNode);
+        }
+
+        return callLinkNode;
     }
 
     public BaseNode parseDot() {
 
         Assert.assertToken(lexical, TokenType.DOT);
-
         lexical.nextToken();
 
         Assert.assertToken(lexical, TokenType.IDENTIFIER);
-
         Token name = lexical.getToken();
-
         lexical.nextToken();
 
         if (lexical.getToken().type == TokenType.LEFT_PAREN) {
@@ -431,9 +412,13 @@ public class DefaultParser implements Parser {
             Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
             lexical.nextToken();
 
-            return new DotNode(TokenType.CALL, name.name, param);
+            DotNode dotNode = new DotNode(TokenType.CALL, name.name, param);
+            dotNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.DOT));
+            return dotNode;
         } else {
-            return new DotNode(TokenType.IDENTIFIER, name.name, null);
+            DotNode dotNode = new DotNode(TokenType.IDENTIFIER, name.name, null);
+            dotNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.DOT));
+            return dotNode;
         }
     }
 
@@ -451,6 +436,7 @@ public class DefaultParser implements Parser {
 
         IndexNode indexNode = new IndexNode(index);
         indexNode.putOperation(OperationDefine.findOperation(TokenType.INDEX));
+        indexNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.INDEX));
 
         return indexNode;
     }
@@ -487,43 +473,6 @@ public class DefaultParser implements Parser {
         callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
 
         return callNode;
-    }
-
-    public BaseNode parseArrayAssign(NameNode name, List<OperationNode> callList) {
-
-        Assert.assertToken(lexical, TokenType.ASSIGN);
-
-        lexical.nextToken();
-
-        OperationNode indexNode = CollectionUtil.last(callList);
-
-        if (indexNode == null || indexNode.getOperationType() != TokenType.INDEX) {
-            throw SyntaxException.withSyntax("对数组元素赋值需要指定下标");
-        }
-        CollectionUtil.removeLast(callList);
-
-        CallLinkedNode calls = new CallLinkedNode(name, callList);
-
-        BaseNode rls = parseExpression();
-
-        return new ArrayAssignNode(calls, (IndexNode) indexNode, rls);
-    }
-
-    public BaseNode parseAssign(Token identifier) {
-
-        if (identifier.type == TokenType.OUT_IDENTIFIER) {
-            throw SyntaxException.withSyntax("外部变量不允许进行赋值操作", identifier);
-        }
-
-        Assert.assertToken(lexical, TokenType.ASSIGN);
-
-        lexical.nextToken();
-
-        NameNode nameAST = new NameNode(identifier, false);
-
-        BaseNode expression = parseExpression();
-
-        return new AssignNode(nameAST, expression);
     }
 
     public BaseNode parseParen() {

@@ -1,0 +1,8 @@
+
+
+name.test()[1].num = 15;
+
+// name
+// .test()
+// [1]
+// .num

@@ -15,6 +15,8 @@ public class OperationDefine {
 
     private static final Map<TokenType, LogicOperation> LOGIC_OPERATION = new HashMap<TokenType, LogicOperation>();
 
+    private static final Map<TokenType, AssignOperation> ASSIGN_OPERATION = new HashMap<TokenType, AssignOperation>();
+
     static {
 
         PRECEDENCE.put(TokenType.OR, 8);        // ||
@@ -46,6 +48,9 @@ public class OperationDefine {
         LOGIC_OPERATION.put(TokenType.AND, new AndOperation()); // &&
         LOGIC_OPERATION.put(TokenType.OR, new OrOperation());   // ||
         LOGIC_OPERATION.put(TokenType.NOT, new NotOperation()); // !
+
+        ASSIGN_OPERATION.put(TokenType.INDEX, new IndexAssignOperation());  // []
+        ASSIGN_OPERATION.put(TokenType.DOT, new DotAssignOperation());      // .
     }
 
     public static LogicOperation findLogicOperation(TokenType type) {
@@ -60,6 +65,14 @@ public class OperationDefine {
         Operation operation = OPERATION.get(type);
         if (operation == null) {
             throw SyntaxException.withSyntax("不支持的操作符:" + type);
+        }
+        return operation;
+    }
+
+    public static AssignOperation findAssignOperation(TokenType type) {
+        AssignOperation operation = ASSIGN_OPERATION.get(type);
+        if (operation == null) {
+            throw SyntaxException.withSyntax("不支持的赋值操作:" + type);
         }
         return operation;
     }

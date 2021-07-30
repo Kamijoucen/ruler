@@ -18,6 +18,8 @@ public class Scope {
 
     private Map<String, BaseValue> valueSpace;
 
+    private BaseValue callLinkPreviousValue;
+
     public Scope(String stackName, Scope parentScope) {
         this.stackName = stackName;
         this.parentScope = parentScope;
@@ -69,5 +71,13 @@ public class Scope {
 
     public List<BaseValue> getReturnSpace() {
         return returnSpace;
+    }
+
+    public BaseValue getCallLinkPreviousValue() {
+        return callLinkPreviousValue;
+    }
+
+    public void putCallLinkPreviousValue(BaseValue value) {
+        this.callLinkPreviousValue = value;
     }
 }

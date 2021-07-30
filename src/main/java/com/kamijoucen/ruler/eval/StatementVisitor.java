@@ -13,11 +13,7 @@ public interface StatementVisitor {
 
     BaseValue eval(IfStatementNode node, Scope scope);
 
-    BaseValue eval(AssignNode node, Scope scope);
-
-    BaseValue eval(AssignNode2 node, Scope Scope);
-
-    BaseValue eval(ArrayAssignNode node, Scope scope);
+    BaseValue eval(AssignNode node, Scope Scope);
 
     BaseValue eval(WhileStatementNode node, Scope scope);
 
@@ -31,7 +27,7 @@ public interface StatementVisitor {
 
     BaseValue eval(DotNode node, Scope scope);
 
-    BaseValue eval(CallLinkedNode node, Scope scope);
+    BaseValue eval(CallLinkNode node, boolean isAssign, Scope scope);
 
     BaseValue eval(ClosureDefineNode node, Scope scope);
 
