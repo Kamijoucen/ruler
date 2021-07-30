@@ -47,6 +47,13 @@ public class Scope {
         }
     }
 
+    public void defineLocal(String name, BaseValue value) {
+        if (valueSpace.containsKey(name)) {
+            throw SyntaxException.withSyntax("变量已定义：" + name);
+        }
+        putLocal(name, value);
+    }
+
     public void putLocal(String name, BaseValue value) {
         valueSpace.put(name, value);
     }

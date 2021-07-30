@@ -186,7 +186,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
         ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
 
         if (funName != null) {
-            scope.putLocal(funName, closureValue);
+            scope.defineLocal(funName, closureValue);
         } else {
             return closureValue;
         }
@@ -218,7 +218,7 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
         BaseValue value = node.getExpression().eval(scope);
 
-        scope.putLocal(name.name.name, value);
+        scope.defineLocal(name.name.name, value);
 
         return NoneValue.INSTANCE;
     }
