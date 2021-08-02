@@ -1,0 +1,12 @@
+import test
+
+
+var url = "http://127.0.0.1/test/json";
+
+var response = post(url, {
+    key: '1',
+    key2: '2'
+});
+
+println(response.head);
+println(response.body);

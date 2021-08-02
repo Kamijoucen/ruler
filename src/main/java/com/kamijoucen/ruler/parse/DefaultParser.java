@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
+import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
@@ -58,7 +59,8 @@ public class DefaultParser implements Parser {
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
-                statement = parseCallLink();
+            case LEFT_PAREN:
+                statement = parseCallLink(true);
                 isNeedSemicolon = true;
                 break;
             case KEY_RETURN:
@@ -171,7 +173,7 @@ public class DefaultParser implements Parser {
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
-                return parseCallLink();
+                return parseCallLink(false);
             case ADD:
             case SUB:
             case NOT:
@@ -346,7 +348,7 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
 
-    public BaseNode parseCallLink() {
+    public BaseNode parseCallLink(boolean isStatement) {
 
         BaseNode firstNode = null;
         if (lexical.getToken().type == TokenType.IDENTIFIER
@@ -379,6 +381,9 @@ public class DefaultParser implements Parser {
         CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
 
         if (lexical.getToken().type == TokenType.ASSIGN) {
+            if (isStatement) {
+                throw SyntaxException.withLexical("表达式内不允许出现赋值语句");
+            }
             return parseCallLinkAssignNode(callLinkNode);
         }
 
