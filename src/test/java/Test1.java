@@ -210,7 +210,7 @@ public class Test1 {
     @Test
     public void test14() {
 
-        String str = FileUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\call_link.txt");
+        String str = FileUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\rule_rson.txt");
 //        String str = "var arr = [1, 2, 3]; arr[2] = 4; println(arr);";
 //        String str1 = "a[1] = 1;";
 

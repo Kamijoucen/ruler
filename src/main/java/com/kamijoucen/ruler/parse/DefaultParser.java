@@ -382,7 +382,7 @@ public class DefaultParser implements Parser {
         CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
 
         if (lexical.getToken().type == TokenType.ASSIGN) {
-            if (isStatement) {
+            if (!isStatement) {
                 throw SyntaxException.withLexical("表达式内不允许出现赋值语句");
             }
             return parseCallLinkAssignNode(callLinkNode);

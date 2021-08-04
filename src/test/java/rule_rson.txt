@@ -6,8 +6,9 @@ fun make() {
        left: null,
        right: null,
        data: -1,
-       log: fun() {
+       log: fun(age) {
            println(name);
+           println(age);
        }
     };
 }
@@ -23,6 +24,6 @@ node1.left = node2;
 println(node1.data);
 println(node1.left.data);
 
-node1.left.log();
+node1.left.log(18);
 
 return node1;
