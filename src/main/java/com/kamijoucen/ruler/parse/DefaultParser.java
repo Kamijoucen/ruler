@@ -173,6 +173,7 @@ public class DefaultParser implements Parser {
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
+            case LEFT_PAREN:
                 return parseCallLink(false);
             case ADD:
             case SUB:
@@ -183,8 +184,6 @@ public class DefaultParser implements Parser {
                 return parseNumber();
             case STRING:
                 return parseString();
-            case LEFT_PAREN:
-                return parseParen();
             case KEY_FALSE:
             case KEY_TRUE:
                 return parseBool();
@@ -356,6 +355,8 @@ public class DefaultParser implements Parser {
             firstNode = new NameNode(lexical.getToken(),
                     lexical.getToken().type == TokenType.OUT_IDENTIFIER);
             lexical.nextToken();
+        } else if (lexical.getToken().type == TokenType.LEFT_PAREN) {
+            firstNode = parseParen();
         } else {
             firstNode = parsePrimaryExpression();
         }
