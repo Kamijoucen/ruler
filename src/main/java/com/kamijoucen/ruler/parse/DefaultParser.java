@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.common.CollectionUtil;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.OperationDefine;
@@ -42,7 +41,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseCallLinkAssignNode(CallLinkNode callLinkNode) {
 
         Assert.assertToken(lexical.getToken(), TokenType.ASSIGN);
-
         lexical.nextToken();
 
         BaseNode expression = parseExpression();
@@ -191,6 +189,8 @@ public class DefaultParser implements Parser {
                 return parseFunDefine();
             case KEY_NULL:
                 return parseNull();
+            case KEY_THIS:
+                return parseThis();
             case LEFT_SQUARE:
                 return parseArray();
             case LEFT_BRACE:
@@ -202,7 +202,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseWhileStatement() {
 
         Assert.assertToken(lexical, TokenType.KEY_WHILE);
-
         lexical.nextToken();
 
         BaseNode condition = parseExpression();
@@ -221,7 +220,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseIfStatement() {
 
         Assert.assertToken(lexical, TokenType.KEY_IF);
-
         lexical.nextToken();
 
         BaseNode condition = parseExpression();
@@ -249,7 +247,6 @@ public class DefaultParser implements Parser {
 
         // eat var
         Assert.assertToken(lexical, TokenType.KEY_VAR);
-
         lexical.nextToken();
 
         Token name = lexical.getToken();
@@ -257,11 +254,9 @@ public class DefaultParser implements Parser {
         if (name.type != TokenType.OUT_IDENTIFIER && name.type != TokenType.IDENTIFIER) {
             throw SyntaxException.withSyntax("不支持的单目运算符", name);
         }
-
         lexical.nextToken();
 
         Assert.assertToken(lexical, TokenType.ASSIGN);
-
         lexical.nextToken();
 
         BaseNode exp = parseExpression();
@@ -273,7 +268,6 @@ public class DefaultParser implements Parser {
 
         // eat fun
         Assert.assertToken(lexical, TokenType.KEY_FUN);
-
         lexical.nextToken();
 
         String name = null;
@@ -310,6 +304,7 @@ public class DefaultParser implements Parser {
         // eat )
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
         lexical.nextToken();
+
         BaseNode block = parseBlock();
 
         return new ClosureDefineNode(name, param, block);
@@ -318,17 +313,16 @@ public class DefaultParser implements Parser {
     public BaseNode parseBlock() {
 
         Assert.assertToken(lexical, TokenType.LEFT_BRACE);
-
         lexical.nextToken();
 
         List<BaseNode> blocks = new ArrayList<BaseNode>();
 
-        while (lexical.getToken().type != TokenType.EOF && lexical.getToken().type != TokenType.RIGHT_BRACE) {
+        while (lexical.getToken().type != TokenType.EOF
+                && lexical.getToken().type != TokenType.RIGHT_BRACE) {
             blocks.add(parseStatement());
         }
 
         Assert.assertToken(lexical, TokenType.RIGHT_BRACE);
-
         lexical.nextToken();
 
         return new BlockNode(blocks);
@@ -383,7 +377,7 @@ public class DefaultParser implements Parser {
 
         if (lexical.getToken().type == TokenType.ASSIGN) {
             if (!isStatement) {
-                throw SyntaxException.withLexical("表达式内不允许出现赋值语句");
+                throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
             }
             return parseCallLinkAssignNode(callLinkNode);
         }
@@ -431,13 +425,11 @@ public class DefaultParser implements Parser {
     public BaseNode parseIndex() {
 
         Assert.assertToken(lexical, TokenType.LEFT_SQUARE);
-
         lexical.nextToken();
 
         BaseNode index = parsePrimaryExpression();
 
         Assert.assertToken(lexical, TokenType.RIGHT_SQUARE);
-
         lexical.nextToken();
 
         IndexNode indexNode = new IndexNode(index);
@@ -450,7 +442,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseCall() {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
-
         lexical.nextToken();
 
         if (lexical.getToken().type == TokenType.RIGHT_PAREN) {
@@ -472,7 +463,6 @@ public class DefaultParser implements Parser {
         }
 
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
-
         lexical.nextToken();
 
         CallNode callNode = new CallNode(params);
@@ -484,13 +474,11 @@ public class DefaultParser implements Parser {
     public BaseNode parseParen() {
 
         Assert.assertToken(lexical, TokenType.LEFT_PAREN);
-
         lexical.nextToken();
 
         BaseNode ast = parseExpression();
 
         Assert.assertToken(lexical, TokenType.RIGHT_PAREN);
-
         lexical.nextToken();
 
         return ast;
@@ -499,7 +487,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseNumber() {
 
         Token token = lexical.getToken();
-
         lexical.nextToken();
 
         if (token.type == TokenType.INTEGER) {
@@ -516,7 +503,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseString() {
 
         Assert.assertToken(lexical, TokenType.STRING);
-
         Token token = lexical.getToken();
 
         lexical.nextToken();
@@ -539,7 +525,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseNull() {
 
         Assert.assertToken(lexical, TokenType.KEY_NULL);
-
         lexical.nextToken();
 
         return NullNode.NULL_NODE;
@@ -548,7 +533,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseContinueAST() {
 
         Assert.assertToken(lexical, TokenType.KEY_CONTINUE);
-
         lexical.nextToken();
 
         return new ContinueNode();
@@ -557,7 +541,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseBreak() {
 
         Assert.assertToken(lexical, TokenType.KEY_BREAK);
-
         lexical.nextToken();
 
         return new BreakNode();
@@ -566,7 +549,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseReturn() {
 
         Assert.assertToken(lexical, TokenType.KEY_RETURN);
-
         lexical.nextToken();
 
         List<BaseNode> param = new ArrayList<BaseNode>();
@@ -587,7 +569,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseArray() {
 
         Assert.assertToken(lexical, TokenType.LEFT_SQUARE);
-
         lexical.nextToken();
 
         List<BaseNode> arrValues = new ArrayList<BaseNode>();
@@ -599,14 +580,12 @@ public class DefaultParser implements Parser {
         while (lexical.getToken().type != TokenType.RIGHT_SQUARE) {
 
             Assert.assertToken(lexical, TokenType.COMMA);
-
             lexical.nextToken();
 
             arrValues.add(parseExpression());
         }
 
         Assert.assertToken(lexical, TokenType.RIGHT_SQUARE);
-
         lexical.nextToken();
 
         return new ArrayNode(arrValues);
@@ -615,14 +594,14 @@ public class DefaultParser implements Parser {
     public BaseNode parseRsonNode() {
 
         Assert.assertToken(lexical, TokenType.LEFT_BRACE);
-
         lexical.nextToken();
 
         Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
 
         if (lexical.getToken().type != TokenType.RIGHT_BRACE) {
 
-            if (lexical.getToken().type != TokenType.IDENTIFIER && lexical.getToken().type != TokenType.STRING) {
+            if (lexical.getToken().type != TokenType.IDENTIFIER
+                    && lexical.getToken().type != TokenType.STRING) {
                 throw SyntaxException.withSyntax("无效的key", lexical.getToken());
             }
 
@@ -632,16 +611,13 @@ public class DefaultParser implements Parser {
             Assert.assertToken(lexical, TokenType.COLON);
             lexical.nextToken();
 
-            BaseNode value = parseExpression();
-
-            properties.put(name.name, value);
+            properties.put(name.name, parseExpression());
 
         }
 
         while (lexical.getToken().type != TokenType.RIGHT_BRACE) {
 
             Assert.assertToken(lexical, TokenType.COMMA);
-
             lexical.nextToken();
 
             if (lexical.getToken().type == TokenType.RIGHT_BRACE) {
@@ -659,16 +635,20 @@ public class DefaultParser implements Parser {
             Assert.assertToken(lexical, TokenType.COLON);
             lexical.nextToken();
 
-            BaseNode value = parseExpression();
-
-            properties.put(name.name, value);
+            properties.put(name.name, parseExpression());
         }
 
         Assert.assertToken(lexical, TokenType.RIGHT_BRACE);
-
         lexical.nextToken();
 
         return new RsonNode(properties);
+    }
+
+    BaseNode parseThis() {
+        Assert.assertToken(lexical, TokenType.KEY_THIS);
+        lexical.nextToken();
+
+        return new ThisNode();
     }
 
 }

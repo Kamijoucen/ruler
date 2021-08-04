@@ -115,6 +115,8 @@ public class DefaultStatementVisitor implements StatementVisitor {
         }
         MataValue mataValue = (MataValue) operationValue;
 
+        scope.putCurrentMataValue(mataValue);
+
         if (dotType == TokenType.IDENTIFIER) {
             return mataValue.getProperty(node.getName());
         } else if (dotType == TokenType.CALL) {
@@ -123,8 +125,10 @@ public class DefaultStatementVisitor implements StatementVisitor {
                 values.add(p.eval(scope));
             }
             return mataValue.invoke(node.getName(), values);
+        } else {
+            throw SyntaxException.withSyntax("不支持的DOT调用类型:" + dotType);
         }
-        throw SyntaxException.withSyntax("不支持的DOT调用类型:" + dotType);
+
     }
 
     @Override
@@ -154,12 +158,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(CallLinkNode ast, boolean isAssign, Scope scope) {
+    public BaseValue eval(CallLinkNode node, boolean isAssign, Scope scope) {
 
-        BaseValue statementValue = ast.getFirst().eval(scope);
+        BaseValue statementValue = node.getFirst().eval(scope);
 
-        List<OperationNode> calls = ast.getCalls();
-        int length = ast.getCalls().size();
+        List<OperationNode> calls = node.getCalls();
+        int length = node.getCalls().size();
 
         if (isAssign) {
             length--;

@@ -32,6 +32,9 @@ public abstract class AbstractMataValue implements MataValue {
 
         BaseValue fun = mataData.get(name);
 
+        ClosureValue closureValue = (ClosureValue) fun;
+        closureValue.getDefineScope().putCurrentMataValue(this);
+
         BaseValue[] realParam = new BaseValue[param.size() + 1];
         realParam[0] = fun;
 

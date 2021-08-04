@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.*;
@@ -95,6 +96,15 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
             mataData.put(name, value);
         }
         return new RsonValue(mataData);
+    }
+
+    @Override
+    public BaseValue eval(ThisNode node, Scope scope) {
+        MataValue mataValue = scope.getCurrentContextMataValue();
+        if (mataValue == null) {
+            throw SyntaxException.withSyntax("");
+        }
+        return null;
     }
 
 }
