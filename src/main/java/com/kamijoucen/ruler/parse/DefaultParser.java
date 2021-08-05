@@ -58,6 +58,7 @@ public class DefaultParser implements Parser {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
             case LEFT_PAREN:
+            case KEY_THIS:
                 statement = parseCallLink(true);
                 isNeedSemicolon = true;
                 break;
@@ -172,6 +173,7 @@ public class DefaultParser implements Parser {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
             case LEFT_PAREN:
+            case KEY_THIS:
                 return parseCallLink(false);
             case ADD:
             case SUB:
@@ -189,8 +191,6 @@ public class DefaultParser implements Parser {
                 return parseFunDefine();
             case KEY_NULL:
                 return parseNull();
-            case KEY_THIS:
-                return parseThis();
             case LEFT_SQUARE:
                 return parseArray();
             case LEFT_BRACE:
@@ -351,6 +351,8 @@ public class DefaultParser implements Parser {
             lexical.nextToken();
         } else if (lexical.getToken().type == TokenType.LEFT_PAREN) {
             firstNode = parseParen();
+        } else if (lexical.getToken().type == TokenType.KEY_THIS) {
+            firstNode = parseThis();
         } else {
             firstNode = parsePrimaryExpression();
         }

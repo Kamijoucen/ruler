@@ -29,6 +29,10 @@ public class Scope {
         this.valueSpace = new HashMap<String, BaseValue>();
     }
 
+    public String getStackName() {
+        return stackName;
+    }
+
     public BaseValue find(String name) {
         BaseValue value = valueSpace.get(name);
         if (value != null) {
@@ -96,6 +100,11 @@ public class Scope {
     }
 
     public MataValue getCurrentContextMataValue() {
-        return currentContextMataValue;
+        if (currentContextMataValue != null) {
+            return currentContextMataValue;
+        } else if (parentScope != null) {
+            return parentScope.getCurrentContextMataValue();
+        }
+        return null;
     }
 }

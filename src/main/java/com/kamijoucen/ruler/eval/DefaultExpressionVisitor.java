@@ -104,7 +104,7 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
         if (mataValue == null) {
             throw SyntaxException.withSyntax("");
         }
-        return null;
+        return mataValue;
     }
 
 }

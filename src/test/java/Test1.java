@@ -296,5 +296,15 @@ public class Test1 {
         script.run();
     }
 
+    @Test
+    public void test_rson_this() {
+
+        String str = "var a = {f: fun() { return this.name; }, name: 'ggggggggg11'}; println(a.f());";
+
+        RuleScript script = Ruler.compile(str);
+
+        script.run();
+        
+    }
 
 }
