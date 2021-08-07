@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 
-public class Assert {
+public class AssertUtil {
 
     public static NoImplException todo(String str) {
         return new NoImplException(str == null ? "还未实现" : str);

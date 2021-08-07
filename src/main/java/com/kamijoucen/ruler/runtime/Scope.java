@@ -19,6 +19,8 @@ public class Scope {
 
     private Map<String, BaseValue> valueSpace;
 
+    private Map<String, BaseValue> outValueSpace;
+
     private BaseValue callLinkPreviousValue;
 
     private MataValue currentContextMataValue;
@@ -27,6 +29,11 @@ public class Scope {
         this.stackName = stackName;
         this.parentScope = parentScope;
         this.valueSpace = new HashMap<String, BaseValue>();
+    }
+
+    public Scope(String stackName, Scope parentScope, Map<String, BaseValue> outValueSpace) {
+        this(stackName, parentScope);
+        this.outValueSpace = outValueSpace;
     }
 
     public String getStackName() {
@@ -39,6 +46,17 @@ public class Scope {
             return value;
         } else if (parentScope != null) {
             return parentScope.find(name);
+        } else {
+            return null;
+        }
+    }
+
+    public BaseValue findOutValue(String name) {
+        BaseValue value = outValueSpace.get(name);
+        if (value != null) {
+            return value;
+        } else if (parentScope != null) {
+            return parentScope.findOutValue(name);
         } else {
             return null;
         }

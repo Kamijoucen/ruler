@@ -51,6 +51,8 @@ public class TokenLookUp {
         KEY_WORDS.put("var", TokenType.KEY_VAR);
         KEY_WORDS.put("null", TokenType.KEY_NULL);
         KEY_WORDS.put("this", TokenType.KEY_THIS);
+        KEY_WORDS.put("import", TokenType.KEY_IMPORT);
+        KEY_WORDS.put("package", TokenType.KEY_PACKAGE);
     }
 
     public static TokenType symbol(String str) {

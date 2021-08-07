@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenLookUp;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.util.MsgUtil;
+import com.kamijoucen.ruler.util.TokenUtil;
 
 public class DefaultLexical implements Lexical {
 
@@ -136,7 +136,7 @@ public class DefaultLexical implements Lexical {
 
             if (type == TokenType.UN_KNOW) {
                 throw SyntaxException.withLexical(
-                        MsgUtil.of("未知的符号:" + buffer.toString(), line, column));
+                        TokenUtil.of("未知的符号:" + buffer.toString(), line, column));
             }
         } else {
             forward();
@@ -178,7 +178,7 @@ public class DefaultLexical implements Lexical {
 
         if (len == 0) {
             throw SyntaxException.withLexical(
-                    MsgUtil.of("小数点后未跟其他数字", line, column));
+                    TokenUtil.of("小数点后未跟其他数字", line, column));
         }
 
         makeToken(TokenType.DOUBLE);
@@ -189,7 +189,7 @@ public class DefaultLexical implements Lexical {
 
         if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
             throw SyntaxException.withLexical(
-                    MsgUtil.of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
+                    TokenUtil.of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
         }
 
         int len = 0;
@@ -200,7 +200,7 @@ public class DefaultLexical implements Lexical {
 
         if (len == 0) {
             throw SyntaxException.withLexical(
-                    MsgUtil.of("标识符 '$' 后必须跟其他标识符", line, column));
+                    TokenUtil.of("标识符 '$' 后必须跟其他标识符", line, column));
         }
 
         makeToken(TokenType.OUT_IDENTIFIER);

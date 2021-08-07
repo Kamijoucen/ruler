@@ -49,6 +49,8 @@ public enum TokenType {
     KEY_VAR,        // var
     KEY_NULL,       // null
     KEY_THIS,       // this
+    KEY_IMPORT,     // import
+    KEY_PACKAGE,    // package
 
     EOF,
 

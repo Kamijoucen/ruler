@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.common.CollectionUtil;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.exception.SyntaxException;

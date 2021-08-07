@@ -13,9 +13,9 @@ public class RuleScript {
 
     private List<BaseNode> asts;
 
-    public RuleScript(Scope globalScope, List<BaseNode> asts) {
+    public RuleScript(Scope scope, List<BaseNode> asts) {
         this.asts = asts;
-        this.scope = new Scope("file", globalScope);
+        this.scope = scope;
     }
 
     public List<Object> run() {
@@ -27,7 +27,6 @@ public class RuleScript {
             param = Collections.emptyMap();
         }
         RulerInterpreter interpreter = new RulerInterpreter(asts, scope);
-
         return interpreter.run(param);
     }
 

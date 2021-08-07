@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.common;
+package com.kamijoucen.ruler.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;

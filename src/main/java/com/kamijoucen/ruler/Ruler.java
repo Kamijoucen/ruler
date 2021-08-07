@@ -28,7 +28,7 @@ public class Ruler {
 
         List<BaseNode> asts = parser.parse();
 
-        return new RuleScript(globalScope, asts);
+        return new RuleScript(new Scope("file", globalScope), asts);
     }
 
 

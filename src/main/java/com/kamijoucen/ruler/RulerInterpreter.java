@@ -1,9 +1,14 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.util.CollectionUtil;
+import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -11,24 +16,34 @@ class RulerInterpreter {
 
     private List<BaseNode> asts;
 
-    private Scope scope;
+    private Scope fileScope;
 
-    public RulerInterpreter(List<BaseNode> asts, Scope scope) {
+    public RulerInterpreter(List<BaseNode> asts, Scope fileScope) {
         this.asts = asts;
-        this.scope = new Scope("interpreter", scope);
+        this.fileScope = fileScope;
     }
 
     public List<Object> run(Map<String, Object> param) {
 
-        scope.initReturnSpace();
+//        Scope runScope = new Scope("run", fileScope, ConvertUtil.convertToBase(param));
+        Scope runScope = new Scope("run", fileScope);
+
+        runScope.initReturnSpace();
 
         for (BaseNode ast : asts) {
-            ast.eval(scope);
+            ast.eval(runScope);
         }
+        List<BaseValue> returnValue = runScope.getReturnSpace();
 
-        List<BaseValue> returnValue = scope.getReturnSpace();
+        if (CollectionUtil.isEmpty(returnValue)) {
+            return Collections.emptyList();
+        }
+        List<Object> realValue = new ArrayList<Object>(returnValue.size());
 
-        return null;
+        for (BaseValue baseValue : returnValue) {
+            realValue.add(ConvertRepository.getConverter(baseValue.getType()));
+        }
+        return realValue;
     }
 
 }

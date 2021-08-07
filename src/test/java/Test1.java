@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.util.FileUtil;
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.Test;
 
@@ -210,7 +210,7 @@ public class Test1 {
     @Test
     public void test14() {
 
-        String str = FileUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\rule_rson.txt");
+        String str = IOUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\rule_rson.txt");
 //        String str = "var arr = [1, 2, 3]; arr[2] = 4; println(arr);";
 //        String str1 = "a[1] = 1;";
 
@@ -223,7 +223,7 @@ public class Test1 {
     @Test
     public void test15() {
 
-        String text = FileUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\quick_sort.txt");
+        String text = IOUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\quick_sort.txt");
 
         RuleScript script = Ruler.compile(text);
 
@@ -299,7 +299,7 @@ public class Test1 {
     @Test
     public void test_rson_this() {
 
-        String str = "var a = {f: fun() { return this.name; }, name: 'ggggggggg11'}; println(a.f());";
+        String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f());";
 
         RuleScript script = Ruler.compile(str);
 
