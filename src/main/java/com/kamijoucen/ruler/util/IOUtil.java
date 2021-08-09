@@ -74,4 +74,16 @@ public class IOUtil {
         }
         return sb.toString();
     }
+
+    public static boolean isBlank(String str) {
+        if (str == null) {
+            return true;
+        }
+        return "".equals(str.trim());
+    }
+
+    public static boolean isNotBlank(String str) {
+        return !isBlank(str);
+    }
+
 }

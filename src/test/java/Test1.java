@@ -201,7 +201,7 @@ public class Test1 {
     @Test
     public void test13() {
 
-        String str = "arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
+        String str = "var arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
 
         RuleScript script = Ruler.compile(str);
 
@@ -301,7 +301,7 @@ public class Test1 {
     @Test
     public void test_rson_this() {
 
-        String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f());";
+        String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f(18));";
 
         RuleScript script = Ruler.compile(str);
 
