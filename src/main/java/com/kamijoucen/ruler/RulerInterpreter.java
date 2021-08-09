@@ -25,8 +25,7 @@ class RulerInterpreter {
 
     public List<Object> run(Map<String, Object> param) {
 
-//        Scope runScope = new Scope("run", fileScope, ConvertUtil.convertToBase(param));
-        Scope runScope = new Scope("run", fileScope);
+        Scope runScope = new Scope("run", fileScope, ConvertUtil.convertToBase(param));
 
         runScope.initReturnSpace();
 

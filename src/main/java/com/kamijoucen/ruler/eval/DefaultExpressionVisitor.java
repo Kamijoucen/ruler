@@ -23,6 +23,15 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
+    public BaseValue eval(OutNameNode node, Scope scope) {
+        BaseValue value = scope.findOutValue(node.name.name);
+        if (value == null) {
+            return NullValue.INSTANCE;
+        }
+        return value;
+    }
+
+    @Override
     public BaseValue eval(IntegerNode ast, Scope scope) {
         return new IntegerValue(ast.getValue());
     }

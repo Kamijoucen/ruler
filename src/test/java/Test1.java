@@ -12,7 +12,9 @@ import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Test1 {
 
@@ -305,6 +307,20 @@ public class Test1 {
 
         script.run();
         
+    }
+
+    @Test
+    public void out_name() {
+
+        String str = "var a = 15; println($a);";
+
+        RuleScript script = Ruler.compile(str);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("a", "李思岑");
+
+        script.run(param);
+
     }
 
 }

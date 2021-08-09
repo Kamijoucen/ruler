@@ -5,11 +5,11 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class NameNode implements BaseNode {
+public class OutNameNode implements BaseNode {
 
     public final Token name;
 
-    public NameNode(Token name) {
+    public OutNameNode(Token name) {
         this.name = name;
     }
 

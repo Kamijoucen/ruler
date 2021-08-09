@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.OutNameNode;
 import com.kamijoucen.ruler.ast.op.CallNode;
 import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.NameNode;
@@ -214,15 +215,11 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(VariableDefineNode node, Scope scope) {
 
-        NameNode name = node.getName();
-
-        if (name.isOut) {
-            throw SyntaxException.withSyntax("不能定义一个外部变量" + name.name.name);
-        }
+        BaseNode name = node.getName();
 
         BaseValue value = node.getExpression().eval(scope);
 
-        scope.defineLocal(name.name.name, value);
+        scope.defineLocal(((NameNode) name).name.name, value);
 
         return NoneValue.INSTANCE;
     }

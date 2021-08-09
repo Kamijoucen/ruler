@@ -6,17 +6,19 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public interface ExpressionVisitor {
 
-    BaseValue eval(NameNode ast, Scope scope);
+    BaseValue eval(NameNode node, Scope scope);
 
-    BaseValue eval(IntegerNode ast, Scope scope);
+    BaseValue eval(OutNameNode node, Scope scope);
 
-    BaseValue eval(DoubleNode ast, Scope scope);
+    BaseValue eval(IntegerNode node, Scope scope);
 
-    BaseValue eval(BoolNode ast, Scope scope);
+    BaseValue eval(DoubleNode node, Scope scope);
 
-    BaseValue eval(StringNode ast, Scope scope);
+    BaseValue eval(BoolNode node, Scope scope);
 
-    BaseValue eval(BinaryOperationNode ast, Scope scope);
+    BaseValue eval(StringNode node, Scope scope);
+
+    BaseValue eval(BinaryOperationNode node, Scope scope);
 
     BaseValue eval(LogicBinaryOperationNode node, Scope scope);
 

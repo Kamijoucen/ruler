@@ -9,11 +9,11 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class VariableDefineNode implements BaseNode {
 
-    private NameNode name;
+    private BaseNode name;
 
     private BaseNode expression;
 
-    public VariableDefineNode(NameNode name, BaseNode expression) {
+    public VariableDefineNode(BaseNode name, BaseNode expression) {
         this.name = name;
         this.expression = expression;
     }
@@ -23,7 +23,7 @@ public class VariableDefineNode implements BaseNode {
         return VisitorRepository.getStatementVisitor().eval(this, scope);
     }
 
-    public NameNode getName() {
+    public BaseNode getName() {
         return name;
     }
 

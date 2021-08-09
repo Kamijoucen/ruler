@@ -250,11 +250,9 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(lexical, TokenType.KEY_VAR);
         lexical.nextToken();
 
-        Token name = lexical.getToken();
+        AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
 
-        if (name.type != TokenType.OUT_IDENTIFIER && name.type != TokenType.IDENTIFIER) {
-            throw SyntaxException.withSyntax("不支持的单目运算符", name);
-        }
+        Token name = lexical.getToken();
         lexical.nextToken();
 
         AssertUtil.assertToken(lexical, TokenType.ASSIGN);
@@ -262,7 +260,7 @@ public class DefaultParser implements Parser {
 
         BaseNode exp = parseExpression();
 
-        return new VariableDefineNode(new NameNode(name, name.type == TokenType.OUT_IDENTIFIER), exp);
+        return new VariableDefineNode(TokenUtil.buildNameNode(name), exp);
     }
 
     public BaseNode parseFunDefine() {
@@ -286,7 +284,7 @@ public class DefaultParser implements Parser {
         if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
-            param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
+            param.add(TokenUtil.buildNameNode(token));
 
             lexical.nextToken();
         }
@@ -297,7 +295,7 @@ public class DefaultParser implements Parser {
 
             AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
             Token token = lexical.getToken();
-            param.add(new NameNode(token, token.type == TokenType.OUT_IDENTIFIER));
+            param.add(TokenUtil.buildNameNode(token));
 
             lexical.nextToken();
         }
@@ -347,8 +345,7 @@ public class DefaultParser implements Parser {
         BaseNode firstNode = null;
         if (lexical.getToken().type == TokenType.IDENTIFIER
                 || lexical.getToken().type == TokenType.OUT_IDENTIFIER) {
-            firstNode = new NameNode(lexical.getToken(),
-                    lexical.getToken().type == TokenType.OUT_IDENTIFIER);
+            firstNode = TokenUtil.buildNameNode(lexical.getToken());
             lexical.nextToken();
         } else if (lexical.getToken().type == TokenType.LEFT_PAREN) {
             firstNode = parseParen();
@@ -376,21 +373,19 @@ public class DefaultParser implements Parser {
             }
         }
 
-        BaseNode opNode = null;
-        if (CollectionUtil.isEmpty(calls)) {
-            opNode = firstNode;
-        } else {
-            opNode = new CallLinkNode(firstNode, calls);
-        }
+        CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
 
         if (lexical.getToken().type == TokenType.ASSIGN) {
             if (!isStatement) {
                 throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
             }
-            return parseCallLinkAssignNode(opNode);
+            if (firstNode instanceof OutNameNode) {
+                throw SyntaxException.withSyntax("不能对外部变量进行赋值: $" + ((OutNameNode) firstNode).name.name);
+            }
+            return parseCallLinkAssignNode(callLinkNode);
         }
 
-        return opNode;
+        return callLinkNode;
     }
 
     public BaseNode parseDot() {
@@ -680,7 +675,6 @@ public class DefaultParser implements Parser {
         Token pathToken = lexical.getToken();
 
         String path = pathToken.name;
-
 
 
         return null;

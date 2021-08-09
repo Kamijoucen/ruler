@@ -3,11 +3,21 @@ package com.kamijoucen.ruler.util;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class ConvertUtil {
+
+    public static Map<String, BaseValue> convertToBase(Map<String, Object> realValues) {
+
+        Map<String, BaseValue> baseValues = new HashMap<String, BaseValue>();
+
+        for (Map.Entry<String, Object> entry : realValues.entrySet()) {
+            Object realValue = entry.getValue();
+            baseValues.put(entry.getKey(), ConvertRepository.getConverter(realValue).realToBase(realValue));
+        }
+
+        return baseValues;
+    }
 
     public static List<BaseValue> convertToBase(List<Object> realValues) {
         if (CollectionUtil.isEmpty(realValues)) {
