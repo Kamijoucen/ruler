@@ -12,6 +12,28 @@ public class RulerFile {
 
     private List<BaseNode> statements;
 
+    public String getPackageName() {
+        return packageName;
+    }
 
+    public void setPackageName(String packageName) {
+        this.packageName = packageName;
+    }
+
+    public List<String> getImportList() {
+        return importList;
+    }
+
+    public void setImportList(List<String> importList) {
+        this.importList = importList;
+    }
+
+    public List<BaseNode> getStatements() {
+        return statements;
+    }
+
+    public void setStatements(List<BaseNode> statements) {
+        this.statements = statements;
+    }
 
 }

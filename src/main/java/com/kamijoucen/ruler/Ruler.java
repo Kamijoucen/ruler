@@ -24,7 +24,7 @@ public class Ruler {
 
         Lexical lexical = new DefaultLexical(text);
 
-        Parser parser = new DefaultParser(lexical);
+        Parser parser = new DefaultParser(lexical, null);
 
         List<BaseNode> asts = parser.parse();
 

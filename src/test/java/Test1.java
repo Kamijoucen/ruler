@@ -33,21 +33,7 @@ public class Test1 {
         }
     }
 
-    @Test
-    public void test2() {
-        String str = "$log(name, $size)";
 
-        Lexical lexical = new DefaultLexical(str);
-
-        lexical.nextToken();
-
-        DefaultParser parser = new DefaultParser(lexical);
-
-        BaseNode baseNode = parser.parseExpression();
-
-        System.out.println(baseNode);
-
-    }
 
     @Test
     public void test3() {
@@ -57,7 +43,7 @@ public class Test1 {
 
         lexical.nextToken();
 
-        DefaultParser parser = new DefaultParser(lexical);
+        DefaultParser parser = new DefaultParser(lexical, null);
 
         BaseNode baseNode = parser.parseExpression();
 
@@ -74,7 +60,7 @@ public class Test1 {
 
         lexical.nextToken();
 
-        DefaultParser parser = new DefaultParser(lexical);
+        DefaultParser parser = new DefaultParser(lexical, null);
 
         BaseNode baseNode = parser.parseExpression();
 
@@ -90,7 +76,7 @@ public class Test1 {
 
         Lexical lexical = new DefaultLexical(str);
 
-        DefaultParser parser = new DefaultParser(lexical);
+        DefaultParser parser = new DefaultParser(lexical, null);
 
         List<BaseNode> parse = parser.parse();
 
@@ -110,7 +96,7 @@ public class Test1 {
 
         Lexical lexical = new DefaultLexical(str);
 
-        DefaultParser parser = new DefaultParser(lexical);
+        DefaultParser parser = new DefaultParser(lexical, null);
 
         List<BaseNode> parse = parser.parse();
 
@@ -276,7 +262,7 @@ public class Test1 {
         System.out.println(script);
 
     }
-    
+
     @Test
     public void test_dot_call1() {
         String str = "obj.name().name[1] = 5;";
@@ -288,7 +274,7 @@ public class Test1 {
         System.out.println(script);
 
     }
-    
+
     @Test
     public void test_dot_call2() {
         String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
@@ -306,7 +292,7 @@ public class Test1 {
         RuleScript script = Ruler.compile(str);
 
         script.run();
-        
+
     }
 
     @Test
