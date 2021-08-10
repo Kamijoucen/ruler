@@ -15,14 +15,15 @@ public class RulerCompiler {
         if (IOUtil.isBlank(content)) {
             return null;
         }
-
         Lexical lexical = new DefaultLexical(content);
-
         Parser parser = new DefaultParser(lexical);
 
-        List<BaseNode> parse = parser.parse();
+        List<BaseNode> statement = parser.parse();
 
-        return null;
+        RulerFile file = new RulerFile();
+        file.setStatements(statement);
+
+        return file;
     }
 
 }

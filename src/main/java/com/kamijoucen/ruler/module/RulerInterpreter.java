@@ -1,9 +1,9 @@
-package com.kamijoucen.ruler;
+package com.kamijoucen.ruler.module;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -12,14 +12,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-class RulerInterpreter {
+public class RulerInterpreter {
 
-    private List<BaseNode> asts;
+    private RulerFile file;
 
     private Scope fileScope;
 
-    public RulerInterpreter(List<BaseNode> asts, Scope fileScope) {
-        this.asts = asts;
+    public RulerInterpreter(RulerFile file, Scope fileScope) {
+        this.file = file;
         this.fileScope = fileScope;
     }
 
@@ -29,9 +29,10 @@ class RulerInterpreter {
 
         runScope.initReturnSpace();
 
-        for (BaseNode ast : asts) {
+        for (BaseNode ast : file.getStatements()) {
             ast.eval(runScope);
         }
+
         List<BaseValue> returnValue = runScope.getReturnSpace();
 
         if (CollectionUtil.isEmpty(returnValue)) {
