@@ -6,9 +6,9 @@ import com.kamijoucen.ruler.ast.op.DotNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
-import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.module.RulerFile;
 import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
@@ -23,8 +23,11 @@ public class DefaultParser implements Parser {
 
     private List<BaseNode> statements;
 
-    public DefaultParser(Lexical lexical) {
+    private RulerFile file;
+
+    public DefaultParser(Lexical lexical, RulerFile file) {
         this.lexical = lexical;
+        this.file = file;
         this.statements = new ArrayList<BaseNode>();
     }
 
@@ -36,6 +39,9 @@ public class DefaultParser implements Parser {
         while (lexical.getToken().type != TokenType.EOF) {
             statements.add(parseStatement());
         }
+
+        file.setStatements(statements);
+
         return statements;
     }
 
