@@ -686,4 +686,13 @@ public class DefaultParser implements Parser {
         return null;
     }
 
+
+    BaseNode parseInitNode() {
+
+        AssertUtil.assertToken(lexical, TokenType.KEY_INIT);
+        lexical.nextToken();
+
+        return null;
+    }
+
 }
