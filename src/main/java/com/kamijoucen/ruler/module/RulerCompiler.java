@@ -7,22 +7,15 @@ import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.util.IOUtil;
 
-import java.util.List;
-
 public class RulerCompiler {
 
     public static RulerFile compile(String content) {
         if (IOUtil.isBlank(content)) {
             return null;
         }
-        Lexical lexical = new DefaultLexical(content);
-        Parser parser = new DefaultParser(lexical);
-
-        List<BaseNode> statement = parser.parse();
-
         RulerFile file = new RulerFile();
-        file.setStatements(statement);
-
+        Parser parser = new DefaultParser(new DefaultLexical(content), file);
+        file.setStatements(parser.parse());
         return file;
     }
 
