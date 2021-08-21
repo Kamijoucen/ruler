@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
+import com.kamijoucen.ruler.ast.statement.ImportNode;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -29,5 +30,4 @@ public interface ExpressionVisitor {
     BaseValue eval(RsonNode node, Scope scope);
 
     BaseValue eval(ThisNode node, Scope scope);
-
 }

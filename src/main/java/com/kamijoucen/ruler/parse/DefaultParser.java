@@ -98,9 +98,9 @@ public class DefaultParser implements Parser {
                 statement = parseVariableDefine();
                 isNeedSemicolon = true;
                 break;
-            case KEY_LIST:
-                break;
-            case KEY_MAP:
+            case KEY_IMPORT:
+                statement = parseImport();
+                isNeedSemicolon = true;
                 break;
         }
         if (statement == null) {
@@ -660,30 +660,23 @@ public class DefaultParser implements Parser {
         return new ThisNode();
     }
 
-
-    BaseNode parsePackage() {
-
-        AssertUtil.assertToken(lexical, TokenType.KEY_PACKAGE);
-        lexical.nextToken();
-
-        AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
-        Token name = lexical.getToken();
-
-        return new PackageNode(name.name);
-    }
-
     BaseNode parseImport() {
 
         AssertUtil.assertToken(lexical, TokenType.KEY_IMPORT);
+
         lexical.nextToken();
 
         AssertUtil.assertToken(lexical, TokenType.STRING);
-        Token pathToken = lexical.getToken();
 
-        String path = pathToken.name;
+        String path = lexical.getToken().name;
 
+        Token nextToken = lexical.nextToken();
 
-        return null;
+        if (nextToken.type == TokenType.SEMICOLON) {
+            return new ImportNode(path, null);
+        } else {
+            return new ImportNode(path, nextToken.name);
+        }
     }
 
 

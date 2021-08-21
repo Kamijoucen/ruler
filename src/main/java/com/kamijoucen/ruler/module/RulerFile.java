@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.module;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.statement.ImportNode;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
@@ -8,9 +9,7 @@ import java.util.Map;
 
 public class RulerFile {
 
-    private String packageName;
-
-    private List<String> importList;
+    private List<ImportNode> importList;
 
     private List<BaseNode> statements;
 
