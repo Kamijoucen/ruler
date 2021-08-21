@@ -298,7 +298,7 @@ public class Test1 {
     @Test
     public void out_name() {
 
-        String str = "var a = 15; println($a);";
+        String str = "var a = 15; println($aa);";
 
         RuleScript script = Ruler.compile(str);
 

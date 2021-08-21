@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler;
 
-import com.kamijoucen.ruler.module.RulerCompiler;
 import com.kamijoucen.ruler.module.RulerFile;
 import com.kamijoucen.ruler.runtime.Scope;
 

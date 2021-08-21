@@ -29,6 +29,7 @@ public class Scope {
         this.stackName = stackName;
         this.parentScope = parentScope;
         this.valueSpace = new HashMap<String, BaseValue>();
+        this.outValueSpace = new HashMap<String, BaseValue>();
     }
 
     public Scope(String stackName, Scope parentScope, Map<String, BaseValue> outValueSpace) {
