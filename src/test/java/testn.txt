@@ -1,0 +1,96 @@
+
+i = 0;
+while i < 10 {
+    i++;
+
+    STOP!
+
+    println(i);
+}
+return i;
+
+------------------------------------------------------
+
+
+
+block 1----------------------------
+
+i = 0;
+if i < 10 {
+    i++;
+//    GOTO block 2;
+} else {
+    return i;
+}
+
+block 2----------------------------
+
+println(i);
+if i < 10 {
+    i++;
+//    GOTO block 2;
+} else {
+    return i;
+}
+
+-------------------------------------------------------
+
+var result;
+var i;
+var state = 0;
+
+func stopCall() bool {
+
+    while true {
+        switch state {
+        case 0:
+            state = 1;
+        case 1:
+            i = 0;
+            if i < 10 {
+                i++;
+                state = 2;
+                return false
+            } else {
+                result = i;
+                return true;
+            }
+        case 2:
+            println(i);
+            if i < 10 {
+                i++;
+                return false
+            } else {
+                result = i;
+                return true
+            }
+        }
+    }
+}
+---------------------------------------------
+
+while(true) {
+
+    result1 = stopCall()
+
+    result1 = stopCall2()
+
+    result1 = stopCall3()
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

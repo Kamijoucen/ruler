@@ -655,6 +655,7 @@ public class DefaultParser implements Parser {
 
     BaseNode parseThis() {
         AssertUtil.assertToken(lexical, TokenType.KEY_THIS);
+
         lexical.nextToken();
 
         return new ThisNode();
