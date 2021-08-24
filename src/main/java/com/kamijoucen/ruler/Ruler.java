@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler;
 
+import com.kamijoucen.ruler.compiler.FileCompiler;
 import com.kamijoucen.ruler.module.RulerFile;
 import com.kamijoucen.ruler.runtime.Scope;
 
@@ -13,7 +14,7 @@ public class Ruler {
 
     public static RuleScript compile(String text) {
 
-        RulerFile file = RulerCompiler.compile(text);
+        RulerFile file = FileCompiler.compile(text);
 
         return new RuleScript(new Scope("file", globalScope), file);
     }

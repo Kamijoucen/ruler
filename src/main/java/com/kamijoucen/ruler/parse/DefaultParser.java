@@ -36,6 +36,11 @@ public class DefaultParser implements Parser {
 
         lexical.nextToken();
 
+        if (lexical.getToken().type == TokenType.KEY_IMPORT) {
+            List<ImportNode> imports = parseImports();
+            file.setImportList(imports);
+        }
+
         while (lexical.getToken().type != TokenType.EOF) {
             statements.add(parseStatement());
         }
@@ -45,15 +50,24 @@ public class DefaultParser implements Parser {
         return statements;
     }
 
-    public BaseNode parseCallLinkAssignNode(BaseNode callLinkNode) {
+    public List<ImportNode> parseImports() {
 
-        AssertUtil.assertToken(lexical.getToken(), TokenType.ASSIGN);
-        lexical.nextToken();
+        if (lexical.getToken().type != TokenType.KEY_IMPORT) {
+            return Collections.emptyList();
+        }
 
-        BaseNode expression = parseExpression();
+        List<ImportNode> imports = new ArrayList<ImportNode>();
 
-        return new AssignNode(callLinkNode, expression);
+        while (lexical.getToken().type == TokenType.KEY_IMPORT) {
+
+            BaseNode importNode = parseImport();
+
+            imports.add((ImportNode) importNode);
+        }
+
+        return imports;
     }
+
 
     public BaseNode parseStatement() {
         Token token = lexical.getToken();
@@ -98,10 +112,6 @@ public class DefaultParser implements Parser {
                 statement = parseVariableDefine();
                 isNeedSemicolon = true;
                 break;
-            case KEY_IMPORT:
-                statement = parseImport();
-                isNeedSemicolon = true;
-                break;
         }
         if (statement == null) {
             throw SyntaxException.withSyntax("错误的语句");
@@ -111,6 +121,16 @@ public class DefaultParser implements Parser {
             lexical.nextToken();
         }
         return statement;
+    }
+
+    public BaseNode parseCallLinkAssignNode(BaseNode callLinkNode) {
+
+        AssertUtil.assertToken(lexical.getToken(), TokenType.ASSIGN);
+        lexical.nextToken();
+
+        BaseNode expression = parseExpression();
+
+        return new AssignNode(callLinkNode, expression);
     }
 
     public BaseNode parseExpression() {
@@ -653,7 +673,7 @@ public class DefaultParser implements Parser {
         return new RsonNode(properties);
     }
 
-    BaseNode parseThis() {
+    public BaseNode parseThis() {
         AssertUtil.assertToken(lexical, TokenType.KEY_THIS);
 
         lexical.nextToken();
@@ -661,7 +681,7 @@ public class DefaultParser implements Parser {
         return new ThisNode();
     }
 
-    BaseNode parseImport() {
+    public BaseNode parseImport() {
 
         AssertUtil.assertToken(lexical, TokenType.KEY_IMPORT);
 
@@ -681,7 +701,7 @@ public class DefaultParser implements Parser {
     }
 
 
-    BaseNode parseInitNode() {
+    public BaseNode parseInitNode() {
 
         AssertUtil.assertToken(lexical, TokenType.KEY_INIT);
         lexical.nextToken();

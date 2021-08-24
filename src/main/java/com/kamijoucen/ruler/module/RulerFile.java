@@ -22,4 +22,13 @@ public class RulerFile {
     public void setStatements(List<BaseNode> statements) {
         this.statements = statements;
     }
+
+    public List<ImportNode> getImportList() {
+        return importList;
+    }
+
+    public void setImportList(List<ImportNode> importList) {
+        this.importList = importList;
+    }
+
 }

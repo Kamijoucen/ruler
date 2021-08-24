@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.eval;
 
-import com.kamijoucen.ruler.RulerCompiler;
 import com.kamijoucen.ruler.ast.*;
 import com.kamijoucen.ruler.ast.statement.ImportNode;
+import com.kamijoucen.ruler.compiler.FileCompiler;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.module.RulerFile;
 import com.kamijoucen.ruler.runtime.MataData;
@@ -98,11 +98,11 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     @Override
     public BaseValue eval(RsonNode node, Scope scope) {
         MataData mataData = new MataData();
-        
+
         for (Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
-            
+
             String name = entry.getKey();
-            
+
             BaseValue value = entry.getValue().eval(scope);
 
             mataData.put(name, value);
