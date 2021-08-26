@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.module.RulerFile;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerInterpreter;
 import com.kamijoucen.ruler.runtime.Scope;
 
@@ -9,13 +9,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class RuleScript {
+public class RuleRunner {
 
     private Scope scope;
 
-    private RulerFile file;
+    private RulerModule file;
 
-    public RuleScript(Scope scope, RulerFile file) {
+    public RuleRunner(Scope scope, RulerModule file) {
         this.file = file;
         this.scope = scope;
     }

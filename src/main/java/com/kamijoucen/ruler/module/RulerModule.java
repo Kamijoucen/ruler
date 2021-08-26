@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 import java.util.List;
 import java.util.Map;
 
-public class RulerFile {
+public class RulerModule {
 
     private List<ImportNode> importList;
 

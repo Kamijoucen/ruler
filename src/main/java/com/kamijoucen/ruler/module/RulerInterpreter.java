@@ -14,11 +14,11 @@ import java.util.Map;
 
 public class RulerInterpreter {
 
-    private RulerFile file;
+    private RulerModule file;
 
     private Scope fileScope;
 
-    public RulerInterpreter(RulerFile file, Scope fileScope) {
+    public RulerInterpreter(RulerModule file, Scope fileScope) {
         this.file = file;
         this.fileScope = fileScope;
     }

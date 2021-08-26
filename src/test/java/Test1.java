@@ -1,4 +1,4 @@
-import com.kamijoucen.ruler.RuleScript;
+import com.kamijoucen.ruler.RuleRunner;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.parse.DefaultLexical;
@@ -115,7 +115,7 @@ public class Test1 {
 
         String str = "a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
 
-        RuleScript runner = Ruler.compile(str);
+        RuleRunner runner = Ruler.compile(str);
 
         runner.run();
 
@@ -129,7 +129,7 @@ public class Test1 {
 
         String str2 = "text = \"hello world!\"; println(text);";
 
-        RuleScript runner = Ruler.compile(str);
+        RuleRunner runner = Ruler.compile(str);
 
         runner.run();
 
@@ -138,7 +138,7 @@ public class Test1 {
     @Test
     public void test9() {
         String str2 = "var i = 15; println(i);";
-        RuleScript runner = Ruler.compile(str2);
+        RuleRunner runner = Ruler.compile(str2);
 
         runner.run();
 
@@ -163,7 +163,7 @@ public class Test1 {
         String str1 = "f = fun() {println(123);};";
 
 
-        RuleScript runner = Ruler.compile(str1);
+        RuleRunner runner = Ruler.compile(str1);
 
         runner.run();
 
@@ -176,7 +176,7 @@ public class Test1 {
 
         String str1 = "arr = [[1, 2], 2, [2,3]]; println(arr[0][1][2]);";
 
-        RuleScript runner = Ruler.compile(str1);
+        RuleRunner runner = Ruler.compile(str1);
 
         runner.run();
 
@@ -189,7 +189,7 @@ public class Test1 {
 
         String str = "var arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         script.run();
     }
@@ -202,7 +202,7 @@ public class Test1 {
 //        String str = "var arr = [1, 2, 3]; arr[2] = 4; println(arr);";
 //        String str1 = "a[1] = 1;";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         List<Object> run = script.run();
 
@@ -213,7 +213,7 @@ public class Test1 {
 
         String text = IOUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\quick_sort.txt");
 
-        RuleScript script = Ruler.compile(text);
+        RuleRunner script = Ruler.compile(text);
 
         script.run();
 
@@ -224,7 +224,7 @@ public class Test1 {
 
         String str = "i = 10; fun test(i) { println(i); if i == 0 return; test(i - 1); } test(i);";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         script.run();
 
@@ -235,7 +235,7 @@ public class Test1 {
 
         String str = "var a = false || false; println(a);";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         script.run();
 
@@ -246,7 +246,7 @@ public class Test1 {
 
         String str = "var rson = {name:name, age:1, doit:fun() { println('gogogogo'); },};";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         System.out.println(script);
 
@@ -257,7 +257,7 @@ public class Test1 {
 
         String str = "var rson = {f: { ff: fun() {println('go!');} }};";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         System.out.println(script);
 
@@ -267,7 +267,7 @@ public class Test1 {
     public void test_dot_call1() {
         String str = "obj.name().name[1] = 5;";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         script.run();
 
@@ -279,7 +279,7 @@ public class Test1 {
     public void test_dot_call2() {
         String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         script.run();
     }
@@ -289,7 +289,7 @@ public class Test1 {
 
         String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f(18));";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         script.run();
 
@@ -298,9 +298,9 @@ public class Test1 {
     @Test
     public void out_name() {
 
-        String str = "var a = 15; println($aa);";
+        String str = "var a = 15; println($a);";
 
-        RuleScript script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(str);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("a", "李思岑");
