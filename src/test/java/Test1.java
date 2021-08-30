@@ -303,10 +303,12 @@ public class Test1 {
         RuleRunner script = Ruler.compile(str);
 
         Map<String, Object> param = new HashMap<String, Object>();
-        param.put("a", "李思岑");
+        param.put("a", "var a = 15; println($a);");
 
-        script.run(param);
+        script.run(param, false);
 
     }
+
+
 
 }

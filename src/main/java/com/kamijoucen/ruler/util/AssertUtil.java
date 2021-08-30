@@ -8,6 +8,12 @@ import com.kamijoucen.ruler.token.TokenType;
 
 public class AssertUtil {
 
+    public static void notNull(Object obj) {
+        if (obj == null) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public static NoImplException todo(String str) {
         return new NoImplException(str == null ? "还未实现" : str);
     }

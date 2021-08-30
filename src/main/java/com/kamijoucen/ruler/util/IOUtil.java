@@ -47,11 +47,11 @@ public class IOUtil {
         return ch >= IOUtil.identifierFlags.length || IOUtil.identifierFlags[ch];
     }
 
-    public static String read(String path) {
+    public static String read(File file) {
         StringBuilder sb = new StringBuilder();
         Reader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(path));
+            reader = new BufferedReader(new FileReader(file));
 
             char[] buf = new char[2048];
 
@@ -73,6 +73,10 @@ public class IOUtil {
             }
         }
         return sb.toString();
+    }
+
+    public static String read(String path) {
+        return read(new File(path));
     }
 
     public static boolean isBlank(String str) {

@@ -13,6 +13,7 @@ import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
+import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 import com.kamijoucen.ruler.util.TokenUtil;
 
 import java.util.*;
@@ -40,6 +41,8 @@ public class DefaultParser implements Parser {
             List<ImportNode> imports = parseImports();
             file.setImportList(imports);
         }
+
+        SyntaxCheckUtil.availableImport(file);
 
         while (lexical.getToken().type != TokenType.EOF) {
             statements.add(parseStatement());
@@ -691,13 +694,11 @@ public class DefaultParser implements Parser {
 
         String path = lexical.getToken().name;
 
-        Token nextToken = lexical.nextToken();
+        Token aliasToken = lexical.nextToken();
 
-        if (nextToken.type == TokenType.SEMICOLON) {
-            return new ImportNode(path, null);
-        } else {
-            return new ImportNode(path, nextToken.name);
-        }
+        AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
+
+        return new ImportNode(path, aliasToken.name);
     }
 
 
