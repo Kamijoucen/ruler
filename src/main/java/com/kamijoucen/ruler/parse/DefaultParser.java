@@ -40,6 +40,8 @@ public class DefaultParser implements Parser {
         if (lexical.getToken().type == TokenType.KEY_IMPORT) {
             List<ImportNode> imports = parseImports();
             file.setImportList(imports);
+        } else {
+            file.setImportList(Collections.<ImportNode>emptyList());
         }
 
         SyntaxCheckUtil.availableImport(file);
