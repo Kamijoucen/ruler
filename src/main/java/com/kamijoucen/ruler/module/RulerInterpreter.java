@@ -18,12 +18,12 @@ import java.util.Map;
 
 public class RulerInterpreter {
 
-    private RulerModule file;
+    private RulerProgram program;
 
     private Scope interScope;
 
-    public RulerInterpreter(RulerModule file, Scope fileScope) {
-        this.file = file;
+    public RulerInterpreter(RulerProgram program, Scope fileScope) {
+        this.program = program;
         this.interScope = fileScope;
     }
 
@@ -31,12 +31,11 @@ public class RulerInterpreter {
 
         Scope runScope = new Scope("run", interScope, ConvertUtil.convertToBase(param));
 
-
-        runImports(file.getImportList());
+        // runImports(file.getImportList());
 
         runScope.initReturnSpace();
 
-        for (BaseNode ast : file.getStatements()) {
+        for (BaseNode ast : program.getMainModule().getStatements()) {
             ast.eval(runScope);
         }
 
@@ -51,19 +50,6 @@ public class RulerInterpreter {
             realValue.add(ConvertRepository.getConverter(baseValue.getType()));
         }
         return realValue;
-    }
-
-    private List<RulerModule> runImports(List<ImportNode> list) {
-
-        if (CollectionUtil.isEmpty(list)) {
-            return Collections.emptyList();
-        }
-
-        for (ImportNode node : list) {
-
-        }
-
-        return null;
     }
 
     private List<RulerModule> loadLib(RuntimeConfig config) {

@@ -298,12 +298,14 @@ public class Test1 {
     @Test
     public void out_name() {
 
-        String str = "var a = 15; println($a); println(1 + 3);";
+        String str = "var a = 15; println($a); println(1 + 3); println($v1 + $v2);";
 
         RuleRunner script = Ruler.compile(str);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("a", "lisicen");
+        param.put("v1", 1);
+        param.put("v2", 15);
 
         script.run(param, false);
 

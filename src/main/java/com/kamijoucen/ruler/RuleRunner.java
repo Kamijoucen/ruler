@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.config.ConfigFactory;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerModule;
+import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerInterpreter;
 import com.kamijoucen.ruler.runtime.Scope;
 
@@ -15,10 +16,10 @@ public class RuleRunner {
 
     private Scope scope;
 
-    private RulerModule file;
+    private RulerProgram program;
 
-    public RuleRunner(Scope scope, RulerModule file) {
-        this.file = file;
+    public RuleRunner(Scope scope, RulerProgram program) {
+        this.program = program;
         this.scope = scope;
     }
 
@@ -40,7 +41,7 @@ public class RuleRunner {
         if (param == null) {
             param = Collections.emptyMap();
         }
-        RulerInterpreter interpreter = new RulerInterpreter(file, scope);
+        RulerInterpreter interpreter = new RulerInterpreter(program, scope);
 
         return interpreter.run(param, config);
     }

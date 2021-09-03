@@ -1,4 +1,4 @@
-import "list.txt" listUtil
+import "std.core.list" list
 
-listUtil.Sub()
+list.Sub()
 

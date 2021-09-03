@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.config.ConfigFactory;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerInterpreter;
 import com.kamijoucen.ruler.module.RulerModule;
+import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
@@ -35,11 +36,11 @@ public class Main {
         script.setFileName(file.getName());
         script.setContent(content);
         script.setPath(file.getParentFile().getAbsolutePath());
-        RulerModule module = new RulerCompiler().compile(script);
+        RulerProgram program = new RulerCompiler().compile(script, config);
 
         Scope rootScope = new Scope("root", null);
         Init.engineInit(rootScope);
-        RulerInterpreter interpreter = new RulerInterpreter(module, rootScope);
+        RulerInterpreter interpreter = new RulerInterpreter(program, rootScope);
 
         interpreter.run(Collections.<String, Object>emptyMap(), config);
     }
