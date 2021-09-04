@@ -36,7 +36,7 @@ public class Main {
         script.setFileName(file.getName());
         script.setContent(content);
         script.setPath(file.getParentFile().getAbsolutePath());
-        RulerProgram program = new RulerCompiler().compile(script, config);
+        RulerProgram program = new RulerCompiler(config, script).compile();
 
         Scope rootScope = new Scope("root", null);
         Init.engineInit(rootScope);

@@ -19,7 +19,7 @@ public class Ruler {
         RulerScript script = new RulerScript();
         script.setContent(text);
 
-        RulerProgram program = new RulerCompiler().compile(script, null);
+        RulerProgram program = new RulerCompiler(null, script).compile();
 
         return new RuleRunner(new Scope("file", globalScope), program);
     }

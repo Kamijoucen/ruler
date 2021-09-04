@@ -16,19 +16,28 @@ import com.kamijoucen.ruler.util.CollectionUtil;
 
 public class RulerCompiler {
 
+    private RulerProgram program;
 
+    private RuntimeConfig config;
 
-    public RulerProgram compile(RulerScript mainScript, RuntimeConfig config) {
+    private RulerScript mainScript;
 
+    public RulerCompiler(RuntimeConfig config, RulerScript mainScript) {
+        this.config = config;
+        this.mainScript = mainScript;
+        this.program = new RulerProgram();
+    }
+
+    public RulerProgram compile() {
         RulerModule mainModule = compileScript(mainScript);
 
-        List<ImportNode> imports = mainModule.getImportList();
+        program.setMainModule(mainModule);
+        // program.getModules().put(mainModule.getFullName(), mainModule);
 
-        return null;
+        return program;
     }
 
     private RulerModule compileScript(RulerScript script) {
-
         RulerModule module = new RulerModule();
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(script.getContent());
@@ -37,7 +46,15 @@ public class RulerCompiler {
         // 开始解析语法
         parser.parse();
 
+        // 解析导入语句
+        for (ImportNode node : module.getImportList()) {
+            parseImport(node);
+        }
         return module;
+    }
+
+    private void parseImport(ImportNode node) {
+
     }
 
 }

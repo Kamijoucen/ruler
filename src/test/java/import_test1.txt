@@ -1,4 +1,7 @@
-import "std.core.list" list
+import "D:\game\name " list
 
-list.Sub()
+var arr = {1, 2, 3};
 
+var subArr = list.Sub(arr, 0, 1);
+
+println(subArr);

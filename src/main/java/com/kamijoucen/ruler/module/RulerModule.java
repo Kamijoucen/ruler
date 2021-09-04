@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class RulerModule {
 
+    private String fullName;
+
     private List<ImportNode> importList;
 
     private List<BaseNode> statements;
@@ -29,6 +31,18 @@ public class RulerModule {
 
     public void setImportList(List<ImportNode> importList) {
         this.importList = importList;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public BaseValue getPublicValue(String key) {
+        return publicValues.get(key);
     }
 
 }
