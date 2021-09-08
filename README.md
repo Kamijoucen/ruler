@@ -21,7 +21,7 @@ var b = 100;
 var c = fun(a) {
     return a + b;
 };
-println(c(1) + b); // 打印 101
+println(c(1)); // 打印 101
 ```
 ## 控制语句
 ```javascript
