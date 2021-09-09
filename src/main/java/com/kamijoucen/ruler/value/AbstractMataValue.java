@@ -12,7 +12,7 @@ public abstract class AbstractMataValue implements MataValue {
 
     protected MataData mataData;
 
-    private static CallOperation callOperation = (CallOperation) OperationDefine.findOperation(TokenType.CALL);
+    protected static CallOperation callOperation = (CallOperation) OperationDefine.findOperation(TokenType.CALL);
     
     public AbstractMataValue(MataData mataData) {
         this.mataData = mataData;

@@ -66,7 +66,7 @@ public class RulerCompiler {
         String content = IOUtil.read(absolutePath);
 
         RulerModule module = compileScript(new RulerScript(null, null, content));
-
+        node.setModule(module);
         return new Tuple2<String, RulerModule>(node.getAlias(), module);
     }
 }

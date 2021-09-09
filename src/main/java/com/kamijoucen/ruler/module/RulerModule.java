@@ -17,8 +17,6 @@ public class RulerModule {
 
     private List<BaseNode> statements;
 
-    private Map<String, BaseValue> publicValues;
-
     /**
      * 子模块，临时实现，后期改为和java一样的包管理模式
      */
@@ -52,10 +50,6 @@ public class RulerModule {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public BaseValue getPublicValue(String key) {
-        return publicValues.get(key);
     }
 
     public List<Tuple2<String, RulerModule>> getChildModule() {

@@ -44,17 +44,6 @@ public class Scope {
         }
     }
 
-//    public BaseValue findOutValue(String name) {
-//        BaseValue value = outValueSpace.get(name);
-//        if (value != null) {
-//            return value;
-//        } else if (parentScope != null) {
-//            return parentScope.findOutValue(name);
-//        } else {
-//            return null;
-//        }
-//    }
-
     public void update(String name, BaseValue value) {
         if (valueSpace.containsKey(name)) {
             putLocal(name, value);

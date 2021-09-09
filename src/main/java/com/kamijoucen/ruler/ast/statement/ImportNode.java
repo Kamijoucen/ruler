@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.ast.statement;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -11,6 +12,8 @@ public class ImportNode implements BaseNode {
     private String path;
 
     private String alias;
+
+    private RulerModule module;
 
     public ImportNode(String path, String alias) {
         this.path = path;
@@ -36,5 +39,13 @@ public class ImportNode implements BaseNode {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public RulerModule getModule() {
+        return module;
+    }
+
+    public void setModule(RulerModule module) {
+        this.module = module;
     }
 }

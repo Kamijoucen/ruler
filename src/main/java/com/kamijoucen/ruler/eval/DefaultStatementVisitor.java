@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.ast.NameNode;
 import com.kamijoucen.ruler.ast.op.IndexNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.ast.statement.*;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -183,11 +184,8 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
     @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
-
         List<BaseNode> param = node.getParam();
-
         String funName = node.getName();
-
         ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
 
         if (funName != null) {
@@ -237,6 +235,12 @@ public class DefaultStatementVisitor implements StatementVisitor {
 
     @Override
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
-        return null;
+        RulerModule module = node.getModule();
+        for (BaseNode statement : module.getStatements()) {
+            statement.eval(context, module.getFileScope());
+        }
+        ModuleValue moduleValue = new ModuleValue(module);
+        scope.defineLocal(node.getAlias(), moduleValue);
+        return NoneValue.INSTANCE;
     }
 }
