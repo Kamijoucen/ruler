@@ -2,6 +2,8 @@ package com.kamijoucen.ruler.module;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.statement.ImportNode;
+import com.kamijoucen.ruler.common.Tuple2;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
@@ -16,6 +18,17 @@ public class RulerModule {
     private List<BaseNode> statements;
 
     private Map<String, BaseValue> publicValues;
+
+    /**
+     * 子模块，临时实现，后期改为和java一样的包管理模式
+     */
+    private List<Tuple2<String, RulerModule>> childModule;
+
+    private Scope fileScope;
+
+    public RulerModule(Scope fileScope) {
+        this.fileScope = fileScope;
+    }
 
     public List<BaseNode> getStatements() {
         return statements;
@@ -45,4 +58,19 @@ public class RulerModule {
         return publicValues.get(key);
     }
 
+    public List<Tuple2<String, RulerModule>> getChildModule() {
+        return childModule;
+    }
+
+    public void setChildModule(List<Tuple2<String, RulerModule>> childModule) {
+        this.childModule = childModule;
+    }
+
+    public Scope getFileScope() {
+        return fileScope;
+    }
+
+    public void setFileScope(Scope fileScope) {
+        this.fileScope = fileScope;
+    }
 }

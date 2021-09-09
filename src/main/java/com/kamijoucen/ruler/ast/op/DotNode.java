@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -32,8 +33,8 @@ public class DotNode implements OperationNode {
     }
 
     @Override
-    public BaseValue eval(Scope scope) {
-        return VisitorRepository.getStatementVisitor().eval(this, scope);
+    public BaseValue eval(RuntimeContext context, Scope scope) {
+        return VisitorRepository.getStatementVisitor().eval(this, scope, context);
     }
 
     @Override
@@ -52,8 +53,8 @@ public class DotNode implements OperationNode {
     }
 
     @Override
-    public void assign(BaseNode expression, Scope scope) {
-        this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope);
+    public void assign(BaseNode expression, Scope scope, RuntimeContext context) {
+        this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope, context);
     }
 
     public TokenType getDotType() {

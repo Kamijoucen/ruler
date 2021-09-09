@@ -1,0 +1,7 @@
+import "sort.txt" sort;
+
+var arr = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
+
+println(arr);
+var rs = sort.Sort(arr, 10);
+println(rs);

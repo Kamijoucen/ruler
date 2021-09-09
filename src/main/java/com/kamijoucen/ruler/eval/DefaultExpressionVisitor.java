@@ -1,10 +1,9 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.*;
-import com.kamijoucen.ruler.ast.statement.ImportNode;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.MataData;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
@@ -16,7 +15,7 @@ import java.util.Map.Entry;
 public class DefaultExpressionVisitor implements ExpressionVisitor {
 
     @Override
-    public BaseValue eval(NameNode node, Scope scope) {
+    public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
         BaseValue baseValue = scope.find(node.name.name);
         if (baseValue == null) {
             return NullValue.INSTANCE;
@@ -25,8 +24,8 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public BaseValue eval(OutNameNode node, Scope scope) {
-        BaseValue value = scope.findOutValue(node.name.name);
+    public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {
+        BaseValue value = context.findOutValue(node.name.name);
         if (value == null) {
             return NullValue.INSTANCE;
         }
@@ -34,45 +33,45 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public BaseValue eval(IntegerNode ast, Scope scope) {
+    public BaseValue eval(IntegerNode ast, Scope scope, RuntimeContext context) {
         return new IntegerValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(DoubleNode ast, Scope scope) {
+    public BaseValue eval(DoubleNode ast, Scope scope, RuntimeContext context) {
         return new DoubleValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(BoolNode ast, Scope scope) {
+    public BaseValue eval(BoolNode ast, Scope scope, RuntimeContext context) {
         return BoolValue.get(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(StringNode ast, Scope scope) {
+    public BaseValue eval(StringNode ast, Scope scope, RuntimeContext context) {
         return new StringValue(ast.getValue());
     }
 
     @Override
-    public BaseValue eval(BinaryOperationNode node, Scope scope) {
+    public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
 
-        BaseValue val1 = node.getExp1().eval(scope);
-        BaseValue val2 = node.getExp2().eval(scope);
+        BaseValue val1 = node.getExp1().eval(context, scope);
+        BaseValue val2 = node.getExp2().eval(context, scope);
 
-        return node.getOperation().compute(val1, val2);
+        return node.getOperation().compute(context, val1, val2);
     }
 
     @Override
-    public BaseValue eval(LogicBinaryOperationNode node, Scope scope) {
+    public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
 
         BaseNode exp1 = node.getExp1();
         BaseNode exp2 = node.getExp2();
 
-        return node.getLogicOperation().compute(scope, exp1, exp2);
+        return node.getLogicOperation().compute(context, scope, exp1, exp2);
     }
 
     @Override
-    public BaseValue eval(ArrayNode node, Scope scope) {
+    public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
 
         List<BaseNode> nodes = node.getValues();
 
@@ -83,26 +82,26 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
         List<BaseValue> values = new ArrayList<BaseValue>(nodes.size());
 
         for (BaseNode tempNode : nodes) {
-            values.add(tempNode.eval(scope));
+            values.add(tempNode.eval(context, scope));
         }
 
         return new ArrayValue(values);
     }
 
     @Override
-    public BaseValue eval(NullNode node, Scope scope) {
+    public BaseValue eval(NullNode node, Scope scope, RuntimeContext context) {
         return NullValue.INSTANCE;
     }
 
     @Override
-    public BaseValue eval(RsonNode node, Scope scope) {
+    public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
         MataData mataData = new MataData();
 
         for (Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
 
             String name = entry.getKey();
 
-            BaseValue value = entry.getValue().eval(scope);
+            BaseValue value = entry.getValue().eval(context, scope);
 
             mataData.put(name, value);
         }
@@ -110,7 +109,7 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     }
 
     @Override
-    public BaseValue eval(ThisNode node, Scope scope) {
+    public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
         MataValue mataValue = scope.getCurrentContextMataValue();
         if (mataValue == null) {
             throw SyntaxException.withSyntax("");

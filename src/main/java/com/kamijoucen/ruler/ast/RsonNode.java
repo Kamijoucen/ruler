@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.ast;
 import java.util.Map;
 
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -15,8 +16,8 @@ public class RsonNode implements BaseNode {
     }
 
     @Override
-    public BaseValue eval(Scope scope) {
-        return VisitorRepository.getExpressionVisitor().eval(this, scope);
+    public BaseValue eval(RuntimeContext context, Scope scope) {
+        return VisitorRepository.getExpressionVisitor().eval(this, scope, context);
     }
 
     public Map<String, BaseNode> getProperties() {

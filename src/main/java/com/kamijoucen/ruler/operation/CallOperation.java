@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.NameNode;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.function.RulerFunction;
@@ -14,7 +15,7 @@ import java.util.List;
 public class CallOperation implements Operation {
 
     @Override
-    public BaseValue compute(BaseValue... param) {
+    public BaseValue compute(RuntimeContext context, BaseValue... param) {
 
         BaseValue func = param[0];
 
@@ -27,14 +28,14 @@ public class CallOperation implements Operation {
 
         if (func.getType() == ValueType.CLOSURE) {
             ClosureValue function = ((ClosureValue) func);
-            return callClosure(function, (BaseValue[]) funcParam);
+            return callClosure(context, function, (BaseValue[]) funcParam);
         }
 
         throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
 
 
-    private BaseValue callClosure(ClosureValue closure, BaseValue[] funcParam) {
+    private BaseValue callClosure(RuntimeContext context, ClosureValue closure, BaseValue[] funcParam) {
 
         Scope callScope = new Scope("closure", closure.getDefineScope());
 
@@ -48,7 +49,7 @@ public class CallOperation implements Operation {
 
         BaseNode block = closure.getBlock();
 
-        block.eval(callScope);
+        block.eval(context, callScope);
 
         List<BaseValue> returnValues = callScope.getReturnSpace();
 

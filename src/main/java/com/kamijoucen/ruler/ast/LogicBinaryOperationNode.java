@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.common.VisitorRepository;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.operation.LogicOperation;
 import com.kamijoucen.ruler.token.TokenType;
@@ -24,8 +25,8 @@ public class LogicBinaryOperationNode implements BaseNode {
     }
 
     @Override
-    public BaseValue eval(Scope scope) {
-        return VisitorRepository.getExpressionVisitor().eval(this, scope);
+    public BaseValue eval(RuntimeContext context, Scope scope) {
+        return VisitorRepository.getExpressionVisitor().eval(this, scope, context);
     }
 
     public BaseNode getExp1() {

@@ -1,11 +1,12 @@
 package com.kamijoucen.ruler.operation;
 
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.*;
 
 public class NeOperation implements Operation {
 
     @Override
-    public BaseValue compute(BaseValue... param) {
+    public BaseValue compute(RuntimeContext context, BaseValue... param) {
         BaseValue tempVal1 = param[0];
         BaseValue tempVal2 = param[1];
 

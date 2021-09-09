@@ -1,7 +1,8 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.compiler.RulerCompiler;
-import com.kamijoucen.ruler.module.RulerModule;
+import com.kamijoucen.ruler.config.ConfigFactory;
+import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -15,12 +16,11 @@ public class Ruler {
     }
 
     public static RuleRunner compile(String text) {
-
         RulerScript script = new RulerScript();
         script.setContent(text);
+        RuntimeConfig config = ConfigFactory.buildConfig(null);
+        RulerProgram program = new RulerCompiler(config, script, globalScope).compile();
 
-        RulerProgram program = new RulerCompiler(null, script).compile();
-
-        return new RuleRunner(new Scope("file", globalScope), program);
+        return new RuleRunner(program);
     }
 }

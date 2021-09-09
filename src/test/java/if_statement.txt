@@ -1,0 +1,9 @@
+
+var a = 0;
+var b = 10;
+
+var r = if a > b {
+            "";
+        } else {
+
+        };

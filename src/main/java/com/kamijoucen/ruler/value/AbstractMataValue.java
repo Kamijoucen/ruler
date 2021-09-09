@@ -5,6 +5,7 @@ import java.util.List;
 import com.kamijoucen.ruler.operation.CallOperation;
 import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.OperationDefine;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.TokenType;
 
 public abstract class AbstractMataValue implements MataValue {
@@ -28,7 +29,7 @@ public abstract class AbstractMataValue implements MataValue {
     }
 
     @Override
-    public BaseValue invoke(String name, List<BaseValue> param) {
+    public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
 
         BaseValue fun = mataData.get(name);
 
@@ -37,6 +38,6 @@ public abstract class AbstractMataValue implements MataValue {
 
         System.arraycopy(param.toArray(), 0, realParam, 1, param.size());
         
-        return callOperation.compute(realParam);
+        return callOperation.compute(context, realParam);
     }
 }

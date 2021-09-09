@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.*;
 
 import java.util.Arrays;
@@ -8,7 +9,7 @@ import java.util.Arrays;
 public class GtOperation implements Operation {
 
     @Override
-    public BaseValue compute(BaseValue... param) {
+    public BaseValue compute(RuntimeContext context, BaseValue... param) {
         BaseValue tempVal1 = param[0];
         BaseValue tempVal2 = param[1];
 

@@ -1,16 +1,13 @@
 package com.kamijoucen.ruler.module;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.statement.ImportNode;
 import com.kamijoucen.ruler.common.ConvertRepository;
-import com.kamijoucen.ruler.config.RuntimeConfig;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,23 +17,22 @@ public class RulerInterpreter {
 
     private RulerProgram program;
 
-    private Scope interScope;
-
-    public RulerInterpreter(RulerProgram program, Scope fileScope) {
+    public RulerInterpreter(RulerProgram program) {
         this.program = program;
-        this.interScope = fileScope;
     }
 
-    public List<Object> run(Map<String, Object> param, RuntimeConfig config) {
+    public List<Object> run(Map<String, Object> param) {
 
-        Scope runScope = new Scope("run", interScope, ConvertUtil.convertToBase(param));
+        RulerModule mainModule = program.getMainModule();
 
-        // runImports(file.getImportList());
+        Scope runScope = new Scope("run", mainModule.getFileScope());
 
         runScope.initReturnSpace();
 
-        for (BaseNode ast : program.getMainModule().getStatements()) {
-            ast.eval(runScope);
+        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param));
+
+        for (BaseNode statement : mainModule.getStatements()) {
+            statement.eval(context, runScope);
         }
 
         List<BaseValue> returnValue = runScope.getReturnSpace();
@@ -52,18 +48,7 @@ public class RulerInterpreter {
         return realValue;
     }
 
-    private List<RulerModule> loadLib(RuntimeConfig config) {
-
-        AssertUtil.notNull(config);
-
-        File libPath = new File(config.libPath);
-        if (!libPath.exists() || !libPath.isDirectory()) {
-            return Collections.emptyList();
-        }
 
 
-
-        return null;
-    }
 
 }

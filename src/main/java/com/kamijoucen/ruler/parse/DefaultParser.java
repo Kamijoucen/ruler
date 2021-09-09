@@ -43,7 +43,6 @@ public class DefaultParser implements Parser {
         } else {
             file.setImportList(Collections.<ImportNode>emptyList());
         }
-
         SyntaxCheckUtil.availableImport(file);
 
         while (lexical.getToken().type != TokenType.EOF) {
@@ -60,16 +59,13 @@ public class DefaultParser implements Parser {
         if (lexical.getToken().type != TokenType.KEY_IMPORT) {
             return Collections.emptyList();
         }
-
         List<ImportNode> imports = new ArrayList<ImportNode>();
 
         while (lexical.getToken().type == TokenType.KEY_IMPORT) {
-
             BaseNode importNode = parseImport();
-
+            statements.add(importNode);
             imports.add((ImportNode) importNode);
         }
-
         return imports;
     }
 
@@ -440,6 +436,7 @@ public class DefaultParser implements Parser {
 
             while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
                 AssertUtil.assertToken(lexical, TokenType.COMMA);
+                lexical.nextToken();
                 param.add(parseExpression());
             }
 
@@ -689,7 +686,6 @@ public class DefaultParser implements Parser {
     public BaseNode parseImport() {
 
         AssertUtil.assertToken(lexical, TokenType.KEY_IMPORT);
-
         lexical.nextToken();
 
         AssertUtil.assertToken(lexical, TokenType.STRING);
@@ -699,6 +695,10 @@ public class DefaultParser implements Parser {
         Token aliasToken = lexical.nextToken();
 
         AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
+        lexical.nextToken();
+
+        AssertUtil.assertToken(lexical, TokenType.SEMICOLON);
+        lexical.nextToken();
 
         return new ImportNode(path, aliasToken.name);
     }

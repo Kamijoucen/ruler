@@ -36,13 +36,13 @@ public class Main {
         script.setFileName(file.getName());
         script.setContent(content);
         script.setPath(file.getParentFile().getAbsolutePath());
-        RulerProgram program = new RulerCompiler(config, script).compile();
 
         Scope rootScope = new Scope("root", null);
         Init.engineInit(rootScope);
-        RulerInterpreter interpreter = new RulerInterpreter(program, rootScope);
 
-        interpreter.run(Collections.<String, Object>emptyMap(), config);
+        RulerProgram program = new RulerCompiler(config, script, rootScope).compile();
+
+        new RulerInterpreter(program).run(Collections.<String, Object>emptyMap());
     }
 
 }

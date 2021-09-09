@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.ast;
 
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -16,7 +17,7 @@ public class UnaryOperationNode implements BaseNode {
     }
 
     @Override
-    public BaseValue eval(Scope scope) {
+    public BaseValue eval(RuntimeContext context, Scope scope) {
         return null;
     }
 }
