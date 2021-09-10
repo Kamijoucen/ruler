@@ -31,4 +31,6 @@ public interface ExpressionVisitor {
     BaseValue eval(RsonNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ThisNode node, Scope scope, RuntimeContext context);
+
+    BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context);
 }

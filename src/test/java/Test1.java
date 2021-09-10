@@ -98,100 +98,6 @@ public class Test1 {
 
     }
 
-    @Test
-    public void test10() {
-
-        Integer[] param = new Integer[] { 1 };
-
-        Integer[] funcParam = Arrays.copyOfRange(param, 1, param.length);
-
-        System.out.println(Arrays.toString(funcParam));
-    }
-
-    @Test
-    public void test11() {
-
-        // String text =
-        // FileUtil.read("D:\\dev\\code\\idea\\ruler\\test\\tests\\rule4.txt");
-
-        String str1 = "var a = 1 * 1; println(a);";
-
-        RuleRunner runner = Ruler.compile(str1);
-
-        runner.run();
-
-        System.out.println(runner);
-
-    }
-
-    @Test
-    public void test12() {
-
-        String str1 = "var arr = [[1, 2], 2, [2,3]]; println(arr[0][1]);";
-
-        RuleRunner runner = Ruler.compile(str1);
-
-        runner.run();
-
-        System.out.println(runner);
-
-    }
-
-    @Test
-    public void test13() {
-
-        String str = "var arr = [1, 2, 3]; println(arr[0] + arr[1] + arr[2]);";
-
-        RuleRunner script = Ruler.compile(str);
-
-        script.run();
-    }
-
-    @Test
-    public void test14() {
-
-        String str = IOUtil.read("D:\\dev\\code\\idea\\ruler\\src\\test\\java\\rule_rson.txt");
-        // String str = "var arr = [1, 2, 3]; arr[2] = 4; println(arr);";
-        // String str1 = "a[1] = 1;";
-
-        RuleRunner script = Ruler.compile(str);
-
-        List<Object> run = script.run();
-
-    }
-
-    @Test
-    public void test15() {
-
-        String text = IOUtil.read("D:\\code\\ruler\\src\\test\\java\\quick_sort.txt");
-
-        RuleRunner script = Ruler.compile(text);
-
-        script.run();
-
-    }
-
-    @Test
-    public void test16() {
-
-        String str = "i = 10; fun test(i) { println(i); if i == 0 return; test(i - 1); } test(i);";
-
-        RuleRunner script = Ruler.compile(str);
-
-        script.run();
-
-    }
-
-    @Test
-    public void test17() {
-
-        String str = "var a = false || false; println(a);";
-
-        RuleRunner script = Ruler.compile(str);
-
-        script.run();
-
-    }
 
     @Test
     public void test_rson_parse() {
@@ -273,6 +179,15 @@ public class Test1 {
         RuleRunner runner = Ruler.compile(content);
 
         runner.run();
+    }
+
+    @Test
+    public void typeof_test() {
+        String str = "var a = 15; println(typeof a);println(typeof 1);println(typeof 1.0);println(typeof println);";
+
+        RuleRunner script = Ruler.compile(str);
+
+        script.run();
     }
 
 }

@@ -5,6 +5,9 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.runtime.TypeMapping;
+import com.kamijoucen.ruler.util.AssertUtil;
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
@@ -111,10 +114,17 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     @Override
     public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
         MataValue mataValue = scope.getCurrentContextMataValue();
-        if (mataValue == null) {
-            throw SyntaxException.withSyntax("");
-        }
+        AssertUtil.notNull(mataValue);
         return mataValue;
     }
 
+    @Override
+    public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
+        BaseValue value = node.getExp().eval(context, scope);
+        String type = TypeMapping.lookUp(value.getType());
+        if (IOUtil.isBlank(type)) {
+            throw SyntaxException.withSyntax("typeof 不支持的表达式");
+        }
+        return new StringValue(type);
+    }
 }

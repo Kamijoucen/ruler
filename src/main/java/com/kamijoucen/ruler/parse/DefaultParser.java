@@ -223,6 +223,8 @@ public class DefaultParser implements Parser {
                 return parseArray();
             case LEFT_BRACE:
                 return parseRsonNode();
+            case KEY_TYPEOF:
+                return parseTypeOfNode();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -622,11 +624,16 @@ public class DefaultParser implements Parser {
         return new ArrayNode(arrValues);
     }
 
-    public BaseNode parseRsonNode() {
+    public BaseNode parseTypeOfNode() {
+        AssertUtil.assertToken(lexical, TokenType.KEY_TYPEOF);
+        lexical.nextToken();
+        BaseNode exp = parseExpression();
+        return new TypeOfNode(exp);
+    }
 
+    public BaseNode parseRsonNode() {
         AssertUtil.assertToken(lexical, TokenType.LEFT_BRACE);
         lexical.nextToken();
-
         Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
 
         if (lexical.getToken().type != TokenType.RIGHT_BRACE) {
@@ -635,26 +642,22 @@ public class DefaultParser implements Parser {
                     && lexical.getToken().type != TokenType.STRING) {
                 throw SyntaxException.withSyntax("无效的key", lexical.getToken());
             }
-
             Token name = lexical.getToken();
             lexical.nextToken();
 
             AssertUtil.assertToken(lexical, TokenType.COLON);
             lexical.nextToken();
-
             properties.put(name.name, parseExpression());
 
         }
 
         while (lexical.getToken().type != TokenType.RIGHT_BRACE) {
-
             AssertUtil.assertToken(lexical, TokenType.COMMA);
             lexical.nextToken();
 
             if (lexical.getToken().type == TokenType.RIGHT_BRACE) {
                 break;
             }
-
             if (lexical.getToken().type != TokenType.IDENTIFIER
                     && lexical.getToken().type != TokenType.STRING) {
                 throw SyntaxException.withSyntax("无效的key", lexical.getToken());
