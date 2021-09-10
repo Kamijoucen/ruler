@@ -10,6 +10,8 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public interface StatementVisitor {
 
+    BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context);
+
     BaseValue eval(BlockNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context);

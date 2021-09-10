@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.value.AbstractMataValue;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.ValueType;
@@ -20,7 +21,7 @@ public class DotAssignOperation implements AssignOperation {
         if (preOperationValue.getType() != ValueType.RSON) {
             throw SyntaxException.withSyntax(preOperationValue.getType() + "不是一个对象");
         }
-        RsonValue rsonValue = (RsonValue) preOperationValue;
+        AbstractMataValue rsonValue = (AbstractMataValue) preOperationValue;
 
         DotNode dotNode = (DotNode) call;
 

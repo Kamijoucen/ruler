@@ -25,12 +25,9 @@ import java.util.List;
 public class DefaultStatementVisitor implements StatementVisitor {
 
     @Override
-    public BaseValue eval(BlockNode ast, Scope scope, RuntimeContext context) {
-
-        Scope blockScope = new Scope("block", scope);
-
-        List<BaseNode> blocks = ast.getBlocks();
-
+    public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
+        Scope blockScope = new Scope("loop block", scope);
+        List<BaseNode> blocks = node.getBlocks();
         for (BaseNode block : blocks) {
             BaseValue val = block.eval(context, blockScope);
             if (ValueType.CONTINUE == val.getType()) {
@@ -41,7 +38,19 @@ public class DefaultStatementVisitor implements StatementVisitor {
                 return val;
             }
         }
+        return NoneValue.INSTANCE;
+    }
 
+    @Override
+    public BaseValue eval(BlockNode ast, Scope scope, RuntimeContext context) {
+        Scope blockScope = new Scope("block", scope);
+        List<BaseNode> blocks = ast.getBlocks();
+        for (BaseNode block : blocks) {
+            BaseValue val = block.eval(context, blockScope);
+            if (ValueType.RETURN == val.getType()) {
+                return val;
+            }
+        }
         return NoneValue.INSTANCE;
     }
 

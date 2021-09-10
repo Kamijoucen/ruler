@@ -21,13 +21,11 @@ public class IndexAssignOperation implements AssignOperation {
             throw SyntaxException.withSyntax(preOperationValue.getType() + "不是一个数组");
         }
         ArrayValue arrayValue = (ArrayValue) preOperationValue;
-
         BaseValue tempIndexValue = ((IndexNode) call).getIndex().eval(context, scope);
 
         if (tempIndexValue.getType() != ValueType.INTEGER) {
             throw SyntaxException.withSyntax("数组的索引必须是数字");
         }
-
         IntegerValue indexValue = (IntegerValue) tempIndexValue;
 
         BaseValue value = expression.eval(context, scope);

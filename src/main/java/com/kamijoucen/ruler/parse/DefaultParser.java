@@ -239,7 +239,7 @@ public class DefaultParser implements Parser {
         if (lexical.getToken().type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock();
         } else {
-            blockAST = new BlockNode(Collections.singletonList(parseStatement()));
+            blockAST = new LoopBlockNode(Collections.singletonList(parseStatement()));
         }
 
         return new WhileStatementNode(condition, blockAST);

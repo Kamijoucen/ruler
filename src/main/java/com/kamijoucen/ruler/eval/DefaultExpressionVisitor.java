@@ -18,7 +18,7 @@ public class DefaultExpressionVisitor implements ExpressionVisitor {
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
         BaseValue baseValue = scope.find(node.name.name);
         if (baseValue == null) {
-            return NullValue.INSTANCE;
+            throw SyntaxException.withSyntax("'" + node.name.name + "'未定义");
         }
         return baseValue;
     }
