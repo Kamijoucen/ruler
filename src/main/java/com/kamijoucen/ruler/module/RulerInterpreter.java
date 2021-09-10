@@ -23,7 +23,7 @@ public class RulerInterpreter {
 
     public List<Object> run(Map<String, Object> param) {
         RulerModule mainModule = program.getMainModule();
-        Scope runScope = new Scope("run", mainModule.getFileScope());
+        Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
 
         runScope.initReturnSpace();
 
@@ -39,7 +39,7 @@ public class RulerInterpreter {
         }
         List<Object> realValue = new ArrayList<Object>(returnValue.size());
         for (BaseValue baseValue : returnValue) {
-            realValue.add(ConvertRepository.getConverter(baseValue.getType()));
+            realValue.add(ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue));
         }
         return realValue;
     }

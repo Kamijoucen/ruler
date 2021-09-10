@@ -3,5 +3,5 @@ import "collections/sort.txt" sort;
 var arr = [9, 8, 7, 6, 5, 4, 3, 2, 1, 0];
 
 println(arr);
-var rs = sort.QuickSort(arr, 10);
-println(rs);
+sort.QuickSort(arr, 10);
+println(arr);

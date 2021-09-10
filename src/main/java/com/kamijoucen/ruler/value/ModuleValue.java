@@ -13,9 +13,12 @@ public class ModuleValue extends AbstractMataValue {
 
     private RulerModule module;
 
-    public ModuleValue(RulerModule module) {
+    private Scope runScope;
+
+    public ModuleValue(RulerModule module, Scope scope) {
         super(null);
         this.module = module;
+        this.runScope = scope;
     }
 
     @Override
@@ -25,8 +28,7 @@ public class ModuleValue extends AbstractMataValue {
 
     @Override
     public BaseValue getProperty(String name) {
-        Scope scope = module.getFileScope();
-        BaseValue value = scope.find(name);
+        BaseValue value = runScope.find(name);
         if (value == null) {
             return NullValue.INSTANCE;
         }
@@ -35,8 +37,7 @@ public class ModuleValue extends AbstractMataValue {
 
     @Override
     public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
-        Scope scope = module.getFileScope();
-        BaseValue funValue = scope.find(name);
+        BaseValue funValue = runScope.find(name);
 
         AssertUtil.notNull(funValue);
 

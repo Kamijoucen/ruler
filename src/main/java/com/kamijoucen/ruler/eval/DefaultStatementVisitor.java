@@ -109,14 +109,13 @@ public class DefaultStatementVisitor implements StatementVisitor {
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
 
         TokenType dotType = node.getDotType();
-
         BaseValue operationValue = scope.getCallLinkPreviousValue();
 
         if (!(operationValue instanceof MataValue)) {
             throw SyntaxException.withSyntax(operationValue + "不支持进行'.'操作");
         }
-        MataValue mataValue = (MataValue) operationValue;
 
+        MataValue mataValue = (MataValue) operationValue;
         scope.putCurrentMataValue(mataValue);
 
         if (dotType == TokenType.IDENTIFIER) {
@@ -236,10 +235,13 @@ public class DefaultStatementVisitor implements StatementVisitor {
     @Override
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
         RulerModule module = node.getModule();
+
+        Scope runScope = new Scope("runtime file", module.getFileScope());
+
         for (BaseNode statement : module.getStatements()) {
-            statement.eval(context, module.getFileScope());
+            statement.eval(context, runScope);
         }
-        ModuleValue moduleValue = new ModuleValue(module);
+        ModuleValue moduleValue = new ModuleValue(module, runScope);
         scope.defineLocal(node.getAlias(), moduleValue);
         return NoneValue.INSTANCE;
     }
