@@ -48,9 +48,7 @@ public class DefaultParser implements Parser {
         while (lexical.getToken().type != TokenType.EOF) {
             statements.add(parseStatement());
         }
-
         file.setStatements(statements);
-
         return statements;
     }
 
@@ -137,15 +135,11 @@ public class DefaultParser implements Parser {
     public BaseNode parseExpression() {
 
         RStack<BaseNode> valStack = new RStack<BaseNode>();
-
         RStack<TokenType> opStack = new RStack<TokenType>();
 
         valStack.push(parsePrimaryExpression()); // first exp
-
         while (true) {
-
             Token op = lexical.getToken();
-
             int curPrecedence = OperationDefine.findPrecedence(op.type);
             if (curPrecedence == -1) {
                 break;
@@ -153,7 +147,6 @@ public class DefaultParser implements Parser {
             lexical.nextToken();
 
             BaseNode rls = parsePrimaryExpression();
-
             if (opStack.size() != 0) {
                 TokenType peek = opStack.peek();
                 int peekPrecedence = OperationDefine.findPrecedence(peek);
@@ -705,7 +698,6 @@ public class DefaultParser implements Parser {
 
         return new ImportNode(path, aliasToken.name);
     }
-
 
     public BaseNode parseInitNode() {
 

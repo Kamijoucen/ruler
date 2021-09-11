@@ -19,37 +19,6 @@ import java.util.Map;
 public class Test1 {
 
     @Test
-    public void test1() {
-        String str = "n $_n 3.5 7  = == - + ** 1.1  /   '55' 1.f  /**===()-- 1. ";
-
-        String str1 = " '11'  --";
-
-        Lexical lexical = new DefaultLexical(str);
-
-        Token token = lexical.nextToken();
-        while (token.type != TokenType.EOF) {
-            System.out.println(token);
-            token = lexical.nextToken();
-        }
-    }
-
-    @Test
-    public void test3() {
-        String str = "(a + b) * c / c";
-
-        Lexical lexical = new DefaultLexical(str);
-
-        lexical.nextToken();
-
-        DefaultParser parser = new DefaultParser(lexical, null);
-
-        BaseNode baseNode = parser.parseExpression();
-
-        System.out.println(baseNode);
-
-    }
-
-    @Test
     public void test4() {
 
         String str = "a -- a --(-a-+b+-c)";
@@ -183,7 +152,9 @@ public class Test1 {
 
     @Test
     public void typeof_test() {
-        String str = "var a = 15; println(typeof a);println(typeof 1);println(typeof 1.0);println(typeof println);";
+        String str = "var a = 15; println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
+
+        String sql = "linq ";
 
         RuleRunner script = Ruler.compile(str);
 

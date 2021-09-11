@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 
 public class Ruler {
 
-    private static final Scope globalScope = new Scope("root", null);
+    static final Scope globalScope = new Scope("root", null);
 
     static {
         Init.engineInit(globalScope);
