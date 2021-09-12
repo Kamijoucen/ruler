@@ -1,11 +1,16 @@
 package com.kamijoucen.ruler.compiler;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.kamijoucen.ruler.ast.statement.ImportNode;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.config.RuntimeConfig;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
@@ -25,11 +30,14 @@ public class RulerCompiler {
 
     private Scope globalScope;
 
+    private Set<String> imported;
+
     public RulerCompiler(RuntimeConfig config, RulerScript mainScript, Scope globalScope) {
         this.config = config;
         this.mainScript = mainScript;
         this.globalScope = globalScope;
         this.program = new RulerProgram();
+        this.imported = new HashSet<String>();
     }
 
     public RulerProgram compile() {
@@ -51,20 +59,32 @@ public class RulerCompiler {
         List<Tuple2<String, RulerModule>> childModule
                 = new ArrayList<Tuple2<String, RulerModule>>(module.getImportList().size());
         for (ImportNode node : module.getImportList()) {
-            Tuple2<String, RulerModule> tuple = parseImport(node);
-            childModule.add(tuple);
+            try {
+                Tuple2<String, RulerModule> tuple = parseImport(node);
+                if (tuple != null) {
+                    childModule.add(tuple);
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         module.setChildModule(childModule);
         return module;
     }
 
-    private Tuple2<String, RulerModule> parseImport(ImportNode node) {
+    private Tuple2<String, RulerModule> parseImport(ImportNode node) throws IOException {
         String absolutePath = node.getPath();
         if (IOUtil.isNotBlank(config.libPath)) {
             absolutePath = config.libPath + "/" + absolutePath;
         }
-        String content = IOUtil.read(absolutePath);
+        File file = new File(absolutePath);
+        String canonicalPath = file.getCanonicalPath();
+        if (imported.contains(canonicalPath)) {
+            return null;
+        }
+        imported.add(canonicalPath);
 
+        String content = IOUtil.read(file);
         RulerModule module = compileScript(new RulerScript(null, null, content));
         node.setModule(module);
         return new Tuple2<String, RulerModule>(node.getAlias(), module);

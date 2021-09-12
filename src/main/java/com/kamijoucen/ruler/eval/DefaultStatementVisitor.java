@@ -55,9 +55,9 @@ public class DefaultStatementVisitor implements StatementVisitor {
     }
 
     @Override
-    public BaseValue eval(IfStatementNode ast, Scope scope, RuntimeContext context) {
+    public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
 
-        BaseValue conditionValue = ast.getCondition().eval(context, scope);
+        BaseValue conditionValue = node.getCondition().eval(context, scope);
 
         if (conditionValue.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("需要一个bool类型");
@@ -66,10 +66,10 @@ public class DefaultStatementVisitor implements StatementVisitor {
         BoolValue boolValue = (BoolValue) conditionValue;
 
         if (boolValue.getValue()) {
-            BaseNode thenBlock = ast.getThenBlock();
+            BaseNode thenBlock = node.getThenBlock();
             return thenBlock.eval(context, scope);
         } else {
-            BaseNode elseBlock = ast.getElseBlock();
+            BaseNode elseBlock = node.getElseBlock();
             if (elseBlock != null) {
                 return elseBlock.eval(context, scope);
             }
