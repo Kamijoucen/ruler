@@ -152,7 +152,7 @@ public class Test1 {
 
     @Test
     public void typeof_test() {
-        String str = "var a = 15; println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
+        String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
 
         String sql = "linq ";
 
