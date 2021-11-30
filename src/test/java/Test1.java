@@ -128,9 +128,9 @@ public class Test1 {
     public void typeof_test() {
         String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
 
-        String sql = "linq ";
+        String sql = "var a = 5; println($a);";
 
-        RuleRunner script = Ruler.compile(str);
+        RuleRunner script = Ruler.compile(sql);
 
         script.run();
     }
