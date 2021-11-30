@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class NameNode implements BaseNode {
+public class NameNode extends AbstractBaseNode {
 
     public final Token name;
 

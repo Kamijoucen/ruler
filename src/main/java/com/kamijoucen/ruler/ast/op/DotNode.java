@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.ast.op;
 
-import java.util.List;
-
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.operation.AssignOperation;
@@ -11,7 +9,9 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class DotNode implements OperationNode {
+import java.util.List;
+
+public class DotNode extends OperationNode {
 
     /**
      * only support call or identifier

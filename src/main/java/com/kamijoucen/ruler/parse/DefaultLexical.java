@@ -26,6 +26,7 @@ public class DefaultLexical implements Lexical {
 
     private StringBuilder buffer;
 
+    private boolean isEnd;
 
     private char curStringFlag;
 
@@ -33,6 +34,7 @@ public class DefaultLexical implements Lexical {
         this.offset = 0;
         this.content = content;
         this.state = State.NONE;
+        this.isEnd = false;
         this.buffer = new StringBuilder();
     }
 
@@ -233,8 +235,12 @@ public class DefaultLexical implements Lexical {
     }
 
     private void makeEndToken() {
+        if (isEnd) {
+            return;
+        }
         currentToken = new Token(TokenType.EOF, "", new TokenLocation(line, column));
         buffer.delete(0, buffer.length());
+        isEnd = true;
     }
 
     private boolean isOver() {

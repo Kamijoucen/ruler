@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class BoolNode implements BaseNode {
+public class BoolNode extends AbstractBaseNode {
 
     private boolean value;
 

@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class UnaryOperationNode implements BaseNode {
+public class UnaryOperationNode extends AbstractBaseNode {
 
     public final TokenType op;
 

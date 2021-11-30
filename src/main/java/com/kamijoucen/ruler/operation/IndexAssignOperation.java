@@ -16,7 +16,6 @@ public class IndexAssignOperation implements AssignOperation {
 
     @Override
     public void assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope, RuntimeContext context) {
-
         if (preOperationValue.getType() != ValueType.ARRAY) {
             throw SyntaxException.withSyntax(preOperationValue.getType() + "不是一个数组");
         }

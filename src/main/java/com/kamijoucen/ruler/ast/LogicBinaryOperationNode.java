@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.operation.LogicOperation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class LogicBinaryOperationNode implements BaseNode {
+public class LogicBinaryOperationNode extends AbstractBaseNode {
 
     private BaseNode exp1;
 

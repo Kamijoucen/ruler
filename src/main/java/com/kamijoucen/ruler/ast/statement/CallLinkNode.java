@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.ast.statement;
 
+import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.op.OperationNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
@@ -9,7 +10,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 
-public class CallLinkNode implements BaseNode {
+public class CallLinkNode extends AbstractBaseNode {
 
     private BaseNode first;
 

@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class TypeOfNode implements BaseNode {
+public class TypeOfNode extends AbstractBaseNode {
 
     private BaseNode exp;
 

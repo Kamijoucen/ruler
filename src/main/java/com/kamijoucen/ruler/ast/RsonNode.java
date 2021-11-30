@@ -1,13 +1,13 @@
 package com.kamijoucen.ruler.ast;
 
-import java.util.Map;
-
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class RsonNode implements BaseNode {
+import java.util.Map;
+
+public class RsonNode extends AbstractBaseNode {
     
     private Map<String, BaseNode> properties;
     

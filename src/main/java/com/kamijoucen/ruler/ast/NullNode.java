@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class NullNode implements BaseNode {
+public class NullNode extends AbstractBaseNode {
 
     public static final NullNode NULL_NODE = new NullNode();
 

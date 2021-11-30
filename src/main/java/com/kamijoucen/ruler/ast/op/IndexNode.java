@@ -3,14 +3,14 @@ package com.kamijoucen.ruler.ast.op;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.operation.AssignOperation;
+import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
 
-public class IndexNode implements OperationNode {
+public class IndexNode extends OperationNode {
 
     private Operation operation;
 

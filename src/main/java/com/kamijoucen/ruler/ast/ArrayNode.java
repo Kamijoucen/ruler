@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 
-public class ArrayNode implements BaseNode {
+public class ArrayNode extends AbstractBaseNode {
 
     private List<BaseNode> values;
 

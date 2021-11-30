@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class IntegerNode implements BaseNode {
+public class IntegerNode extends AbstractBaseNode {
 
     public int value;
 

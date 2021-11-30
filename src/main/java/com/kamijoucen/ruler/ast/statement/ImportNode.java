@@ -1,13 +1,13 @@
 package com.kamijoucen.ruler.ast.statement;
 
-import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.common.VisitorRepository;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class ImportNode implements BaseNode {
+public class ImportNode extends AbstractBaseNode {
 
     private String path;
 

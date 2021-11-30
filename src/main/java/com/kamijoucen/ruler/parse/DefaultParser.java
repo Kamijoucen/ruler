@@ -101,7 +101,7 @@ public class DefaultParser implements Parser {
                 isNeedSemicolon = true;
                 break;
             case KEY_CONTINUE:
-                statement = parseContinueAST();
+                statement = parseContinue();
                 isNeedSemicolon = true;
                 break;
             case KEY_FUN:
@@ -556,39 +556,31 @@ public class DefaultParser implements Parser {
         return NullNode.NULL_NODE;
     }
 
-    public BaseNode parseContinueAST() {
-
+    public BaseNode parseContinue() {
         AssertUtil.assertToken(lexical, TokenType.KEY_CONTINUE);
         lexical.nextToken();
-
         return new ContinueNode();
     }
 
     public BaseNode parseBreak() {
-
         AssertUtil.assertToken(lexical, TokenType.KEY_BREAK);
         lexical.nextToken();
-
         return new BreakNode();
     }
 
     public BaseNode parseReturn() {
-
         AssertUtil.assertToken(lexical, TokenType.KEY_RETURN);
         lexical.nextToken();
 
         List<BaseNode> param = new ArrayList<BaseNode>();
-
         if (lexical.getToken().type != TokenType.SEMICOLON) {
             param.add(parseExpression());
         }
-
         while (lexical.getToken().type != TokenType.SEMICOLON) {
             AssertUtil.assertToken(lexical, TokenType.COMMA);
             lexical.nextToken();
             param.add(parseExpression());
         }
-
         return new ReturnNode(param);
     }
 
