@@ -1,39 +1,13 @@
 import com.kamijoucen.ruler.RuleRunner;
 import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.parse.DefaultLexical;
-import com.kamijoucen.ruler.parse.DefaultParser;
-import com.kamijoucen.ruler.parse.Lexical;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.token.Token;
-import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.value.BaseValue;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Test1 {
 
-    @Test
-    public void test4() {
-
-        String str = "a -- a --(-a-+b+-c)";
-
-        Lexical lexical = new DefaultLexical(str);
-
-        lexical.nextToken();
-
-        DefaultParser parser = new DefaultParser(lexical, null);
-
-        BaseNode baseNode = parser.parseExpression();
-
-        System.out.println(baseNode);
-
-    }
     @Test
     public void test7() {
 

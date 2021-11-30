@@ -1,24 +1,21 @@
 package com.kamijoucen.ruler.compiler;
 
+import com.kamijoucen.ruler.ast.statement.ImportNode;
+import com.kamijoucen.ruler.common.Tuple2;
+import com.kamijoucen.ruler.config.RuntimeConfig;
+import com.kamijoucen.ruler.module.RulerModule;
+import com.kamijoucen.ruler.module.RulerProgram;
+import com.kamijoucen.ruler.module.RulerScript;
+import com.kamijoucen.ruler.parse.*;
+import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.IOUtil;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.kamijoucen.ruler.ast.statement.ImportNode;
-import com.kamijoucen.ruler.common.Tuple2;
-import com.kamijoucen.ruler.config.RuntimeConfig;
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.module.RulerProgram;
-import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.parse.DefaultLexical;
-import com.kamijoucen.ruler.parse.DefaultParser;
-import com.kamijoucen.ruler.parse.Parser;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.util.IOUtil;
 
 public class RulerCompiler {
 
@@ -50,8 +47,11 @@ public class RulerCompiler {
         RulerModule module = new RulerModule(new Scope("file", globalScope));
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(script.getContent());
+        // 开始词法分析
+        TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
+        tokenStream.scan();
         // 语法分析器
-        Parser parser = new DefaultParser(lexical, module);
+        Parser parser = new DefaultParser(module, tokenStream);
         // 开始解析语法
         parser.parse();
 

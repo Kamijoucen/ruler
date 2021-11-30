@@ -20,24 +20,24 @@ import java.util.*;
 
 public class DefaultParser implements Parser {
 
-    private Lexical lexical;
+    private final List<BaseNode> statements;
 
-    private List<BaseNode> statements;
+    private final RulerModule file;
 
-    private RulerModule file;
-
-    public DefaultParser(Lexical lexical, RulerModule file) {
-        this.lexical = lexical;
+    private final TokenStream tokenStream;
+    
+    public DefaultParser(RulerModule file, TokenStream tokenStream) {
         this.file = file;
+        this.tokenStream = tokenStream;
         this.statements = new ArrayList<BaseNode>();
     }
 
     @Override
     public List<BaseNode> parse() {
 
-        lexical.nextToken();
+        tokenStream.nextToken();
 
-        if (lexical.getToken().type == TokenType.KEY_IMPORT) {
+        if (tokenStream.getToken().type == TokenType.KEY_IMPORT) {
             List<ImportNode> imports = parseImports();
             file.setImportList(imports);
         } else {
@@ -45,7 +45,7 @@ public class DefaultParser implements Parser {
         }
         SyntaxCheckUtil.availableImport(file);
 
-        while (lexical.getToken().type != TokenType.EOF) {
+        while (tokenStream.getToken().type != TokenType.EOF) {
             statements.add(parseStatement());
         }
         file.setStatements(statements);
@@ -54,12 +54,12 @@ public class DefaultParser implements Parser {
 
     public List<ImportNode> parseImports() {
 
-        if (lexical.getToken().type != TokenType.KEY_IMPORT) {
+        if (tokenStream.getToken().type != TokenType.KEY_IMPORT) {
             return Collections.emptyList();
         }
         List<ImportNode> imports = new ArrayList<ImportNode>();
 
-        while (lexical.getToken().type == TokenType.KEY_IMPORT) {
+        while (tokenStream.getToken().type == TokenType.KEY_IMPORT) {
             BaseNode importNode = parseImport();
             statements.add(importNode);
             imports.add((ImportNode) importNode);
@@ -69,7 +69,7 @@ public class DefaultParser implements Parser {
 
 
     public BaseNode parseStatement() {
-        Token token = lexical.getToken();
+        Token token = tokenStream.getToken();
 
         BaseNode statement = null;
 
@@ -116,16 +116,16 @@ public class DefaultParser implements Parser {
             throw SyntaxException.withSyntax("错误的语句");
         }
         if (isNeedSemicolon) {
-            AssertUtil.assertToken(lexical, TokenType.SEMICOLON);
-            lexical.nextToken();
+            AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
+            tokenStream.nextToken();
         }
         return statement;
     }
 
     public BaseNode parseCallLinkAssignNode(BaseNode callLinkNode) {
 
-        AssertUtil.assertToken(lexical.getToken(), TokenType.ASSIGN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream.getToken(), TokenType.ASSIGN);
+        tokenStream.nextToken();
 
         BaseNode expression = parseExpression();
 
@@ -139,12 +139,12 @@ public class DefaultParser implements Parser {
 
         valStack.push(parsePrimaryExpression()); // first exp
         while (true) {
-            Token op = lexical.getToken();
+            Token op = tokenStream.getToken();
             int curPrecedence = OperationDefine.findPrecedence(op.type);
             if (curPrecedence == -1) {
                 break;
             }
-            lexical.nextToken();
+            tokenStream.nextToken();
 
             BaseNode rls = parsePrimaryExpression();
             if (opStack.size() != 0) {
@@ -188,7 +188,7 @@ public class DefaultParser implements Parser {
 
     public BaseNode parsePrimaryExpression() {
 
-        Token token = lexical.getToken();
+        Token token = tokenStream.getToken();
 
         switch (token.type) {
             case IDENTIFIER:
@@ -224,14 +224,14 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseWhileStatement() {
 
-        AssertUtil.assertToken(lexical, TokenType.KEY_WHILE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_WHILE);
+        tokenStream.nextToken();
 
         BaseNode condition = parseExpression();
 
         BaseNode blockAST = null;
 
-        if (lexical.getToken().type == TokenType.LEFT_BRACE) {
+        if (tokenStream.getToken().type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock();
         } else {
             blockAST = new LoopBlockNode(Collections.singletonList(parseStatement()));
@@ -242,21 +242,21 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseIfStatement() {
 
-        AssertUtil.assertToken(lexical, TokenType.KEY_IF);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_IF);
+        tokenStream.nextToken();
 
         BaseNode condition = parseExpression();
 
         BaseNode thenBlock = null;
-        if (lexical.getToken().type == TokenType.LEFT_BRACE) {
+        if (tokenStream.getToken().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock();
         } else {
             thenBlock = new BlockNode(Collections.singletonList(parseStatement()));
         }
 
         BaseNode elseBlock = null;
-        if (lexical.getToken().type == TokenType.KEY_ELSE) {
-            Token token = lexical.nextToken();
+        if (tokenStream.getToken().type == TokenType.KEY_ELSE) {
+            Token token = tokenStream.nextToken();
             if (token.type == TokenType.LEFT_BRACE) {
                 elseBlock = parseBlock();
             } else {
@@ -269,16 +269,16 @@ public class DefaultParser implements Parser {
     public BaseNode parseVariableDefine() {
 
         // eat var
-        AssertUtil.assertToken(lexical, TokenType.KEY_VAR);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_VAR);
+        tokenStream.nextToken();
 
-        AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
+        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
 
-        Token name = lexical.getToken();
-        lexical.nextToken();
+        Token name = tokenStream.getToken();
+        tokenStream.nextToken();
 
-        AssertUtil.assertToken(lexical, TokenType.ASSIGN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
+        tokenStream.nextToken();
 
         BaseNode exp = parseExpression();
 
@@ -288,43 +288,43 @@ public class DefaultParser implements Parser {
     public BaseNode parseFunDefine() {
 
         // eat fun
-        AssertUtil.assertToken(lexical, TokenType.KEY_FUN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_FUN);
+        tokenStream.nextToken();
 
         String name = null;
-        if (lexical.getToken().type == TokenType.IDENTIFIER) {
-            name = lexical.getToken().name;
-            lexical.nextToken();
+        if (tokenStream.getToken().type == TokenType.IDENTIFIER) {
+            name = tokenStream.getToken().name;
+            tokenStream.nextToken();
         }
 
         // eat (
-        AssertUtil.assertToken(lexical, TokenType.LEFT_PAREN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
+        tokenStream.nextToken();
 
         List<BaseNode> param = new ArrayList<BaseNode>();
 
-        if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
-            AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
-            Token token = lexical.getToken();
+        if (tokenStream.getToken().type != TokenType.RIGHT_PAREN) {
+            AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+            Token token = tokenStream.getToken();
             param.add(TokenUtil.buildNameNode(token));
 
-            lexical.nextToken();
+            tokenStream.nextToken();
         }
 
-        while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
-            AssertUtil.assertToken(lexical, TokenType.COMMA);
-            lexical.nextToken();
+        while (tokenStream.getToken().type != TokenType.RIGHT_PAREN) {
+            AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+            tokenStream.nextToken();
 
-            AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
-            Token token = lexical.getToken();
+            AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+            Token token = tokenStream.getToken();
             param.add(TokenUtil.buildNameNode(token));
 
-            lexical.nextToken();
+            tokenStream.nextToken();
         }
 
         // eat )
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_PAREN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
+        tokenStream.nextToken();
 
         BaseNode block = parseBlock();
 
@@ -333,25 +333,25 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseBlock() {
 
-        AssertUtil.assertToken(lexical, TokenType.LEFT_BRACE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
+        tokenStream.nextToken();
 
         List<BaseNode> blocks = new ArrayList<BaseNode>();
 
-        while (lexical.getToken().type != TokenType.EOF
-                && lexical.getToken().type != TokenType.RIGHT_BRACE) {
+        while (tokenStream.getToken().type != TokenType.EOF
+                && tokenStream.getToken().type != TokenType.RIGHT_BRACE) {
             blocks.add(parseStatement());
         }
 
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_BRACE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
+        tokenStream.nextToken();
 
         return new BlockNode(blocks);
     }
 
     public BaseNode parseUnaryExpression() {
-        Token token = lexical.getToken();
-        lexical.nextToken();
+        Token token = tokenStream.getToken();
+        tokenStream.nextToken();
 
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(token.type, parsePrimaryExpression());
@@ -365,13 +365,13 @@ public class DefaultParser implements Parser {
     public BaseNode parseCallLink(boolean isStatement) {
 
         BaseNode firstNode = null;
-        if (lexical.getToken().type == TokenType.IDENTIFIER
-                || lexical.getToken().type == TokenType.OUT_IDENTIFIER) {
-            firstNode = TokenUtil.buildNameNode(lexical.getToken());
-            lexical.nextToken();
-        } else if (lexical.getToken().type == TokenType.LEFT_PAREN) {
+        if (tokenStream.getToken().type == TokenType.IDENTIFIER
+                || tokenStream.getToken().type == TokenType.OUT_IDENTIFIER) {
+            firstNode = TokenUtil.buildNameNode(tokenStream.getToken());
+            tokenStream.nextToken();
+        } else if (tokenStream.getToken().type == TokenType.LEFT_PAREN) {
             firstNode = parseParen();
-        } else if (lexical.getToken().type == TokenType.KEY_THIS) {
+        } else if (tokenStream.getToken().type == TokenType.KEY_THIS) {
             firstNode = parseThis();
         } else {
             firstNode = parsePrimaryExpression();
@@ -379,10 +379,10 @@ public class DefaultParser implements Parser {
 
         List<OperationNode> calls = new ArrayList<OperationNode>();
 
-        while (lexical.getToken().type == TokenType.LEFT_PAREN
-                || lexical.getToken().type == TokenType.LEFT_SQUARE
-                || lexical.getToken().type == TokenType.DOT) {
-            switch (lexical.getToken().type) {
+        while (tokenStream.getToken().type == TokenType.LEFT_PAREN
+                || tokenStream.getToken().type == TokenType.LEFT_SQUARE
+                || tokenStream.getToken().type == TokenType.DOT) {
+            switch (tokenStream.getToken().type) {
                 case LEFT_PAREN:
                     calls.add((OperationNode) parseCall());
                     break;
@@ -397,7 +397,7 @@ public class DefaultParser implements Parser {
 
         CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
 
-        if (lexical.getToken().type == TokenType.ASSIGN) {
+        if (tokenStream.getToken().type == TokenType.ASSIGN) {
             if (!isStatement) {
                 throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
             }
@@ -412,31 +412,31 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseDot() {
 
-        AssertUtil.assertToken(lexical, TokenType.DOT);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.DOT);
+        tokenStream.nextToken();
 
-        AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
-        Token name = lexical.getToken();
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+        Token name = tokenStream.getToken();
+        tokenStream.nextToken();
 
-        if (lexical.getToken().type == TokenType.LEFT_PAREN) {
+        if (tokenStream.getToken().type == TokenType.LEFT_PAREN) {
 
-            lexical.nextToken();
+            tokenStream.nextToken();
 
             List<BaseNode> param = new ArrayList<BaseNode>();
 
-            if (lexical.getToken().type != TokenType.RIGHT_PAREN) {
+            if (tokenStream.getToken().type != TokenType.RIGHT_PAREN) {
                 param.add(parseExpression());
             }
 
-            while (lexical.getToken().type != TokenType.RIGHT_PAREN) {
-                AssertUtil.assertToken(lexical, TokenType.COMMA);
-                lexical.nextToken();
+            while (tokenStream.getToken().type != TokenType.RIGHT_PAREN) {
+                AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+                tokenStream.nextToken();
                 param.add(parseExpression());
             }
 
-            AssertUtil.assertToken(lexical, TokenType.RIGHT_PAREN);
-            lexical.nextToken();
+            AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
+            tokenStream.nextToken();
 
             DotNode dotNode = new DotNode(TokenType.CALL, name.name, param);
             dotNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.DOT));
@@ -450,13 +450,13 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseIndex() {
 
-        AssertUtil.assertToken(lexical, TokenType.LEFT_SQUARE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
+        tokenStream.nextToken();
 
         BaseNode index = parsePrimaryExpression();
 
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_SQUARE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
+        tokenStream.nextToken();
 
         IndexNode indexNode = new IndexNode(index);
         indexNode.putOperation(OperationDefine.findOperation(TokenType.INDEX));
@@ -467,11 +467,11 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseCall() {
 
-        AssertUtil.assertToken(lexical, TokenType.LEFT_PAREN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
+        tokenStream.nextToken();
 
-        if (lexical.getToken().type == TokenType.RIGHT_PAREN) {
-            lexical.nextToken();
+        if (tokenStream.getToken().type == TokenType.RIGHT_PAREN) {
+            tokenStream.nextToken();
             CallNode callNode = new CallNode(Collections.<BaseNode>emptyList());
             callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
             return callNode;
@@ -482,14 +482,14 @@ public class DefaultParser implements Parser {
         List<BaseNode> params = new ArrayList<BaseNode>();
         params.add(param1);
 
-        while (lexical.getToken().type != TokenType.EOF && lexical.getToken().type != TokenType.RIGHT_PAREN) {
-            AssertUtil.assertToken(lexical, TokenType.COMMA);
-            lexical.nextToken();
+        while (tokenStream.getToken().type != TokenType.EOF && tokenStream.getToken().type != TokenType.RIGHT_PAREN) {
+            AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+            tokenStream.nextToken();
             params.add(parseExpression());
         }
 
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_PAREN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
+        tokenStream.nextToken();
 
         CallNode callNode = new CallNode(params);
         callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
@@ -499,21 +499,21 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseParen() {
 
-        AssertUtil.assertToken(lexical, TokenType.LEFT_PAREN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
+        tokenStream.nextToken();
 
         BaseNode ast = parseExpression();
 
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_PAREN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
+        tokenStream.nextToken();
 
         return ast;
     }
 
     public BaseNode parseNumber() {
 
-        Token token = lexical.getToken();
-        lexical.nextToken();
+        Token token = tokenStream.getToken();
+        tokenStream.nextToken();
 
         if (token.type == TokenType.INTEGER) {
             return new IntegerNode(Integer.parseInt(token.name));
@@ -528,57 +528,57 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseString() {
 
-        AssertUtil.assertToken(lexical, TokenType.STRING);
-        Token token = lexical.getToken();
+        AssertUtil.assertToken(tokenStream, TokenType.STRING);
+        Token token = tokenStream.getToken();
 
-        lexical.nextToken();
+        tokenStream.nextToken();
 
         return new StringNode(token.name);
     }
 
     public BaseNode parseBool() {
 
-        Token token = lexical.getToken();
+        Token token = tokenStream.getToken();
 
         if (token.type != TokenType.KEY_FALSE && token.type != TokenType.KEY_TRUE) {
             throw SyntaxException.withSyntax("需要一个bool", token);
         }
-        lexical.nextToken();
+        tokenStream.nextToken();
 
         return new BoolNode(Boolean.parseBoolean(token.name));
     }
 
     public BaseNode parseNull() {
 
-        AssertUtil.assertToken(lexical, TokenType.KEY_NULL);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_NULL);
+        tokenStream.nextToken();
 
         return NullNode.NULL_NODE;
     }
 
     public BaseNode parseContinue() {
-        AssertUtil.assertToken(lexical, TokenType.KEY_CONTINUE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);
+        tokenStream.nextToken();
         return new ContinueNode();
     }
 
     public BaseNode parseBreak() {
-        AssertUtil.assertToken(lexical, TokenType.KEY_BREAK);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
+        tokenStream.nextToken();
         return new BreakNode();
     }
 
     public BaseNode parseReturn() {
-        AssertUtil.assertToken(lexical, TokenType.KEY_RETURN);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_RETURN);
+        tokenStream.nextToken();
 
         List<BaseNode> param = new ArrayList<BaseNode>();
-        if (lexical.getToken().type != TokenType.SEMICOLON) {
+        if (tokenStream.getToken().type != TokenType.SEMICOLON) {
             param.add(parseExpression());
         }
-        while (lexical.getToken().type != TokenType.SEMICOLON) {
-            AssertUtil.assertToken(lexical, TokenType.COMMA);
-            lexical.nextToken();
+        while (tokenStream.getToken().type != TokenType.SEMICOLON) {
+            AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+            tokenStream.nextToken();
             param.add(parseExpression());
         }
         return new ReturnNode(param);
@@ -586,115 +586,115 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseArray() {
 
-        AssertUtil.assertToken(lexical, TokenType.LEFT_SQUARE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
+        tokenStream.nextToken();
 
         List<BaseNode> arrValues = new ArrayList<BaseNode>();
 
-        if (lexical.getToken().type != TokenType.RIGHT_SQUARE) {
+        if (tokenStream.getToken().type != TokenType.RIGHT_SQUARE) {
             arrValues.add(parseExpression());
         }
 
-        while (lexical.getToken().type != TokenType.RIGHT_SQUARE) {
+        while (tokenStream.getToken().type != TokenType.RIGHT_SQUARE) {
 
-            AssertUtil.assertToken(lexical, TokenType.COMMA);
-            lexical.nextToken();
+            AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+            tokenStream.nextToken();
 
             arrValues.add(parseExpression());
         }
 
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_SQUARE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
+        tokenStream.nextToken();
 
         return new ArrayNode(arrValues);
     }
 
     public BaseNode parseTypeOfNode() {
-        AssertUtil.assertToken(lexical, TokenType.KEY_TYPEOF);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_TYPEOF);
+        tokenStream.nextToken();
         BaseNode exp = parseExpression();
         return new TypeOfNode(exp);
     }
 
     public BaseNode parseRsonNode() {
-        AssertUtil.assertToken(lexical, TokenType.LEFT_BRACE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
+        tokenStream.nextToken();
         Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
 
-        if (lexical.getToken().type != TokenType.RIGHT_BRACE) {
+        if (tokenStream.getToken().type != TokenType.RIGHT_BRACE) {
 
-            if (lexical.getToken().type != TokenType.IDENTIFIER
-                    && lexical.getToken().type != TokenType.STRING) {
-                throw SyntaxException.withSyntax("无效的key", lexical.getToken());
+            if (tokenStream.getToken().type != TokenType.IDENTIFIER
+                    && tokenStream.getToken().type != TokenType.STRING) {
+                throw SyntaxException.withSyntax("无效的key", tokenStream.getToken());
             }
-            Token name = lexical.getToken();
-            lexical.nextToken();
+            Token name = tokenStream.getToken();
+            tokenStream.nextToken();
 
-            AssertUtil.assertToken(lexical, TokenType.COLON);
-            lexical.nextToken();
+            AssertUtil.assertToken(tokenStream, TokenType.COLON);
+            tokenStream.nextToken();
             properties.put(name.name, parseExpression());
 
         }
 
-        while (lexical.getToken().type != TokenType.RIGHT_BRACE) {
-            AssertUtil.assertToken(lexical, TokenType.COMMA);
-            lexical.nextToken();
+        while (tokenStream.getToken().type != TokenType.RIGHT_BRACE) {
+            AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+            tokenStream.nextToken();
 
-            if (lexical.getToken().type == TokenType.RIGHT_BRACE) {
+            if (tokenStream.getToken().type == TokenType.RIGHT_BRACE) {
                 break;
             }
-            if (lexical.getToken().type != TokenType.IDENTIFIER
-                    && lexical.getToken().type != TokenType.STRING) {
-                throw SyntaxException.withSyntax("无效的key", lexical.getToken());
+            if (tokenStream.getToken().type != TokenType.IDENTIFIER
+                    && tokenStream.getToken().type != TokenType.STRING) {
+                throw SyntaxException.withSyntax("无效的key", tokenStream.getToken());
             }
 
-            Token name = lexical.getToken();
-            lexical.nextToken();
+            Token name = tokenStream.getToken();
+            tokenStream.nextToken();
 
-            AssertUtil.assertToken(lexical, TokenType.COLON);
-            lexical.nextToken();
+            AssertUtil.assertToken(tokenStream, TokenType.COLON);
+            tokenStream.nextToken();
 
             properties.put(name.name, parseExpression());
         }
 
-        AssertUtil.assertToken(lexical, TokenType.RIGHT_BRACE);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
+        tokenStream.nextToken();
 
         return new RsonNode(properties);
     }
 
     public BaseNode parseThis() {
-        AssertUtil.assertToken(lexical, TokenType.KEY_THIS);
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_THIS);
 
-        lexical.nextToken();
+        tokenStream.nextToken();
 
         return new ThisNode();
     }
 
     public BaseNode parseImport() {
 
-        AssertUtil.assertToken(lexical, TokenType.KEY_IMPORT);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_IMPORT);
+        tokenStream.nextToken();
 
-        AssertUtil.assertToken(lexical, TokenType.STRING);
+        AssertUtil.assertToken(tokenStream, TokenType.STRING);
 
-        String path = lexical.getToken().name;
+        String path = tokenStream.getToken().name;
 
-        Token aliasToken = lexical.nextToken();
+        Token aliasToken = tokenStream.nextToken();
 
-        AssertUtil.assertToken(lexical, TokenType.IDENTIFIER);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+        tokenStream.nextToken();
 
-        AssertUtil.assertToken(lexical, TokenType.SEMICOLON);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
+        tokenStream.nextToken();
 
         return new ImportNode(path, aliasToken.name);
     }
 
     public BaseNode parseInitNode() {
 
-        AssertUtil.assertToken(lexical, TokenType.KEY_INIT);
-        lexical.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_INIT);
+        tokenStream.nextToken();
 
         BaseNode blockNode = parseBlock();
 

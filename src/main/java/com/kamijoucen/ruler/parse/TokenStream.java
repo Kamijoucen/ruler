@@ -4,6 +4,8 @@ import com.kamijoucen.ruler.token.Token;
 
 public interface TokenStream {
 
+    Token getToken();
+
     Token nextToken();
 
     Token[] nextToken(int step);

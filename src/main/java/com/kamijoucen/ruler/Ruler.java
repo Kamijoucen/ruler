@@ -20,7 +20,6 @@ public class Ruler {
         script.setContent(text);
         RuntimeConfig config = ConfigFactory.buildConfig(null);
         RulerProgram program = new RulerCompiler(config, script, globalScope).compile();
-
         return new RuleRunner(program);
     }
 }
