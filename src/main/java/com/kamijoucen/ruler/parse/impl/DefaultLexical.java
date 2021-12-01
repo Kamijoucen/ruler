@@ -1,7 +1,8 @@
-package com.kamijoucen.ruler.parse;
+package com.kamijoucen.ruler.parse.impl;
 
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.state.State;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenLocation;

@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.common;
 
-import com.kamijoucen.ruler.eval.DefaultExpressionVisitor;
 import com.kamijoucen.ruler.eval.DefaultStatementVisitor;
 import com.kamijoucen.ruler.eval.ExpressionVisitor;
 import com.kamijoucen.ruler.eval.StatementVisitor;

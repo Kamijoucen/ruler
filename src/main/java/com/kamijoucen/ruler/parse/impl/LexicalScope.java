@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.parse;
+package com.kamijoucen.ruler.parse.impl;
 
 import java.util.HashSet;
 import java.util.Set;

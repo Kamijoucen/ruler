@@ -1,5 +1,7 @@
-package com.kamijoucen.ruler.parse;
+package com.kamijoucen.ruler.parse.impl;
 
+import com.kamijoucen.ruler.parse.Lexical;
+import com.kamijoucen.ruler.parse.TokenStream;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 

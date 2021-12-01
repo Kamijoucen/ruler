@@ -7,6 +7,9 @@ import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.parse.*;
+import com.kamijoucen.ruler.parse.impl.DefaultLexical;
+import com.kamijoucen.ruler.parse.impl.DefaultParser;
+import com.kamijoucen.ruler.parse.impl.TokenStreamImpl;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
 
