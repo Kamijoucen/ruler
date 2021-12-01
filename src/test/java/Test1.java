@@ -101,7 +101,7 @@ public class Test1 {
     @Test
     public void out_name() {
 
-        String str = "var a = 15; println($a); println(1 + 3); println($v1 + $v2);";
+        String str = "println(({a:1}).a);";
 
         RuleRunner script = Ruler.compile(str);
 

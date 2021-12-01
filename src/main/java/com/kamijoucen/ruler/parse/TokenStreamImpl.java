@@ -27,7 +27,7 @@ public class TokenStreamImpl implements TokenStream {
     }
 
     @Override
-    public Token getToken() {
+    public Token token() {
         return this.tokens.get(offset);
     }
 

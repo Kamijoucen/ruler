@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.token.Token;
 
 public interface TokenStream {
 
-    Token getToken();
+    Token token();
 
     Token nextToken();
 

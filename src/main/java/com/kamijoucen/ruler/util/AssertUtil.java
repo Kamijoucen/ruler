@@ -25,8 +25,8 @@ public class AssertUtil {
     }
 
     public static void assertToken(TokenStream tokenStream, TokenType type) {
-        if (tokenStream.getToken().type != type) {
-            throw SyntaxException.withSyntax("预期符号为:" + type.toString() + ", 但是出现了'" + tokenStream.getToken().type.toString() + "'", tokenStream.getToken());
+        if (tokenStream.token().type != type) {
+            throw SyntaxException.withSyntax("预期符号为:" + type.toString() + ", 但是出现了'" + tokenStream.token().type.toString() + "'", tokenStream.token());
         }
     }
 }
