@@ -1,17 +1,15 @@
 package com.kamijoucen.ruler;
 
-import java.io.File;
-import java.util.Collections;
-
 import com.kamijoucen.ruler.compiler.RulerCompiler;
 import com.kamijoucen.ruler.config.ConfigFactory;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerInterpreter;
-import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
+
+import java.io.File;
+import java.util.Collections;
 
 public class Main {
 

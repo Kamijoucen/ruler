@@ -1,25 +1,10 @@
 package com.kamijoucen.ruler.parse.impl;
 
-import java.util.Stack;
+import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.eval.BaseEval;
+
+import java.util.Map;
 
 public class ParseContext {
 
-    private Stack<LexicalScope> lexicalScope;
-
-    public ParseContext() {
-        lexicalScope = new Stack<LexicalScope>();
-    }
-
-    public void pushScope(LexicalScope item) {
-        lexicalScope.push(item);
-    }
-
-    public LexicalScope popScope() {
-        return lexicalScope.pop();
-    }
-
-
-    public LexicalScope getCurrentScope() {
-        return lexicalScope.peek();
-    }
 }

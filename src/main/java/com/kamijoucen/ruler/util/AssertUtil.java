@@ -15,7 +15,7 @@ public class AssertUtil {
     }
 
     public static NoImplException todo(String str) {
-        return new NoImplException(str == null ? "还未实现" : str);
+        throw new NoImplException(str == null ? "还未实现" : str);
     }
 
     public static void assertToken(Token token, TokenType type) {

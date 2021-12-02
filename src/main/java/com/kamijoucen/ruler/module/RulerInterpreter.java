@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.module;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.ConvertRepository;
+import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.CollectionUtil;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 public class RulerInterpreter {
 
-    private RulerProgram program;
+    private final RulerProgram program;
 
     public RulerInterpreter(RulerProgram program) {
         this.program = program;
@@ -24,15 +25,12 @@ public class RulerInterpreter {
     public List<Object> run(Map<String, Object> param) {
         RulerModule mainModule = program.getMainModule();
         Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
-
         runScope.initReturnSpace();
 
-        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param));
-
+        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor());
         for (BaseNode statement : mainModule.getStatements()) {
             statement.eval(context, runScope);
         }
-
         List<BaseValue> returnValue = runScope.getReturnSpace();
         if (CollectionUtil.isEmpty(returnValue)) {
             return Collections.emptyList();

@@ -6,8 +6,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public interface BaseNode {
 
-    void bindEval();
-
     BaseValue eval(RuntimeContext context, Scope scope);
 
 }

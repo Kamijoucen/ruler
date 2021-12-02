@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.op.IndexNode;
-import com.kamijoucen.ruler.ast.op.OperationNode;
+import com.kamijoucen.ruler.ast.OperationNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -21,14 +21,11 @@ public class IndexAssignOperation implements AssignOperation {
         }
         ArrayValue arrayValue = (ArrayValue) preOperationValue;
         BaseValue tempIndexValue = ((IndexNode) call).getIndex().eval(context, scope);
-
         if (tempIndexValue.getType() != ValueType.INTEGER) {
             throw SyntaxException.withSyntax("数组的索引必须是数字");
         }
         IntegerValue indexValue = (IntegerValue) tempIndexValue;
-
         BaseValue value = expression.eval(context, scope);
-
         arrayValue.getValues().set(indexValue.getValue(), value);
     }
 }

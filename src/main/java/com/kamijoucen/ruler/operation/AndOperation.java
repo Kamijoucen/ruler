@@ -1,10 +1,12 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.value.*;
+import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.BoolValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class AndOperation implements LogicOperation {
 

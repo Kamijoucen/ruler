@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.eval.expression;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.statement.LoopBlockNode;
+import com.kamijoucen.ruler.ast.expression.LoopBlockNode;
 import com.kamijoucen.ruler.eval.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

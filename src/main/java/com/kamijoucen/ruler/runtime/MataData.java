@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.runtime;
 
+import com.kamijoucen.ruler.value.BaseValue;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.kamijoucen.ruler.value.BaseValue;
 
 public class MataData {
 

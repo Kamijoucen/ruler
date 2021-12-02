@@ -1,11 +1,11 @@
 package com.kamijoucen.ruler.util;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import com.kamijoucen.ruler.ast.statement.ImportNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.module.RulerModule;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class SyntaxCheckUtil {
 

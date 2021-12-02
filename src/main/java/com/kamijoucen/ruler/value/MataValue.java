@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.value;
 
-import java.util.List;
-
 import com.kamijoucen.ruler.runtime.MataData;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+
+import java.util.List;
 
 public interface MataValue extends BaseValue {
 

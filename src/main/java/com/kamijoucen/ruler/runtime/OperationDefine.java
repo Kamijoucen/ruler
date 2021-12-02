@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.runtime;
 
-import com.kamijoucen.ruler.operation.*;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.operation.*;
 import com.kamijoucen.ruler.token.TokenType;
 
 import java.util.HashMap;

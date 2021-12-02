@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.eval.facotr;
 
-import com.kamijoucen.ruler.ast.NameNode;
+import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.eval.BaseEval;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;

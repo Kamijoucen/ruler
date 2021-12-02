@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.compiler;
 
-import com.kamijoucen.ruler.ast.statement.ImportNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.parse.*;
+import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.parse.impl.DefaultLexical;
 import com.kamijoucen.ruler.parse.impl.DefaultParser;
 import com.kamijoucen.ruler.parse.impl.TokenStreamImpl;

@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.eval.facotr;
 
-import com.kamijoucen.ruler.ast.IntegerNode;
+import com.kamijoucen.ruler.ast.facotr.IntegerNode;
 import com.kamijoucen.ruler.eval.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

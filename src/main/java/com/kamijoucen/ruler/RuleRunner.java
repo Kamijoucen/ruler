@@ -1,8 +1,7 @@
 package com.kamijoucen.ruler;
 
-import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerInterpreter;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.module.RulerProgram;
 
 import java.util.Collections;
 import java.util.List;

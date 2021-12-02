@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.eval.facotr;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.LogicBinaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.LogicBinaryOperationNode;
 import com.kamijoucen.ruler.eval.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

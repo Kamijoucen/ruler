@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.util;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.NameNode;
-import com.kamijoucen.ruler.ast.OutNameNode;
+import com.kamijoucen.ruler.ast.facotr.NameNode;
+import com.kamijoucen.ruler.ast.facotr.OutNameNode;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;

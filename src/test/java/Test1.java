@@ -11,7 +11,7 @@ public class Test1 {
     @Test
     public void test7() {
 
-        String str = "a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
+        String str = "var a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
 
         RuleRunner runner = Ruler.compile(str);
 
@@ -22,7 +22,7 @@ public class Test1 {
     @Test
     public void test8() {
 
-        String str = "str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible()('1');} println(str, 1, 2, 3, '李思岑');";
+        String str = "var str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible();} println(str, 1, 2, 3, '李思岑');";
 
         String str2 = "text = \"hello world!\"; println(text);";
 
@@ -45,7 +45,7 @@ public class Test1 {
     @Test
     public void test_rson_parse() {
 
-        String str = "var rson = {name:name, age:1, doit:fun() { println('gogogogo'); },}; println(rson.name, rson.age, rson.doit());";
+        String str = "var rson = {name:'name', age:1, doit:fun() { println('gogogogo'); },}; println(rson.name, rson.age, rson.doit());";
 
         RuleRunner script = Ruler.compile(str);
 
@@ -61,18 +61,6 @@ public class Test1 {
         String str = "var rson = {f: { ff: fun() {println('go!');} }};";
 
         RuleRunner script = Ruler.compile(str);
-
-        System.out.println(script);
-
-    }
-
-    @Test
-    public void test_dot_call1() {
-        String str = "obj.name().name[1] = 5;";
-
-        RuleRunner script = Ruler.compile(str);
-
-        script.run();
 
         System.out.println(script);
 
@@ -112,16 +100,6 @@ public class Test1 {
 
         script.run(param);
 
-    }
-
-    @Test
-    public void import_test() {
-
-        String content = IOUtil.read("D:\\code\\ruler\\src\\test\\java\\import_sort_test.txt");
-
-        RuleRunner runner = Ruler.compile(content);
-
-        runner.run();
     }
 
     @Test
