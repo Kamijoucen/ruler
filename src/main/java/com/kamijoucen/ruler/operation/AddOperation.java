@@ -40,7 +40,6 @@ public class AddOperation implements Operation {
 
             return new DoubleValue(val1.getValue() + val2.getValue());
         }
-
         throw SyntaxException.withSyntax("该值不支持做加法:" + Arrays.toString(param));
     }
 }
