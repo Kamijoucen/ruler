@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.ast.expression.*;
 import com.kamijoucen.ruler.ast.facotr.*;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnaryMulOperation;
 import com.kamijoucen.ruler.parse.Parser;
@@ -15,6 +14,7 @@ import com.kamijoucen.ruler.runtime.OperationDefine;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 import com.kamijoucen.ruler.util.TokenUtil;
 
@@ -24,12 +24,9 @@ public class DefaultParser implements Parser {
 
     private final List<BaseNode> statements;
 
-    private final RulerModule file;
-
     private final TokenStream tokenStream;
 
-    public DefaultParser(RulerModule file, TokenStream tokenStream) {
-        this.file = file;
+    public DefaultParser(TokenStream tokenStream) {
         this.tokenStream = tokenStream;
         this.statements = new ArrayList<BaseNode>();
     }
@@ -37,18 +34,17 @@ public class DefaultParser implements Parser {
     @Override
     public List<BaseNode> parse() {
         tokenStream.nextToken();
+        List<ImportNode> imports = null;
         if (tokenStream.token().type == TokenType.KEY_IMPORT) {
-            List<ImportNode> imports = parseImports();
-            file.setImportList(imports);
-        } else {
-            file.setImportList(Collections.<ImportNode>emptyList());
+            imports = parseImports();
         }
-        SyntaxCheckUtil.availableImport(file);
-
+        if (!CollectionUtil.isEmpty(imports)) {
+            SyntaxCheckUtil.availableImport(imports);
+            statements.addAll(imports);
+        }
         while (tokenStream.token().type != TokenType.EOF) {
             statements.add(parseStatement());
         }
-        file.setStatements(statements);
         return statements;
     }
 

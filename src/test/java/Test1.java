@@ -1,6 +1,6 @@
-import com.kamijoucen.ruler.RuleRunner;
+import com.kamijoucen.ruler.result.RuleResult;
+import com.kamijoucen.ruler.runner.RuleRunner;
 import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.util.IOUtil;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -13,7 +13,7 @@ public class Test1 {
 
         String str = "var a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
 
-        RuleRunner runner = Ruler.compile(str);
+        RuleRunner runner = Ruler.compileScript(str);
 
         runner.run();
 
@@ -26,7 +26,7 @@ public class Test1 {
 
         String str2 = "text = \"hello world!\"; println(text);";
 
-        RuleRunner runner = Ruler.compile(str);
+        RuleRunner runner = Ruler.compileScript(str);
 
         runner.run();
 
@@ -35,7 +35,7 @@ public class Test1 {
     @Test
     public void test9() {
         String str2 = "var i = 15; println(i);";
-        RuleRunner runner = Ruler.compile(str2);
+        RuleRunner runner = Ruler.compileScript(str2);
 
         runner.run();
 
@@ -47,7 +47,7 @@ public class Test1 {
 
         String str = "var rson = {name:'name', age:1, doit:fun() { println('gogogogo'); },}; println(rson.name, rson.age, rson.doit());";
 
-        RuleRunner script = Ruler.compile(str);
+        RuleRunner script = Ruler.compileScript(str);
 
         script.run();
 
@@ -60,7 +60,7 @@ public class Test1 {
 
         String str = "var rson = {f: { ff: fun() {println('go!');} }};";
 
-        RuleRunner script = Ruler.compile(str);
+        RuleRunner script = Ruler.compileScript(str);
 
         System.out.println(script);
 
@@ -70,7 +70,7 @@ public class Test1 {
     public void test_dot_call2() {
         String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
 
-        RuleRunner script = Ruler.compile(str);
+        RuleRunner script = Ruler.compileScript(str);
 
         script.run();
     }
@@ -80,7 +80,7 @@ public class Test1 {
 
         String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f(18));";
 
-        RuleRunner script = Ruler.compile(str);
+        RuleRunner script = Ruler.compileScript(str);
 
         script.run();
 
@@ -91,7 +91,7 @@ public class Test1 {
 
         String str = "println(({a:1}).a);";
 
-        RuleRunner script = Ruler.compile(str);
+        RuleRunner script = Ruler.compileScript(str);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("a", "lisicen");
@@ -105,12 +105,23 @@ public class Test1 {
     @Test
     public void typeof_test() {
         String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
-
         String sql = "var a = 5; println($a);";
-
-        RuleRunner script = Ruler.compile(sql);
-
+        RuleRunner script = Ruler.compileScript(sql);
         script.run();
+    }
+
+    @Test
+    public void expression_test() {
+
+        String sql = "$level >= 500";
+
+        RuleRunner script = Ruler.compileExpression(sql);
+
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("level", 500);
+        RuleResult result = script.run(param);
+
+        System.out.println(result.first().getBoolean());
     }
 
 }
