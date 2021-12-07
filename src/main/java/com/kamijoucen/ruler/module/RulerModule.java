@@ -5,13 +5,14 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.runtime.Scope;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RulerModule {
 
     private String fullName;
 
-    private List<ImportNode> importList;
+    private List<ImportNode> importList = new ArrayList<ImportNode>();
 
     private List<BaseNode> statements;
 
