@@ -104,15 +104,14 @@ public class DefaultLexical implements Lexical {
                     break;
             }
         }
-
         if (!match) {
             makeEndToken();
         }
-
         return currentToken;
     }
 
-    private void scanComment() {
+    @Override
+    public void scanComment() {
 
         forward();
         forward();
@@ -123,20 +122,14 @@ public class DefaultLexical implements Lexical {
 
     }
 
-    private void scanSymbol() {
-
+    @Override
+    public void scanSymbol() {
         appendAndForward();
-
         append(safeCharAt());
-
         TokenType type = TokenLookUp.symbol(buffer.toString());
-
         if (type == TokenType.UN_KNOW) {
-
             buffer.delete(1, buffer.length());
-
             type = TokenLookUp.symbol(buffer.toString());
-
             if (type == TokenType.UN_KNOW) {
                 throw SyntaxException.withLexical(
                         TokenUtil.of("未知的符号:" + buffer.toString(), line, column));
@@ -147,76 +140,65 @@ public class DefaultLexical implements Lexical {
         makeToken(type);
     }
 
-    private void scanString() {
+    @Override
+    public void scanString() {
         forward();
-
         while (isNotOver() && charAt() != curStringFlag) {
             appendAndForward();
         }
-
         forward();
-
         makeToken(TokenType.STRING);
     }
 
-    private void scanNumber() {
+    @Override
+    public void scanNumber() {
         appendAndForward();
-
         while (isNotOver() && Character.isDigit(charAt())) {
             appendAndForward();
         }
-
         if (isOver() || charAt() != '.') {
             makeToken(TokenType.INTEGER);
             return;
         }
-
         appendAndForward();
-
         int len = 0;
         while (isNotOver() && Character.isDigit(charAt())) {
             appendAndForward();
             len++;
         }
-
         if (len == 0) {
             throw SyntaxException.withLexical(
                     TokenUtil.of("小数点后未跟其他数字", line, column));
         }
-
         makeToken(TokenType.DOUBLE);
     }
 
-    private void scanOutIdentifier() {
+    @Override
+    public void scanOutIdentifier() {
         forward();
-
         if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
             throw SyntaxException.withLexical(
                     TokenUtil.of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
         }
-
         int len = 0;
         while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
             appendAndForward();
             len++;
         }
-
         if (len == 0) {
             throw SyntaxException.withLexical(
                     TokenUtil.of("标识符 '$' 后必须跟其他标识符", line, column));
         }
-
         makeToken(TokenType.OUT_IDENTIFIER);
     }
 
-    private void scanIdentifier() {
+    @Override
+    public void scanIdentifier() {
         appendAndForward();
         while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
             appendAndForward();
         }
-
         TokenType tokenType = TokenLookUp.keyWords(buffer.toString());
-
         if (tokenType != TokenType.UN_KNOW) {
             makeToken(tokenType);
         } else {
@@ -274,9 +256,7 @@ public class DefaultLexical implements Lexical {
     }
 
     private void forward() {
-
         offset = offset + 1;
-        
         if (safeCharAt() != '\n') {
             ++column;
         } else {

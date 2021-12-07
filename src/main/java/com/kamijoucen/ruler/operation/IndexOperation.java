@@ -12,22 +12,16 @@ public class IndexOperation implements Operation {
 
     @Override
     public BaseValue compute(RuntimeContext context, BaseValue... param) {
-
         BaseValue tempArray = param[0];
         BaseValue tempIndex = param[1];
-
         if (tempIndex.getType() != ValueType.INTEGER) {
             throw SyntaxException.withSyntax("数组的索引必须是数字");
         }
-
         ArrayValue array = (ArrayValue) tempArray;
-
         IntegerValue index = (IntegerValue) tempIndex;
-
         if (index.getValue() >= array.getValues().size()) {
             return NullValue.INSTANCE;
         }
-
         return array.getValues().get(index.getValue());
     }
 

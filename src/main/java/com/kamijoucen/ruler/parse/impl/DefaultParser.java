@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.ast.facotr.*;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
-import com.kamijoucen.ruler.operation.UnaryMulOperation;
+import com.kamijoucen.ruler.operation.UnarySubOperation;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.parse.TokenStream;
 import com.kamijoucen.ruler.runtime.OperationDefine;
@@ -323,7 +323,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(token.type, parsePrimaryExpression(),
-                    token.type == TokenType.ADD ? new UnaryMulOperation() : new UnaryAddOperation());
+                    token.type == TokenType.ADD ? new UnarySubOperation() : new UnaryAddOperation());
         } else if (token.type == TokenType.NOT) {
             return new LogicBinaryOperationNode(TokenType.NOT, parsePrimaryExpression(), null,
                     OperationDefine.findLogicOperation(TokenType.NOT));

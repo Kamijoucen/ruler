@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.runtime;
 
 import com.kamijoucen.ruler.eval.NodeVisitor;
+import com.kamijoucen.ruler.parse.Lexical;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 

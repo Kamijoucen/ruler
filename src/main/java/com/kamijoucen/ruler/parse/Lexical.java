@@ -8,4 +8,15 @@ public interface Lexical {
 
     Token nextToken();
 
+    void scanComment();
+
+    void scanSymbol();
+
+    void scanString();
+
+    void scanNumber();
+
+    void scanOutIdentifier();
+
+    void scanIdentifier();
 }

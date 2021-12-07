@@ -124,4 +124,12 @@ public class Test1 {
         System.out.println(result.first().getBoolean());
     }
 
+    @Test
+    public void str_bin_test() {
+        String sql = "'500' < 500";
+        RuleRunner script = Ruler.compileExpression(sql);
+        RuleResult result = script.run();
+        System.out.println(result.first().getBoolean());
+    }
+
 }

@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class UnaryMulOperation implements Operation {
+public class UnarySubOperation implements Operation {
     @Override
     public BaseValue compute(RuntimeContext context, BaseValue... param) {
         AssertUtil.todo(null);
