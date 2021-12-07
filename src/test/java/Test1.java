@@ -1,6 +1,8 @@
+import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.result.RuleResult;
 import com.kamijoucen.ruler.runner.RuleRunner;
 import com.kamijoucen.ruler.Ruler;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -113,7 +115,7 @@ public class Test1 {
     @Test
     public void expression_test() {
 
-        String sql = "$level >= 500";
+        String sql = "(fun(i){return i >= 10;})($level)";
 
         RuleRunner script = Ruler.compileExpression(sql);
 
@@ -122,6 +124,9 @@ public class Test1 {
         RuleResult result = script.run(param);
 
         System.out.println(result.first().getBoolean());
+
+        RuntimeContext context = script.customRun(new OutNameVisitor());
+        System.out.println(context);
     }
 
     @Test
@@ -130,6 +135,18 @@ public class Test1 {
         RuleRunner script = Ruler.compileExpression(sql);
         RuleResult result = script.run();
         System.out.println(result.first().getBoolean());
+    }
+
+
+    @Test
+    public void out_name_find_test() {
+        String sql = "$level < 500";
+        RuleRunner script = Ruler.compileExpression(sql);
+        RuleResult result = script.run();
+        System.out.println(result.first().getBoolean());
+
+        RuntimeContext context = script.customRun(new OutNameVisitor());
+        System.out.println(context);
     }
 
 }

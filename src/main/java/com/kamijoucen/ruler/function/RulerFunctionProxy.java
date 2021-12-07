@@ -21,41 +21,30 @@ public class RulerFunctionProxy implements RulerFunction {
 
     @Override
     public BaseValue call(Object... param) {
-
         Object[] realParam = processParams(param);
-
         Object returnVal = function.call(realParam);
-
         ValueConvert converter = ConvertRepository.getConverter(returnVal);
-
         if (converter == null) {
             return ConvertRepository.getConverter(ValueType.STRING).realToBase(returnVal.toString());
         }
-
         return converter.realToBase(returnVal);
     }
 
     private Object[] processParams(Object... param) {
-
         Object[] realValues = new Object[param.length];
-
         for (int i = 0; i < param.length; i++) {
             realValues[i] = processParam(param[i]);
         }
-
         return realValues;
     }
 
     private Object processParam(Object param) {
-
         BaseValue baseValue = null;
-
         if (param instanceof BaseValue) {
             baseValue = (BaseValue) param;
         } else {
             throw SyntaxException.withSyntax("错误的类型");
         }
-
         return ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue);
     }
 

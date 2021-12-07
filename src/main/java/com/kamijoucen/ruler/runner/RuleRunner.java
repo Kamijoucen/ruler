@@ -1,9 +1,12 @@
 package com.kamijoucen.ruler.runner;
 
 import com.kamijoucen.ruler.compiler.RulerInterpreter;
+import com.kamijoucen.ruler.eval.NodeVisitor;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.result.RuleResult;
 import com.kamijoucen.ruler.result.RuleValue;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.util.AssertUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,6 +44,12 @@ public class RuleRunner {
             ruleValues.add(new RuleValue(value));
         }
         return new RuleResult(ruleValues);
+    }
+
+    public RuntimeContext customRun(NodeVisitor visitor) {
+        AssertUtil.notNull(visitor);
+        RulerInterpreter interpreter = new RulerInterpreter(program);
+        return interpreter.runCustomVisitor(visitor);
     }
 
 }

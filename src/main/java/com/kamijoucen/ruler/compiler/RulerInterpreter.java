@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.compiler;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.eval.EvalVisitor;
+import com.kamijoucen.ruler.eval.NodeVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -23,6 +24,16 @@ public class RulerInterpreter {
 
     public RulerInterpreter(RulerProgram program) {
         this.program = program;
+    }
+
+    public RuntimeContext runCustomVisitor(NodeVisitor visitor) {
+        RulerModule mainModule = program.getMainModule();
+        Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
+        RuntimeContext context = new RuntimeContext(null, visitor);
+        for (BaseNode statement : mainModule.getStatements()) {
+            statement.eval(context, runScope);
+        }
+        return context;
     }
 
     public List<Object> runExpression(Map<String, Object> param) {
