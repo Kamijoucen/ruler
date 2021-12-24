@@ -1,14 +1,15 @@
-import com.kamijoucen.ruler.eval.OutNameVisitor;
-import com.kamijoucen.ruler.result.RuleResult;
-import com.kamijoucen.ruler.runner.RuleRunner;
-import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import org.junit.Test;
-
 import java.util.HashMap;
 import java.util.Map;
 
-public class Test1 {
+import com.kamijoucen.ruler.Ruler;
+import com.kamijoucen.ruler.eval.OutNameVisitor;
+import com.kamijoucen.ruler.result.RuleResult;
+import com.kamijoucen.ruler.runner.RuleRunner;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
+
+import org.junit.Test;
+
+public class RulerTest {
 
     @Test
     public void test7() {
@@ -42,7 +43,6 @@ public class Test1 {
         runner.run();
 
     }
-
 
     @Test
     public void test_rson_parse() {
@@ -115,7 +115,7 @@ public class Test1 {
     @Test
     public void expression_test() {
 
-        String sql = "(fun(i){return i >= 10;})($level)";
+        String sql = "(fun(i){return i >= 10;})";
 
         RuleRunner script = Ruler.compileExpression(sql);
 
@@ -137,7 +137,6 @@ public class Test1 {
         System.out.println(result.first().getBoolean());
     }
 
-
     @Test
     public void out_name_find_test() {
         String sql = "$level < 500";
@@ -147,6 +146,21 @@ public class Test1 {
 
         RuntimeContext context = script.customRun(new OutNameVisitor());
         System.out.println(context);
+    }
+
+    @Test
+    public void null_input_test() {
+
+        String script = "$name == '12'";
+        RuleRunner runner = Ruler.compileExpression(script);
+
+        Map<String, Object> args = new HashMap<String, Object>();
+        args.put("name", "1");
+
+        RuleResult result = runner.run(args);
+
+        System.out.println(result.first().getBoolean());
+
     }
 
 }

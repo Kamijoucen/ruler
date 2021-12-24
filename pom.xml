@@ -20,5 +20,4 @@
         <maven.compiler.source>6</maven.compiler.source>
         <maven.compiler.target>6</maven.compiler.target>
     </properties>
-    
 </project>
