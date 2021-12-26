@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class TypeInferenceVisitor extends AbstractVisitor {
+public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {

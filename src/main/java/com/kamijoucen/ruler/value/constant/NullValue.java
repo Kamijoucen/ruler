@@ -12,5 +12,9 @@ public class NullValue implements BaseValue {
         return ValueType.NULL;
     }
 
+    @Override
+    public String toString() {
+        return "null";
+    }
 
 }
