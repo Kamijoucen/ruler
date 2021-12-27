@@ -5,10 +5,14 @@ import com.kamijoucen.ruler.value.ValueType;
 
 public class DoubleType implements BaseValue {
 
+    public static final DoubleType INSTANCE = new DoubleType();
+
+    private DoubleType() {
+    }
+
     @Override
     public ValueType getType() {
-        // TODO Auto-generated method stub
-        return null;
+        return ValueType.DOUBLE;
     }
 
 }

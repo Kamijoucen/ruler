@@ -1,50 +1,92 @@
 package com.kamijoucen.ruler.eval;
 
-import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.BlockNode;
+import com.kamijoucen.ruler.ast.expression.CallLinkNode;
+import com.kamijoucen.ruler.ast.expression.CallNode;
+import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
+import com.kamijoucen.ruler.ast.expression.LoopBlockNode;
+import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.facotr.ArrayNode;
+import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.BoolNode;
+import com.kamijoucen.ruler.ast.facotr.BreakNode;
+import com.kamijoucen.ruler.ast.facotr.ContinueNode;
+import com.kamijoucen.ruler.ast.facotr.DoubleNode;
+import com.kamijoucen.ruler.ast.facotr.IntegerNode;
+import com.kamijoucen.ruler.ast.facotr.LogicBinaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.NameNode;
+import com.kamijoucen.ruler.ast.facotr.NullNode;
+import com.kamijoucen.ruler.ast.facotr.OutNameNode;
+import com.kamijoucen.ruler.ast.facotr.ReturnNode;
+import com.kamijoucen.ruler.ast.facotr.RsonNode;
+import com.kamijoucen.ruler.ast.facotr.StringNode;
+import com.kamijoucen.ruler.ast.facotr.ThisNode;
+import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
+import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.type.BoolType;
+import com.kamijoucen.ruler.type.DoubleType;
+import com.kamijoucen.ruler.type.IntegerType;
+import com.kamijoucen.ruler.type.StringType;
+import com.kamijoucen.ruler.type.UnknowType;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(IntegerNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return IntegerType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(DoubleNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return DoubleType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(BoolNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return BoolType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(StringNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return StringType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
+        BaseValue val1 = node.getExp1().eval(context, scope);
+        BaseValue val2 = node.getExp2().eval(context, scope);
+
+        TokenType op = node.getOp();
+        if (op == TokenType.ADD || op == TokenType.SUB
+                || op == TokenType.MUL || op == TokenType.DIV) {
+        } else if (op == TokenType.AND || op == TokenType.OR) {
+        }
         return super.eval(node, scope, context);
     }
 
     @Override
     public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
+
         return super.eval(node, scope, context);
     }
 

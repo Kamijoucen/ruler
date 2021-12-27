@@ -3,16 +3,15 @@ package com.kamijoucen.ruler.type;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-public class UnknowType implements BaseValue {
+public class StringType implements BaseValue {
 
-    public static final UnknowType INSTANCE = new UnknowType();
+    public static final StringType INSTANCE = new StringType();
 
-    private UnknowType() {
+    private StringType() {
     }
 
     @Override
     public ValueType getType() {
-        return null;
+        return ValueType.STRING;
     }
-
 }
