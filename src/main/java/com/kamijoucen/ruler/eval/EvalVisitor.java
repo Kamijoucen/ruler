@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.expression.*;
 import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.eval.expression.*;
 import com.kamijoucen.ruler.eval.facotr.*;
 import com.kamijoucen.ruler.runtime.RuntimeContext;

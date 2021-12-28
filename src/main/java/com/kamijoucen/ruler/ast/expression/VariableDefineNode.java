@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.ast.expression;
 
-
 import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
@@ -22,6 +21,11 @@ public class VariableDefineNode extends AbstractBaseNode {
     @Override
     public BaseValue eval(RuntimeContext context, Scope scope) {
         return context.getNodeVisitor().eval(this, scope, context);
+    }
+
+    @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
     public BaseNode getName() {

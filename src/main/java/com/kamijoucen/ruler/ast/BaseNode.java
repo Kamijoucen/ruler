@@ -8,4 +8,6 @@ public interface BaseNode {
 
     BaseValue eval(RuntimeContext context, Scope scope);
 
+    BaseValue typeCheck(RuntimeContext context, Scope scope);
+
 }

@@ -38,6 +38,11 @@ public class DotNode extends OperationNode {
     }
 
     @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
+    }
+
+    @Override
     public TokenType getOperationType() {
         return TokenType.DOT;
     }

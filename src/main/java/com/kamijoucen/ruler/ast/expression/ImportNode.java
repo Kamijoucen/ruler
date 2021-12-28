@@ -24,6 +24,11 @@ public class ImportNode extends AbstractBaseNode {
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
+    @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
+    }
+
     public String getPath() {
         return path;
     }

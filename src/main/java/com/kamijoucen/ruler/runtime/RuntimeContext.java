@@ -1,13 +1,12 @@
 package com.kamijoucen.ruler.runtime;
 
-import com.kamijoucen.ruler.eval.NodeVisitor;
-import com.kamijoucen.ruler.parse.Lexical;
-import com.kamijoucen.ruler.token.Token;
-import com.kamijoucen.ruler.value.BaseValue;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.kamijoucen.ruler.common.NodeVisitor;
+import com.kamijoucen.ruler.token.Token;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class RuntimeContext {
 
@@ -15,10 +14,12 @@ public class RuntimeContext {
     private List<Token> outNameToken = new ArrayList<Token>();
     private Map<String, BaseValue> outSpace;
     private final NodeVisitor nodeVisitor;
+    private final NodeVisitor typeCheckVisitor;
 
-    public RuntimeContext(Map<String, BaseValue> outSpace, NodeVisitor nodeVisitor) {
+    public RuntimeContext(Map<String, BaseValue> outSpace, NodeVisitor nodeVisitor, NodeVisitor typeCheckVisitor) {
         this.outSpace = outSpace;
         this.nodeVisitor = nodeVisitor;
+        this.typeCheckVisitor = typeCheckVisitor;
     }
 
     public BaseValue findOutValue(String name) {
@@ -35,6 +36,10 @@ public class RuntimeContext {
 
     public NodeVisitor getNodeVisitor() {
         return nodeVisitor;
+    }
+
+    public NodeVisitor getTypeCheckVisitor() {
+        return typeCheckVisitor;
     }
 
     public List<Token> getOutNameToken() {

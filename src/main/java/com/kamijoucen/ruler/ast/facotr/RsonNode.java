@@ -9,9 +9,9 @@ import com.kamijoucen.ruler.value.BaseValue;
 import java.util.Map;
 
 public class RsonNode extends AbstractBaseNode {
-    
+
     private Map<String, BaseNode> properties;
-    
+
     public RsonNode(Map<String, BaseNode> properties) {
         this.properties = properties;
     }
@@ -19,6 +19,11 @@ public class RsonNode extends AbstractBaseNode {
     @Override
     public BaseValue eval(RuntimeContext context, Scope scope) {
         return context.getNodeVisitor().eval(this, scope, context);
+    }
+
+    @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
     public Map<String, BaseNode> getProperties() {

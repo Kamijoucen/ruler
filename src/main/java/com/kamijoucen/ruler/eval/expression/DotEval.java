@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.eval.expression;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
-import com.kamijoucen.ruler.eval.BaseEval;
+import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

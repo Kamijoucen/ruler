@@ -2,12 +2,13 @@ package com.kamijoucen.ruler.compiler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.ConvertRepository;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.eval.EvalVisitor;
-import com.kamijoucen.ruler.eval.NodeVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
@@ -29,7 +30,7 @@ public class RulerInterpreter {
     public RuntimeContext runCustomVisitor(NodeVisitor visitor) {
         RulerModule mainModule = program.getMainModule();
         Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
-        RuntimeContext context = new RuntimeContext(null, visitor);
+        RuntimeContext context = new RuntimeContext(null, visitor, new TypeCheckVisitor());
         for (BaseNode statement : mainModule.getStatements()) {
             statement.eval(context, runScope);
         }
@@ -40,7 +41,8 @@ public class RulerInterpreter {
         RulerModule mainModule = program.getMainModule();
         Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
         // 运行上下文
-        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor());
+        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor(),
+                new TypeCheckVisitor());
         BaseNode firstNode = CollectionUtil.first(mainModule.getStatements());
         // 执行表达式
         AssertUtil.notNull(firstNode);
@@ -53,7 +55,8 @@ public class RulerInterpreter {
         Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
         runScope.initReturnSpace();
 
-        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor());
+        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor(),
+                new TypeCheckVisitor());
         for (BaseNode statement : mainModule.getStatements()) {
             statement.eval(context, runScope);
         }

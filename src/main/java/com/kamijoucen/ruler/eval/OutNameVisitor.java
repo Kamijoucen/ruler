@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.facotr.OutNameNode;
+import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;

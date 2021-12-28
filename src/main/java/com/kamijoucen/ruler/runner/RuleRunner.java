@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.runner;
 
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.RulerInterpreter;
-import com.kamijoucen.ruler.eval.NodeVisitor;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.result.RuleResult;
 import com.kamijoucen.ruler.result.RuleValue;

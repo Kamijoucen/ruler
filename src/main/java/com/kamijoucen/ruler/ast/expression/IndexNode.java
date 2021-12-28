@@ -9,7 +9,6 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-
 public class IndexNode extends OperationNode {
 
     private Operation operation;
@@ -25,6 +24,11 @@ public class IndexNode extends OperationNode {
     @Override
     public BaseValue eval(RuntimeContext context, Scope scope) {
         return context.getNodeVisitor().eval(this, scope, context);
+    }
+
+    @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.eval;
+package com.kamijoucen.ruler.typecheck;
 
 import com.kamijoucen.ruler.ast.expression.AssignNode;
 import com.kamijoucen.ruler.ast.expression.BlockNode;
@@ -29,6 +29,7 @@ import com.kamijoucen.ruler.ast.facotr.StringNode;
 import com.kamijoucen.ruler.ast.facotr.ThisNode;
 import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
 import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
+import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
@@ -40,6 +41,8 @@ import com.kamijoucen.ruler.type.UnknowType;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class TypeCheckVisitor extends AbstractVisitor {
+
+    private static final BinaryChecker binaryChecker = new BinaryChecker();
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
@@ -73,20 +76,11 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        BaseValue val1 = node.getExp1().eval(context, scope);
-        BaseValue val2 = node.getExp2().eval(context, scope);
-
-        TokenType op = node.getOp();
-        if (op == TokenType.ADD || op == TokenType.SUB
-                || op == TokenType.MUL || op == TokenType.DIV) {
-        } else if (op == TokenType.AND || op == TokenType.OR) {
-        }
-        return super.eval(node, scope, context);
+        return binaryChecker.eval(node, scope, context);
     }
 
     @Override
     public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
-
         return super.eval(node, scope, context);
     }
 

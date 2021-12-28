@@ -21,6 +21,11 @@ public class ArrayNode extends AbstractBaseNode {
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
+    @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
+    }
+
     public List<BaseNode> getValues() {
         return values;
     }
@@ -28,4 +33,5 @@ public class ArrayNode extends AbstractBaseNode {
     public void setValues(List<BaseNode> values) {
         this.values = values;
     }
+
 }

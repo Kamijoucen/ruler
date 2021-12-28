@@ -16,4 +16,9 @@ public class NullNode extends AbstractBaseNode {
     public BaseValue eval(RuntimeContext context, Scope scope) {
         return context.getNodeVisitor().eval(this, scope, context);
     }
+
+    @Override
+    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+        return context.getTypeCheckVisitor().eval(this, scope, context);
+    }
 }
