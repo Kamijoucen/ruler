@@ -12,7 +12,7 @@ public class UnknowType implements BaseValue {
 
     @Override
     public ValueType getType() {
-        return null;
+        return ValueType.UN_KNOW;
     }
 
 }

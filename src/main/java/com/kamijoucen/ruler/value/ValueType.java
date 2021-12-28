@@ -30,4 +30,8 @@ public enum ValueType {
 
     RSON,
 
+    UN_KNOW,
+
+    FAILURE,
+
 }

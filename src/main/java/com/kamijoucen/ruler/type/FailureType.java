@@ -12,7 +12,7 @@ public class FailureType implements BaseValue {
 
     @Override
     public ValueType getType() {
-        return null;
+        return ValueType.FAILURE;
     }
 
 }
