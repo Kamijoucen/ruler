@@ -3,16 +3,16 @@ package com.kamijoucen.ruler.type;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-public class IntegerType implements BaseValue {
+public class NullType implements BaseValue {
 
-    public static final IntegerType INSTANCE = new IntegerType();
+    public static final NullType INSTANCE = new NullType();
 
-    private IntegerType() {
+    private NullType() {
     }
 
     @Override
     public ValueType getType() {
-        return ValueType.INTEGER;
+        return ValueType.NULL;
     }
 
 }

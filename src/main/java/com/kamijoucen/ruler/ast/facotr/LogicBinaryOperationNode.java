@@ -11,11 +11,8 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class LogicBinaryOperationNode extends AbstractBaseNode {
 
     private BaseNode exp1;
-
     private BaseNode exp2;
-
     private TokenType op;
-
     private LogicOperation logicOperation;
 
     public LogicBinaryOperationNode(TokenType op, BaseNode exp1, BaseNode exp2, LogicOperation logicOperation) {

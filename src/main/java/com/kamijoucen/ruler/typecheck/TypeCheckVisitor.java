@@ -32,16 +32,22 @@ import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
 import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.type.ArrayType;
 import com.kamijoucen.ruler.type.BoolType;
 import com.kamijoucen.ruler.type.DoubleType;
+import com.kamijoucen.ruler.type.FailureType;
 import com.kamijoucen.ruler.type.IntegerType;
+import com.kamijoucen.ruler.type.NullType;
+import com.kamijoucen.ruler.type.RsonType;
 import com.kamijoucen.ruler.type.StringType;
 import com.kamijoucen.ruler.type.UnknowType;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class TypeCheckVisitor extends AbstractVisitor {
 
     private static final BinaryChecker binaryChecker = new BinaryChecker();
+    private static final LogicBinaryChecker logicBinaryCheck = new LogicBinaryChecker();
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
@@ -80,111 +86,114 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return logicBinaryCheck.eval(node, scope, context);
     }
 
     @Override
     public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return node.getExp().typeCheck(context, scope);
     }
 
     @Override
     public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return ArrayType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(NullNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return NullType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return RsonType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return StringType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(BreakNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(CallLinkNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        if (!CollectionUtil.isEmpty(node.getCalls())) {
+            return UnknowType.INSTANCE;
+        }
+        return node.getFirst().typeCheck(context, scope);
     }
 
     @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return UnknowType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(ReturnNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+        return FailureType.INSTANCE;
     }
 }

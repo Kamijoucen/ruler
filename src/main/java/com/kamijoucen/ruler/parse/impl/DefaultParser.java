@@ -1,34 +1,75 @@
 package com.kamijoucen.ruler.parse.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.OperationNode;
-import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.BlockNode;
+import com.kamijoucen.ruler.ast.expression.CallLinkNode;
+import com.kamijoucen.ruler.ast.expression.CallNode;
+import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
+import com.kamijoucen.ruler.ast.expression.LoopBlockNode;
+import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.facotr.ArrayNode;
+import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.BoolNode;
+import com.kamijoucen.ruler.ast.facotr.BreakNode;
+import com.kamijoucen.ruler.ast.facotr.ContinueNode;
+import com.kamijoucen.ruler.ast.facotr.DoubleNode;
+import com.kamijoucen.ruler.ast.facotr.IntegerNode;
+import com.kamijoucen.ruler.ast.facotr.LogicBinaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.NullNode;
+import com.kamijoucen.ruler.ast.facotr.OutNameNode;
+import com.kamijoucen.ruler.ast.facotr.ReturnNode;
+import com.kamijoucen.ruler.ast.facotr.RsonNode;
+import com.kamijoucen.ruler.ast.facotr.StringNode;
+import com.kamijoucen.ruler.ast.facotr.ThisNode;
+import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
+import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
 import com.kamijoucen.ruler.common.RStack;
+import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.parse.TokenStream;
 import com.kamijoucen.ruler.runtime.OperationDefine;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 import com.kamijoucen.ruler.util.TokenUtil;
 
-import java.util.*;
-
 public class DefaultParser implements Parser {
 
+    private ParseContext parseContext;
+    private RuntimeContext runtimeContext;
     private final List<BaseNode> statements;
-
     private final TokenStream tokenStream;
 
     public DefaultParser(TokenStream tokenStream) {
+        initContext();
         this.tokenStream = tokenStream;
         this.statements = new ArrayList<BaseNode>();
+    }
+
+    private void initContext() {
+        TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
+        this.parseContext = new ParseContext(typeCheckVisitor);
+        this.runtimeContext = new RuntimeContext(null, null, typeCheckVisitor);
     }
 
     @Override
@@ -143,13 +184,16 @@ public class DefaultParser implements Parser {
                 if (curPrecedence <= peekPrecedence) {
                     BaseNode exp1 = valStack.pop();
                     BaseNode exp2 = valStack.pop();
-
                     TokenType binOp = opStack.pop();
-
                     if (TokenUtil.isLogicOperation(binOp)) {
-                        valStack.push(new LogicBinaryOperationNode(binOp, exp2, exp1,
-                                OperationDefine.findLogicOperation(binOp)));
+                        LogicBinaryOperationNode logicBinaryOperationNode = new LogicBinaryOperationNode(
+                                binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp));
+                        SyntaxCheckUtil.logicBinaryTypeCheck(logicBinaryOperationNode, parseContext, runtimeContext);
+                        valStack.push(logicBinaryOperationNode);
                     } else {
+                        BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp, exp2, exp1,
+                                OperationDefine.findOperation(binOp));
+                        SyntaxCheckUtil.binaryTypeCheck(binaryOperationNode, parseContext, runtimeContext);
                         valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
                     }
                 }
@@ -160,14 +204,17 @@ public class DefaultParser implements Parser {
         while (opStack.size() != 0) {
             BaseNode exp1 = valStack.pop();
             BaseNode exp2 = valStack.pop();
-
             TokenType binOp = opStack.pop();
-
             if (TokenUtil.isLogicOperation(binOp)) {
-                valStack.push(
-                        new LogicBinaryOperationNode(binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp)));
+                LogicBinaryOperationNode logicBinaryOperationNode = new LogicBinaryOperationNode(binOp, exp2, exp1,
+                        OperationDefine.findLogicOperation(binOp));
+                SyntaxCheckUtil.logicBinaryTypeCheck(logicBinaryOperationNode, parseContext, runtimeContext);
+                valStack.push(logicBinaryOperationNode);
             } else {
-                valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
+                BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp, exp2, exp1,
+                        OperationDefine.findOperation(binOp));
+                SyntaxCheckUtil.binaryTypeCheck(binaryOperationNode, parseContext, runtimeContext);
+                valStack.push(binaryOperationNode);
             }
         }
         return valStack.pop();

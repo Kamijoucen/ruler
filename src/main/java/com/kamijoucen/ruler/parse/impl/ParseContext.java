@@ -1,10 +1,17 @@
 package com.kamijoucen.ruler.parse.impl;
 
-import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.common.BaseEval;
-
-import java.util.Map;
+import com.kamijoucen.ruler.common.NodeVisitor;
 
 public class ParseContext {
+
+    private NodeVisitor typeCheckVisitor;
+
+    public ParseContext(NodeVisitor typeCheckVisitor) {
+        this.typeCheckVisitor = typeCheckVisitor;
+    }
+
+    public NodeVisitor getTypeCheckVisitor() {
+        return typeCheckVisitor;
+    }
 
 }

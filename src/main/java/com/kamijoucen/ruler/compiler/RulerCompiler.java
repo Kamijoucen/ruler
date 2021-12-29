@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.parse.impl.DefaultLexical;
 import com.kamijoucen.ruler.parse.impl.DefaultParser;
 import com.kamijoucen.ruler.parse.impl.TokenStreamImpl;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
 
@@ -91,8 +92,8 @@ public class RulerCompiler {
         }
         module.setStatements(statements);
         // 解析导入语句
-        List<Tuple2<String, RulerModule>> childModule
-                = new ArrayList<Tuple2<String, RulerModule>>(module.getImportList().size());
+        List<Tuple2<String, RulerModule>> childModule = new ArrayList<Tuple2<String, RulerModule>>(
+                module.getImportList().size());
         for (ImportNode node : module.getImportList()) {
             Tuple2<String, RulerModule> tuple = parseImport(node);
             if (tuple != null) {
