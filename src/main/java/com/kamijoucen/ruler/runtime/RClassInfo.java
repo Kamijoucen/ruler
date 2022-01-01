@@ -5,11 +5,11 @@ import com.kamijoucen.ruler.value.BaseValue;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MataData {
+public class RClassInfo {
 
     private Map<String, BaseValue> properties;
 
-    public MataData() {
+    public RClassInfo() {
         this.properties = new HashMap<String, BaseValue>();
     }
 
@@ -20,5 +20,5 @@ public class MataData {
     public BaseValue get(String name) {
         return this.properties.get(name);
     }
-    
+
 }

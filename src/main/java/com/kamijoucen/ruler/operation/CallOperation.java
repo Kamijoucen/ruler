@@ -29,7 +29,6 @@ public class CallOperation implements Operation {
         throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
 
-
     private BaseValue callClosure(RuntimeContext context, ClosureValue closure, BaseValue[] funcParam) {
         Scope callScope = new Scope("closure", closure.getDefineScope());
         List<BaseNode> defineParam = closure.getParam();
@@ -47,7 +46,7 @@ public class CallOperation implements Operation {
         if (returnValues.size() == 1) {
             return returnValues.get(0);
         }
-        return new ArrayValue(returnValues);
+        return new ArrayValue(returnValues, null);
     }
 
 }

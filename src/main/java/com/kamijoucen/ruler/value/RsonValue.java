@@ -1,17 +1,16 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.runtime.MataData;
+import com.kamijoucen.ruler.runtime.RClassInfo;
 
-public class RsonValue extends AbstractMataValue {
+public class RsonValue extends AbstractRClassValue {
 
-    public RsonValue(MataData mataData) {
+    public RsonValue(RClassInfo mataData) {
         super(mataData);
     }
-
 
     @Override
     public ValueType getType() {
         return ValueType.RSON;
     }
-    
+
 }

@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.value;
 
 import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.runtime.MataData;
+import com.kamijoucen.ruler.runtime.RClassInfo;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;
@@ -9,10 +9,9 @@ import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.List;
 
-public class ModuleValue extends AbstractMataValue {
+public class ModuleValue extends AbstractRClassValue {
 
     private RulerModule module;
-
     private Scope runScope;
 
     public ModuleValue(RulerModule module, Scope scope) {
@@ -22,7 +21,7 @@ public class ModuleValue extends AbstractMataValue {
     }
 
     @Override
-    public MataData getMataData() {
+    public RClassInfo getClassInfo() {
         throw new UnsupportedOperationException("不允许对别名进行修改操作");
     }
 
@@ -38,13 +37,10 @@ public class ModuleValue extends AbstractMataValue {
     @Override
     public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
         BaseValue funValue = runScope.find(name);
-
         AssertUtil.notNull(funValue);
-
         BaseValue[] realParam = new BaseValue[param.size() + 1];
         realParam[0] = funValue;
         System.arraycopy(param.toArray(), 0, realParam, 1, param.size());
-
         return callOperation.compute(context, realParam);
     }
 
