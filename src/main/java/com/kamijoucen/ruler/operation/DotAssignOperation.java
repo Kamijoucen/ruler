@@ -17,7 +17,7 @@ public class DotAssignOperation implements AssignOperation {
     @Override
     public void assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope,
             RuntimeContext context) {
-        if (preOperationValue.getType() != ValueType.RSON) {
+        if (!(preOperationValue instanceof AbstractRClassValue)) {
             throw SyntaxException.withSyntax(preOperationValue.getType() + "不是一个对象");
         }
         AbstractRClassValue rsonValue = (AbstractRClassValue) preOperationValue;

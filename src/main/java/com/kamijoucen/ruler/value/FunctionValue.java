@@ -4,15 +4,9 @@ import com.kamijoucen.ruler.function.RulerFunction;
 
 public class FunctionValue implements BaseValue {
 
-    private AbstractRClassValue classInfo;
     private RulerFunction value;
 
     public FunctionValue(RulerFunction value) {
-        this.value = value;
-    }
-
-    public FunctionValue(RulerFunction value, AbstractRClassValue classInfo) {
-        this.classInfo = classInfo;
         this.value = value;
     }
 

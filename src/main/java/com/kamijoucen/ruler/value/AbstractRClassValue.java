@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.value;
 
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.CallOperation;
 import com.kamijoucen.ruler.runtime.RClassInfo;
 import com.kamijoucen.ruler.runtime.OperationDefine;
@@ -30,6 +31,9 @@ public abstract class AbstractRClassValue implements MataValue {
     @Override
     public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
         BaseValue fun = classInfo.get(name);
+        if (fun == null) {
+            throw SyntaxException.withSyntax("function not found: " + name);
+        }
         BaseValue[] realParam = new BaseValue[param.size() + 1];
         realParam[0] = fun;
         System.arraycopy(param.toArray(), 0, realParam, 1, param.size());

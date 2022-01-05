@@ -8,9 +8,7 @@ import java.util.List;
 public class ClosureValue implements BaseValue {
 
     private Scope defineScope;
-
     private List<BaseNode> param;
-
     private BaseNode block;
 
     public ClosureValue(Scope defineScope, List<BaseNode> param, BaseNode block) {
