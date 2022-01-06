@@ -166,7 +166,7 @@ public class RulerTest {
     @Test
     public void array_call() {
 
-        String script = "var arr = [1, 2, 3, 4]; arr.name = '里斯岑';  println(typeof arr.name);";
+        String script = "var arr = [[1]];  println(length(arr[0]));";
 
         RuleRunner run = Ruler.compileScript(script);
 

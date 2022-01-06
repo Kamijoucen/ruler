@@ -1,14 +1,14 @@
 package com.kamijoucen.ruler.util;
 
 import com.kamijoucen.ruler.function.RulerFunction;
-import com.kamijoucen.ruler.function.RulerFunctionProxy;
+import com.kamijoucen.ruler.function.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 
 public class MateDataUtil {
 
     public static void initArrayMateData(final ArrayValue value) {
-        FunctionValue arrSizeFun = new FunctionValue(new RulerFunctionProxy(new RulerFunction() {
+        FunctionValue arrSizeFun = new FunctionValue(new ValueConvertFunctionProxy(new RulerFunction() {
             private final ArrayValue array = value;
 
             @Override

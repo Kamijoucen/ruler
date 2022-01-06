@@ -7,9 +7,9 @@ import com.kamijoucen.ruler.value.FunctionValue;
 public class Init {
 
     public static void engineInit(Scope scope) {
-        registerInnerFunction(scope, new RulerFunctionProxy(new PrintFunction()));
-        registerInnerFunction(scope, new RulerFunctionProxy(new MakeItPossibleFunction()));
-        registerInnerFunction(scope, new LengthFunction());
+        registerInnerFunction(scope, new ValueConvertFunctionProxy(new PrintFunction()));
+        registerInnerFunction(scope, new ValueConvertFunctionProxy(new MakeItPossibleFunction()));
+        registerInnerFunction(scope, new ReturnConvertFunctionProxy(new LengthFunction()));
     }
 
     private static void registerInnerFunction(Scope scope, RulerFunction function) {

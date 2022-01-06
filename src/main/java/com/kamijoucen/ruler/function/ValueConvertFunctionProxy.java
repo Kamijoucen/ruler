@@ -6,11 +6,11 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.ValueConvert;
 
-public class RulerFunctionProxy implements RulerFunction {
+public class ValueConvertFunctionProxy implements RulerFunction {
 
     private final RulerFunction function;
 
-    public RulerFunctionProxy(RulerFunction function) {
+    public ValueConvertFunctionProxy(RulerFunction function) {
         this.function = function;
     }
 
@@ -21,7 +21,7 @@ public class RulerFunctionProxy implements RulerFunction {
 
     @Override
     public BaseValue call(Object... param) {
-        Object[] realParam = processParams(param);
+        Object[] realParam = convertParams(param);
         Object returnVal = function.call(realParam);
         ValueConvert converter = ConvertRepository.getConverter(returnVal);
         if (converter == null) {
@@ -30,15 +30,15 @@ public class RulerFunctionProxy implements RulerFunction {
         return converter.realToBase(returnVal);
     }
 
-    private Object[] processParams(Object... param) {
+    private Object[] convertParams(Object... param) {
         Object[] realValues = new Object[param.length];
         for (int i = 0; i < param.length; i++) {
-            realValues[i] = processParam(param[i]);
+            realValues[i] = convert(param[i]);
         }
         return realValues;
     }
 
-    private Object processParam(Object param) {
+    private Object convert(Object param) {
         BaseValue baseValue = null;
         if (param instanceof BaseValue) {
             baseValue = (BaseValue) param;

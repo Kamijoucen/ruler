@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.value;
 import java.util.List;
 
 import com.kamijoucen.ruler.runtime.RClassInfo;
-import com.kamijoucen.ruler.util.MateDataUtil;
 
 public class ArrayValue extends AbstractRClassValue {
 
@@ -12,7 +11,7 @@ public class ArrayValue extends AbstractRClassValue {
     public ArrayValue(List<BaseValue> values, RClassInfo mataData) {
         super(mataData);
         this.values = values;
-        MateDataUtil.initArrayMateData(this);
+        // MateDataUtil.initArrayMateData(this);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.function;
 
-import com.kamijoucen.ruler.exception.SyntaxException;
-
-import java.util.List;
+import com.kamijoucen.ruler.value.ArrayValue;
+import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class LengthFunction implements RulerFunction {
 
@@ -13,13 +13,11 @@ public class LengthFunction implements RulerFunction {
 
     @Override
     public Object call(Object... param) {
-        if (param == null || param.length != 1) {
-            throw SyntaxException.withSyntax("length只接收一个参数");
+        BaseValue value = (BaseValue) param[0];
+        if (value.getType() == ValueType.ARRAY) {
+            return ((ArrayValue) value).getValues().size();
         }
-        if (!(param[0] instanceof List)) {
-            return 1;
-        }
-        return ((List<?>) param[0]).size();
+        return null;
     }
 
 }
