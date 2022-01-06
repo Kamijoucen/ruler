@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.state;
+package com.kamijoucen.ruler.common;
 
 public enum State {
 

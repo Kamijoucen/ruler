@@ -3,9 +3,7 @@ package com.kamijoucen.ruler.module;
 public class RulerScript {
 
     private String path;
-
     private String fileName;
-
     private String content;
 
     public RulerScript() {

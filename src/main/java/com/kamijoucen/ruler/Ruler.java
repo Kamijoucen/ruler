@@ -5,7 +5,6 @@ import com.kamijoucen.ruler.config.ConfigFactory;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.runner.RuleRunner;
 import com.kamijoucen.ruler.runtime.Scope;
 
 public class Ruler {

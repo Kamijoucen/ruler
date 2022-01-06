@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.runner;
+package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.RulerInterpreter;

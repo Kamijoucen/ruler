@@ -26,13 +26,9 @@ import java.util.Set;
 public class RulerCompiler {
 
     private RulerProgram program;
-
     private RuntimeConfig config;
-
     private RulerScript mainScript;
-
     private Scope globalScope;
-
     private Set<String> imported;
 
     public RulerCompiler(RuntimeConfig config, RulerScript mainScript, Scope globalScope) {

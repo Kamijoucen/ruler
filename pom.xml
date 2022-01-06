@@ -20,4 +20,15 @@
         <maven.compiler.source>6</maven.compiler.source>
         <maven.compiler.target>6</maven.compiler.target>
     </properties>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/ruler/std/*.txt</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

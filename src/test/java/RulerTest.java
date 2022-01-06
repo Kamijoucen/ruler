@@ -4,7 +4,7 @@ import java.util.Map;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.result.RuleResult;
-import com.kamijoucen.ruler.runner.RuleRunner;
+import com.kamijoucen.ruler.RuleRunner;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 import org.junit.Test;
@@ -167,6 +167,17 @@ public class RulerTest {
     public void array_call() {
 
         String script = "var arr = [[1]];  println(length(arr[0]));";
+
+        RuleRunner run = Ruler.compileScript(script);
+
+        run.run();
+
+    }
+
+    @Test
+    public void import_test() {
+
+        String script = "import 'collections/sort.txt' sort; sort.name;";
 
         RuleRunner run = Ruler.compileScript(script);
 

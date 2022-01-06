@@ -1,6 +1,5 @@
 
 fun IsEmpty(list) {
-
 }
 
 fun SubList(list, from, to) {
