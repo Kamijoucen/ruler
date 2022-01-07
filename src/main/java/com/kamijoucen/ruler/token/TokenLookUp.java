@@ -54,6 +54,7 @@ public class TokenLookUp {
         KEY_WORDS.put("import", TokenType.KEY_IMPORT);
         KEY_WORDS.put("init", TokenType.KEY_INIT);
         KEY_WORDS.put("typeof", TokenType.KEY_TYPEOF);
+        KEY_WORDS.put("in", TokenType.KEY_IN);
     }
 
     public static TokenType symbol(String str) {

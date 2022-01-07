@@ -9,7 +9,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class WhileStatementNode extends AbstractBaseNode {
 
     private BaseNode condition;
-
     private BaseNode block;
 
     public WhileStatementNode(BaseNode condition, BaseNode block) {

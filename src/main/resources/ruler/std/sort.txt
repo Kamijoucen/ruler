@@ -1,0 +1,36 @@
+import "ruler/std/collections.txt" collections;
+import "ruler/std/array.txt" array;
+
+fun partition(arr, begin, end, compare) {
+    var mid = arr[end];
+    var i = begin;
+    var j = begin;
+    while j < end {
+        if arr[j] < mid {
+            collections.Swap(arr, i, j);
+            i = i + 1;
+        }
+        j = j + 1;
+    }
+    collections.Swap(arr, i, end);
+    return i;
+}
+fun subSort(subArr, begin, end, compare) {
+    if begin >= end {
+        return;
+    }
+    var p = partition(subArr, begin, end, compare);
+    subSort(subArr, begin, p - 1, compare);
+    subSort(subArr, p + 1, end, compare);
+}
+fun Sort(arr, compare) {
+    if (!IsArray(arr)) {
+        return;
+    }
+    if (compare == null) || (typeof(compare) != "function") {
+        compare = fun(val1, val2) {
+            return varl - var2;
+        };
+    }
+    subSort(arr, 0, length(arr), compare);
+}

@@ -1,7 +1,0 @@
-
-fun IsEmpty(list) {
-}
-
-fun SubList(list, from, to) {
-    if IsEmpty(list) return null;
-}

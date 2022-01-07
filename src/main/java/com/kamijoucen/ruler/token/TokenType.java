@@ -52,6 +52,7 @@ public enum TokenType {
     KEY_IMPORT,     // import
     KEY_INIT,       // init
     KEY_TYPEOF,     // typeof
+    KEY_IN,         // in
 
     EOF,
 

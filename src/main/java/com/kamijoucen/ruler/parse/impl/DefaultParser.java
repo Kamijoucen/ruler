@@ -253,6 +253,15 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
 
+    public BaseNode parseForEachStatement() {
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_FOR);
+        tokenStream.nextToken();
+
+
+
+        return null;
+    }
+
     public BaseNode parseWhileStatement() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_WHILE);
         tokenStream.nextToken();
@@ -595,7 +604,11 @@ public class DefaultParser implements Parser {
     public BaseNode parseTypeOfNode() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_TYPEOF);
         tokenStream.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
+        tokenStream.nextToken();
         BaseNode exp = parseExpression();
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
+        tokenStream.nextToken();
         return new TypeOfNode(exp);
     }
 
