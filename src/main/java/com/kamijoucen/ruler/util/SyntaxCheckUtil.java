@@ -15,6 +15,9 @@ import com.kamijoucen.ruler.value.ValueType;
 
 public class SyntaxCheckUtil {
 
+
+
+
     public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
         BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
         if (typeVal.getType() == ValueType.FAILURE) {

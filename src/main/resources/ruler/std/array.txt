@@ -1,6 +1,6 @@
 
 fun IsArray(arr) {
-    return (typeof arr) == "array";
+    return typeof(arr) == "array";
 }
 
 fun Size(arr) {

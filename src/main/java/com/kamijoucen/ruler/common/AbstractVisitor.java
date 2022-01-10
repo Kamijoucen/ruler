@@ -150,6 +150,13 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
+    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
+        node.getList().eval(context, scope);
+        node.getBlock().eval(context, scope);
+        return null;
+    }
+
+    @Override
     public BaseValue eval(BreakNode node, Scope scope, RuntimeContext context) {
         return null;
     }
@@ -228,4 +235,5 @@ public class AbstractVisitor implements NodeVisitor {
         AssertUtil.todo(null);
         return null;
     }
+
 }

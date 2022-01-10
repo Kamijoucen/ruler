@@ -175,13 +175,16 @@ public class RulerTest {
 
     @Test
     public void import_test() {
-
         String script = "import 'collections/sort.txt' sort; sort.name;";
-
         RuleRunner run = Ruler.compileScript(script);
-
         run.run();
+    }
 
+    @Test
+    public void foreach_test() {
+        String script = "var arr = [1, 2, 3, 4]; for v in [111] println(v);";
+        RuleRunner run = Ruler.compileScript(script);
+        run.run();
     }
 
 }

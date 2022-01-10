@@ -30,6 +30,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final IfStatementEval ifStatementEval = new IfStatementEval();
     private static final AssignEval assignEval = new AssignEval();
     private static final WhileStatementEval whileStatementEval = new WhileStatementEval();
+    private static final ForEachStatementEval forEachStatementEval = new ForEachStatementEval();
     private static final BreakEval breakEval = new BreakEval();
     private static final ContinueEval continueEval = new ContinueEval();
     private static final CallEval callEval = new CallEval();
@@ -134,6 +135,11 @@ public class EvalVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
         return whileStatementEval.eval(node, scope, context);
+    }
+
+    @Override
+    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
+        return forEachStatementEval.eval(node, scope, context);
     }
 
     @Override

@@ -15,6 +15,9 @@ public class LoopBlockEval implements BaseEval<LoopBlockNode> {
     @Override
     public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
         Scope blockScope = new Scope("loop block", scope);
+        if (scope.getCurrentLoopVariable() != null) {
+            blockScope.putLocal(scope.getCurrentLoopVariableName(), scope.getCurrentLoopVariable());
+        }
         List<BaseNode> blocks = node.getBlocks();
         for (BaseNode block : blocks) {
             BaseValue val = block.eval(context, blockScope);

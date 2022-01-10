@@ -14,6 +14,7 @@ import com.kamijoucen.ruler.ast.expression.CallLinkNode;
 import com.kamijoucen.ruler.ast.expression.CallNode;
 import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.ast.expression.IfStatementNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.IndexNode;
@@ -46,11 +47,15 @@ import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.type.ArrayType;
+import com.kamijoucen.ruler.type.UnknowType;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 import com.kamijoucen.ruler.util.TokenUtil;
+import com.kamijoucen.ruler.value.ArrayValue;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class DefaultParser implements Parser {
 
@@ -123,6 +128,7 @@ public class DefaultParser implements Parser {
                 statement = parseIfStatement();
                 break;
             case KEY_FOR:
+                statement = parseForEachStatement();
                 break;
             case KEY_WHILE:
                 statement = parseWhileStatement();
@@ -254,12 +260,29 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseForEachStatement() {
+        // key
         AssertUtil.assertToken(tokenStream, TokenType.KEY_FOR);
         tokenStream.nextToken();
-
-
-
-        return null;
+        // temp var
+        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+        Token name = tokenStream.token();
+        tokenStream.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_IN);
+        tokenStream.nextToken();
+        BaseNode arrayExp = parseExpression();
+        // type check
+        BaseValue typeCheckValue = arrayExp.typeCheck(runtimeContext, null);
+        if (typeCheckValue.getType() != UnknowType.INSTANCE.getType()
+                && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
+            throw SyntaxException.withSyntax("The value of the expression must be an array!");
+        }
+        BaseNode blockNode = null;
+        if (tokenStream.token().type == TokenType.LEFT_BRACE) {
+            blockNode = parseBlock(true);
+        } else {
+            blockNode = new LoopBlockNode(Collections.singletonList(parseStatement()));
+        }
+        return new ForEachStatementNode(name, arrayExp, blockNode);
     }
 
     public BaseNode parseWhileStatement() {
@@ -268,7 +291,7 @@ public class DefaultParser implements Parser {
         BaseNode condition = parseExpression();
         BaseNode blockAST = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockAST = parseBlock();
+            blockAST = parseBlock(true);
         } else {
             blockAST = new LoopBlockNode(Collections.singletonList(parseStatement()));
         }
@@ -282,7 +305,7 @@ public class DefaultParser implements Parser {
         BaseNode condition = parseExpression();
         BaseNode thenBlock = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            thenBlock = parseBlock();
+            thenBlock = parseBlock(false);
         } else {
             thenBlock = new BlockNode(Collections.singletonList(parseStatement()));
         }
@@ -290,7 +313,7 @@ public class DefaultParser implements Parser {
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
             Token token = tokenStream.nextToken();
             if (token.type == TokenType.LEFT_BRACE) {
-                elseBlock = parseBlock();
+                elseBlock = parseBlock(false);
             } else {
                 elseBlock = new BlockNode(Collections.singletonList(parseStatement()));
             }
@@ -302,15 +325,11 @@ public class DefaultParser implements Parser {
         // eat var
         AssertUtil.assertToken(tokenStream, TokenType.KEY_VAR);
         tokenStream.nextToken();
-
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-
         Token name = tokenStream.token();
         tokenStream.nextToken();
-
         AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
         tokenStream.nextToken();
-
         BaseNode exp = parseExpression();
         return new VariableDefineNode(TokenUtil.buildNameNode(name), exp);
     }
@@ -319,7 +338,6 @@ public class DefaultParser implements Parser {
         // eat fun
         AssertUtil.assertToken(tokenStream, TokenType.KEY_FUN);
         tokenStream.nextToken();
-
         String name = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER) {
             name = tokenStream.token().name;
@@ -328,7 +346,6 @@ public class DefaultParser implements Parser {
         // eat (
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
         tokenStream.nextToken();
-
         List<BaseNode> param = new ArrayList<BaseNode>();
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
@@ -350,27 +367,25 @@ public class DefaultParser implements Parser {
         // eat )
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();
-
-        BaseNode block = parseBlock();
-
+        BaseNode block = parseBlock(false);
         return new ClosureDefineNode(name, param, block);
     }
 
-    public BaseNode parseBlock() {
+    public BaseNode parseBlock(boolean isLoop) {
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
         tokenStream.nextToken();
-
         List<BaseNode> blocks = new ArrayList<BaseNode>();
-
         while (tokenStream.token().type != TokenType.EOF
                 && tokenStream.token().type != TokenType.RIGHT_BRACE) {
             blocks.add(parseStatement());
         }
-
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
-
-        return new BlockNode(blocks);
+        if (isLoop) {
+            return new LoopBlockNode(blocks);
+        } else {
+            return new BlockNode(blocks);
+        }
     }
 
     public BaseNode parseUnaryExpression() {
@@ -399,9 +414,7 @@ public class DefaultParser implements Parser {
         } else {
             firstNode = parsePrimaryExpression();
         }
-
         List<OperationNode> calls = new ArrayList<OperationNode>();
-
         while (tokenStream.token().type == TokenType.LEFT_PAREN
                 || tokenStream.token().type == TokenType.LEFT_SQUARE
                 || tokenStream.token().type == TokenType.DOT) {
@@ -417,9 +430,7 @@ public class DefaultParser implements Parser {
                     break;
             }
         }
-
         CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
-
         if (tokenStream.token().type == TokenType.ASSIGN) {
             if (!isStatement) {
                 throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
@@ -468,16 +479,12 @@ public class DefaultParser implements Parser {
     public BaseNode parseIndex() {
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
         tokenStream.nextToken();
-
         BaseNode index = parsePrimaryExpression();
-
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
         tokenStream.nextToken();
-
         IndexNode indexNode = new IndexNode(index);
         indexNode.putOperation(OperationDefine.findOperation(TokenType.INDEX));
         indexNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.INDEX));
-
         return indexNode;
     }
 
@@ -581,19 +588,15 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseArray() {
-
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
         tokenStream.nextToken();
-
         List<BaseNode> arrValues = new ArrayList<BaseNode>();
         if (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
             arrValues.add(parseExpression());
         }
         while (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
-
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();
-
             arrValues.add(parseExpression());
         }
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);

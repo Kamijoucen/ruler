@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.ast.expression.CallLinkNode;
 import com.kamijoucen.ruler.ast.expression.CallNode;
 import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.ast.expression.IfStatementNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.IndexNode;
@@ -141,6 +142,11 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
+        return FailureType.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
         return FailureType.INSTANCE;
     }
 

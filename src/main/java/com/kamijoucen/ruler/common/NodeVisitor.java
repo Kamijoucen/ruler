@@ -46,6 +46,8 @@ public interface NodeVisitor {
 
     BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context);
 
+    BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context);
+
     BaseValue eval(BreakNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context);
