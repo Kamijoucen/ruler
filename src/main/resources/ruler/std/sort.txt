@@ -1,6 +1,4 @@
 import "ruler/std/collections.txt" collections;
-import "ruler/std/array.txt" array;
-
 fun partition(arr, begin, end, compare) {
     var mid = arr[end];
     var i = begin;
@@ -24,7 +22,7 @@ fun subSort(subArr, begin, end, compare) {
     subSort(subArr, p + 1, end, compare);
 }
 fun Sort(arr, compare) {
-    if (!IsArray(arr)) {
+    if (!collections.IsArray(arr)) {
         return;
     }
     if (compare == null) || (typeof(compare) != "function") {

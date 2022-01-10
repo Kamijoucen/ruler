@@ -4,11 +4,21 @@ import java.io.*;
 
 public class IOUtil {
 
+    public final static boolean[] pathFlags = new boolean[256];
     public final static boolean[] firstIdentifierFlags = new boolean[256];
     public final static boolean[] identifierFlags = new boolean[256];
     public final static boolean[] numberFlags = new boolean[256];
 
     static {
+
+        for (char c = 0; c < pathFlags.length; ++c) {
+            if (c == '.' || c == '/' || c == '\\' || c == ':' || c == ':' || c == '*' || c == '?' || c == '<'
+                    || c == '>' || c == '|') {
+                pathFlags[c] = false;
+            } else {
+                pathFlags[c] = true;
+            }
+        }
 
         for (char c = 0; c < numberFlags.length; ++c) {
             if (c >= '0' && c <= '9') {
@@ -39,6 +49,10 @@ public class IOUtil {
         }
     }
 
+    public static boolean isAvailablePathChar(char ch) {
+        return ch >= IOUtil.pathFlags.length || IOUtil.pathFlags[ch];
+    }
+
     public static boolean isFirstIdentifierChar(char ch) {
         return ch >= IOUtil.firstIdentifierFlags.length || IOUtil.firstIdentifierFlags[ch];
     }
@@ -47,14 +61,29 @@ public class IOUtil {
         return ch >= IOUtil.identifierFlags.length || IOUtil.identifierFlags[ch];
     }
 
+    public static String read(InputStream inputStream) {
+        Reader reader = new BufferedReader(new InputStreamReader(inputStream));
+        return read(reader);
+    }
+
     public static String read(File file) {
-        StringBuilder sb = new StringBuilder();
-        Reader reader = null;
         try {
-            reader = new BufferedReader(new FileReader(file));
+            Reader reader = new BufferedReader(new FileReader(file));
+            return read(reader);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
+    public static String read(String path) {
+        return read(new File(path));
+    }
+
+    public static String read(Reader reader) {
+        StringBuilder sb = new StringBuilder();
+        try {
             char[] buf = new char[2048];
-
             int len = 0;
             while ((len = reader.read(buf)) != -1) {
                 sb.append(buf, 0, len);
@@ -73,10 +102,6 @@ public class IOUtil {
             }
         }
         return sb.toString();
-    }
-
-    public static String read(String path) {
-        return read(new File(path));
     }
 
     public static boolean isBlank(String str) {

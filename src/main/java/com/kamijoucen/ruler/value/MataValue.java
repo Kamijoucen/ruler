@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.runtime.RClassInfo;
+import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 import java.util.List;

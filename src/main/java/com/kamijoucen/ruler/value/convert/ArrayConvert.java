@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.kamijoucen.ruler.common.ConvertRepository;
-import com.kamijoucen.ruler.runtime.RClassInfo;
+import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 

@@ -552,10 +552,8 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseNull() {
-
         AssertUtil.assertToken(tokenStream, TokenType.KEY_NULL);
         tokenStream.nextToken();
-
         return NullNode.NULL_NODE;
     }
 
@@ -648,7 +646,6 @@ public class DefaultParser implements Parser {
             tokenStream.nextToken();
             properties.put(name.name, parseExpression());
         }
-
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
         return new RsonNode(properties);

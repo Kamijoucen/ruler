@@ -12,7 +12,6 @@ import com.kamijoucen.ruler.parse.impl.DefaultLexical;
 import com.kamijoucen.ruler.parse.impl.DefaultParser;
 import com.kamijoucen.ruler.parse.impl.TokenStreamImpl;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
 
@@ -91,7 +90,7 @@ public class RulerCompiler {
         List<Tuple2<String, RulerModule>> childModule = new ArrayList<Tuple2<String, RulerModule>>(
                 module.getImportList().size());
         for (ImportNode node : module.getImportList()) {
-            Tuple2<String, RulerModule> tuple = parseImport(node);
+            Tuple2<String, RulerModule> tuple = handleImport(node);
             if (tuple != null) {
                 childModule.add(tuple);
             }
@@ -100,7 +99,7 @@ public class RulerCompiler {
         return module;
     }
 
-    private Tuple2<String, RulerModule> parseImport(ImportNode node) {
+    private Tuple2<String, RulerModule> handleImport(ImportNode node) {
         String absolutePath = node.getPath();
         if (IOUtil.isNotBlank(config.libPath)) {
             absolutePath = config.libPath + "/" + absolutePath;

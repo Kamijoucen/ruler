@@ -2,8 +2,8 @@ package com.kamijoucen.ruler.value;
 
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.CallOperation;
-import com.kamijoucen.ruler.runtime.RClassInfo;
 import com.kamijoucen.ruler.common.OperationDefine;
+import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.TokenType;
 

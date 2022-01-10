@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.value;
 
+import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.runtime.RClassInfo;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;

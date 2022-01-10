@@ -15,8 +15,21 @@ import com.kamijoucen.ruler.value.ValueType;
 
 public class SyntaxCheckUtil {
 
-
-
+    public static void importPathCheck(String[] pathParts) {
+        if (pathParts == null || pathParts.length == 0) {
+            throw SyntaxException.withSyntax("The import path is empty");
+        }
+        for (String part : pathParts) {
+            if (IOUtil.isBlank(part)) {
+                throw SyntaxException.withSyntax("Illegal import matches");
+            }
+            for (char ch : part.toCharArray()) {
+                if (!IOUtil.isAvailablePathChar(ch)) {
+                    throw SyntaxException.withSyntax("Illegal character");
+                }
+            }
+        }
+    }
 
     public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
         BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
@@ -34,10 +47,8 @@ public class SyntaxCheckUtil {
     }
 
     public static void availableImport(List<ImportNode> imports) {
-
         Set<String> pathSet = new HashSet<String>();
         Set<String> aliasSet = new HashSet<String>();
-
         for (ImportNode node : imports) {
             int oldPathSize = pathSet.size();
             pathSet.add(node.getPath());

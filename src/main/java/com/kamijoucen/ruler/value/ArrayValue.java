@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.value;
 
 import java.util.List;
 
-import com.kamijoucen.ruler.runtime.RClassInfo;
+import com.kamijoucen.ruler.common.RClassInfo;
 
 public class ArrayValue extends AbstractRClassValue {
 
