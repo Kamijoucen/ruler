@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.token.TokenType;
 
 import java.util.List;
 
-public abstract class AbstractRClassValue implements MataValue {
+public abstract class AbstractRClassValue implements MetaValue {
 
     protected RClassInfo classInfo;
     protected static CallOperation callOperation = (CallOperation) OperationDefine.findOperation(TokenType.CALL);

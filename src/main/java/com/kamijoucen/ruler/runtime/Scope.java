@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.runtime;
 
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.MataValue;
+import com.kamijoucen.ruler.value.MetaValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ public class Scope {
     private List<BaseValue> returnSpace;
     private Map<String, BaseValue> valueSpace;
     private BaseValue callLinkPreviousValue;
-    private MataValue currentContextMataValue;
+    private MetaValue currentContextMataValue;
     private String currentLoopVariableName;
     private BaseValue currentLoopVariable;
 
@@ -92,11 +92,11 @@ public class Scope {
         this.callLinkPreviousValue = value;
     }
 
-    public void putCurrentMataValue(MataValue mataValue) {
+    public void putCurrentMataValue(MetaValue mataValue) {
         this.currentContextMataValue = mataValue;
     }
 
-    public MataValue getCurrentContextMataValue() {
+    public MetaValue getCurrentContextMataValue() {
         if (currentContextMataValue != null) {
             return currentContextMataValue;
         } else if (parentScope != null) {

@@ -4,8 +4,8 @@ import com.kamijoucen.ruler.common.RClassInfo;
 
 public class RsonValue extends AbstractRClassValue {
 
-    public RsonValue(RClassInfo mataData) {
-        super(mataData);
+    public RsonValue(RClassInfo mateData) {
+        super(mateData);
     }
 
     @Override

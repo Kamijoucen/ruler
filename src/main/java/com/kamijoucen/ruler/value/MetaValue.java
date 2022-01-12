@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 import java.util.List;
 
-public interface MataValue extends BaseValue {
+public interface MetaValue extends BaseValue {
 
     RClassInfo getClassInfo();
 
