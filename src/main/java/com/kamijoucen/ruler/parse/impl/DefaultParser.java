@@ -48,7 +48,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.type.ArrayType;
-import com.kamijoucen.ruler.type.UnknowType;
+import com.kamijoucen.ruler.type.UnknownType;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
@@ -272,7 +272,7 @@ public class DefaultParser implements Parser {
         BaseNode arrayExp = parseExpression();
         // type check
         BaseValue typeCheckValue = arrayExp.typeCheck(runtimeContext, null);
-        if (typeCheckValue.getType() != UnknowType.INSTANCE.getType()
+        if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
                 && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
             throw SyntaxException.withSyntax("The value of the expression must be an array!");
         }

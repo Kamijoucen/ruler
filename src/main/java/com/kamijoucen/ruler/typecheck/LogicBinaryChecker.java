@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.type.BoolType;
 import com.kamijoucen.ruler.type.FailureType;
-import com.kamijoucen.ruler.type.UnknowType;
+import com.kamijoucen.ruler.type.UnknownType;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 
@@ -20,15 +20,15 @@ public class LogicBinaryChecker implements BaseEval<LogicBinaryOperationNode> {
         if (!isAvailableType(typeVal1) || !isAvailableType(typeVal2)) {
             return FailureType.INSTANCE;
         }
-        if (typeVal1.getType() == ValueType.UN_KNOW
-                || typeVal2.getType() == ValueType.UN_KNOW) {
-            return UnknowType.INSTANCE;
+        if (typeVal1.getType() == ValueType.UN_KNOWN
+                || typeVal2.getType() == ValueType.UN_KNOWN) {
+            return UnknownType.INSTANCE;
         }
         return BoolType.INSTANCE;
     }
 
     private boolean isAvailableType(BaseValue val) {
-        return val.getType() == ValueType.BOOL || val.getType() == ValueType.UN_KNOW;
+        return val.getType() == ValueType.BOOL || val.getType() == ValueType.UN_KNOWN;
     }
 
 }

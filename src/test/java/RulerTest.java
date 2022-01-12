@@ -106,8 +106,9 @@ public class RulerTest {
 
     @Test
     public void typeof_test() {
-        String str = "var a = '15'; println(typeof(a)); println(typeof ((fun() {})()));println(typeof (1));println(typeof (1.0));println(typeof (println));";
-        RuleRunner script = Ruler.compileScript(str);
+        String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
+        String sql = "var a = 5; println($a);";
+        RuleRunner script = Ruler.compileScript(sql);
         script.run();
     }
 
@@ -175,16 +176,13 @@ public class RulerTest {
 
     @Test
     public void import_test() {
-        String script = "import 'collections/sort.txt' sort; sort.name;";
-        RuleRunner run = Ruler.compileScript(script);
-        run.run();
-    }
 
-    @Test
-    public void foreach_test() {
-        String script = "var arr = [1, 2, 3, 4]; for v in [111] println(v);";
+        String script = "import 'collections/sort.txt' sort; sort.name;";
+
         RuleRunner run = Ruler.compileScript(script);
+
         run.run();
+
     }
 
 }

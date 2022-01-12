@@ -41,7 +41,7 @@ import com.kamijoucen.ruler.type.IntegerType;
 import com.kamijoucen.ruler.type.NullType;
 import com.kamijoucen.ruler.type.RsonType;
 import com.kamijoucen.ruler.type.StringType;
-import com.kamijoucen.ruler.type.UnknowType;
+import com.kamijoucen.ruler.type.UnknownType;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -52,12 +52,12 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
@@ -112,7 +112,7 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
@@ -137,7 +137,7 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
@@ -162,30 +162,30 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override
     public BaseValue eval(CallLinkNode node, Scope scope, RuntimeContext context) {
         if (!CollectionUtil.isEmpty(node.getCalls())) {
-            return UnknowType.INSTANCE;
+            return UnknownType.INSTANCE;
         }
         return node.getFirst().typeCheck(context, scope);
     }
 
     @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
-        return UnknowType.INSTANCE;
+        return UnknownType.INSTANCE;
     }
 
     @Override

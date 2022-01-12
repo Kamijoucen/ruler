@@ -10,7 +10,7 @@ import com.kamijoucen.ruler.type.DoubleType;
 import com.kamijoucen.ruler.type.FailureType;
 import com.kamijoucen.ruler.type.IntegerType;
 import com.kamijoucen.ruler.type.StringType;
-import com.kamijoucen.ruler.type.UnknowType;
+import com.kamijoucen.ruler.type.UnknownType;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 
@@ -29,28 +29,28 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
     private static void initBaseMap() {
         typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = IntegerType.INSTANCE;
         typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = UnknowType.INSTANCE;
+        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
 
         typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = DoubleType.INSTANCE;
         typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = UnknowType.INSTANCE;
+        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
 
-        typeBaseMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = UnknowType.INSTANCE;
-        typeBaseMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = UnknowType.INSTANCE;
+        typeBaseMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = UnknownType.INSTANCE;
+        typeBaseMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = UnknownType.INSTANCE;
     }
 
     private static void initAddMap() {
         typeAddMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = IntegerType.INSTANCE;
         typeAddMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = UnknowType.INSTANCE;
+        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
 
         typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = DoubleType.INSTANCE;
         typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = UnknowType.INSTANCE;
+        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
 
         typeAddMap[ValueType.STRING.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = UnknowType.INSTANCE;
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = UnknowType.INSTANCE;
+        typeAddMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = UnknownType.INSTANCE;
+        typeAddMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = UnknownType.INSTANCE;
     }
 
     @Override
@@ -64,8 +64,8 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
         if (op == TokenType.EQ || op == TokenType.NE) {
             return BoolType.INSTANCE;
         }
-        if (val1.getType() == ValueType.UN_KNOW || val2.getType() == ValueType.UN_KNOW) {
-            return UnknowType.INSTANCE;
+        if (val1.getType() == ValueType.UN_KNOWN || val2.getType() == ValueType.UN_KNOWN) {
+            return UnknownType.INSTANCE;
         }
         BaseValue typeValue = null;
         if (op == TokenType.ADD) {
