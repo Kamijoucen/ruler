@@ -54,7 +54,6 @@ import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 import com.kamijoucen.ruler.util.TokenUtil;
-import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class DefaultParser implements Parser {

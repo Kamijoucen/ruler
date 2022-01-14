@@ -14,21 +14,13 @@ import com.kamijoucen.ruler.util.TokenUtil;
 public class DefaultLexical implements Lexical {
 
     private int offset;
-
     public int line;
-
     public int column;
-
     private State state;
-
     private String content;
-
     private Token currentToken;
-
     private StringBuilder buffer;
-
     private boolean isEnd;
-
     private char curStringFlag;
 
     public DefaultLexical(String content) {

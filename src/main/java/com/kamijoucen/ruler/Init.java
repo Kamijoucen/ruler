@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.value.FunctionValue;
 public class Init {
 
     public static void engineInit(Scope scope) {
-        //        initStdlib(scope);
+        initStdlib(scope);
         registerInnerFunction(scope, new ValueConvertFunctionProxy(new PrintFunction()));
         registerInnerFunction(scope, new ValueConvertFunctionProxy(new MakeItPossibleFunction()));
         registerInnerFunction(scope, new ReturnConvertFunctionProxy(new LengthFunction()));
@@ -16,6 +16,7 @@ public class Init {
 
     private static void initStdlib(Scope scope) {
         String collections = IOUtil.read(Init.class.getResourceAsStream("/ruler/std/collections.txt"));
+        System.out.println(collections);
     }
 
     private static void registerInnerFunction(Scope scope, RulerFunction function) {

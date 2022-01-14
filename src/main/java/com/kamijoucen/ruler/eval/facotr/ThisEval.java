@@ -11,8 +11,8 @@ import com.kamijoucen.ruler.value.MetaValue;
 public class ThisEval implements BaseEval<ThisNode> {
     @Override
     public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        MetaValue mataValue = scope.getCurrentContextMataValue();
-        AssertUtil.notNull(mataValue);
-        return mataValue;
+        MetaValue metaValue = scope.getCurrentContextMataValue();
+        AssertUtil.notNull(metaValue);
+        return metaValue;
     }
 }

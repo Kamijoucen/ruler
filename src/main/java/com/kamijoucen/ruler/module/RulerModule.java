@@ -11,16 +11,9 @@ import java.util.List;
 public class RulerModule {
 
     private String fullName;
-
     private List<ImportNode> importList = new ArrayList<ImportNode>();
-
     private List<BaseNode> statements;
-
-    /**
-     * 子模块，临时实现，后期改为和java一样的包管理模式
-     */
     private List<Tuple2<String, RulerModule>> childModule;
-
     private Scope fileScope;
 
     public RulerModule(Scope fileScope) {
