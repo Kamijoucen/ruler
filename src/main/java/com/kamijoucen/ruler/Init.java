@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.value.FunctionValue;
 public class Init {
 
     public static void engineInit(Scope scope) {
-        initStdlib(scope);
+//        initStdlib(scope);
         registerInnerFunction(scope, new ValueConvertFunctionProxy(new PrintFunction()));
         registerInnerFunction(scope, new ValueConvertFunctionProxy(new MakeItPossibleFunction()));
         registerInnerFunction(scope, new ReturnConvertFunctionProxy(new LengthFunction()));
