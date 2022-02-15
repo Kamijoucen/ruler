@@ -9,9 +9,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class ImportNode extends AbstractBaseNode {
 
     private String path;
-
     private String alias;
-
     private RulerModule module;
 
     public ImportNode(String path, String alias) {

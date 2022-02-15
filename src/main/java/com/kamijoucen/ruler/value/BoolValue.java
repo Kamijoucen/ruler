@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.value;
 public class BoolValue implements BaseValue {
 
     public static final BoolValue TRUE = new BoolValue(true);
-
     public static final BoolValue FALSE = new BoolValue(false);
     
     private final boolean value;

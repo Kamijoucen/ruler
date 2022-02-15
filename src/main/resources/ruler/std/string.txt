@@ -1,0 +1,10 @@
+fun Contains(str) {
+}
+
+fun Trim(str) {
+
+}
+
+fun IsBlank(str) {
+
+}
