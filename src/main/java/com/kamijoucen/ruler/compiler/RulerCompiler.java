@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.compiler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.config.RuntimeConfig;
+import com.kamijoucen.ruler.runtime.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.parse.Parser;

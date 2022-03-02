@@ -2,7 +2,7 @@ package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.RulerInterpreter;
-import com.kamijoucen.ruler.config.RuntimeConfiguration;
+import com.kamijoucen.ruler.runtime.ImportCache;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.result.RuleResult;
 import com.kamijoucen.ruler.result.RuleValue;
@@ -18,12 +18,11 @@ public class RuleRunner {
 
     private RulerModule module;
     private boolean isScript;
-    private RuntimeConfiguration runtimeConfiguration;
+    private ImportCache importCache = new ImportCache();
 
     public RuleRunner(RulerModule module, boolean isScript) {
         this.module = module;
         this.isScript = isScript;
-        this.runtimeConfiguration = null;
     }
 
     public RuleResult run() {

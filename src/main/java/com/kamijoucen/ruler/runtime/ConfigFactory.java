@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.config;
+package com.kamijoucen.ruler.runtime;
 
 import com.kamijoucen.ruler.common.Constant;
 

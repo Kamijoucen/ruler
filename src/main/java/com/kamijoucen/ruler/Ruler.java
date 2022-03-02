@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.compiler.RulerCompiler;
-import com.kamijoucen.ruler.config.ConfigFactory;
-import com.kamijoucen.ruler.config.RuntimeConfig;
+import com.kamijoucen.ruler.runtime.ConfigFactory;
+import com.kamijoucen.ruler.runtime.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.runtime.Scope;
