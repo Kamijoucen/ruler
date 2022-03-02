@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
+import com.kamijoucen.ruler.config.RuntimeConfiguration;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -15,11 +16,13 @@ public class RuntimeContext {
     private Map<String, BaseValue> outSpace;
     private final NodeVisitor nodeVisitor;
     private final NodeVisitor typeCheckVisitor;
+    private final RuntimeConfiguration configuration;
 
-    public RuntimeContext(Map<String, BaseValue> outSpace, NodeVisitor nodeVisitor, NodeVisitor typeCheckVisitor) {
+    public RuntimeContext(Map<String, BaseValue> outSpace, NodeVisitor nodeVisitor, NodeVisitor typeCheckVisitor, RuntimeConfiguration configuration) {
         this.outSpace = outSpace;
         this.nodeVisitor = nodeVisitor;
         this.typeCheckVisitor = typeCheckVisitor;
+        this.configuration = configuration;
     }
 
     public BaseValue findOutValue(String name) {
@@ -48,5 +51,9 @@ public class RuntimeContext {
 
     public void setOutNameToken(List<Token> outNameToken) {
         this.outNameToken = outNameToken;
+    }
+
+    public RuntimeConfiguration getConfiguration() {
+        return configuration;
     }
 }

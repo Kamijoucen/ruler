@@ -5,7 +5,6 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.parse.Parser;
 import com.kamijoucen.ruler.parse.impl.DefaultLexical;
@@ -24,7 +23,6 @@ import java.util.Set;
 
 public class RulerCompiler {
 
-    private RulerProgram program;
     private RuntimeConfig config;
     private RulerScript mainScript;
     private Scope globalScope;
@@ -34,17 +32,15 @@ public class RulerCompiler {
         this.config = config;
         this.mainScript = mainScript;
         this.globalScope = globalScope;
-        this.program = new RulerProgram();
         this.imported = new HashSet<String>();
     }
 
-    public RulerProgram compileScript() {
+    public RulerModule compileScript() {
         RulerModule mainModule = compileModule(mainScript);
-        program.setMainModule(mainModule);
-        return program;
+        return mainModule;
     }
 
-    public RulerProgram compileExpression() {
+    public RulerModule compileExpression() {
         RulerModule module = new RulerModule(new Scope("expression", globalScope));
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(mainScript.getContent());
@@ -57,8 +53,7 @@ public class RulerCompiler {
 
         BaseNode expression = parser.parseExpression();
         module.setStatements(CollectionUtil.list(expression));
-        program.setMainModule(module);
-        return program;
+        return module;
     }
 
     private RulerModule compileModule(RulerScript script) {

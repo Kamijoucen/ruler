@@ -5,7 +5,6 @@ import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.module.RulerProgram;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
@@ -21,29 +20,27 @@ import java.util.Map;
 
 public class RulerInterpreter {
 
-    private final RulerProgram program;
+    private final RulerModule module;
 
-    public RulerInterpreter(RulerProgram program) {
-        this.program = program;
+    public RulerInterpreter(RulerModule module) {
+        this.module = module;
     }
 
     public RuntimeContext runCustomVisitor(NodeVisitor visitor) {
-        RulerModule mainModule = program.getMainModule();
-        Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
-        RuntimeContext context = new RuntimeContext(null, visitor, new TypeCheckVisitor());
-        for (BaseNode statement : mainModule.getStatements()) {
+        Scope runScope = new Scope("runtime main file", module.getFileScope());
+        RuntimeContext context = new RuntimeContext(null, visitor, new TypeCheckVisitor(), null);
+        for (BaseNode statement : module.getStatements()) {
             statement.eval(context, runScope);
         }
         return context;
     }
 
     public List<Object> runExpression(Map<String, Object> param) {
-        RulerModule mainModule = program.getMainModule();
-        Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
+        Scope runScope = new Scope("runtime main file", module.getFileScope());
         // 运行上下文
         RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor(),
-                new TypeCheckVisitor());
-        BaseNode firstNode = CollectionUtil.first(mainModule.getStatements());
+                new TypeCheckVisitor(), null);
+        BaseNode firstNode = CollectionUtil.first(module.getStatements());
         // 执行表达式
         AssertUtil.notNull(firstNode);
         BaseValue value = firstNode.eval(context, runScope);
@@ -51,13 +48,12 @@ public class RulerInterpreter {
     }
 
     public List<Object> runScript(Map<String, Object> param) {
-        RulerModule mainModule = program.getMainModule();
-        Scope runScope = new Scope("runtime main file", mainModule.getFileScope());
+        Scope runScope = new Scope("runtime main file", module.getFileScope());
         runScope.initReturnSpace();
 
         RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), new EvalVisitor(),
-                new TypeCheckVisitor());
-        for (BaseNode statement : mainModule.getStatements()) {
+                new TypeCheckVisitor(), null);
+        for (BaseNode statement : module.getStatements()) {
             statement.eval(context, runScope);
         }
         List<BaseValue> returnValue = runScope.getReturnSpace();

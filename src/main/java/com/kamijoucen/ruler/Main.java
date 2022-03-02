@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.compiler.RulerCompiler;
 import com.kamijoucen.ruler.config.ConfigFactory;
 import com.kamijoucen.ruler.config.RuntimeConfig;
 import com.kamijoucen.ruler.compiler.RulerInterpreter;
-import com.kamijoucen.ruler.module.RulerProgram;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.util.IOUtil;
 
@@ -35,7 +35,7 @@ public class Main {
         script.setContent(content);
         script.setPath(file.getParentFile().getAbsolutePath());
 
-        RulerProgram program = new RulerCompiler(config, script, Ruler.globalScope).compileScript();
+        RulerModule program = new RulerCompiler(config, script, Ruler.globalScope).compileScript();
 
         new RulerInterpreter(program).runScript(Collections.<String, Object>emptyMap());
     }

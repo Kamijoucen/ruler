@@ -2,7 +2,8 @@ package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.RulerInterpreter;
-import com.kamijoucen.ruler.module.RulerProgram;
+import com.kamijoucen.ruler.config.RuntimeConfiguration;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.result.RuleResult;
 import com.kamijoucen.ruler.result.RuleValue;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -15,12 +16,14 @@ import java.util.Map;
 
 public class RuleRunner {
 
-    private RulerProgram program;
+    private RulerModule module;
     private boolean isScript;
+    private RuntimeConfiguration runtimeConfiguration;
 
-    public RuleRunner(RulerProgram program, boolean isScript) {
-        this.program = program;
+    public RuleRunner(RulerModule module, boolean isScript) {
+        this.module = module;
         this.isScript = isScript;
+        this.runtimeConfiguration = null;
     }
 
     public RuleResult run() {
@@ -32,7 +35,7 @@ public class RuleRunner {
             param = Collections.emptyMap();
         }
         List<Object> values = null;
-        RulerInterpreter interpreter = new RulerInterpreter(program);
+        RulerInterpreter interpreter = new RulerInterpreter(module);
         if (isScript) {
             values = interpreter.runScript(param);
         } else {
@@ -48,7 +51,7 @@ public class RuleRunner {
 
     public RuntimeContext customRun(NodeVisitor visitor) {
         AssertUtil.notNull(visitor);
-        RulerInterpreter interpreter = new RulerInterpreter(program);
+        RulerInterpreter interpreter = new RulerInterpreter(module);
         return interpreter.runCustomVisitor(visitor);
     }
 
