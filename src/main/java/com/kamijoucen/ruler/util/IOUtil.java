@@ -12,7 +12,7 @@ public class IOUtil {
     static {
 
         for (char c = 0; c < pathFlags.length; ++c) {
-            if (c == '.' || c == '/' || c == '\\' || c == ':' || c == ':' || c == '*' || c == '?' || c == '<'
+            if (c == '.' || c == '/' || c == '\\' || c == ':' || c == '*' || c == '?' || c == '<'
                     || c == '>' || c == '|') {
                 pathFlags[c] = false;
             } else {

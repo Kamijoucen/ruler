@@ -147,6 +147,8 @@ public class DefaultParser implements Parser {
                 statement = parseVariableDefine();
                 isNeedSemicolon = true;
                 break;
+            default:
+                throw SyntaxException.withSyntax("未知的符号：" + token.name);
         }
         if (statement == null) {
             throw SyntaxException.withSyntax("错误的语句");

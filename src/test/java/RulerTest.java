@@ -125,8 +125,9 @@ public class RulerTest {
 
         System.out.println(result.first().getBoolean());
 
-        RuntimeContext context = script.customRun(new OutNameVisitor());
-        System.out.println(context);
+        OutNameVisitor outNameVisitor = new OutNameVisitor();
+        RuntimeContext context = script.customRun(outNameVisitor);
+        System.out.println(outNameVisitor.outNameTokens);
     }
 
     @Test

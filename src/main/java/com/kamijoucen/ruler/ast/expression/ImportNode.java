@@ -10,7 +10,6 @@ public class ImportNode extends AbstractBaseNode {
 
     private String path;
     private String alias;
-    private RulerModule module;
 
     public ImportNode(String path, String alias) {
         this.path = path;
@@ -41,13 +40,5 @@ public class ImportNode extends AbstractBaseNode {
 
     public void setAlias(String alias) {
         this.alias = alias;
-    }
-
-    public RulerModule getModule() {
-        return module;
-    }
-
-    public void setModule(RulerModule module) {
-        this.module = module;
     }
 }
