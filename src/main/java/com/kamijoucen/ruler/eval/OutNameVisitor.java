@@ -4,12 +4,19 @@ import com.kamijoucen.ruler.ast.facotr.OutNameNode;
 import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.BaseValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class OutNameVisitor extends AbstractVisitor {
+
+    public final List<Token> outNameTokens = new ArrayList<Token>();
+
     @Override
     public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {
-        context.getOutNameToken().add(node.name);
+        outNameTokens.add(node.name);
         return super.eval(node, scope, context);
     }
 }
