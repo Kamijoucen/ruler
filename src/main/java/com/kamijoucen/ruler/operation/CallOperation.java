@@ -34,7 +34,7 @@ public class CallOperation implements Operation {
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {
             NameNode name = (NameNode) defineParam.get(i);
-            callScope.putLocal(name.name.name, funcParam[i]);
+            callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
         }
         callScope.initReturnSpace();
         BaseNode block = closure.getBlock();

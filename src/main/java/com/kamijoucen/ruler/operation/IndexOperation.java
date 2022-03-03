@@ -20,6 +20,7 @@ public class IndexOperation implements Operation {
         ArrayValue array = (ArrayValue) tempArray;
         IntegerValue index = (IntegerValue) tempIndex;
         if (index.getValue() >= array.getValues().size()) {
+            // todo 是否允许数组越界
             return NullValue.INSTANCE;
         }
         return array.getValues().get(index.getValue());

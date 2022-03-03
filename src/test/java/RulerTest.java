@@ -182,7 +182,7 @@ public class RulerTest {
     @Test
     public void import_test() {
 
-        String script = "import '/ruler/std/collections.txt' sort; println(sort.Size([1, 5, 15]));";
+        String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 5, 15,3]; sort.Sort(arr, null); println(arr);";
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 

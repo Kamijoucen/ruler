@@ -31,5 +31,5 @@ fun Sort(arr, compare) {
             return var1 - var2;
         };
     }
-    subSort(arr, 0, length(arr), compare);
+    subSort(arr, 0, collections.Size(arr) - 1, compare);
 }
