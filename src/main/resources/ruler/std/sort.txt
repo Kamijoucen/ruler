@@ -1,4 +1,4 @@
-import "ruler/std/collections.txt" collections;
+import "/ruler/std/collections.txt" collections;
 
 fun partition(arr, begin, end, compare) {
     var mid = arr[end];

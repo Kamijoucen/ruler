@@ -72,7 +72,7 @@ public class DefaultParser implements Parser {
     private void initContext() {
         TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
         this.parseContext = new ParseContext(typeCheckVisitor);
-        this.runtimeContext = new RuntimeContext(null, null, typeCheckVisitor, null);
+        this.runtimeContext = new RuntimeContext(null, null, typeCheckVisitor, null, null);
     }
 
     @Override
@@ -99,7 +99,6 @@ public class DefaultParser implements Parser {
         List<ImportNode> imports = new ArrayList<ImportNode>();
         while (tokenStream.token().type == TokenType.KEY_IMPORT) {
             BaseNode importNode = parseImport();
-            statements.add(importNode);
             imports.add((ImportNode) importNode);
         }
         return imports;

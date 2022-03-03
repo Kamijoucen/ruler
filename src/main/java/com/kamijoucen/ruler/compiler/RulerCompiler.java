@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.compiler;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.RuntimeConfig;
+import com.kamijoucen.ruler.runtime.RulerConfiguration;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.parse.Parser;
@@ -15,14 +15,12 @@ import java.util.List;
 
 public class RulerCompiler {
 
-    private RuntimeConfig config;
+    private RulerConfiguration configuration;
     private RulerScript mainScript;
-    private Scope globalScope;
 
-    public RulerCompiler(RuntimeConfig config, RulerScript mainScript, Scope globalScope) {
-        this.config = config;
+    public RulerCompiler(RulerScript mainScript, RulerConfiguration configuration) {
         this.mainScript = mainScript;
-        this.globalScope = globalScope;
+        this.configuration = configuration;
     }
 
     public RulerModule compileScript() {
@@ -31,7 +29,7 @@ public class RulerCompiler {
     }
 
     public RulerModule compileExpression() {
-        RulerModule module = new RulerModule(new Scope("expression", globalScope));
+        RulerModule module = new RulerModule(new Scope("expression", configuration.getGlobalScope()));
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(mainScript.getContent());
         // 开始词法分析
@@ -47,7 +45,7 @@ public class RulerCompiler {
     }
 
     private RulerModule compileModule(RulerScript script) {
-        RulerModule module = new RulerModule(new Scope("file", globalScope));
+        RulerModule module = new RulerModule(new Scope("file", configuration.getGlobalScope()));
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(script.getContent());
         // 开始词法分析
