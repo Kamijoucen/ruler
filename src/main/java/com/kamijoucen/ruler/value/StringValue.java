@@ -1,10 +1,13 @@
 package com.kamijoucen.ruler.value;
 
-public class StringValue implements BaseValue {
+import com.kamijoucen.ruler.common.RClassInfo;
+
+public class StringValue extends AbstractRClassValue {
 
     private String value;
 
     public StringValue(String value) {
+        super(null);
         this.value = value;
     }
 

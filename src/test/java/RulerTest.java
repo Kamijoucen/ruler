@@ -3,6 +3,7 @@ import java.util.Map;
 
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.result.RuleResult;
 import com.kamijoucen.ruler.RuleRunner;
 import com.kamijoucen.ruler.runtime.RulerConfiguration;
@@ -182,9 +183,31 @@ public class RulerTest {
     @Test
     public void import_test() {
 
-        String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 5, 15,3]; sort.Sort(arr, null); println(arr);";
+        String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
 
         RuleRunner run = Ruler.compileScript(script, configuration);
+
+        run.run();
+
+    }
+
+    @Test
+    public void custom_function() {
+
+        configuration.setGlobalFunction(new RulerFunction() {
+            @Override
+            public String getName() {
+                return "哈哈哈哈";
+            }
+            @Override
+            public Object call(Object... param) {
+                return "我们gg啦！！！";
+            }
+        });
+
+        String text = "var a = 哈哈哈哈(); println(typeof(哈哈哈哈));";
+
+        RuleRunner run = Ruler.compileScript(text, configuration);
 
         run.run();
 

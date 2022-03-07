@@ -11,7 +11,6 @@ public class ArrayValue extends AbstractRClassValue {
     public ArrayValue(List<BaseValue> values, RClassInfo mataData) {
         super(mataData);
         this.values = values;
-        // MateDataUtil.initArrayMateData(this);
     }
 
     @Override

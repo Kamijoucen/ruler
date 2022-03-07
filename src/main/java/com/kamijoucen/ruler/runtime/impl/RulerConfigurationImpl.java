@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.runtime.impl;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
+import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
 import com.kamijoucen.ruler.runtime.ImportCache;
@@ -9,6 +10,10 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.FunctionValue;
+import com.kamijoucen.ruler.value.ValueType;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
@@ -16,6 +21,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private final NodeVisitor evalVisitor = new EvalVisitor();
     private final Scope globalScope = new Scope("root", null);
     private final ImportCache importCache = new ImportCache();
+    private final Map<ValueType, RClassInfo> metaClassInfoMapping = new HashMap<ValueType, RClassInfo>();
 
     public RulerConfigurationImpl() {
         initDefaultFunction();
