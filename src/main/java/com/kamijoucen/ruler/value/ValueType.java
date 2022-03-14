@@ -34,4 +34,6 @@ public enum ValueType {
 
     FAILURE,
 
+    DATE
+
 }

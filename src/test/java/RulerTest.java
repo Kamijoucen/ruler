@@ -213,4 +213,15 @@ public class RulerTest {
 
     }
 
+    @Test
+    public void in_arr_test() {
+
+        String script = "import '/ruler/std/collections.txt' arrUtil; var arr = [2, 1, 85, 15,3]; println(arrUtil.In(825, arr));";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        run.run();
+
+    }
+
 }

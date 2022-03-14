@@ -27,8 +27,13 @@ fun Swap(arr, i, j) {
     arr[j] = temp;
 }
 
-fun Contains(list, obj) {
-    if !IsArray(arr) return null;
+fun Contains(obj, list) {
+    if !IsArray(list) return false;
     for v in list
         if v == obj return true;
+    return false;
+}
+
+fun In(obj, list) {
+    return Contains(obj, list);
 }

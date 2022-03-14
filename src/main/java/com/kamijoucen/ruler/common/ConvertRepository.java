@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.common;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,11 +27,13 @@ public class ConvertRepository {
         VALUE_TYPE_MAP.put(ValueType.NULL, nullConvert);
         VALUE_TYPE_MAP.put(ValueType.ARRAY, arrayConvert);
         VALUE_TYPE_MAP.put(ValueType.BOOL, boolConvert);
+        VALUE_TYPE_MAP.put(ValueType.DATE, nullConvert);
 
         CLASS_MAP.put(Integer.class, integerConvert);
         CLASS_MAP.put(Double.class, doubleConvert);
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
+        CLASS_MAP.put(Date.class, nullConvert);
     }
 
     public static ValueConvert getConverter(Object obj) {

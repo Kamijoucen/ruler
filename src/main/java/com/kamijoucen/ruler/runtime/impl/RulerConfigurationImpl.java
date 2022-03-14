@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.ImportCache;
 import com.kamijoucen.ruler.runtime.RulerConfiguration;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -56,6 +57,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ImportCache getImportCache() {
         return importCache;
+    }
+
+    @Override
+    public void setGlobalModuleByPath(String path, String alias) {
     }
 
     private void initDefaultFunction() {
