@@ -13,12 +13,6 @@ public class GeOperation implements Operation {
     public BaseValue compute(RuntimeContext context, BaseValue... param) {
         BaseValue tempVal1 = param[0];
         BaseValue tempVal2 = param[1];
-        if (tempVal1.getType() == ValueType.STRING) {
-            tempVal1 = ConvertUtil.stringToValue((StringValue) tempVal1);
-        }
-        if (tempVal2.getType() == ValueType.STRING) {
-            tempVal2 = ConvertUtil.stringToValue((StringValue) tempVal2);
-        }
         if (tempVal1.getType() == ValueType.INTEGER && tempVal2.getType() == ValueType.INTEGER) {
             IntegerValue val1 = (IntegerValue) tempVal1;
             IntegerValue val2 = (IntegerValue) tempVal2;
