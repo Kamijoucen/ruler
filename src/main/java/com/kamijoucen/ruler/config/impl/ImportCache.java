@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.runtime;
+package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.module.RulerModule;
 

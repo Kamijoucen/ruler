@@ -1,8 +1,9 @@
-package com.kamijoucen.ruler.runtime;
+package com.kamijoucen.ruler.config;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
+import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.function.RulerFunction;
-import com.kamijoucen.ruler.module.RulerModule;
+import com.kamijoucen.ruler.runtime.Scope;
 
 public interface RulerConfiguration {
 
@@ -10,14 +11,16 @@ public interface RulerConfiguration {
 
     void setGlobalFunction(RulerFunction function);
 
+    void setGlobalModuleByPath(String path, String alias);
+
     void removeGlobalFunction(String functionName);
 
     NodeVisitor getTypeCheckVisitor();
 
-    NodeVisitor getEvalVisitor();
-
     ImportCache getImportCache();
 
-    void setGlobalModuleByPath(String path, String alias);
+    NodeVisitor getEvalVisitor();
+
+    ParamTypePreProcess getParamTypePreProcess();
 
 }

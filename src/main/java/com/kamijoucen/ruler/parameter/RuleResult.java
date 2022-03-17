@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.result;
+package com.kamijoucen.ruler.parameter;
 
 import com.kamijoucen.ruler.util.CollectionUtil;
 

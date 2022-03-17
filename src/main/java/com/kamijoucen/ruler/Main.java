@@ -1,11 +1,12 @@
 package com.kamijoucen.ruler;
 
-import com.kamijoucen.ruler.compiler.RulerCompiler;
-import com.kamijoucen.ruler.compiler.RulerInterpreter;
+import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
+import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.runtime.RulerConfiguration;
-import com.kamijoucen.ruler.runtime.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.util.IOUtil;
 
 import java.io.File;
@@ -36,7 +37,7 @@ public class Main {
         RulerConfiguration configuration = new RulerConfigurationImpl();
         RulerModule program = new RulerCompiler(script, configuration).compileScript();
 
-        new RulerInterpreter(program, configuration).runScript(Collections.<String, Object>emptyMap());
+        new RulerInterpreter(program, configuration).runScript(Collections.<RulerParameter>emptyList());
     }
 
 }

@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.parse.impl;
+package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
 

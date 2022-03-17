@@ -4,12 +4,12 @@ import java.util.Map;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
-import com.kamijoucen.ruler.result.RuleResult;
+import com.kamijoucen.ruler.parameter.RuleResult;
 import com.kamijoucen.ruler.RuleRunner;
-import com.kamijoucen.ruler.runtime.RulerConfiguration;
+import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
-import com.kamijoucen.ruler.runtime.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import org.junit.Test;
 
 public class RulerTest {

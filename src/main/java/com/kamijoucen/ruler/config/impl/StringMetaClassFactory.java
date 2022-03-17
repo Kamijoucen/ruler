@@ -1,7 +1,7 @@
-package com.kamijoucen.ruler.runtime.impl;
+package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.common.RClassInfo;
-import com.kamijoucen.ruler.runtime.MetaClassFactory;
+import com.kamijoucen.ruler.config.MetaClassFactory;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class StringMetaClassFactory implements MetaClassFactory {

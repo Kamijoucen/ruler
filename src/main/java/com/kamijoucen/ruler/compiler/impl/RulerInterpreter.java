@@ -1,10 +1,11 @@
-package com.kamijoucen.ruler.compiler;
+package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.runtime.RulerConfiguration;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;
@@ -12,10 +13,7 @@ import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RulerInterpreter {
 
@@ -37,10 +35,13 @@ public class RulerInterpreter {
         return context;
     }
 
-    public List<Object> runExpression(Map<String, Object> param) {
+    public List<Object> runExpression(List<RulerParameter> param) {
         Scope runScope = new Scope("runtime main file", module.getFileScope());
+        runScope.initReturnSpace();
+
+        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
         // 运行上下文
-        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), configuration.getEvalVisitor(),
+        RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration);
         BaseNode firstNode = CollectionUtil.first(module.getStatements());
         // 执行表达式
@@ -49,11 +50,13 @@ public class RulerInterpreter {
         return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value));
     }
 
-    public List<Object> runScript(Map<String, Object> param) {
+    public List<Object> runScript(List<RulerParameter> param) {
         Scope runScope = new Scope("runtime main file", module.getFileScope());
         runScope.initReturnSpace();
 
-        RuntimeContext context = new RuntimeContext(ConvertUtil.convertToBase(param), configuration.getEvalVisitor(),
+        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
+
+        RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration);
         for (BaseNode statement : module.getStatements()) {
             statement.eval(context, runScope);

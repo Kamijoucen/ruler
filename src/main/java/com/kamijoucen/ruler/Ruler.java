@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler;
 
-import com.kamijoucen.ruler.compiler.RulerCompiler;
+import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.runtime.RulerConfiguration;
+import com.kamijoucen.ruler.config.RulerConfiguration;
 
 public class Ruler {
 

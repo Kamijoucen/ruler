@@ -1,11 +1,12 @@
 package com.kamijoucen.ruler.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 public class CollectionUtil {
+
+    public static boolean isEmpty(Map<?, ?> map) {
+        return map == null || map.size() == 0;
+    }
 
     public static boolean isEmpty(Collection<?> collection) {
         if (collection == null) {

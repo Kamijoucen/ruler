@@ -1,10 +1,12 @@
 package com.kamijoucen.ruler.util;
 
 import com.kamijoucen.ruler.common.ConvertRepository;
+import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
 import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.StringValue;
+import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -20,12 +22,19 @@ public class ConvertUtil {
         System.out.println(stringToValue(new StringValue("12.9")));
     }
 
-    public static BaseValue stringToValue(StringValue strValue) {
+
+    public static Number parseToNumber(String str) {
         NumberFormat formatter = NumberFormat.getInstance();
-        Number result = null;
         try {
-            result = formatter.parse(strValue.getValue());
+            return formatter.parse(str);
         } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static BaseValue stringToValue(StringValue strValue) {
+        Number result = parseToNumber(strValue.getValue());
+        if (result == null) {
             return strValue;
         }
         if (result instanceof Double) {
@@ -41,6 +50,22 @@ public class ConvertUtil {
             baseValues.put(entry.getKey(), ConvertRepository.getConverter(realValue).realToBase(realValue));
         }
         return baseValues;
+    }
+
+    public static Map<String, BaseValue> convertParamToBase(List<RulerParameter> params) {
+        if (CollectionUtil.isEmpty(params)) {
+            return Collections.emptyMap();
+        }
+        Map<String, BaseValue> values = new HashMap<String, BaseValue>();
+        for (RulerParameter param : params) {
+            ValueConvert convert = ConvertRepository.getConverter(param.getType());
+            if (convert == null) {
+                continue;
+            }
+            BaseValue baseValue = convert.realToBase(param.getValue());
+            values.put(param.getName(), baseValue);
+        }
+        return values;
     }
 
     public static List<BaseValue> convertToBase(List<Object> realValues) {

@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.parse;
+package com.kamijoucen.ruler.compiler;
 
 import com.kamijoucen.ruler.token.Token;
 

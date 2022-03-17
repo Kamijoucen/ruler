@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.runtime;
+package com.kamijoucen.ruler.config;
 
 import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.value.BaseValue;

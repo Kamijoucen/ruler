@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.compiler.RulerInterpreter;
-import com.kamijoucen.ruler.runtime.ImportCache;
+import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.result.RuleResult;
-import com.kamijoucen.ruler.result.RuleValue;
-import com.kamijoucen.ruler.runtime.RulerConfiguration;
+import com.kamijoucen.ruler.parameter.RuleResult;
+import com.kamijoucen.ruler.parameter.RuleValue;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.util.AssertUtil;
 
@@ -28,13 +28,11 @@ public class RuleRunner {
     }
 
     public RuleResult run() {
-        return run(null);
+        return run((Map<String, Object>) null);
     }
 
-    public RuleResult run(Map<String, Object> param) {
-        if (param == null) {
-            param = Collections.emptyMap();
-        }
+    public RuleResult run(List<RulerParameter> param) {
+
         List<Object> values = null;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         if (isScript) {
@@ -48,6 +46,14 @@ public class RuleRunner {
             ruleValues.add(new RuleValue(value));
         }
         return new RuleResult(ruleValues);
+    }
+
+    public RuleResult run(Map<String, Object> param) {
+        if (param == null) {
+            param = Collections.emptyMap();
+        }
+        List<RulerParameter> parameter = configuration.getParamTypePreProcess().process(param);
+        return run(parameter);
     }
 
     public RuntimeContext customRun(NodeVisitor visitor) {
