@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
@@ -26,7 +27,7 @@ public class RulerInterpreter {
     }
 
     public RuntimeContext runCustomVisitor(NodeVisitor visitor) {
-        Scope runScope = new Scope("runtime main file", module.getFileScope());
+        Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
         RuntimeContext context = new RuntimeContext(null, visitor, configuration.getTypeCheckVisitor(),
                 configuration.getImportCache(), configuration);
         for (BaseNode statement : module.getStatements()) {
@@ -36,13 +37,20 @@ public class RulerInterpreter {
     }
 
     public List<Object> runExpression(List<RulerParameter> param) {
-        Scope runScope = new Scope("runtime main file", module.getFileScope());
+        Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
         // 运行上下文
         RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration);
+
+        List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
+        if (CollectionUtil.isNotEmpty(globalImportModules)) {
+            for (ImportNode node : globalImportModules) {
+                node.eval(context, runScope);
+            }
+        }
         BaseNode firstNode = CollectionUtil.first(module.getStatements());
         // 执行表达式
         AssertUtil.notNull(firstNode);
@@ -51,14 +59,19 @@ public class RulerInterpreter {
     }
 
     public List<Object> runScript(List<RulerParameter> param) {
-        Scope runScope = new Scope("runtime main file", module.getFileScope());
+        Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
 
         RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration);
-        for (BaseNode statement : module.getStatements()) {
+
+        List<BaseNode> allNode = new ArrayList<BaseNode>(module.getStatements().size() + configuration.getGlobalImportModules().size());
+        allNode.addAll(configuration.getGlobalImportModules());
+        allNode.addAll(module.getStatements());
+
+        for (BaseNode statement : allNode) {
             statement.eval(context, runScope);
         }
         List<BaseValue> returnValue = runScope.getReturnSpace();

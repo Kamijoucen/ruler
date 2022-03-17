@@ -29,7 +29,7 @@ public class RulerCompiler {
     }
 
     public RulerModule compileExpression() {
-        RulerModule module = new RulerModule(new Scope("expression", configuration.getGlobalScope()));
+        RulerModule module = new RulerModule();
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(mainScript.getContent());
         // 开始词法分析
@@ -45,7 +45,7 @@ public class RulerCompiler {
     }
 
     private RulerModule compileModule(RulerScript script) {
-        RulerModule module = new RulerModule(new Scope("file", configuration.getGlobalScope()));
+        RulerModule module = new RulerModule();
         // 词法分析器
         DefaultLexical lexical = new DefaultLexical(script.getContent());
         // 开始词法分析

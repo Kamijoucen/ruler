@@ -10,11 +10,18 @@ import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import org.junit.Before;
 import org.junit.Test;
 
 public class RulerTest {
 
-    public RulerConfiguration configuration = new RulerConfigurationImpl();
+    public RulerConfiguration configuration;
+
+    @Before
+    public void begin() {
+        configuration = new RulerConfigurationImpl();
+        configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
+    }
 
     @Test
     public void test7() {
@@ -216,7 +223,7 @@ public class RulerTest {
     @Test
     public void in_arr_test() {
 
-        String script = "import '/ruler/std/collections.txt' arrUtil; var arr = [2, 1, 85, 15,3]; println(arrUtil.In(825, arr));";
+        String script = "var arr = [2, 1, 85, 15,3]; println(listUtil.In(825, arr));";
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 

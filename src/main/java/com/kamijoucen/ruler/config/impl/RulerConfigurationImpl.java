@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.config.impl;
 
+import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.ParamTypePreProcess;
 import com.kamijoucen.ruler.config.RulerConfiguration;
@@ -10,6 +11,9 @@ import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.FunctionValue;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RulerConfigurationImpl implements RulerConfiguration {
 
     private Scope globalScope = new Scope("root", null);
@@ -17,6 +21,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private NodeVisitor evalVisitor = new EvalVisitor();
     private ImportCache importCache = new ImportCache();
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
+    private List<ImportNode> globalImport = new ArrayList<ImportNode>();
 
     public RulerConfigurationImpl() {
         initDefaultFunction();
@@ -47,6 +52,16 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
+    public void setGlobalImportModule(String path, String alias) {
+        this.globalImport.add(new ImportNode(path, alias));
+    }
+
+    @Override
+    public List<ImportNode> getGlobalImportModules() {
+        return new ArrayList<ImportNode>(globalImport);
+    }
+
+    @Override
     public NodeVisitor getTypeCheckVisitor() {
         return typeCheckVisitor;
     }
@@ -64,10 +79,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ImportCache getImportCache() {
         return importCache;
-    }
-
-    @Override
-    public void setGlobalModuleByPath(String path, String alias) {
     }
 
     public void setGlobalScope(Scope globalScope) {

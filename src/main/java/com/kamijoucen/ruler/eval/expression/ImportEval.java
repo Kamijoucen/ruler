@@ -38,7 +38,6 @@ public class ImportEval implements BaseEval<ImportNode> {
         Scope runScope = new Scope("runtime file", new Scope("file", context.getGlobalScope()));
         runScope.initReturnSpace();
 
-        importModule.setFileScope(runScope);
         for (BaseNode statement : importModule.getStatements()) {
             statement.eval(context, runScope);
         }

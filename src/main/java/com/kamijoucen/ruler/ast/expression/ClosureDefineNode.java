@@ -11,9 +11,7 @@ import java.util.List;
 public class ClosureDefineNode extends AbstractBaseNode {
 
     private String name;
-
     private List<BaseNode> param;
-
     private BaseNode block;
 
     public ClosureDefineNode(String name, List<BaseNode> param, BaseNode block) {
