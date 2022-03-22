@@ -231,4 +231,22 @@ public class RulerTest {
 
     }
 
+    @Test
+    public void util_test() {
+        String script = "import '/ruler/std/util.txt' util; var arr = [2, 1, 85, 15,3]; println(util.NotContainsAnyOne(63, arr, fun(v1, v2) { return v1 == v2; }));";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        run.run();
+    }
+
+    @Test
+    public void util_eq_arr_test() {
+        String script = "import '/ruler/std/util.txt' util; println(util.EqArray([1,2, 3], [3, 2, 1]));";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        run.run();
+    }
+
 }

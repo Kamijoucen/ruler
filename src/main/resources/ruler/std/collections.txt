@@ -13,8 +13,8 @@ fun Size(arr) {
 
 fun IsEmpty(list) {
     if list == null return true;
-    if !IsArray(arr) return false;
-    return length(arr) == 0;
+    if !IsArray(list) return false;
+    return length(list) == 0;
 }
 
 fun IsNotEmpty(list) {
