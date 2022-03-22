@@ -7,8 +7,14 @@ import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class ArrayConvert implements ValueConvert {
+    @Override
+    public ValueType getType() {
+        return ValueType.ARRAY;
+    }
+
     @Override
     public BaseValue realToBase(Object value) {
         Object[] arr = (Object[]) value;

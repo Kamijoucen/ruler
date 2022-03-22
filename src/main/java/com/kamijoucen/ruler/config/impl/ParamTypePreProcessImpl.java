@@ -1,8 +1,11 @@
 package com.kamijoucen.ruler.config.impl;
 
+import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.ParamTypePreProcess;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.util.CollectionUtil;
+import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,12 +27,20 @@ public class ParamTypePreProcessImpl implements ParamTypePreProcess {
     }
 
     private RulerParameter processOne(Map.Entry<String, Object> entry) {
-
         Object value = entry.getValue();
-        Class<?> valClass = value.getClass();
-
-        // TODO
-
-        return new RulerParameter(null, entry.getKey(), null);
+        if (value == null) {
+            return new RulerParameter(ValueType.NULL, entry.getKey(), null);
+        }
+        if (value.getClass().isArray()) {
+            return new RulerParameter(ValueType.ARRAY, entry.getKey(), value);
+        }
+        if (value instanceof List) {
+            return new RulerParameter(ValueType.ARRAY, entry.getKey(), value);
+        }
+        ValueConvert converter = ConvertRepository.getConverter(value);
+        if (converter == null) {
+            throw new IllegalArgumentException("不支持的参数：" + value.getClass());
+        }
+        return new RulerParameter(converter.getType(), entry.getKey(), value);
     }
 }

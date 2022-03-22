@@ -2,8 +2,14 @@ package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class DoubleConvert implements ValueConvert {
+    @Override
+    public ValueType getType() {
+        return ValueType.DOUBLE;
+    }
+
     @Override
     public BaseValue realToBase(Object value) {
         return new DoubleValue(Double.parseDouble(value.toString()));

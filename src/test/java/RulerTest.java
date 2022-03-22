@@ -168,7 +168,7 @@ public class RulerTest {
         RuleRunner runner = Ruler.compileExpression(script, configuration);
 
         Map<String, Object> args = new HashMap<String, Object>();
-        args.put("name", "1");
+        args.put("name", 12);
 
         RuleResult result = runner.run(args);
 

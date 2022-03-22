@@ -18,39 +18,46 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
 
     private static final BaseValue[][] typeBaseMap;
     private static final BaseValue[][] typeAddMap;
+    private static final BaseValue[][] typeCompareMap;
 
     static {
         typeBaseMap = new BaseValue[ValueType.values().length][ValueType.values().length];
         typeAddMap = new BaseValue[ValueType.values().length][ValueType.values().length];
+        typeCompareMap = new BaseValue[ValueType.values().length][ValueType.values().length];
+
         initBaseMap();
         initAddMap();
+        initCompareMap();
+    }
+
+    private static void initCompareMap() {
+        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = BoolType.INSTANCE;
+        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = BoolType.INSTANCE;
+
+        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = BoolType.INSTANCE;
+        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = BoolType.INSTANCE;
     }
 
     private static void initBaseMap() {
         typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = IntegerType.INSTANCE;
         typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
 
         typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = DoubleType.INSTANCE;
         typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
-
-        typeBaseMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = UnknownType.INSTANCE;
-        typeBaseMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = UnknownType.INSTANCE;
     }
 
     private static void initAddMap() {
         typeAddMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = IntegerType.INSTANCE;
         typeAddMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
+        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
 
         typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = DoubleType.INSTANCE;
         typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = UnknownType.INSTANCE;
+        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
 
         typeAddMap[ValueType.STRING.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = UnknownType.INSTANCE;
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = UnknownType.INSTANCE;
+        typeAddMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = StringType.INSTANCE;
+        typeAddMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = StringType.INSTANCE;
     }
 
     @Override
