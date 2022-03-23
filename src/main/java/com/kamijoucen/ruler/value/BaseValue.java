@@ -1,6 +1,8 @@
 package com.kamijoucen.ruler.value;
 
-public interface BaseValue {
+import java.io.Serializable;
+
+public interface BaseValue extends Serializable {
 
     ValueType getType();
 
