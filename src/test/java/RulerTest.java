@@ -142,7 +142,7 @@ public class RulerTest {
         System.out.println(outNameVisitor.outNameTokens);
     }
 
-    @Test
+//    @Test
     public void str_bin_test() {
         String sql = "'500' < 500";
         RuleRunner script = Ruler.compileExpression(sql, configuration);
@@ -242,11 +242,15 @@ public class RulerTest {
 
     @Test
     public void util_eq_arr_test() {
-        String script = "import '/ruler/std/util.txt' util; println(util.EqArray([1,2, 3], [3, 2, 1]));";
-
+        String script = "import '/ruler/std/util.txt' util; println(util.EqArrayEveryOne([1,2, 3], [3, 2, 1]));";
         RuleRunner run = Ruler.compileScript(script, configuration);
-
         run.run();
     }
 
+    @Test
+    public void util_eq_arr_any() {
+        String script = "import '/ruler/std/util.txt' util; println(util.EqArrayAnyOne([11,21, 31], [311, 211, 11]));";
+        RuleRunner run = Ruler.compileScript(script, configuration);
+        run.run();
+    }
 }

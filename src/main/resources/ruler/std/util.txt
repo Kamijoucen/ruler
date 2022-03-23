@@ -10,6 +10,21 @@ fun NotEq(val1, val2, compare) {
     return !Eq(val1, val2, compare);
 }
 
+// 等于任意一个
+fun ContainsAnyOne(val, list, compare) {
+    if collections.IsNotArray(list)
+        return false;
+    for v in list
+        if Eq(val, v, compare) return true;
+    return false;
+}
+
+// 不等于任意一个
+fun NotContainsAnyOne(val, list, compare) {
+    return !ContainsAnyOne(val, list, compare);
+}
+
+// 两个数组元素去重后相等
 fun EqArrayEveryOne(list1, list2, compare) {
     if collections.IsNotArray(list1) || collections.IsNotArray(list2)
         return false;
@@ -26,16 +41,16 @@ fun EqArrayEveryOne(list1, list2, compare) {
     return true;
 }
 
-// 等于任意一个
-fun ContainsAnyOne(val, list, compare) {
-    if collections.IsNotArray(list)
+// 包含任意一个
+fun EqArrayAnyOne(list1, list2, compare) {
+    if collections.IsNotArray(list1) || collections.IsNotArray(list2)
         return false;
-    for v in list
-        if Eq(val, v, compare) return true;
+    if collections.IsEmpty(list1) && collections.IsEmpty(list2)
+        return true;
+    if collections.IsEmpty(list1) || collections.IsEmpty(list2)
+        return false;
+    for v1 in list1
+        if ContainsAnyOne(v1, list2, compare)
+            return true;
     return false;
-}
-
-// 不等于任意一个
-fun NotContainsAnyOne(val, list, compare) {
-    return !ContainsAnyOne(val, list, compare);
 }
