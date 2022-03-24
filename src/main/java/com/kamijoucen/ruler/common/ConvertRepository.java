@@ -30,7 +30,9 @@ public class ConvertRepository {
         VALUE_TYPE_MAP.put(ValueType.DATE, nullConvert);
 
         CLASS_MAP.put(Integer.class, integerConvert);
+        CLASS_MAP.put(Long.class, integerConvert);
         CLASS_MAP.put(Double.class, doubleConvert);
+        CLASS_MAP.put(Float.class, doubleConvert);
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
         CLASS_MAP.put(Date.class, nullConvert);

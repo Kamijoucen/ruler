@@ -253,4 +253,14 @@ public class RulerTest {
         RuleRunner run = Ruler.compileScript(script, configuration);
         run.run();
     }
+
+    @Test
+    public void eq_null() {
+
+        String s = "null == 'aaa'";
+
+        RuleRunner run = Ruler.compileExpression(s, configuration);
+        RuleResult result = run.run();
+        System.out.println(result.first().getBoolean());
+    }
 }
