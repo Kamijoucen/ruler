@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.kamijoucen.ruler.Ruler;
@@ -7,9 +9,11 @@ import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.parameter.RuleResult;
 import com.kamijoucen.ruler.RuleRunner;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.value.ValueType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -20,6 +24,7 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
+        configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
         configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
     }
 
@@ -142,7 +147,7 @@ public class RulerTest {
         System.out.println(outNameVisitor.outNameTokens);
     }
 
-//    @Test
+    //    @Test
     public void str_bin_test() {
         String sql = "'500' < 500";
         RuleRunner script = Ruler.compileExpression(sql, configuration);
@@ -206,6 +211,7 @@ public class RulerTest {
             public String getName() {
                 return "哈哈哈哈";
             }
+
             @Override
             public Object call(Object... param) {
                 return "我们gg啦！！！";
@@ -257,10 +263,16 @@ public class RulerTest {
     @Test
     public void eq_null() {
 
-        String s = "null == 'aaa'";
+        String s = "((util.EqArrayAnyOne($_start_user_key, ['125'])) && (util.Eq($var_623a8e5cfe7b9e1b639f2679, 'c8024e9451db4b37b86643c6fb8b8c71')))";
 
         RuleRunner run = Ruler.compileExpression(s, configuration);
-        RuleResult result = run.run();
+
+        RulerParameter p = new RulerParameter(ValueType.STRING, "var_623a8e5cfe7b9e1b639f2679", "9b5c863074464179bf98acf53344bf21");
+
+        List list = new ArrayList();
+        list.add(p);
+
+        RuleResult result = run.run(list);
         System.out.println(result.first().getBoolean());
     }
 }

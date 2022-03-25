@@ -138,6 +138,9 @@ public class DefaultLexical implements Lexical {
         while (isNotOver() && charAt() != curStringFlag) {
             appendAndForward();
         }
+        if (isOver()) {
+            throw SyntaxException.withLexical("字符串未发现结束符");
+        }
         forward();
         makeToken(TokenType.STRING);
     }

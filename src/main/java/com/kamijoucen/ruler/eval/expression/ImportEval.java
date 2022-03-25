@@ -42,7 +42,7 @@ public class ImportEval implements BaseEval<ImportNode> {
             statement.eval(context, runScope);
         }
         ModuleValue moduleValue = new ModuleValue(importModule, runScope);
-        scope.defineLocal(node.getAlias(), moduleValue);
+        scope.putLocal(node.getAlias(), moduleValue);
         return NoneValue.INSTANCE;
     }
 
