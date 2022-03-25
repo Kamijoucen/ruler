@@ -1,6 +1,8 @@
 package com.kamijoucen.ruler.value.convert;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import com.kamijoucen.ruler.common.ConvertRepository;
@@ -17,9 +19,14 @@ public class ArrayConvert implements ValueConvert {
 
     @Override
     public BaseValue realToBase(Object value) {
-        Object[] arr = (Object[]) value;
-        List<BaseValue> list = new ArrayList<BaseValue>(arr.length);
-        for (Object obj : arr) {
+        List<Object> realArr = null;
+        if (value instanceof Collection) {
+            realArr = new ArrayList<Object>((Collection<?>) value);
+        } else {
+            realArr = Arrays.asList((Object[]) value);
+        }
+        List<BaseValue> list = new ArrayList<BaseValue>(realArr.size());
+        for (Object obj : realArr) {
             BaseValue baseValue = ConvertRepository.getConverter(obj).realToBase(obj);
             list.add(baseValue);
         }
