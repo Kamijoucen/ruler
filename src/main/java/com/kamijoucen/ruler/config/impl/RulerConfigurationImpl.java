@@ -32,7 +32,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         setGlobalFunction(new MakeItPossibleFunction());
 
         RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction());
+        RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction());
+
         this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
+        this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
     }
 
     @Override

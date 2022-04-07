@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.common.RClassInfo;
-
 public class StringValue extends AbstractRClassValue {
 
     private String value;
