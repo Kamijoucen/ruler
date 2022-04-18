@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
@@ -12,7 +13,8 @@ public class ArrayNode extends AbstractBaseNode {
 
     private List<BaseNode> values;
 
-    public ArrayNode(List<BaseNode> values) {
+    public ArrayNode(List<BaseNode> values, TokenLocation location) {
+        super(location);
         this.values = values;
     }
 
@@ -25,6 +27,7 @@ public class ArrayNode extends AbstractBaseNode {
     public BaseValue typeCheck(RuntimeContext context, Scope scope) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
+
 
     public List<BaseNode> getValues() {
         return values;

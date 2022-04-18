@@ -4,17 +4,17 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class IfStatementNode extends AbstractBaseNode {
 
     private BaseNode condition;
-
     private BaseNode thenBlock;
-
     private BaseNode elseBlock;
 
-    public IfStatementNode(BaseNode condition, BaseNode thenBlock, BaseNode elseBlock) {
+    public IfStatementNode(BaseNode condition, BaseNode thenBlock, BaseNode elseBlock, TokenLocation location) {
+        super(location);
         this.condition = condition;
         this.thenBlock = thenBlock;
         this.elseBlock = elseBlock;

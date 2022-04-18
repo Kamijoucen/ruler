@@ -4,13 +4,15 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class OutNameNode extends AbstractBaseNode {
 
     public final Token name;
 
-    public OutNameNode(Token name) {
+    public OutNameNode(Token name, TokenLocation location) {
+        super(location);
         this.name = name;
     }
 
@@ -23,5 +25,6 @@ public class OutNameNode extends AbstractBaseNode {
     public BaseValue typeCheck(RuntimeContext context, Scope scope) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
+
 
 }

@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -17,16 +18,13 @@ public class DotNode extends OperationNode {
      * only support call or identifier
      */
     private TokenType dotType;
-
     private String name;
-
     private List<BaseNode> param;
-
     private Operation operation;
-
     private AssignOperation assignOperation;
 
-    public DotNode(TokenType dotType, String name, List<BaseNode> param) {
+    public DotNode(TokenType dotType, String name, List<BaseNode> param, TokenLocation location) {
+        super(location);
         this.dotType = dotType;
         this.name = name;
         this.param = param;

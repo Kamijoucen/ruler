@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class VariableDefineNode extends AbstractBaseNode {
@@ -13,7 +14,8 @@ public class VariableDefineNode extends AbstractBaseNode {
 
     private BaseNode expression;
 
-    public VariableDefineNode(BaseNode name, BaseNode expression) {
+    public VariableDefineNode(BaseNode name, BaseNode expression, TokenLocation location) {
+        super(location);
         this.name = name;
         this.expression = expression;
     }

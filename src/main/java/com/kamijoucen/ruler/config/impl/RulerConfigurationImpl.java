@@ -56,7 +56,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public void setGlobalImportModule(String path, String alias) {
-        this.globalImport.add(new ImportNode(path, alias));
+        this.globalImport.add(new ImportNode(path, alias, null));
     }
 
     @Override

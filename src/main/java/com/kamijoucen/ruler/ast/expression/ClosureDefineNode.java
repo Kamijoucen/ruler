@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
@@ -14,7 +15,8 @@ public class ClosureDefineNode extends AbstractBaseNode {
     private List<BaseNode> param;
     private BaseNode block;
 
-    public ClosureDefineNode(String name, List<BaseNode> param, BaseNode block) {
+    public ClosureDefineNode(String name, List<BaseNode> param, BaseNode block, TokenLocation location) {
+        super(location);
         this.name = name;
         this.param = param;
         this.block = block;

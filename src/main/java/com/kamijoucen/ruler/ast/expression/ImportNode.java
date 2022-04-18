@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class ImportNode extends AbstractBaseNode {
@@ -11,7 +12,8 @@ public class ImportNode extends AbstractBaseNode {
     private String path;
     private String alias;
 
-    public ImportNode(String path, String alias) {
+    public ImportNode(String path, String alias, TokenLocation location) {
+        super(location);
         this.path = path;
         this.alias = alias;
     }

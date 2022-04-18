@@ -27,15 +27,15 @@ public class RulerCompiler {
     }
 
     public RulerModule compileExpression() {
-        RulerModule module = new RulerModule();
+        RulerModule module = new RulerModule("runtime expression");
         // 词法分析器
-        DefaultLexical lexical = new DefaultLexical(mainScript.getContent());
+        DefaultLexical lexical = new DefaultLexical(mainScript.getContent(), module.getFullName());
         // 开始词法分析
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
         tokenStream.nextToken();
         // 语法分析器
-        DefaultParser parser = new DefaultParser(tokenStream);
+        DefaultParser parser = new DefaultParser(tokenStream, configuration);
         BaseNode expression = parser.parseExpression();
         if (tokenStream.token().type != TokenType.EOF) {
             throw SyntaxException.withSyntax("错误的表达式结构：" + tokenStream.token());
@@ -45,14 +45,14 @@ public class RulerCompiler {
     }
 
     private RulerModule compileModule(RulerScript script) {
-        RulerModule module = new RulerModule();
+        RulerModule module = new RulerModule(script.getFileName());
         // 词法分析器
-        DefaultLexical lexical = new DefaultLexical(script.getContent());
+        DefaultLexical lexical = new DefaultLexical(script.getContent(), module.getFullName());
         // 开始词法分析
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
         // 语法分析器
-        Parser parser = new DefaultParser(tokenStream);
+        Parser parser = new DefaultParser(tokenStream, configuration);
         // 开始解析语法
         List<BaseNode> statements = parser.parse();
         module.setStatements(statements);

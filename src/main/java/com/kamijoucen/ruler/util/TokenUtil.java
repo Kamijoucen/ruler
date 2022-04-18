@@ -11,9 +11,9 @@ public class TokenUtil {
 
     public static BaseNode buildNameNode(Token token) {
         if (token.type == TokenType.IDENTIFIER) {
-            return new NameNode(token);
+            return new NameNode(token, token.location);
         } else if (token.type == TokenType.OUT_IDENTIFIER) {
-            return new OutNameNode(token);
+            return new OutNameNode(token, token.location);
         } else {
             throw SyntaxException.withSyntax("error identifier: " + token);
         }

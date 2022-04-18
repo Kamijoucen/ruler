@@ -30,9 +30,8 @@ public class Main {
         }
 
         RulerScript script = new RulerScript();
-        script.setFileName(file.getName());
+        script.setFileName(args[0]);
         script.setContent(content);
-        script.setPath(file.getParentFile().getAbsolutePath());
 
         RulerConfiguration configuration = new RulerConfigurationImpl();
         RulerModule program = new RulerCompiler(script, configuration).compileScript();

@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.operation.AssignOperation;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -17,7 +18,8 @@ public class IndexNode extends OperationNode {
 
     private AssignOperation assignOperation;
 
-    public IndexNode(BaseNode index) {
+    public IndexNode(BaseNode index, TokenLocation location) {
+        super(location);
         this.index = index;
     }
 

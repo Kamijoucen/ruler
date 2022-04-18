@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class WhileStatementNode extends AbstractBaseNode {
@@ -11,7 +12,8 @@ public class WhileStatementNode extends AbstractBaseNode {
     private BaseNode condition;
     private BaseNode block;
 
-    public WhileStatementNode(BaseNode condition, BaseNode block) {
+    public WhileStatementNode(BaseNode condition, BaseNode block, TokenLocation location) {
+        super(location);
         this.condition = condition;
         this.block = block;
     }

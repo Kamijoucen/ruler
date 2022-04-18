@@ -39,6 +39,7 @@ import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
 import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.compiler.Parser;
+import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
@@ -58,15 +59,17 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class DefaultParser implements Parser {
 
+    private RulerConfiguration configuration;
     private ParseContext parseContext;
     private RuntimeContext runtimeContext;
     private final List<BaseNode> statements;
     private final TokenStream tokenStream;
 
-    public DefaultParser(TokenStream tokenStream) {
+    public DefaultParser(TokenStream tokenStream, RulerConfiguration configuration) {
         initContext();
         this.tokenStream = tokenStream;
         this.statements = new ArrayList<BaseNode>();
+        this.configuration = configuration;
     }
 
     private void initContext() {
@@ -160,16 +163,17 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseCallLinkAssignNode(BaseNode callLinkNode) {
-        AssertUtil.assertToken(tokenStream.token(), TokenType.ASSIGN);
+        Token assignToken = tokenStream.token();
+        AssertUtil.assertToken(assignToken, TokenType.ASSIGN);
         tokenStream.nextToken();
         BaseNode expression = parseExpression();
-        return new AssignNode(callLinkNode, expression);
+        return new AssignNode(callLinkNode, expression, assignToken.location);
     }
 
     public BaseNode parseExpression() {
 
         RStack<BaseNode> valStack = new RStack<BaseNode>();
-        RStack<TokenType> opStack = new RStack<TokenType>();
+        RStack<Token> opStack = new RStack<Token>();
 
         valStack.push(parsePrimaryExpression()); // first exp
         while (true) {
@@ -181,43 +185,44 @@ public class DefaultParser implements Parser {
             tokenStream.nextToken();
             BaseNode rls = parsePrimaryExpression();
             if (opStack.size() != 0) {
-                TokenType peek = opStack.peek();
-                int peekPrecedence = OperationDefine.findPrecedence(peek);
+                Token peek = opStack.peek();
+                int peekPrecedence = OperationDefine.findPrecedence(peek.type);
                 if (peekPrecedence == -1) {
                     throw SyntaxException.withSyntax("不支持的的二元操作符:" + peek);
                 }
                 if (curPrecedence <= peekPrecedence) {
                     BaseNode exp1 = valStack.pop();
                     BaseNode exp2 = valStack.pop();
-                    TokenType binOp = opStack.pop();
-                    if (TokenUtil.isLogicOperation(binOp)) {
+                    Token binOp = opStack.pop();
+                    if (TokenUtil.isLogicOperation(binOp.type)) {
                         LogicBinaryOperationNode logicBinaryOperationNode = new LogicBinaryOperationNode(
-                                binOp, exp2, exp1, OperationDefine.findLogicOperation(binOp));
+                                binOp.type, exp2, exp1, OperationDefine.findLogicOperation(binOp.type), binOp.location);
                         SyntaxCheckUtil.logicBinaryTypeCheck(logicBinaryOperationNode, parseContext, runtimeContext);
                         valStack.push(logicBinaryOperationNode);
                     } else {
-                        BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp, exp2, exp1,
-                                OperationDefine.findOperation(binOp));
+                        BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp.type, exp2, exp1,
+                                OperationDefine.findOperation(binOp.type), binOp.location);
                         SyntaxCheckUtil.binaryTypeCheck(binaryOperationNode, parseContext, runtimeContext);
-                        valStack.push(new BinaryOperationNode(binOp, exp2, exp1, OperationDefine.findOperation(binOp)));
+                        valStack.push(new BinaryOperationNode(binOp.type, exp2, exp1,
+                                OperationDefine.findOperation(binOp.type), binOp.location));
                     }
                 }
             }
-            opStack.push(op.type);
+            opStack.push(op);
             valStack.push(rls);
         }
         while (opStack.size() != 0) {
             BaseNode exp1 = valStack.pop();
             BaseNode exp2 = valStack.pop();
-            TokenType binOp = opStack.pop();
-            if (TokenUtil.isLogicOperation(binOp)) {
-                LogicBinaryOperationNode logicBinaryOperationNode = new LogicBinaryOperationNode(binOp, exp2, exp1,
-                        OperationDefine.findLogicOperation(binOp));
+            Token binOp = opStack.pop();
+            if (TokenUtil.isLogicOperation(binOp.type)) {
+                LogicBinaryOperationNode logicBinaryOperationNode = new LogicBinaryOperationNode(binOp.type, exp2, exp1,
+                        OperationDefine.findLogicOperation(binOp.type), binOp.location);
                 SyntaxCheckUtil.logicBinaryTypeCheck(logicBinaryOperationNode, parseContext, runtimeContext);
                 valStack.push(logicBinaryOperationNode);
             } else {
-                BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp, exp2, exp1,
-                        OperationDefine.findOperation(binOp));
+                BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp.type, exp2, exp1,
+                        OperationDefine.findOperation(binOp.type), binOp.location);
                 SyntaxCheckUtil.binaryTypeCheck(binaryOperationNode, parseContext, runtimeContext);
                 valStack.push(binaryOperationNode);
             }
@@ -261,7 +266,8 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseForEachStatement() {
         // key
-        AssertUtil.assertToken(tokenStream, TokenType.KEY_FOR);
+        Token forToken = tokenStream.token();
+        AssertUtil.assertToken(forToken, TokenType.KEY_FOR);
         tokenStream.nextToken();
         // temp var
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
@@ -280,26 +286,32 @@ public class DefaultParser implements Parser {
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockNode = parseBlock(true);
         } else {
-            blockNode = new LoopBlockNode(Collections.singletonList(parseStatement()));
+            BaseNode statement = parseStatement();
+            blockNode = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
         }
-        return new ForEachStatementNode(name, arrayExp, blockNode);
+        return new ForEachStatementNode(name, arrayExp, blockNode, forToken.location);
     }
 
     public BaseNode parseWhileStatement() {
-        AssertUtil.assertToken(tokenStream, TokenType.KEY_WHILE);
+        Token whileToken = tokenStream.token();
+        AssertUtil.assertToken(whileToken, TokenType.KEY_WHILE);
         tokenStream.nextToken();
         BaseNode condition = parseExpression();
-        BaseNode blockAST = null;
-        if (tokenStream.token().type == TokenType.LEFT_BRACE) {
+        BaseNode blockAST;
+        if (whileToken.type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock(true);
         } else {
-            blockAST = new LoopBlockNode(Collections.singletonList(parseStatement()));
+            BaseNode statement = parseStatement();
+            blockAST = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
         }
-        return new WhileStatementNode(condition, blockAST);
+        return new WhileStatementNode(condition, blockAST, whileToken.location);
     }
 
     public BaseNode parseIfStatement() {
-        AssertUtil.assertToken(tokenStream, TokenType.KEY_IF);
+
+        Token ifToken = tokenStream.token();
+
+        AssertUtil.assertToken(ifToken, TokenType.KEY_IF);
         tokenStream.nextToken();
 
         BaseNode condition = parseExpression();
@@ -307,7 +319,8 @@ public class DefaultParser implements Parser {
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock(false);
         } else {
-            thenBlock = new BlockNode(Collections.singletonList(parseStatement()));
+            BaseNode statement = parseStatement();
+            thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         }
         BaseNode elseBlock = null;
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
@@ -315,15 +328,17 @@ public class DefaultParser implements Parser {
             if (token.type == TokenType.LEFT_BRACE) {
                 elseBlock = parseBlock(false);
             } else {
-                elseBlock = new BlockNode(Collections.singletonList(parseStatement()));
+                BaseNode statement = parseStatement();
+                elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
             }
         }
-        return new IfStatementNode(condition, thenBlock, elseBlock);
+        return new IfStatementNode(condition, thenBlock, elseBlock, ifToken.location);
     }
 
     public BaseNode parseVariableDefine() {
+        Token varToken = tokenStream.token();
         // eat var
-        AssertUtil.assertToken(tokenStream, TokenType.KEY_VAR);
+        AssertUtil.assertToken(varToken, TokenType.KEY_VAR);
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
         Token name = tokenStream.token();
@@ -331,10 +346,11 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
         tokenStream.nextToken();
         BaseNode exp = parseExpression();
-        return new VariableDefineNode(TokenUtil.buildNameNode(name), exp);
+        return new VariableDefineNode(TokenUtil.buildNameNode(name), exp, varToken.location);
     }
 
     public BaseNode parseFunDefine() {
+        Token funToken = tokenStream.token();
         // eat fun
         AssertUtil.assertToken(tokenStream, TokenType.KEY_FUN);
         tokenStream.nextToken();
@@ -368,11 +384,14 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();
         BaseNode block = parseBlock(false);
-        return new ClosureDefineNode(name, param, block);
+        return new ClosureDefineNode(name, param, block, funToken.location);
     }
 
     public BaseNode parseBlock(boolean isLoop) {
-        AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
+
+        Token lToken = tokenStream.token();
+
+        AssertUtil.assertToken(lToken, TokenType.LEFT_BRACE);
         tokenStream.nextToken();
         List<BaseNode> blocks = new ArrayList<BaseNode>();
         while (tokenStream.token().type != TokenType.EOF
@@ -382,9 +401,9 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
         if (isLoop) {
-            return new LoopBlockNode(blocks);
+            return new LoopBlockNode(blocks, lToken.location);
         } else {
-            return new BlockNode(blocks);
+            return new BlockNode(blocks, lToken.location);
         }
     }
 
@@ -393,10 +412,10 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(token.type, parsePrimaryExpression(),
-                    token.type == TokenType.ADD ? new UnarySubOperation() : new UnaryAddOperation());
+                    token.type == TokenType.ADD ? new UnarySubOperation() : new UnaryAddOperation(), token.location);
         } else if (token.type == TokenType.NOT) {
             return new LogicBinaryOperationNode(TokenType.NOT, parsePrimaryExpression(), null,
-                    OperationDefine.findLogicOperation(TokenType.NOT));
+                    OperationDefine.findLogicOperation(TokenType.NOT), token.location);
         }
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
@@ -430,7 +449,7 @@ public class DefaultParser implements Parser {
                     break;
             }
         }
-        CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls);
+        CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls, firstNode.getLocation());
         if (tokenStream.token().type == TokenType.ASSIGN) {
             if (!isStatement) {
                 throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
@@ -445,6 +464,7 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseDot() {
+        Token token = tokenStream.token();
         AssertUtil.assertToken(tokenStream, TokenType.DOT);
         tokenStream.nextToken();
 
@@ -466,34 +486,36 @@ public class DefaultParser implements Parser {
             AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
             tokenStream.nextToken();
 
-            DotNode dotNode = new DotNode(TokenType.CALL, name.name, param);
+            DotNode dotNode = new DotNode(TokenType.CALL, name.name, param, token.location);
             dotNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.DOT));
             return dotNode;
         } else {
-            DotNode dotNode = new DotNode(TokenType.IDENTIFIER, name.name, null);
+            DotNode dotNode = new DotNode(TokenType.IDENTIFIER, name.name, null, token.location);
             dotNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.DOT));
             return dotNode;
         }
     }
 
     public BaseNode parseIndex() {
-        AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
+        Token lToken = tokenStream.token();
+        AssertUtil.assertToken(lToken, TokenType.LEFT_SQUARE);
         tokenStream.nextToken();
         BaseNode index = parsePrimaryExpression();
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
         tokenStream.nextToken();
-        IndexNode indexNode = new IndexNode(index);
+        IndexNode indexNode = new IndexNode(index, lToken.location);
         indexNode.putOperation(OperationDefine.findOperation(TokenType.INDEX));
         indexNode.putAssignOperation(OperationDefine.findAssignOperation(TokenType.INDEX));
         return indexNode;
     }
 
     public BaseNode parseCall() {
+        Token lToken = tokenStream.token();
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
         tokenStream.nextToken();
         if (tokenStream.token().type == TokenType.RIGHT_PAREN) {
             tokenStream.nextToken();
-            CallNode callNode = new CallNode(Collections.<BaseNode>emptyList());
+            CallNode callNode = new CallNode(Collections.<BaseNode>emptyList(), lToken.location);
             callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
             return callNode;
         }
@@ -509,7 +531,7 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();
 
-        CallNode callNode = new CallNode(params);
+        CallNode callNode = new CallNode(params, lToken.location);
         callNode.putOperation(OperationDefine.findOperation(TokenType.CALL));
         return callNode;
     }
@@ -527,10 +549,10 @@ public class DefaultParser implements Parser {
         Token token = tokenStream.token();
         tokenStream.nextToken();
         if (token.type == TokenType.INTEGER) {
-            return new IntegerNode(Integer.parseInt(token.name));
+            return new IntegerNode(Integer.parseInt(token.name), token.location);
         }
         if (token.type == TokenType.DOUBLE) {
-            return new DoubleNode(Double.parseDouble(token.name));
+            return new DoubleNode(Double.parseDouble(token.name), token.location);
         }
         throw SyntaxException.withSyntax("需要一个数字", token);
     }
@@ -539,7 +561,7 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.STRING);
         Token token = tokenStream.token();
         tokenStream.nextToken();
-        return new StringNode(token.name);
+        return new StringNode(token.name, token.location);
     }
 
     public BaseNode parseBool() {
@@ -548,29 +570,33 @@ public class DefaultParser implements Parser {
             throw SyntaxException.withSyntax("需要一个bool", token);
         }
         tokenStream.nextToken();
-        return new BoolNode(Boolean.parseBoolean(token.name));
+        return new BoolNode(Boolean.parseBoolean(token.name), token.location);
     }
 
     public BaseNode parseNull() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_NULL);
+        Token token = tokenStream.token();
         tokenStream.nextToken();
-        return NullNode.NULL_NODE;
+        return new NullNode(token.location);
     }
 
     public BaseNode parseContinue() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);
+        Token token = tokenStream.token();
         tokenStream.nextToken();
-        return new ContinueNode();
+        return new ContinueNode(token.location);
     }
 
     public BaseNode parseBreak() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
+        Token token = tokenStream.token();
         tokenStream.nextToken();
-        return new BreakNode();
+        return new BreakNode(token.location);
     }
 
     public BaseNode parseReturn() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_RETURN);
+        Token returnToken = tokenStream.token();
         tokenStream.nextToken();
 
         List<BaseNode> param = new ArrayList<BaseNode>();
@@ -582,11 +608,12 @@ public class DefaultParser implements Parser {
             tokenStream.nextToken();
             param.add(parseExpression());
         }
-        return new ReturnNode(param);
+        return new ReturnNode(param, returnToken.location);
     }
 
     public BaseNode parseArray() {
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
+        Token lToken = tokenStream.token();
         tokenStream.nextToken();
         List<BaseNode> arrValues = new ArrayList<BaseNode>();
         if (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
@@ -599,22 +626,24 @@ public class DefaultParser implements Parser {
         }
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
         tokenStream.nextToken();
-        return new ArrayNode(arrValues);
+        return new ArrayNode(arrValues, lToken.location);
     }
 
     public BaseNode parseTypeOfNode() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_TYPEOF);
+        Token typeOfToken = tokenStream.token();
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
         tokenStream.nextToken();
         BaseNode exp = parseExpression();
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();
-        return new TypeOfNode(exp);
+        return new TypeOfNode(exp, typeOfToken.location);
     }
 
     public BaseNode parseRsonNode() {
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
+        Token lToken = tokenStream.token();
         tokenStream.nextToken();
         Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
         if (tokenStream.token().type != TokenType.RIGHT_BRACE) {
@@ -648,17 +677,19 @@ public class DefaultParser implements Parser {
         }
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
-        return new RsonNode(properties);
+        return new RsonNode(properties, lToken.location);
     }
 
     public BaseNode parseThis() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_THIS);
+        Token thisToken = tokenStream.token();
         tokenStream.nextToken();
-        return new ThisNode();
+        return new ThisNode(thisToken.location);
     }
 
     public BaseNode parseImport() {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_IMPORT);
+        Token importToken = tokenStream.token();
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.STRING);
         String path = tokenStream.token().name;
@@ -667,7 +698,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
-        return new ImportNode(path, aliasToken.name);
+        return new ImportNode(path, aliasToken.name, importToken.location);
     }
 
 }

@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.operation.LogicOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -15,7 +16,8 @@ public class LogicBinaryOperationNode extends AbstractBaseNode {
     private TokenType op;
     private LogicOperation logicOperation;
 
-    public LogicBinaryOperationNode(TokenType op, BaseNode exp1, BaseNode exp2, LogicOperation logicOperation) {
+    public LogicBinaryOperationNode(TokenType op, BaseNode exp1, BaseNode exp2, LogicOperation logicOperation, TokenLocation location) {
+        super(location);
         this.op = op;
         this.exp1 = exp1;
         this.exp2 = exp2;

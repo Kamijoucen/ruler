@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
@@ -274,5 +271,10 @@ public class RulerTest {
 
         RuleResult result = run.run(list);
         System.out.println(result.first().getBoolean());
+    }
+
+    @Test
+    public void i18n_test() {
+        ResourceBundle.getBundle("Messages", Locale.US);//原文出自【易百教程】，商业转载请联系作者获得授权，非商业请保留原文链接：https://www.yiibai.com/java_i18n/java_i18n_resourcebundle.html#article-start
     }
 }

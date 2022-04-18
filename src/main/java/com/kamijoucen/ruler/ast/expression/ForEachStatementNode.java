@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class ForEachStatementNode extends AbstractBaseNode {
@@ -13,7 +14,8 @@ public class ForEachStatementNode extends AbstractBaseNode {
     private BaseNode list;
     private BaseNode block;
 
-    public ForEachStatementNode(Token loopName, BaseNode list, BaseNode block) {
+    public ForEachStatementNode(Token loopName, BaseNode list, BaseNode block, TokenLocation location) {
+        super(location);
         this.loopName = loopName;
         this.list = list;
         this.block = block;

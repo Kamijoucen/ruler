@@ -4,13 +4,15 @@ import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class TypeOfNode extends AbstractBaseNode {
 
     private BaseNode exp;
 
-    public TypeOfNode(BaseNode exp) {
+    public TypeOfNode(BaseNode exp, TokenLocation location) {
+        super(location);
         this.exp = exp;
     }
 

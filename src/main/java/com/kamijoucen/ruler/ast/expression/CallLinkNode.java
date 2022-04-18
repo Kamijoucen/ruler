@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.OperationNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
@@ -15,7 +16,8 @@ public class CallLinkNode extends AbstractBaseNode {
 
     private List<OperationNode> calls;
 
-    public CallLinkNode(BaseNode first, List<OperationNode> calls) {
+    public CallLinkNode(BaseNode first, List<OperationNode> calls, TokenLocation location) {
+        super(location);
         this.first = first;
         this.calls = calls;
     }

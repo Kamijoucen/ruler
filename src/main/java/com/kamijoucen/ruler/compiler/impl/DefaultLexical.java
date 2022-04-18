@@ -22,11 +22,13 @@ public class DefaultLexical implements Lexical {
     private StringBuilder buffer;
     private boolean isEnd;
     private char curStringFlag;
+    String fileName;
 
-    public DefaultLexical(String content) {
+    public DefaultLexical(String content, String fileName) {
         this.offset = 0;
         this.content = content;
         this.state = State.NONE;
+        this.fileName = fileName;
         this.isEnd = false;
         this.buffer = new StringBuilder();
     }
@@ -208,7 +210,7 @@ public class DefaultLexical implements Lexical {
     }
 
     private void makeToken(TokenType type) {
-        currentToken = new Token(type, buffer.toString(), new TokenLocation(line, column));
+        currentToken = new Token(type, buffer.toString(), new TokenLocation(line, column, fileName));
         buffer.delete(0, buffer.length());
     }
 
@@ -216,7 +218,7 @@ public class DefaultLexical implements Lexical {
         if (isEnd) {
             return;
         }
-        currentToken = new Token(TokenType.EOF, "", new TokenLocation(line, column));
+        currentToken = new Token(TokenType.EOF, "", new TokenLocation(line, column, fileName));
         buffer.delete(0, buffer.length());
         isEnd = true;
     }

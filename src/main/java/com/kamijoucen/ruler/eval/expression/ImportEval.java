@@ -30,7 +30,7 @@ public class ImportEval implements BaseEval<ImportNode> {
             } else {
                 text = IOUtil.read(path);
             }
-            importModule = compilerScript(text, context);
+            importModule = compilerScript(text, path, context);
             AssertUtil.notNull(importModule);
 
             importCache.putImportModule(path, importModule);
@@ -46,8 +46,8 @@ public class ImportEval implements BaseEval<ImportNode> {
         return NoneValue.INSTANCE;
     }
 
-    public RulerModule compilerScript(String text, RuntimeContext context) {
-        RulerScript script = new RulerScript(null, null, text);
+    public RulerModule compilerScript(String text, String fileName, RuntimeContext context) {
+        RulerScript script = new RulerScript(fileName, text);
         return new RulerCompiler(script, context.getConfiguration()).compileScript();
     }
 

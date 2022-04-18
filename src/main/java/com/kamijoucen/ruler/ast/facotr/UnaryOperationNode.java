@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -14,7 +15,8 @@ public class UnaryOperationNode extends AbstractBaseNode {
     private BaseNode exp;
     private Operation operation;
 
-    public UnaryOperationNode(TokenType op, BaseNode exp, Operation operation) {
+    public UnaryOperationNode(TokenType op, BaseNode exp, Operation operation, TokenLocation location) {
+        super(location);
         this.op = op;
         this.exp = exp;
         this.operation = operation;
