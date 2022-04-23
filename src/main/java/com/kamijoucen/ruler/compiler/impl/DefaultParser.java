@@ -298,7 +298,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         BaseNode condition = parseExpression();
         BaseNode blockAST;
-        if (whileToken.type == TokenType.LEFT_BRACE) {
+        if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock(true);
         } else {
             BaseNode statement = parseStatement();
