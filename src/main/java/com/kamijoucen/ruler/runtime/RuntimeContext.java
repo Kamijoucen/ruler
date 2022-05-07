@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.runtime;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.impl.ImportCache;
@@ -15,6 +16,7 @@ public class RuntimeContext {
     private final NodeVisitor nodeVisitor;
     private final NodeVisitor typeCheckVisitor;
     private final ImportCache importCache;
+    private StackDepthCheckOperation stackDepthCheckOperation;
 
     public RuntimeContext(Map<String, BaseValue> outSpace,
                           NodeVisitor nodeVisitor,
@@ -25,6 +27,7 @@ public class RuntimeContext {
         this.typeCheckVisitor = typeCheckVisitor;
         this.importCache = importCache;
         this.configuration = configuration;
+        this.stackDepthCheckOperation = configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation();
     }
 
     public BaseValue findOutValue(String name) {
@@ -58,4 +61,13 @@ public class RuntimeContext {
     public RulerConfiguration getConfiguration() {
         return configuration;
     }
+
+    public StackDepthCheckOperation getStackDepthCheckOperation() {
+        return stackDepthCheckOperation;
+    }
+
+    public void setStackDepthCheckOperation(StackDepthCheckOperation stackDepthCheckOperation) {
+        this.stackDepthCheckOperation = stackDepthCheckOperation;
+    }
+
 }

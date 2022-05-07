@@ -28,4 +28,10 @@ public interface RulerConfiguration {
 
     ParamTypePreProcess getParamTypePreProcess();
 
+    RuntimeBehaviorFactory getRuntimeBehaviorFactory();
+
+    Integer getMaxLoopNumber();
+
+    Integer getMaxStackDepth();
+
 }

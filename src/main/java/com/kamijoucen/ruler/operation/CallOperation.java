@@ -17,14 +17,20 @@ public class CallOperation implements Operation {
     @Override
     public BaseValue compute(RuntimeContext context, BaseValue... param) {
         BaseValue func = param[0];
-        Object[] funcParam = Arrays.copyOfRange(param, 1, param.length);
-        if (func.getType() == ValueType.FUNCTION) {
-            RulerFunction function = ((FunctionValue) func).getValue();
-            return (BaseValue) function.call(funcParam);
-        }
-        if (func.getType() == ValueType.CLOSURE) {
-            ClosureValue function = ((ClosureValue) func);
-            return callClosure(context, function, (BaseValue[]) funcParam);
+
+        context.getStackDepthCheckOperation().addDepth(context);
+        try {
+            Object[] funcParam = Arrays.copyOfRange(param, 1, param.length);
+            if (func.getType() == ValueType.FUNCTION) {
+                RulerFunction function = ((FunctionValue) func).getValue();
+                return (BaseValue) function.call(funcParam);
+            }
+            if (func.getType() == ValueType.CLOSURE) {
+                ClosureValue function = ((ClosureValue) func);
+                return callClosure(context, function, (BaseValue[]) funcParam);
+            }
+        } finally {
+            context.getStackDepthCheckOperation().subDepth(context);
         }
         throw SyntaxException.withSyntax(func + " 不是一个函数");
     }

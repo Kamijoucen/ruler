@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.ParamTypePreProcess;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.config.RuntimeBehaviorFactory;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -22,9 +23,17 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private ImportCache importCache = new ImportCache();
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
     private List<ImportNode> globalImport = new ArrayList<ImportNode>();
+    private RuntimeBehaviorFactory runtimeBehaviorFactory;
+    private Integer maxLoopNumber = -1;
+    private Integer maxStackDepth = -1;
 
     public RulerConfigurationImpl() {
+        init();
+    }
+
+    private void init() {
         initDefaultFunction();
+        runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
     }
 
     private void initDefaultFunction() {
@@ -77,6 +86,33 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ParamTypePreProcess getParamTypePreProcess() {
         return paramTypePreProcess;
+    }
+
+    @Override
+    public RuntimeBehaviorFactory getRuntimeBehaviorFactory() {
+        return this.runtimeBehaviorFactory;
+    }
+
+    public void setRuntimeBehaviorFactory(RuntimeBehaviorFactory runtimeBehaviorFactory) {
+        this.runtimeBehaviorFactory = runtimeBehaviorFactory;
+    }
+
+    public void setMaxLoopNumber(Integer maxLoopNumber) {
+        this.maxLoopNumber = maxLoopNumber;
+    }
+
+    public void setMaxStackDepth(Integer maxStackDepth) {
+        this.maxStackDepth = maxStackDepth;
+    }
+
+    @Override
+    public Integer getMaxLoopNumber() {
+        return this.maxLoopNumber;
+    }
+
+    @Override
+    public Integer getMaxStackDepth() {
+        return this.maxStackDepth;
     }
 
     @Override

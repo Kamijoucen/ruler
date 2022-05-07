@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
@@ -26,7 +27,11 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         List<BaseValue> arrayValues = ((ArrayValue) listValue).getValues();
         Token loopName = node.getLoopName();
         BaseNode block = node.getBlock();
+
+        LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
+                .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
         for (BaseValue baseValue : arrayValues) {
+            loopCountCheckOperation.accept(node, scope, context);
             scope.setCurrentLoopVariableName(loopName.name);
             scope.setCurrentLoopVariable(baseValue);
             BaseValue blockValue = block.eval(context, scope);
