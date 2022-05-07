@@ -21,13 +21,14 @@ public class RuntimeContext {
     public RuntimeContext(Map<String, BaseValue> outSpace,
                           NodeVisitor nodeVisitor,
                           NodeVisitor typeCheckVisitor,
-                          ImportCache importCache, RulerConfiguration configuration) {
+                          ImportCache importCache, RulerConfiguration configuration,
+                          StackDepthCheckOperation stackDepthCheckOperation) {
         this.outSpace = outSpace;
         this.nodeVisitor = nodeVisitor;
         this.typeCheckVisitor = typeCheckVisitor;
         this.importCache = importCache;
         this.configuration = configuration;
-        this.stackDepthCheckOperation = configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation();
+        this.stackDepthCheckOperation = stackDepthCheckOperation;
     }
 
     public BaseValue findOutValue(String name) {

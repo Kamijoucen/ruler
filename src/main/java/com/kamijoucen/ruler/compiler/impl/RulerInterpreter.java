@@ -29,7 +29,7 @@ public class RulerInterpreter {
     public RuntimeContext runCustomVisitor(NodeVisitor visitor) {
         Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
         RuntimeContext context = new RuntimeContext(null, visitor, configuration.getTypeCheckVisitor(),
-                configuration.getImportCache(), configuration);
+                configuration.getImportCache(), configuration, configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
         for (BaseNode statement : module.getStatements()) {
             statement.eval(context, runScope);
         }
@@ -43,7 +43,8 @@ public class RulerInterpreter {
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
         // 运行上下文
         RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
-                configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration);
+                configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
+                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
 
         List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
         if (CollectionUtil.isNotEmpty(globalImportModules)) {
@@ -65,7 +66,8 @@ public class RulerInterpreter {
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
 
         RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
-                configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration);
+                configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
+                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
 
         List<BaseNode> allNode = new ArrayList<BaseNode>(module.getStatements().size() + configuration.getGlobalImportModules().size());
         allNode.addAll(configuration.getGlobalImportModules());

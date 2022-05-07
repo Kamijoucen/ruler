@@ -23,7 +23,7 @@ public class RulerTest {
         configuration = new RulerConfigurationImpl();
         configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
         configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
-        configuration.setMaxLoopNumber(5);
+//        configuration.setMaxLoopNumber(5);
     }
 
     @Test
