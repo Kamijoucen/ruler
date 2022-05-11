@@ -7,7 +7,7 @@ public class CharAtFunction implements RulerFunction {
 
     @Override
     public String getName() {
-        return "stringCharAt";
+        return "StringCharAt";
     }
 
     @Override
@@ -20,6 +20,6 @@ public class CharAtFunction implements RulerFunction {
         }
         StringValue value = (StringValue) param[0];
         IntegerValue index = (IntegerValue) param[1];
-        return value.getValue().charAt(index.getValue());
+        return value.getValue().charAt((int) index.getValue());
     }
 }

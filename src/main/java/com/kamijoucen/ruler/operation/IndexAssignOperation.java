@@ -26,6 +26,6 @@ public class IndexAssignOperation implements AssignOperation {
         }
         IntegerValue indexValue = (IntegerValue) tempIndexValue;
         BaseValue value = expression.eval(context, scope);
-        arrayValue.getValues().set(indexValue.getValue(), value);
+        arrayValue.getValues().set((int) indexValue.getValue(), value);
     }
 }

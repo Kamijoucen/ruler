@@ -23,7 +23,7 @@ public class IndexOperation implements Operation {
             // todo 是否允许数组越界
             return NullValue.INSTANCE;
         }
-        return array.getValues().get(index.getValue());
+        return array.getValues().get((int) index.getValue());
     }
 
 }

@@ -39,10 +39,12 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private void initDefaultFunction() {
         setGlobalFunction(new PrintFunction());
         setGlobalFunction(new MakeItPossibleFunction());
+        setGlobalFunction(new CharAtFunction());
+        setGlobalFunction(new DatetimeFunction());
+        setGlobalFunction(new TimestampFunction());
 
         RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction());
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction());
-
         this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
         this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
     }

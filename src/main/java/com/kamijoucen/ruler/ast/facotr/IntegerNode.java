@@ -8,9 +8,9 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class IntegerNode extends AbstractBaseNode {
 
-    public int value;
+    public long value;
 
-    public IntegerNode(int value, TokenLocation location) {
+    public IntegerNode(long value, TokenLocation location) {
         super(location);
         this.value = value;
     }
@@ -25,11 +25,11 @@ public class IntegerNode extends AbstractBaseNode {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
-    public int getValue() {
+    public long getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(long value) {
         this.value = value;
     }
 }

@@ -3,11 +3,11 @@ package com.kamijoucen.ruler.function;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-public class DateFunction implements RulerFunction {
+public class DatetimeFunction implements RulerFunction {
 
     @Override
     public String getName() {
-        return "datetime";
+        return "Datetime";
     }
 
     @Override

@@ -2,9 +2,9 @@ package com.kamijoucen.ruler.value;
 
 public class IntegerValue implements BaseValue {
 
-    private int value;
+    private long value;
 
-    public IntegerValue(int value) {
+    public IntegerValue(long value) {
         this.value = value;
     }
 
@@ -18,11 +18,11 @@ public class IntegerValue implements BaseValue {
         return String.valueOf(value);
     }
 
-    public int getValue() {
+    public long getValue() {
         return value;
     }
 
-    public void setValue(int value) {
+    public void setValue(long value) {
         this.value = value;
     }
 }
