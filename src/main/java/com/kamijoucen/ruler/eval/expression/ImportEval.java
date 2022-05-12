@@ -14,6 +14,7 @@ import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ModuleValue;
+import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 
 public class ImportEval implements BaseEval<ImportNode> {
@@ -39,7 +40,9 @@ public class ImportEval implements BaseEval<ImportNode> {
         runScope.initReturnSpace();
 
         for (BaseNode statement : importModule.getStatements()) {
-            statement.eval(context, runScope);
+            if (statement.eval(context, runScope).getType() == ValueType.RETURN) {
+                break;
+            }
         }
         ModuleValue moduleValue = new ModuleValue(importModule, runScope);
         scope.putLocal(node.getAlias(), moduleValue);

@@ -289,4 +289,13 @@ public class RulerTest {
         run.run();
 
     }
+
+    @Test
+    public void loop_root_return() {
+        String script = "var i = 0; println((fun() {return 'aaa'; })()); while i < 10 { i = i + 1; if i == 5 { return 'lisicen'; } } return 'hehe';";
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        RuleResult result = run.run();
+        System.out.println(result);
+    }
 }

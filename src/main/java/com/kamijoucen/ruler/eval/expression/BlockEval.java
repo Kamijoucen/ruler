@@ -16,12 +16,14 @@ public class BlockEval implements BaseEval<BlockNode> {
     public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
         Scope blockScope = new Scope("block", scope);
         List<BaseNode> blocks = node.getBlocks();
+
+        BaseValue lastVal = null;
         for (BaseNode block : blocks) {
-            BaseValue val = block.eval(context, blockScope);
-            if (ValueType.RETURN == val.getType()) {
-                return val;
+            lastVal = block.eval(context, blockScope);
+            if (ValueType.RETURN == lastVal.getType()) {
+                return lastVal;
             }
         }
-        return NoneValue.INSTANCE;
+        return lastVal;
     }
 }

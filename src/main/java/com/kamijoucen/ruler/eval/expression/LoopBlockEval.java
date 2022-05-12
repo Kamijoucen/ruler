@@ -19,16 +19,18 @@ public class LoopBlockEval implements BaseEval<LoopBlockNode> {
             blockScope.putLocal(scope.getCurrentLoopVariableName(), scope.getCurrentLoopVariable());
         }
         List<BaseNode> blocks = node.getBlocks();
+
+        BaseValue lastVal = null;
         for (BaseNode block : blocks) {
-            BaseValue val = block.eval(context, blockScope);
-            if (ValueType.CONTINUE == val.getType()) {
+            lastVal = block.eval(context, blockScope);
+            if (ValueType.CONTINUE == lastVal.getType()) {
                 break;
-            } else if (ValueType.BREAK == val.getType()) {
-                return val;
-            } else if (ValueType.RETURN == val.getType()) {
-                return val;
+            } else if (ValueType.BREAK == lastVal.getType()) {
+                return lastVal;
+            } else if (ValueType.RETURN == lastVal.getType()) {
+                return lastVal;
             }
         }
-        return NoneValue.INSTANCE;
+        return lastVal;
     }
 }

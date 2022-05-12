@@ -13,6 +13,7 @@ import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.*;
 
@@ -74,7 +75,9 @@ public class RulerInterpreter {
         allNode.addAll(module.getStatements());
 
         for (BaseNode statement : allNode) {
-            statement.eval(context, runScope);
+            if (statement.eval(context, runScope).getType() == ValueType.RETURN) {
+                break;
+            }
         }
         List<BaseValue> returnValue = runScope.getReturnSpace();
         if (CollectionUtil.isEmpty(returnValue)) {
