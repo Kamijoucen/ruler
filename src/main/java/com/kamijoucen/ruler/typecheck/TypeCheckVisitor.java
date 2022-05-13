@@ -1,18 +1,6 @@
 package com.kamijoucen.ruler.typecheck;
 
-import com.kamijoucen.ruler.ast.expression.AssignNode;
-import com.kamijoucen.ruler.ast.expression.BlockNode;
-import com.kamijoucen.ruler.ast.expression.CallLinkNode;
-import com.kamijoucen.ruler.ast.expression.CallNode;
-import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
-import com.kamijoucen.ruler.ast.expression.DotNode;
-import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
-import com.kamijoucen.ruler.ast.expression.IfStatementNode;
-import com.kamijoucen.ruler.ast.expression.ImportNode;
-import com.kamijoucen.ruler.ast.expression.IndexNode;
-import com.kamijoucen.ruler.ast.expression.LoopBlockNode;
-import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
-import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.expression.*;
 import com.kamijoucen.ruler.ast.facotr.ArrayNode;
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.facotr.BoolNode;
@@ -200,6 +188,11 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
+        return FailureType.INSTANCE;
+    }
+
+    @Override
+    public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
         return FailureType.INSTANCE;
     }
 }

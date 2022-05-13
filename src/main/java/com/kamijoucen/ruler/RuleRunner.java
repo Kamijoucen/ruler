@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.parameter.RuleValue;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;
 
 import java.util.ArrayList;
@@ -36,9 +37,9 @@ public class RuleRunner {
         List<Object> values = null;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         if (isScript) {
-            values = interpreter.runScript(param);
+            values = interpreter.runScript(param, new Scope("runtime root", configuration.getGlobalScope()));
         } else {
-            values = interpreter.runExpression(param);
+            values = interpreter.runExpression(param, new Scope("runtime root", configuration.getGlobalScope()));
         }
 
         List<RuleValue> ruleValues = new ArrayList<RuleValue>(values.size());
@@ -59,7 +60,7 @@ public class RuleRunner {
     public RuntimeContext customRun(NodeVisitor visitor) {
         AssertUtil.notNull(visitor);
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        return interpreter.runCustomVisitor(visitor);
+        return interpreter.runCustomVisitor(visitor, new Scope("runtime root", configuration.getGlobalScope()));
     }
 
 }

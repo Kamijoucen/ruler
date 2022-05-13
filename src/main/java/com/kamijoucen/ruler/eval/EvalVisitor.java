@@ -41,6 +41,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final ReturnEval returnEval = new ReturnEval();
     private static final VariableEval variableEval = new VariableEval();
     private static final ImportEval importEval = new ImportEval();
+    private static final RuleStatementEval ruleStatementEval = new RuleStatementEval();
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
@@ -191,4 +192,10 @@ public class EvalVisitor extends AbstractVisitor {
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
         return importEval.eval(node, scope, context);
     }
+
+    @Override
+    public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
+        return ruleStatementEval.eval(node, scope, context);
+    }
+
 }

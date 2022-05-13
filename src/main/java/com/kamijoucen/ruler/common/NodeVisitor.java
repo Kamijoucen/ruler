@@ -67,4 +67,6 @@ public interface NodeVisitor {
     BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ImportNode node, Scope scope, RuntimeContext context);
+
+    BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context);
 }

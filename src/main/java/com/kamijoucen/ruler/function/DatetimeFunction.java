@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.function;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DatetimeFunction implements RulerFunction {
 
@@ -12,6 +13,12 @@ public class DatetimeFunction implements RulerFunction {
 
     @Override
     public Object call(Object... param) {
+        if (param.length == 0) {
+            return new Date();
+        }
+        if (!(param[0] instanceof String)) {
+            throw new RuntimeException("datetime function only accept string type");
+        }
         String date = (String) param[0];
         String pattern = "yyyy-MM-dd HH:mm:ss";
         if (param.length > 1) {

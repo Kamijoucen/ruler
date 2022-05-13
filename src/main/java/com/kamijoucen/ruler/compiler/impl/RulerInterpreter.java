@@ -21,14 +21,14 @@ public class RulerInterpreter {
 
     private final RulerModule module;
     private RulerConfiguration configuration;
+    private Boolean hasImportGlobalModule = true;
 
     public RulerInterpreter(RulerModule module, RulerConfiguration configuration) {
         this.module = module;
         this.configuration = configuration;
     }
 
-    public RuntimeContext runCustomVisitor(NodeVisitor visitor) {
-        Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
+    public RuntimeContext runCustomVisitor(NodeVisitor visitor, Scope runScope) {
         RuntimeContext context = new RuntimeContext(null, visitor, configuration.getTypeCheckVisitor(),
                 configuration.getImportCache(), configuration, configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
         for (BaseNode statement : module.getStatements()) {
@@ -37,8 +37,7 @@ public class RulerInterpreter {
         return context;
     }
 
-    public List<Object> runExpression(List<RulerParameter> param) {
-        Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
+    public List<Object> runExpression(List<RulerParameter> param, Scope runScope) {
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
@@ -47,10 +46,12 @@ public class RulerInterpreter {
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
                 configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
 
-        List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
-        if (CollectionUtil.isNotEmpty(globalImportModules)) {
-            for (ImportNode node : globalImportModules) {
-                node.eval(context, runScope);
+        if (hasImportGlobalModule) {
+            List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
+            if (CollectionUtil.isNotEmpty(globalImportModules)) {
+                for (ImportNode node : globalImportModules) {
+                    node.eval(context, runScope);
+                }
             }
         }
         BaseNode firstNode = CollectionUtil.first(module.getStatements());
@@ -60,8 +61,7 @@ public class RulerInterpreter {
         return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value));
     }
 
-    public List<Object> runScript(List<RulerParameter> param) {
-        Scope runScope = new Scope("runtime main file", configuration.getGlobalScope());
+    public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
@@ -70,8 +70,11 @@ public class RulerInterpreter {
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
                 configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
 
-        List<BaseNode> allNode = new ArrayList<BaseNode>(module.getStatements().size() + configuration.getGlobalImportModules().size());
-        allNode.addAll(configuration.getGlobalImportModules());
+        List<BaseNode> allNode = new ArrayList<BaseNode>(
+                module.getStatements().size() + configuration.getGlobalImportModules().size());
+        if (hasImportGlobalModule) {
+            allNode.addAll(configuration.getGlobalImportModules());
+        }
         allNode.addAll(module.getStatements());
 
         for (BaseNode statement : allNode) {
@@ -88,5 +91,13 @@ public class RulerInterpreter {
             realValue.add(ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue));
         }
         return realValue;
+    }
+
+    public Boolean getHasImportGlobalModule() {
+        return hasImportGlobalModule;
+    }
+
+    public void setHasImportGlobalModule(Boolean hasImportGlobalModule) {
+        this.hasImportGlobalModule = hasImportGlobalModule;
     }
 }

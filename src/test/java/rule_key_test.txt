@@ -1,19 +1,18 @@
-import "ruler/std/sort.txt" sort;
+import "/ruler/std/sort.txt" sort;
 
-rule "1"
-return $name = 'lsc'
-end
-
-rule '2'
-return $name = 'jj'
-end
-
-rule 'test1'
-
-var a = 10;
-if (a * $age) > 100 {
-    return 1;
-} else {
-    return Datetime();
+rule "1" {
+    return $name == 'lsc';
 }
-end
+
+rule '2' {
+    return $name == 'jj';
+}
+
+rule 'test1' {
+    var a = 10;
+    if (a * 10) > 100 {
+        return 1;
+    } else {
+        return Datetime();
+    }
+}

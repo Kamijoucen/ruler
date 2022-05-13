@@ -20,6 +20,7 @@ public class ConvertRepository {
         NullConvert nullConvert = new NullConvert();
         ArrayConvert arrayConvert = new ArrayConvert();
         BoolConvert boolConvert = new BoolConvert();
+        RuleResultConvert ruleResultConvert = new RuleResultConvert();
 
         VALUE_TYPE_MAP.put(ValueType.INTEGER, integerConvert);
         VALUE_TYPE_MAP.put(ValueType.DOUBLE, doubleConvert);
@@ -28,6 +29,7 @@ public class ConvertRepository {
         VALUE_TYPE_MAP.put(ValueType.ARRAY, arrayConvert);
         VALUE_TYPE_MAP.put(ValueType.BOOL, boolConvert);
         VALUE_TYPE_MAP.put(ValueType.DATE, nullConvert);
+        VALUE_TYPE_MAP.put(ValueType.RULE_RESULT, ruleResultConvert);
 
         CLASS_MAP.put(Integer.class, integerConvert);
         CLASS_MAP.put(Long.class, integerConvert);

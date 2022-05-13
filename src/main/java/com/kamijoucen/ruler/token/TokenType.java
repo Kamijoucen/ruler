@@ -40,8 +40,6 @@ public enum TokenType {
     KEY_WHILE,      // while
     KEY_BREAK,      // break
     KEY_CONTINUE,   // continue
-    KEY_LIST,       // list
-    KEY_MAP,        // map
     KEY_FALSE,      // false
     KEY_TRUE,       // true
     KEY_ELSE,       // else
@@ -53,7 +51,7 @@ public enum TokenType {
     KEY_INIT,       // init
     KEY_TYPEOF,     // typeof
     KEY_IN,         // in
-
+    KEY_RULE,       // rule
     EOF,
 
     UN_KNOW,

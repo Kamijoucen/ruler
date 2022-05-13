@@ -42,8 +42,6 @@ public class TokenLookUp {
         KEY_WORDS.put("while", TokenType.KEY_WHILE);
         KEY_WORDS.put("break", TokenType.KEY_BREAK);
         KEY_WORDS.put("continue", TokenType.KEY_CONTINUE);
-        // KEY_WORDS.put("list", TokenType.KEY_LIST);
-        // KEY_WORDS.put("map", TokenType.KEY_MAP);
         KEY_WORDS.put("false", TokenType.KEY_FALSE);
         KEY_WORDS.put("true", TokenType.KEY_TRUE);
         KEY_WORDS.put("else", TokenType.KEY_ELSE);
@@ -55,6 +53,7 @@ public class TokenLookUp {
         KEY_WORDS.put("init", TokenType.KEY_INIT);
         KEY_WORDS.put("typeof", TokenType.KEY_TYPEOF);
         KEY_WORDS.put("in", TokenType.KEY_IN);
+        KEY_WORDS.put("rule", TokenType.KEY_RULE);
     }
 
     public static TokenType symbol(String str) {

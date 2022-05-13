@@ -10,6 +10,7 @@ import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.ValueType;
 import org.junit.Before;
 import org.junit.Test;
@@ -291,8 +292,30 @@ public class RulerTest {
     }
 
     @Test
+    public void time_stamp_check() {
+        String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
+
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        System.out.println("- " + System.currentTimeMillis());
+        run.run();
+        System.out.println("- " + System.currentTimeMillis());
+
+    }
+
+    @Test
     public void loop_root_return() {
         String script = "var i = 0; println((fun() {return 'aaa'; })()); while i < 10 { i = i + 1; if i == 5 { return 'lisicen'; } } return 'hehe';";
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        RuleResult result = run.run();
+        System.out.println(result);
+    }
+
+    @Test
+    public void rule_key_test() {
+        String script = IOUtil.read("D:\\dev\\code\\ruler\\ruler\\src\\test\\java\\rule_key_test.txt");
         RuleRunner run = Ruler.compileScript(script, configuration);
 
         RuleResult result = run.run();

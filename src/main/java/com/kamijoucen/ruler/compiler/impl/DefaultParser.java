@@ -8,19 +8,7 @@ import java.util.Map;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.OperationNode;
-import com.kamijoucen.ruler.ast.expression.AssignNode;
-import com.kamijoucen.ruler.ast.expression.BlockNode;
-import com.kamijoucen.ruler.ast.expression.CallLinkNode;
-import com.kamijoucen.ruler.ast.expression.CallNode;
-import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
-import com.kamijoucen.ruler.ast.expression.DotNode;
-import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
-import com.kamijoucen.ruler.ast.expression.IfStatementNode;
-import com.kamijoucen.ruler.ast.expression.ImportNode;
-import com.kamijoucen.ruler.ast.expression.IndexNode;
-import com.kamijoucen.ruler.ast.expression.LoopBlockNode;
-import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
-import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.expression.*;
 import com.kamijoucen.ruler.ast.facotr.ArrayNode;
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.facotr.BoolNode;
@@ -90,7 +78,7 @@ public class DefaultParser implements Parser {
             statements.addAll(imports);
         }
         while (tokenStream.token().type != TokenType.EOF) {
-            statements.add(parseStatement());
+            statements.add(parseStatement(true));
         }
         return statements;
     }
@@ -107,7 +95,7 @@ public class DefaultParser implements Parser {
         return imports;
     }
 
-    public BaseNode parseStatement() {
+    public BaseNode parseStatement(boolean isRoot) {
         Token token = tokenStream.token();
         BaseNode statement = null;
         boolean isNeedSemicolon = false;
@@ -148,6 +136,11 @@ public class DefaultParser implements Parser {
             case KEY_VAR:
                 statement = parseVariableDefine();
                 isNeedSemicolon = true;
+                break;
+            case KEY_RULE:
+                if (isRoot) {
+                    statement = parseRuleBlock();
+                }
                 break;
             default:
                 throw SyntaxException.withSyntax("未知的符号：" + token.name);
@@ -286,7 +279,7 @@ public class DefaultParser implements Parser {
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockNode = parseBlock(true);
         } else {
-            BaseNode statement = parseStatement();
+            BaseNode statement = parseStatement(false);
             blockNode = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
         }
         return new ForEachStatementNode(name, arrayExp, blockNode, forToken.location);
@@ -301,7 +294,7 @@ public class DefaultParser implements Parser {
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock(true);
         } else {
-            BaseNode statement = parseStatement();
+            BaseNode statement = parseStatement(false);
             blockAST = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
         }
         return new WhileStatementNode(condition, blockAST, whileToken.location);
@@ -319,7 +312,7 @@ public class DefaultParser implements Parser {
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock(false);
         } else {
-            BaseNode statement = parseStatement();
+            BaseNode statement = parseStatement(false);
             thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         }
         BaseNode elseBlock = null;
@@ -328,7 +321,7 @@ public class DefaultParser implements Parser {
             if (token.type == TokenType.LEFT_BRACE) {
                 elseBlock = parseBlock(false);
             } else {
-                BaseNode statement = parseStatement();
+                BaseNode statement = parseStatement(false);
                 elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
             }
         }
@@ -396,7 +389,7 @@ public class DefaultParser implements Parser {
         List<BaseNode> blocks = new ArrayList<BaseNode>();
         while (tokenStream.token().type != TokenType.EOF
                 && tokenStream.token().type != TokenType.RIGHT_BRACE) {
-            blocks.add(parseStatement());
+            blocks.add(parseStatement(false));
         }
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
@@ -699,6 +692,22 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
         return new ImportNode(path, aliasToken.name, importToken.location);
+    }
+
+    public BaseNode parseRuleBlock() {
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_RULE);
+        Token ruleToken = tokenStream.token();
+        tokenStream.nextToken();
+
+        AssertUtil.assertToken(tokenStream, TokenType.STRING);
+        Token nameToken = tokenStream.token();
+        tokenStream.nextToken();
+
+        BaseNode blockNode = parseBlock(false);
+        return new RuleStatementNode(
+                new StringNode(nameToken.name, nameToken.location),
+                (BlockNode) blockNode,
+                ruleToken.location);
     }
 
 }

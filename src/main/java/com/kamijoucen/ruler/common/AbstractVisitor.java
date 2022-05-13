@@ -236,4 +236,11 @@ public class AbstractVisitor implements NodeVisitor {
         return null;
     }
 
+    @Override
+    public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
+        node.getAlias().eval(context, scope);
+        node.getBlock().eval(context, scope);
+        return null;
+    }
+
 }
