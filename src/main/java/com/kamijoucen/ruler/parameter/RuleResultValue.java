@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.parameter;
 
-public class RuleValue {
+public class RuleResultValue {
 
     public final Object value;
 
-    public RuleValue(Object value) {
+    public RuleResultValue(Object value) {
         this.value = value;
     }
 
@@ -27,4 +27,5 @@ public class RuleValue {
     public Double getDouble() {
         return (Double) value;
     }
+
 }

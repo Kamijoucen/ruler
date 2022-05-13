@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.parameter.RuleResult;
-import com.kamijoucen.ruler.parameter.RuleValue;
+import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -42,11 +42,11 @@ public class RuleRunner {
             values = interpreter.runExpression(param, new Scope("runtime root", configuration.getGlobalScope()));
         }
 
-        List<RuleValue> ruleValues = new ArrayList<RuleValue>(values.size());
+        List<RuleResultValue> ruleResultValues = new ArrayList<RuleResultValue>(values.size());
         for (Object value : values) {
-            ruleValues.add(new RuleValue(value));
+            ruleResultValues.add(new RuleResultValue(value));
         }
-        return new RuleResult(ruleValues);
+        return new RuleResult(ruleResultValues);
     }
 
     public RuleResult run(Map<String, Object> param) {

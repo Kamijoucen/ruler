@@ -6,13 +6,13 @@ import java.util.List;
 
 public class RuleResult {
 
-    private final List<RuleValue> result;
+    private final List<RuleResultValue> result;
 
-    public RuleResult(List<RuleValue> value) {
+    public RuleResult(List<RuleResultValue> value) {
         this.result = value;
     }
 
-    public List<RuleValue> getResult() {
+    public List<RuleResultValue> getResult() {
         return result;
     }
 
@@ -24,7 +24,7 @@ public class RuleResult {
         return result.size();
     }
 
-    public RuleValue first() {
+    public RuleResultValue first() {
         if (CollectionUtil.isEmpty(result)) {
             return null;
         }

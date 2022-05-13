@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.value.convert;
 
-import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.SubRuleValue;
 import com.kamijoucen.ruler.value.ValueType;
@@ -25,7 +24,6 @@ public class RuleResultConvert implements ValueConvert {
 
         List<BaseValue> values = subRuleValue.getValues();
         for (BaseValue val : values) {
-
             // TODO
         }
         return null;
