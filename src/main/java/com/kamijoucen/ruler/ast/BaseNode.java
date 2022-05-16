@@ -5,7 +5,9 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public interface BaseNode {
+import java.io.Serializable;
+
+public interface BaseNode extends Serializable {
 
     BaseValue eval(RuntimeContext context, Scope scope);
 

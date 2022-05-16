@@ -1,6 +1,8 @@
 package com.kamijoucen.ruler.token;
 
-public class TokenLocation {
+import java.io.Serializable;
+
+public class TokenLocation implements Serializable {
 
     public final long line;
     public final long column;

@@ -20,7 +20,7 @@ import java.util.*;
 public class RulerInterpreter {
 
     private final RulerModule module;
-    private RulerConfiguration configuration;
+    private transient RulerConfiguration configuration;
     private Boolean hasImportGlobalModule = true;
 
     public RulerInterpreter(RulerModule module, RulerConfiguration configuration) {
