@@ -15,7 +15,7 @@ public class OrOperation implements LogicOperation {
         BaseNode exp2 = nodes[1];
         BaseValue tempExp1Val = exp1.eval(context, scope);
         if (tempExp1Val.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持&&:" + tempExp1Val);
+            throw SyntaxException.withSyntax("该值不支持||:" + tempExp1Val);
         }
         BoolValue exp1Val = (BoolValue) tempExp1Val;
         if (exp1Val.getValue()) {
@@ -23,7 +23,7 @@ public class OrOperation implements LogicOperation {
         }
         BaseValue tempExp2Val = exp2.eval(context, scope);
         if (tempExp2Val.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持&&:" + tempExp2Val);
+            throw SyntaxException.withSyntax("该值不支持||:" + tempExp2Val);
         }
         BoolValue exp2Val = (BoolValue) tempExp2Val;
         if (exp2Val.getValue()) {
