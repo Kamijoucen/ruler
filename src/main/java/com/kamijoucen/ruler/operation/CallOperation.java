@@ -2,6 +2,8 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
+import com.kamijoucen.ruler.common.Constant;
+import com.kamijoucen.ruler.common.RClassInfo;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -43,6 +45,8 @@ public class CallOperation implements Operation {
             callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
         }
         callScope.initReturnSpace();
+        // put args in scope
+        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), new RClassInfo()));
         BaseNode block = closure.getBlock();
         block.eval(context, callScope);
         List<BaseValue> returnValues = callScope.getReturnSpace();

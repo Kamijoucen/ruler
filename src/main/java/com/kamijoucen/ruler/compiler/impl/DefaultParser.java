@@ -405,7 +405,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(token.type, parsePrimaryExpression(),
-                    token.type == TokenType.ADD ? new UnarySubOperation() : new UnaryAddOperation(), token.location);
+                    token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(), token.location);
         } else if (token.type == TokenType.NOT) {
             return new LogicBinaryOperationNode(TokenType.NOT, parsePrimaryExpression(), null,
                     OperationDefine.findLogicOperation(TokenType.NOT), token.location);

@@ -24,6 +24,7 @@ public class RulerTest {
         configuration = new RulerConfigurationImpl();
         configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
         configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
+        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
 //        configuration.setMaxLoopNumber(5);
     }
 
@@ -320,5 +321,29 @@ public class RulerTest {
 
         RuleResult result = run.run();
         System.out.println(result);
+    }
+
+    @Test
+    public void fun_args_test() {
+        String script = "var a = fun() { println(_args_); }; a(1, [1, 2], 1.1);";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+        RuleResult result = run.run();
+    }
+
+    @Test
+    public void global_test() {
+        String script = "println(op.Add(1, 2, -3)); println(op.Sub(6, 3, -1));";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+        long v1 = System.currentTimeMillis();
+        RuleResult result = run.run();
+        long v2 = System.currentTimeMillis();
+        System.out.println("time1: " + (v2 - v1));
+
+        v1 = System.currentTimeMillis();
+        run.run();
+        v2 = System.currentTimeMillis();
+        System.out.println("time2: " + (v2 - v1));
     }
 }

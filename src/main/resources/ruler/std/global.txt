@@ -1,0 +1,22 @@
+import "/ruler/std/collections.txt" collections;
+
+fun Add() {
+    var num = 0;
+    for arg in _args_
+        num = num + arg;
+    return num;
+}
+
+fun Sub() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = _args_[0];
+    var i = 1;
+
+    while i < len {
+        r = r - _args_[i];
+        i = i + 1;
+    }
+    return r;
+}
