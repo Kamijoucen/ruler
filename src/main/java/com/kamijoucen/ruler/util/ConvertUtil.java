@@ -32,6 +32,17 @@ public class ConvertUtil {
         }
     }
 
+    public static BaseValue stringToValue(String str) {
+        Number result = parseToNumber(str);
+        if (result == null) {
+            return null;
+        }
+        if (result instanceof Double) {
+            return new DoubleValue(result.doubleValue());
+        }
+        return new IntegerValue(result.intValue());
+    }
+
     public static BaseValue stringToValue(StringValue strValue) {
         Number result = parseToNumber(strValue.getValue());
         if (result == null) {
