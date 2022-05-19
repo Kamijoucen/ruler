@@ -3,7 +3,7 @@ import "/ruler/std/collections.txt" collections;
 fun Add() {
     var num = 0;
     for arg in _args_
-        num = num + arg;
+        num = num + ToNumber(arg);
     return num;
 }
 
