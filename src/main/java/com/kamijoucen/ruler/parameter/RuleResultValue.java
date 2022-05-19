@@ -12,19 +12,20 @@ public class RuleResultValue {
         return value;
     }
 
-    public String getString() {
+    @Override
+    public String toString() {
         return value.toString();
     }
 
-    public Boolean getBoolean() {
+    public Boolean toBoolean() {
         return (Boolean) value;
     }
 
-    public Integer getInteger() {
+    public Integer toInteger() {
         return (Integer) value;
     }
 
-    public Double getDouble() {
+    public Double toDouble() {
         return (Double) value;
     }
 
