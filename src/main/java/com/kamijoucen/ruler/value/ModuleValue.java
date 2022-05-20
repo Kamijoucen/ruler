@@ -37,6 +37,9 @@ public class ModuleValue extends AbstractRClassValue {
     @Override
     public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
         BaseValue funValue = runScope.find(name);
+        if (funValue == null) {
+            throw new IllegalArgumentException("找不到函数: " + name);
+        }
         AssertUtil.notNull(funValue);
         BaseValue[] realParam = new BaseValue[param.size() + 1];
         realParam[0] = funValue;
