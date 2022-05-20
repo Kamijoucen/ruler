@@ -31,7 +31,7 @@ public class SubRuleResultConvert implements ValueConvert {
         }
         List<Object> realValue = new ArrayList<Object>(subRuleValue.getValues().size());
         for (BaseValue val : subRuleValue.getValues()) {
-            realValue.add(ConvertRepository.getConverter(val.getType()).baseToReal(value));
+            realValue.add(ConvertRepository.getConverter(val.getType()).baseToReal(val));
         }
         return new SubRuleResultValue(subRuleValue.getRuleName(), realValue);
     }
