@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.ParamTypePreProcess;
 import com.kamijoucen.ruler.config.RulerConfiguration;
@@ -71,6 +72,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public void setGlobalImportModule(String path, String alias) {
         this.globalImport.add(new ImportNode(path, alias, null));
+    }
+
+    @Override
+    public void setGlobalImportScriptModule(String script, String alias) {
+        this.globalImport.add(new ImportScriptNode(script, alias, null));
     }
 
     @Override

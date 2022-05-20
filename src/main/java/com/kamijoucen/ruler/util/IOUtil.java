@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.util;
 
 import java.io.*;
+import java.util.UUID;
 
 public class IOUtil {
 
@@ -113,6 +114,10 @@ public class IOUtil {
 
     public static boolean isNotBlank(String str) {
         return !isBlank(str);
+    }
+
+    public static String getVirtualPath(String script, String alias) {
+        return "virtual_path_" + UUID.randomUUID().toString() + "_" + alias.hashCode() + "_" + script.hashCode();
     }
 
 }

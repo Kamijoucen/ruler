@@ -18,6 +18,8 @@ public interface RulerConfiguration {
 
     void setGlobalImportModule(String path, String alias);
 
+    void setGlobalImportScriptModule(String alias, String script);
+
     List<ImportNode> getGlobalImportModules();
 
     NodeVisitor getTypeCheckVisitor();

@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.eval.expression;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
 import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
@@ -30,10 +31,16 @@ public class ImportEval implements BaseEval<ImportNode> {
         RulerModule importModule = importCache.getImportModule(path);
         if (importModule == null) {
             String text = null;
-            if (isStdImport(path)) {
-                text = IOUtil.read(Ruler.class.getResourceAsStream(path));
+
+            if (node instanceof ImportScriptNode) {
+                ImportScriptNode scriptNode = (ImportScriptNode) node;
+                text = scriptNode.getScript();
             } else {
-                text = IOUtil.read(path);
+                if (isStdImport(path)) {
+                    text = IOUtil.read(Ruler.class.getResourceAsStream(path));
+                } else {
+                    text = IOUtil.read(path);
+                }
             }
             importModule = compilerScript(text, path, context);
             AssertUtil.notNull(importModule);

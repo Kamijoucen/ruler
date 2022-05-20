@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.module.RulerModule;
+import com.kamijoucen.ruler.util.IOUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,9 @@ public class ImportCache {
     }
 
     public RulerModule getImportModule(String path) {
+        if (IOUtil.isBlank(path)) {
+            return null;
+        }
         return cache.get(path);
     }
 

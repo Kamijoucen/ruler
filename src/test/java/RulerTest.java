@@ -25,6 +25,7 @@ public class RulerTest {
         configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
         configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
         configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
 //        configuration.setMaxLoopNumber(5);
     }
 
@@ -140,7 +141,7 @@ public class RulerTest {
         param.put("level", 500);
         RuleResult result = script.run(param);
 
-        System.out.println(result.first().getBoolean());
+        System.out.println(result.first().toBoolean());
 
         OutNameVisitor outNameVisitor = new OutNameVisitor();
         RuntimeContext context = script.customRun(outNameVisitor);
@@ -152,7 +153,7 @@ public class RulerTest {
         String sql = "'500' < 500";
         RuleRunner script = Ruler.compileExpression(sql, configuration);
         RuleResult result = script.run();
-        System.out.println(result.first().getBoolean());
+        System.out.println(result.first().toBoolean());
     }
 
     // @Test
@@ -160,7 +161,7 @@ public class RulerTest {
         String sql = "$level < 500";
         RuleRunner script = Ruler.compileExpression(sql, configuration);
         RuleResult result = script.run();
-        System.out.println(result.first().getBoolean());
+        System.out.println(result.first().toBoolean());
 
         RuntimeContext context = script.customRun(new OutNameVisitor());
         System.out.println(context);
@@ -177,7 +178,7 @@ public class RulerTest {
 
         RuleResult result = runner.run(args);
 
-        System.out.println(result.first().getBoolean());
+        System.out.println(result.first().toBoolean());
 
     }
 
@@ -273,7 +274,7 @@ public class RulerTest {
         list.add(p);
 
         RuleResult result = run.run(list);
-        System.out.println(result.first().getBoolean());
+        System.out.println(result.first().toBoolean());
     }
 
     @Test
@@ -345,5 +346,15 @@ public class RulerTest {
         run.run();
         v2 = System.currentTimeMillis();
         System.out.println("time2: " + (v2 - v1));
+    }
+
+    @Test
+    public void global_script_test() {
+
+        String script = "println(ok.Ok());";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+        run.run();
+
     }
 }
