@@ -11,12 +11,204 @@ fun Sub() {
     var len = length(_args_);
     if len == 0 return null;
 
+    var r = ToNumber(_args_[0]);
+    var i = 1;
+
+    while i < len {
+        r = r - ToNumber(_args_[i]);
+        i = i + 1;
+    }
+    return r;
+}
+
+fun Mul() {
+    var num = 1;
+    for arg in _args_
+        num = num * ToNumber(arg);
+    return num;
+}
+
+fun Div() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToNumber(_args_[0]);
+    var i = 1;
+
+    while i < len {
+        r = r / ToNumber(_args_[i]);
+        i = i + 1;
+    }
+    return r;
+}
+
+fun And() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToBoolean(_args_[0]);
+
+    if !r {
+        return false;
+    }
+
+    var i = 1;
+
+    while i < len {
+        r = r && ToBoolean(_args_[i]);
+
+        if !r {
+            return false;
+        }
+
+        i = i + 1;
+    }
+    return true;
+}
+
+fun Or() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToBoolean(_args_[0]);
+    if r {
+        return true;
+    }
+
+    var i = 1;
+
+    while i < len {
+        r = r || ToBoolean(_args_[i]);
+
+        if r {
+            return true;
+        }
+
+        i = i + 1;
+    }
+    return false;
+}
+
+fun Not() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    return !ToBoolean(_args_[0]);
+}
+
+// >
+fun Gt() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToNumber(_args_[0]);
+    var i = 1;
+
+    while i < len {
+        var n = ToNumber(_args_[i]);
+        if r <= n {
+            return false;
+        }
+        r = n;
+        i = i + 1;
+    }
+    return true;
+}
+
+// <
+fun Lt() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToNumber(_args_[0]);
+    var i = 1;
+
+    while i < len {
+        var n = ToNumber(_args_[i]);
+        if r >= n {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+// <=
+fun Le() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToNumber(_args_[0]);
+    var i = 1;
+
+    while i < len {
+        var n = ToNumber(_args_[i]);
+        if r > n {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+// >=
+fun Ge() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = ToNumber(_args_[0]);
+    var i = 1;
+
+    while i < len {
+        var n = ToNumber(_args_[i]);
+        if r < n {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+// ==
+fun Eq() {
+    var len = length(_args_);
+    if len == 0 return null;
+
     var r = _args_[0];
     var i = 1;
 
     while i < len {
-        r = r - _args_[i];
+        var n = _args_[i];
+        if r != n {
+            return false;
+        }
         i = i + 1;
     }
-    return r;
+    return true;
+}
+
+// !=
+fun Ne() {
+    var len = length(_args_);
+    if len == 0 return null;
+
+    var r = _args_[0];
+    var i = 1;
+
+    while i < len {
+        var n = _args_[i];
+        if r == n {
+            return false;
+        }
+        i = i + 1;
+    }
+    return true;
+}
+
+fun In(target, list) {
+    return collections.Contains(target, list);
+}
+
+fun Nin(target, list) {
+    return !collections.Contains(target, list);
 }
