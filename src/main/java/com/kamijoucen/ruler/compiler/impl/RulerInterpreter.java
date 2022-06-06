@@ -40,7 +40,7 @@ public class RulerInterpreter {
     public List<Object> runExpression(List<RulerParameter> param, Scope runScope) {
         runScope.initReturnSpace();
 
-        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
+        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         // 运行上下文
         RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
@@ -58,13 +58,13 @@ public class RulerInterpreter {
         // 执行表达式
         AssertUtil.notNull(firstNode);
         BaseValue value = firstNode.eval(context, runScope);
-        return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value));
+        return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value, configuration));
     }
 
     public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
         runScope.initReturnSpace();
 
-        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param);
+        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
 
         RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
@@ -88,7 +88,7 @@ public class RulerInterpreter {
         }
         List<Object> realValue = new ArrayList<Object>(returnValue.size());
         for (BaseValue baseValue : returnValue) {
-            realValue.add(ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue));
+            realValue.add(ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue, configuration));
         }
         return realValue;
     }

@@ -1,7 +1,9 @@
 package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.common.ConvertRepository;
+import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.SubRuleResultValue;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.SubRuleValue;
@@ -19,19 +21,19 @@ public class SubRuleResultConvert implements ValueConvert {
     }
 
     @Override
-    public BaseValue realToBase(Object value) {
+    public BaseValue realToBase(Object value, RulerConfiguration configuration) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public Object baseToReal(BaseValue value) {
+    public Object baseToReal(BaseValue value, RulerConfiguration configuration) {
         SubRuleValue subRuleValue = (SubRuleValue) value;
         if (CollectionUtil.isEmpty(subRuleValue.getValues())) {
             return new SubRuleResultValue(subRuleValue.getRuleName(), Collections.emptyList());
         }
         List<Object> realValue = new ArrayList<Object>(subRuleValue.getValues().size());
         for (BaseValue val : subRuleValue.getValues()) {
-            realValue.add(ConvertRepository.getConverter(val.getType()).baseToReal(val));
+            realValue.add(ConvertRepository.getConverter(val.getType()).baseToReal(val, configuration));
         }
         return new SubRuleResultValue(subRuleValue.getRuleName(), realValue);
     }

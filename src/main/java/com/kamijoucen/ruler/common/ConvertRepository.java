@@ -21,6 +21,7 @@ public class ConvertRepository {
         ArrayConvert arrayConvert = new ArrayConvert();
         BoolConvert boolConvert = new BoolConvert();
         SubRuleResultConvert subRuleResultConvert = new SubRuleResultConvert();
+        DateConvert dateConvert = new DateConvert();
 
         VALUE_TYPE_MAP.put(ValueType.INTEGER, integerConvert);
         VALUE_TYPE_MAP.put(ValueType.DOUBLE, doubleConvert);
@@ -28,7 +29,7 @@ public class ConvertRepository {
         VALUE_TYPE_MAP.put(ValueType.NULL, nullConvert);
         VALUE_TYPE_MAP.put(ValueType.ARRAY, arrayConvert);
         VALUE_TYPE_MAP.put(ValueType.BOOL, boolConvert);
-        VALUE_TYPE_MAP.put(ValueType.DATE, nullConvert);
+        VALUE_TYPE_MAP.put(ValueType.DATE, dateConvert);
         VALUE_TYPE_MAP.put(ValueType.RULE_RESULT, subRuleResultConvert);
 
         CLASS_MAP.put(Integer.class, integerConvert);
@@ -37,7 +38,7 @@ public class ConvertRepository {
         CLASS_MAP.put(Float.class, doubleConvert);
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
-        CLASS_MAP.put(Date.class, nullConvert);
+        CLASS_MAP.put(Date.class, dateConvert);
     }
 
     public static ValueConvert getConverter(Object obj) {

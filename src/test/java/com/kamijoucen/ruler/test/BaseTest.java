@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.RuleRunner;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.module.RuleRunner;
 import com.kamijoucen.ruler.parameter.RuleResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import org.junit.Assert;

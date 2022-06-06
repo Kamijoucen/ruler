@@ -2,13 +2,13 @@ package com.kamijoucen.ruler.value;
 
 import java.util.List;
 
-import com.kamijoucen.ruler.common.RClassInfo;
+import com.kamijoucen.ruler.common.RMateInfo;
 
 public class ArrayValue extends AbstractRClassValue {
 
     private List<BaseValue> values;
 
-    public ArrayValue(List<BaseValue> values, RClassInfo mataData) {
+    public ArrayValue(List<BaseValue> values, RMateInfo mataData) {
         super(mataData);
         this.values = values;
     }

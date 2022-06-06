@@ -3,9 +3,8 @@ import java.util.*;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.module.RuleRunner;
 import com.kamijoucen.ruler.parameter.RuleResult;
-import com.kamijoucen.ruler.RuleRunner;
-import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 
@@ -355,6 +354,32 @@ public class RulerTest {
 
         RuleRunner run = Ruler.compileScript(script, configuration);
         run.run();
+
+    }
+
+    @Test
+    public void string_plus_test() {
+        String a = 1 + 2 + 3 + "4";
+        System.out.println(a);
+    }
+
+    @Test
+    public void obj_fun_test() {
+
+        String script = "var y = Datetime('1995-03-31', 'yyyy-MM-dd').year(); println(y);";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        long v1 = System.currentTimeMillis();
+        run.run();
+        long v2 = System.currentTimeMillis();
+        System.out.println(v2 - v1);
+
+        v1 = System.currentTimeMillis();
+        run.run();
+        v2 = System.currentTimeMillis();
+
+        System.out.println(v2 - v1);
 
     }
 }

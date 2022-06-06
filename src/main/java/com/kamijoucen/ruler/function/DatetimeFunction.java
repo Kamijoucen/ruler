@@ -20,9 +20,11 @@ public class DatetimeFunction implements RulerFunction {
             throw new RuntimeException("datetime function only accept string type");
         }
         String date = (String) param[0];
-        String pattern = "yyyy-MM-dd HH:mm:ss";
+        String pattern;
         if (param.length > 1) {
             pattern = (String) param[1];
+        } else {
+            pattern = "yyyy-MM-dd HH:mm:ss";
         }
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         try {

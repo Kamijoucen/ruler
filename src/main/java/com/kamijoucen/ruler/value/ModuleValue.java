@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.common.RClassInfo;
+import com.kamijoucen.ruler.common.RMateInfo;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -21,7 +21,7 @@ public class ModuleValue extends AbstractRClassValue {
     }
 
     @Override
-    public RClassInfo getClassInfo() {
+    public RMateInfo getClassInfo() {
         throw new UnsupportedOperationException("不允许对别名进行修改操作");
     }
 

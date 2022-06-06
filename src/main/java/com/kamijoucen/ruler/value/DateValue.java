@@ -1,13 +1,20 @@
 package com.kamijoucen.ruler.value;
 
+import com.kamijoucen.ruler.common.RMateInfo;
+
+import java.util.Calendar;
 import java.util.Date;
 
-public class DateValue implements BaseValue {
+public class DateValue extends RsonValue {
 
     private Date value;
+    private Calendar calendar;
 
-    public DateValue(Date value) {
+    public DateValue(Date value, RMateInfo mateInfo) {
+        super(mateInfo);
         this.value = value;
+        this.calendar = Calendar.getInstance();
+        this.calendar.setTime(value);
     }
 
     @Override
@@ -18,5 +25,17 @@ public class DateValue implements BaseValue {
     @Override
     public String toString() {
         return value.toString();
+    }
+
+    public Date getValue() {
+        return value;
+    }
+
+    public void setValue(Date value) {
+        this.value = value;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
     }
 }

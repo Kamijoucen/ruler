@@ -3,14 +3,13 @@ package com.kamijoucen.ruler.operation;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.OperationNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
-import com.kamijoucen.ruler.common.RClassInfo;
+import com.kamijoucen.ruler.common.RMateInfo;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.AbstractRClassValue;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.ValueType;
 
 public class DotAssignOperation implements AssignOperation {
 
@@ -25,7 +24,7 @@ public class DotAssignOperation implements AssignOperation {
         if (dotNode.getDotType() != TokenType.IDENTIFIER) {
             throw SyntaxException.withSyntax("不能为调用赋值");
         }
-        RClassInfo mataData = rsonValue.getClassInfo();
+        RMateInfo mataData = rsonValue.getClassInfo();
         BaseValue value = expression.eval(context, scope);
         mataData.put(dotNode.getName(), value);
     }

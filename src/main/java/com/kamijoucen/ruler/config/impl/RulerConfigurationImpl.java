@@ -3,11 +3,13 @@ package com.kamijoucen.ruler.config.impl;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
+import com.kamijoucen.ruler.config.MetaInfoFactory;
 import com.kamijoucen.ruler.config.ParamTypePreProcess;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.RuntimeBehaviorFactory;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
+import com.kamijoucen.ruler.runtime.ObjectMetaInfoFactory;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
@@ -25,6 +27,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
     private List<ImportNode> globalImport = new ArrayList<ImportNode>();
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
+    private MetaInfoFactory metaInfoFactory;
     private Integer maxLoopNumber = -1;
     private Integer maxStackDepth = -1;
 
@@ -35,6 +38,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private void init() {
         initDefaultFunction();
         runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
+        metaInfoFactory = new ObjectMetaInfoFactory();
     }
 
     private void initDefaultFunction() {
@@ -47,8 +51,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
 
-        RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction());
-        RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction());
+        RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction(), this);
+        RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
         this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
@@ -63,7 +67,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public void setGlobalFunction(RulerFunction function) {
-        FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function));
+        FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this));
         this.globalScope.putLocal(funValue.getValue().getName(), funValue);
     }
 
@@ -105,6 +109,15 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public RuntimeBehaviorFactory getRuntimeBehaviorFactory() {
         return this.runtimeBehaviorFactory;
+    }
+
+    @Override
+    public MetaInfoFactory getMetaInfoFactory() {
+        return this.metaInfoFactory;
+    }
+
+    public void setMetaInfoFactory(MetaInfoFactory metaInfoFactory) {
+        this.metaInfoFactory = metaInfoFactory;
     }
 
     public void setRuntimeBehaviorFactory(RuntimeBehaviorFactory runtimeBehaviorFactory) {

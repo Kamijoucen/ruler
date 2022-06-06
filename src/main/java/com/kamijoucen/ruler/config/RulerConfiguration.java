@@ -32,6 +32,8 @@ public interface RulerConfiguration {
 
     RuntimeBehaviorFactory getRuntimeBehaviorFactory();
 
+    MetaInfoFactory getMetaInfoFactory();
+
     Integer getMaxLoopNumber();
 
     Integer getMaxStackDepth();

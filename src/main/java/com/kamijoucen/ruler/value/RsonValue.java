@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.common.RClassInfo;
+import com.kamijoucen.ruler.common.RMateInfo;
 
 public class RsonValue extends AbstractRClassValue {
 
-    public RsonValue(RClassInfo mateData) {
+    public RsonValue(RMateInfo mateData) {
         super(mateData);
     }
 
