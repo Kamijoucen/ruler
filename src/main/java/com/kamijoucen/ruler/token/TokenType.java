@@ -34,7 +34,6 @@ public enum TokenType {
     CALL,           // ()
     INDEX,          // []
     KEY_RETURN,     // return
-    KEY_DEF,        // def
     KEY_IF,         // if
     KEY_FOR,        // for
     KEY_WHILE,      // while

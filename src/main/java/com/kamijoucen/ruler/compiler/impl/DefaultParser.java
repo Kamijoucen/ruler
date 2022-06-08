@@ -111,8 +111,6 @@ public class DefaultParser implements Parser {
                 statement = parseReturn();
                 isNeedSemicolon = true;
                 break;
-            case KEY_DEF:
-                break;
             case KEY_IF:
                 statement = parseIfStatement();
                 break;
