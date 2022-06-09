@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.util;
 
+import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.exception.NoImplException;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 

@@ -11,7 +11,10 @@ import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ConvertUtil {
 

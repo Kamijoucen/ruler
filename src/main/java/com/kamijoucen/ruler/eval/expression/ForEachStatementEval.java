@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.eval.expression;
 
-import java.util.List;
-
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
@@ -15,6 +13,8 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.constant.NoneValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
+
+import java.util.List;
 
 public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
 

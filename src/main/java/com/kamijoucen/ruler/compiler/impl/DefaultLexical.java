@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.common.Constant;
+import com.kamijoucen.ruler.common.State;
 import com.kamijoucen.ruler.compiler.Lexical;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.common.State;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenLookUp;

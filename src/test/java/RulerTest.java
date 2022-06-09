@@ -1,18 +1,17 @@
-import java.util.*;
-
 import com.kamijoucen.ruler.Ruler;
+import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.module.RuleRunner;
 import com.kamijoucen.ruler.parameter.RuleResult;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.ValueType;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.*;
 
 public class RulerTest {
 

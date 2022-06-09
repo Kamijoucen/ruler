@@ -5,12 +5,7 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.type.BoolType;
-import com.kamijoucen.ruler.type.DoubleType;
-import com.kamijoucen.ruler.type.FailureType;
-import com.kamijoucen.ruler.type.IntegerType;
-import com.kamijoucen.ruler.type.StringType;
-import com.kamijoucen.ruler.type.UnknownType;
+import com.kamijoucen.ruler.type.*;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 

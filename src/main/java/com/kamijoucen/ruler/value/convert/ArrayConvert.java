@@ -1,16 +1,16 @@
 package com.kamijoucen.ruler.value.convert;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.common.RMetaInfo;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class ArrayConvert implements ValueConvert {
     @Override

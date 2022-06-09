@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.*;
 
 import java.util.Arrays;

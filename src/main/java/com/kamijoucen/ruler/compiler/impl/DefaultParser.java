@@ -1,38 +1,17 @@
 package com.kamijoucen.ruler.compiler.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.OperationNode;
 import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.ArrayNode;
-import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
-import com.kamijoucen.ruler.ast.facotr.BoolNode;
-import com.kamijoucen.ruler.ast.facotr.BreakNode;
-import com.kamijoucen.ruler.ast.facotr.ContinueNode;
-import com.kamijoucen.ruler.ast.facotr.DoubleNode;
-import com.kamijoucen.ruler.ast.facotr.IntegerNode;
-import com.kamijoucen.ruler.ast.facotr.LogicBinaryOperationNode;
-import com.kamijoucen.ruler.ast.facotr.NullNode;
-import com.kamijoucen.ruler.ast.facotr.OutNameNode;
-import com.kamijoucen.ruler.ast.facotr.ReturnNode;
-import com.kamijoucen.ruler.ast.facotr.RsonNode;
-import com.kamijoucen.ruler.ast.facotr.StringNode;
-import com.kamijoucen.ruler.ast.facotr.ThisNode;
-import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
-import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.compiler.Parser;
+import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
-import com.kamijoucen.ruler.compiler.TokenStream;
-import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
@@ -44,6 +23,8 @@ import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 import com.kamijoucen.ruler.util.TokenUtil;
 import com.kamijoucen.ruler.value.BaseValue;
+
+import java.util.*;
 
 public class DefaultParser implements Parser {
 

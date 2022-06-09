@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.ast.expression;
 
 import com.kamijoucen.ruler.ast.AbstractBaseNode;
-import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;

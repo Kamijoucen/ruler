@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.value;
 
-import java.util.List;
-
 import com.kamijoucen.ruler.common.RMetaInfo;
+
+import java.util.List;
 
 public class ArrayValue extends AbstractRClassValue {
 

@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NoneValue;
 
 import java.util.List;
 

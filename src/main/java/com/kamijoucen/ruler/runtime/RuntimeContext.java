@@ -1,12 +1,11 @@
 package com.kamijoucen.ruler.runtime;
 
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.value.BaseValue;
+
+import java.util.Map;
 
 public class RuntimeContext {
 

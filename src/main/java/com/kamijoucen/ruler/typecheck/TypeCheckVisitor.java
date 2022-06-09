@@ -1,35 +1,11 @@
 package com.kamijoucen.ruler.typecheck;
 
 import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.ArrayNode;
-import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
-import com.kamijoucen.ruler.ast.facotr.BoolNode;
-import com.kamijoucen.ruler.ast.facotr.BreakNode;
-import com.kamijoucen.ruler.ast.facotr.ContinueNode;
-import com.kamijoucen.ruler.ast.facotr.DoubleNode;
-import com.kamijoucen.ruler.ast.facotr.IntegerNode;
-import com.kamijoucen.ruler.ast.facotr.LogicBinaryOperationNode;
-import com.kamijoucen.ruler.ast.facotr.NameNode;
-import com.kamijoucen.ruler.ast.facotr.NullNode;
-import com.kamijoucen.ruler.ast.facotr.OutNameNode;
-import com.kamijoucen.ruler.ast.facotr.ReturnNode;
-import com.kamijoucen.ruler.ast.facotr.RsonNode;
-import com.kamijoucen.ruler.ast.facotr.StringNode;
-import com.kamijoucen.ruler.ast.facotr.ThisNode;
-import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
-import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.*;
 import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.type.ArrayType;
-import com.kamijoucen.ruler.type.BoolType;
-import com.kamijoucen.ruler.type.DoubleType;
-import com.kamijoucen.ruler.type.FailureType;
-import com.kamijoucen.ruler.type.IntegerType;
-import com.kamijoucen.ruler.type.NullType;
-import com.kamijoucen.ruler.type.RsonType;
-import com.kamijoucen.ruler.type.StringType;
-import com.kamijoucen.ruler.type.UnknownType;
+import com.kamijoucen.ruler.type.*;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 

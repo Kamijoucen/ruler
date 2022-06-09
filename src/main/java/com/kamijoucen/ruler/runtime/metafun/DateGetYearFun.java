@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.runtime.metafun;
 
-import com.kamijoucen.ruler.common.RMetaInfo;
 import com.kamijoucen.ruler.value.DateValue;
 import com.kamijoucen.ruler.value.IntegerValue;
 
