@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.config;
 
-import com.kamijoucen.ruler.common.RMateInfo;
+import com.kamijoucen.ruler.common.RMetaInfo;
 
 public interface MetaInfoFactory {
 
-    RMateInfo createDateMateInfo();
+    RMetaInfo createDateMetaInfo();
 
 }

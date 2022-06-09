@@ -1,22 +1,24 @@
 package com.kamijoucen.ruler.common;
 
+import com.kamijoucen.ruler.runtime.metafun.AbstractMetaFun;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class RMateInfo {
+public class RMetaInfo {
 
     private BaseValue source;
     private final Map<String, BaseValue> properties;
 
-    public RMateInfo() {
+    public RMetaInfo() {
         this.properties = new HashMap<String, BaseValue>();
     }
 
-    public RMateInfo(BaseValue source) {
-        this();
-        this.source = source;
+    public void initMetaFun(AbstractMetaFun fun) {
+        fun.setMetaInfo(this);
+        this.put(fun.getName(), new FunctionValue(fun));
     }
 
     public void put(String name, BaseValue value) {
