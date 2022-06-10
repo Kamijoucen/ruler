@@ -24,6 +24,7 @@ public class DateConvert implements ValueConvert {
 
     @Override
     public Object baseToReal(BaseValue value, RulerConfiguration configuration) {
-        return null;
+        DateValue dateValue = (DateValue) value;
+        return dateValue.getValue();
     }
 }
