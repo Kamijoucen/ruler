@@ -47,6 +47,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         setGlobalFunction(new CharAtFunction());
         setGlobalFunction(new DatetimeFunction());
         setGlobalFunction(new TimestampFunction());
+        setGlobalFunction(new PanicFunction());
 
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
