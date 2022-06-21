@@ -37,8 +37,8 @@ public class MapRsonConvert implements ValueConvert {
                 (int) (Math.ceil(rsonValue.getClassInfo().getProperties().size() / 0.75) + 1));
         for (Map.Entry<String, BaseValue> entry : rsonValue.getClassInfo().getProperties().entrySet()) {
             map.put(entry.getKey(), ConvertRepository.getConverter(entry.getValue().getType()).baseToReal(entry.getValue(), configuration));
-
         }
+
         return map;
     }
 }

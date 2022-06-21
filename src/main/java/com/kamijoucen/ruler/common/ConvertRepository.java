@@ -3,10 +3,7 @@ package com.kamijoucen.ruler.common;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConvertRepository {
 
@@ -42,16 +39,17 @@ public class ConvertRepository {
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
         CLASS_MAP.put(Date.class, dateConvert);
-        CLASS_MAP.put(List.class, arrayConvert);
-        CLASS_MAP.put(Map.class, mapRsonConvert);
     }
 
     public static ValueConvert getConverter(Object obj) {
         if (obj == null) {
             return VALUE_TYPE_MAP.get(ValueType.NULL);
         }
-        if (obj.getClass().isArray()) {
+        if (obj.getClass().isArray() || obj.getClass().isAssignableFrom(Collection.class)) {
             return VALUE_TYPE_MAP.get(ValueType.ARRAY);
+        }
+        if (Map.class.isAssignableFrom(obj.getClass())) {
+            return VALUE_TYPE_MAP.get(ValueType.RSON);
         }
         return CLASS_MAP.get(obj.getClass());
     }
