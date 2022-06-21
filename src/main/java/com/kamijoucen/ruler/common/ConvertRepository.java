@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.value.convert.*;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ConvertRepository {
@@ -22,6 +23,7 @@ public class ConvertRepository {
         BoolConvert boolConvert = new BoolConvert();
         SubRuleResultConvert subRuleResultConvert = new SubRuleResultConvert();
         DateConvert dateConvert = new DateConvert();
+        MapRsonConvert mapRsonConvert = new MapRsonConvert();
 
         VALUE_TYPE_MAP.put(ValueType.INTEGER, integerConvert);
         VALUE_TYPE_MAP.put(ValueType.DOUBLE, doubleConvert);
@@ -30,6 +32,7 @@ public class ConvertRepository {
         VALUE_TYPE_MAP.put(ValueType.ARRAY, arrayConvert);
         VALUE_TYPE_MAP.put(ValueType.BOOL, boolConvert);
         VALUE_TYPE_MAP.put(ValueType.DATE, dateConvert);
+        VALUE_TYPE_MAP.put(ValueType.RSON, mapRsonConvert);
         VALUE_TYPE_MAP.put(ValueType.RULE_RESULT, subRuleResultConvert);
 
         CLASS_MAP.put(Integer.class, integerConvert);
@@ -39,6 +42,8 @@ public class ConvertRepository {
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
         CLASS_MAP.put(Date.class, dateConvert);
+        CLASS_MAP.put(List.class, arrayConvert);
+        CLASS_MAP.put(Map.class, mapRsonConvert);
     }
 
     public static ValueConvert getConverter(Object obj) {

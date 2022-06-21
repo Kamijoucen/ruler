@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.value.ValueType;
 import java.util.Date;
 
 public class DateConvert implements ValueConvert {
+
     @Override
     public ValueType getType() {
         return ValueType.DATE;

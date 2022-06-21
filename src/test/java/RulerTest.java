@@ -358,8 +358,8 @@ public class RulerTest {
 
     @Test
     public void string_plus_test() {
-        String a = 1 + 2 + 3 + "4";
-        System.out.println(a);
+        List<String> list = new ArrayList<String>();
+        System.out.println(list.getClass().isArray());
     }
 
     @Test
@@ -379,6 +379,5 @@ public class RulerTest {
         v2 = System.currentTimeMillis();
 
         System.out.println(v2 - v1);
-
     }
 }

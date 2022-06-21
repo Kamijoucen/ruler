@@ -36,4 +36,8 @@ public class RMetaInfo {
     public void setSource(BaseValue source) {
         this.source = source;
     }
+
+    public Map<String, BaseValue> getProperties() {
+        return properties;
+    }
 }
