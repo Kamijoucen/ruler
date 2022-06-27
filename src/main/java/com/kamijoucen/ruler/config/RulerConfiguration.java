@@ -4,9 +4,12 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
+import java.util.Map;
 
 public interface RulerConfiguration {
 
@@ -32,10 +35,14 @@ public interface RulerConfiguration {
 
     RuntimeBehaviorFactory getRuntimeBehaviorFactory();
 
+    CreateRuntimeContextFactory getCreateDefaultRuntimeContextFactory();
+
     MetaInfoFactory getMetaInfoFactory();
 
     Integer getMaxLoopNumber();
 
     Integer getMaxStackDepth();
+
+    RuntimeContext createDefaultRuntimeContext(Map<String, BaseValue> outSpace);
 
 }

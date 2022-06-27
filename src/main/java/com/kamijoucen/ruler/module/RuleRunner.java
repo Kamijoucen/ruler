@@ -22,9 +22,6 @@ public class RuleRunner implements Serializable {
     private boolean isScript;
     private transient RulerConfiguration configuration;
 
-    public RuleRunner() {
-    }
-
     public RuleRunner(RulerModule module, boolean isScript, RulerConfiguration configuration) {
         this.module = module;
         this.isScript = isScript;
@@ -63,6 +60,7 @@ public class RuleRunner implements Serializable {
         return run(parameter);
     }
 
+    //------------------------------------------------------------------------------------------------------------------
     public RuntimeContext customRun(NodeVisitor visitor, RulerConfiguration configuration) {
         AssertUtil.notNull(visitor);
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
@@ -72,6 +70,7 @@ public class RuleRunner implements Serializable {
     public RuntimeContext customRun(NodeVisitor visitor) {
         return customRun(visitor, configuration);
     }
+
 
     public RulerConfiguration getConfiguration() {
         return configuration;
@@ -85,15 +84,8 @@ public class RuleRunner implements Serializable {
         return module;
     }
 
-    public void setModule(RulerModule module) {
-        this.module = module;
-    }
-
     public boolean isScript() {
         return isScript;
     }
 
-    public void setScript(boolean script) {
-        isScript = script;
-    }
 }

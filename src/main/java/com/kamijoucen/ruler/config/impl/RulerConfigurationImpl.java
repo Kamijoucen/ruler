@@ -3,20 +3,20 @@ package com.kamijoucen.ruler.config.impl;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.config.MetaInfoFactory;
-import com.kamijoucen.ruler.config.ParamTypePreProcess;
-import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.config.RuntimeBehaviorFactory;
+import com.kamijoucen.ruler.config.*;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
 import com.kamijoucen.ruler.runtime.ObjectMetaInfoFactory;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
+import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
@@ -27,6 +27,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
     private List<ImportNode> globalImport = new ArrayList<ImportNode>();
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
+    private CreateRuntimeContextFactory createRuntimeContextFactory;
     private MetaInfoFactory metaInfoFactory;
     private Integer maxLoopNumber = -1;
     private Integer maxStackDepth = -1;
@@ -37,8 +38,13 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private void init() {
         initDefaultFunction();
-        runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
-        metaInfoFactory = new ObjectMetaInfoFactory();
+        initEngineBehaviorFactory();
+    }
+
+    private void initEngineBehaviorFactory() {
+        this.runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
+        this.metaInfoFactory = new ObjectMetaInfoFactory();
+        this.createRuntimeContextFactory = new CreateRuntimeContextFactoryImpl(this);
     }
 
     private void initDefaultFunction() {
@@ -113,6 +119,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
+    public CreateRuntimeContextFactory getCreateDefaultRuntimeContextFactory() {
+        return this.createRuntimeContextFactory;
+    }
+
+    @Override
     public MetaInfoFactory getMetaInfoFactory() {
         return this.metaInfoFactory;
     }
@@ -148,6 +159,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return importCache;
     }
 
+    @Override
+    public RuntimeContext createDefaultRuntimeContext(Map<String, BaseValue> outSpace) {
+        return createRuntimeContextFactory.create(outSpace);
+    }
+
     public void setGlobalScope(Scope globalScope) {
         this.globalScope = globalScope;
     }
@@ -166,5 +182,13 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     public void setParamTypePreProcess(ParamTypePreProcess paramTypePreProcess) {
         this.paramTypePreProcess = paramTypePreProcess;
+    }
+
+    public CreateRuntimeContextFactory getCreateRuntimeContextFactory() {
+        return createRuntimeContextFactory;
+    }
+
+    public void setCreateRuntimeContextFactory(CreateRuntimeContextFactory createRuntimeContextFactory) {
+        this.createRuntimeContextFactory = createRuntimeContextFactory;
     }
 }

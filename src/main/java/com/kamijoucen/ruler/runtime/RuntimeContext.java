@@ -9,9 +9,9 @@ import java.util.Map;
 
 public class RuntimeContext {
 
-    private RulerConfiguration configuration;
+    private final RulerConfiguration configuration;
     private Boolean isCallLinkAssign = null;
-    private Map<String, BaseValue> outSpace;
+    private final Map<String, BaseValue> outSpace;
     private final NodeVisitor nodeVisitor;
     private final NodeVisitor typeCheckVisitor;
     private final ImportCache importCache;
