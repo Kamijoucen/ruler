@@ -5,29 +5,30 @@ import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.value.BaseValue;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class RuntimeContext {
 
     private final RulerConfiguration configuration;
+    private Map<String, BaseValue> outSpace;
     private Boolean isCallLinkAssign = null;
-    private final Map<String, BaseValue> outSpace;
-    private final NodeVisitor nodeVisitor;
-    private final NodeVisitor typeCheckVisitor;
-    private final ImportCache importCache;
+    private NodeVisitor nodeVisitor;
+    private NodeVisitor typeCheckVisitor;
+    private ImportCache importCache;
     private StackDepthCheckOperation stackDepthCheckOperation;
 
-    public RuntimeContext(Map<String, BaseValue> outSpace,
-                          NodeVisitor nodeVisitor,
+    public RuntimeContext(NodeVisitor nodeVisitor,
                           NodeVisitor typeCheckVisitor,
-                          ImportCache importCache, RulerConfiguration configuration,
-                          StackDepthCheckOperation stackDepthCheckOperation) {
-        this.outSpace = outSpace;
+                          ImportCache importCache,
+                          StackDepthCheckOperation stackDepthCheckOperation,
+                          RulerConfiguration configuration) {
+        this.outSpace = new HashMap<String, BaseValue>();
         this.nodeVisitor = nodeVisitor;
         this.typeCheckVisitor = typeCheckVisitor;
         this.importCache = importCache;
-        this.configuration = configuration;
         this.stackDepthCheckOperation = stackDepthCheckOperation;
+        this.configuration = configuration;
     }
 
     public BaseValue findOutValue(String name) {
@@ -70,4 +71,26 @@ public class RuntimeContext {
         this.stackDepthCheckOperation = stackDepthCheckOperation;
     }
 
+    public Map<String, BaseValue> getOutSpace() {
+        return outSpace;
+    }
+
+    public void setOutSpace(Map<String, BaseValue> outSpace) {
+        if (outSpace == null) {
+            return;
+        }
+        this.outSpace = outSpace;
+    }
+
+    public void setNodeVisitor(NodeVisitor nodeVisitor) {
+        this.nodeVisitor = nodeVisitor;
+    }
+
+    public void setTypeCheckVisitor(NodeVisitor typeCheckVisitor) {
+        this.typeCheckVisitor = typeCheckVisitor;
+    }
+
+    public void setImportCache(ImportCache importCache) {
+        this.importCache = importCache;
+    }
 }

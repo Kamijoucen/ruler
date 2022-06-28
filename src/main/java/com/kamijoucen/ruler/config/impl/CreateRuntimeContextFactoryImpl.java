@@ -2,10 +2,7 @@ package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.config.CreateRuntimeContextFactory;
 import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
-import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.Map;
@@ -20,12 +17,13 @@ public class CreateRuntimeContextFactoryImpl implements CreateRuntimeContextFact
 
     @Override
     public RuntimeContext create(Map<String, BaseValue> outSpace) {
-        if (CollectionUtil.isEmpty(outSpace)) {
-            throw new IllegalArgumentException("out space is null");
-        }
         RuntimeContext runtimeContext = new RuntimeContext(
-                outSpace, new EvalVisitor(), new TypeCheckVisitor(), configuration.getImportCache(), configuration,
-                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
+                configuration.getEvalVisitor(),
+                configuration.getTypeCheckVisitor(),
+                configuration.getImportCache(),
+                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation(),
+                configuration);
+        runtimeContext.setOutSpace(outSpace);
         return runtimeContext;
     }
 }

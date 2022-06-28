@@ -32,8 +32,10 @@ public class RulerInterpreter {
     }
 
     public RuntimeContext runCustomVisitor(NodeVisitor visitor, Scope runScope) {
-        RuntimeContext context = new RuntimeContext(null, visitor, configuration.getTypeCheckVisitor(),
-                configuration.getImportCache(), configuration, configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
+
+        RuntimeContext context = configuration.createDefaultRuntimeContext(null);
+        context.setNodeVisitor(visitor);
+
         for (BaseNode statement : module.getStatements()) {
             statement.eval(context, runScope);
         }
@@ -45,9 +47,7 @@ public class RulerInterpreter {
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         // 运行上下文
-        RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
-                configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
-                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
+        RuntimeContext context = configuration.createDefaultRuntimeContext(values);
 
         if (hasImportGlobalModule) {
             List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
@@ -68,10 +68,7 @@ public class RulerInterpreter {
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
-
-        RuntimeContext context = new RuntimeContext(values, configuration.getEvalVisitor(),
-                configuration.getTypeCheckVisitor(), configuration.getImportCache(), configuration,
-                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation());
+        RuntimeContext context = configuration.createDefaultRuntimeContext(values);
 
         List<BaseNode> allNode = new ArrayList<BaseNode>(
                 module.getStatements().size() + configuration.getGlobalImportModules().size());

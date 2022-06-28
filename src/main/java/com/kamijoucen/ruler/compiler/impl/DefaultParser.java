@@ -44,7 +44,7 @@ public class DefaultParser implements Parser {
     private void initContext() {
         TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
         this.parseContext = new ParseContext(typeCheckVisitor);
-        this.runtimeContext = new RuntimeContext(null, null, typeCheckVisitor, null, null, null);
+        this.runtimeContext = new RuntimeContext(null, typeCheckVisitor, null, null, null);
     }
 
     @Override

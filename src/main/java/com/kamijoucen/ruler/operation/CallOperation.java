@@ -56,7 +56,7 @@ public class CallOperation implements Operation {
         if (returnValues.size() == 1) {
             return returnValues.get(0);
         }
-        return new ArrayValue(returnValues, null);
+        return new ArrayValue(returnValues, new RMetaInfo());
     }
 
 }

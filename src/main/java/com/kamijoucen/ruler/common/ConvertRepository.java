@@ -3,7 +3,10 @@ package com.kamijoucen.ruler.common;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.*;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ConvertRepository {
 
