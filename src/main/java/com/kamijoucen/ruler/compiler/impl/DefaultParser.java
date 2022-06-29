@@ -17,7 +17,6 @@ import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.type.ArrayType;
 import com.kamijoucen.ruler.type.UnknownType;
-import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
@@ -28,23 +27,22 @@ import java.util.*;
 
 public class DefaultParser implements Parser {
 
-    private RulerConfiguration configuration;
+    private final RulerConfiguration configuration;
     private ParseContext parseContext;
     private RuntimeContext runtimeContext;
     private final List<BaseNode> statements;
     private final TokenStream tokenStream;
 
     public DefaultParser(TokenStream tokenStream, RulerConfiguration configuration) {
-        initContext();
         this.tokenStream = tokenStream;
-        this.statements = new ArrayList<BaseNode>();
         this.configuration = configuration;
+        this.statements = new ArrayList<BaseNode>();
+        initContext();
     }
 
     private void initContext() {
-        TypeCheckVisitor typeCheckVisitor = new TypeCheckVisitor();
-        this.parseContext = new ParseContext(typeCheckVisitor);
-        this.runtimeContext = new RuntimeContext(null, typeCheckVisitor, null, null, null);
+        this.parseContext = new ParseContext(configuration.getTypeCheckVisitor());
+        this.runtimeContext = configuration.createDefaultRuntimeContext(null);
     }
 
     @Override
