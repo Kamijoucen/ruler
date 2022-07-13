@@ -7,6 +7,9 @@ public class NullValue implements BaseValue {
 
     public static final NullValue INSTANCE = new NullValue();
 
+    private NullValue() {
+    }
+
     @Override
     public ValueType getType() {
         return ValueType.NULL;

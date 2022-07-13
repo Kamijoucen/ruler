@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.exception.IllegalOperationException;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
@@ -75,57 +76,27 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseStatement(boolean isRoot) {
+
         Token token = tokenStream.token();
         BaseNode statement = null;
-        boolean isNeedSemicolon = false;
-        switch (token.type) {
-            case IDENTIFIER:
-            case OUT_IDENTIFIER:
-            case LEFT_PAREN:
-            case KEY_THIS:
-                statement = parseCallLink(true);
-                isNeedSemicolon = true;
-                break;
-            case KEY_RETURN:
-                statement = parseReturn();
-                isNeedSemicolon = true;
-                break;
-            case KEY_IF:
-                statement = parseIfStatement();
-                break;
-            case KEY_FOR:
-                statement = parseForEachStatement();
-                break;
-            case KEY_WHILE:
-                statement = parseWhileStatement();
-                break;
-            case KEY_BREAK:
-                statement = parseBreak();
-                isNeedSemicolon = true;
-                break;
-            case KEY_CONTINUE:
-                statement = parseContinue();
-                isNeedSemicolon = true;
-                break;
-            case KEY_FUN:
-                statement = parseFunDefine();
-                break;
-            case KEY_VAR:
-                statement = parseVariableDefine();
-                isNeedSemicolon = true;
-                break;
-            case KEY_RULE:
-                if (isRoot) {
-                    statement = parseRuleBlock();
-                }
-                break;
-            default:
-                throw SyntaxException.withSyntax("未知的符号：" + token.name);
+
+        if (token.type == TokenType.KEY_RULE) {
+            if (!isRoot) {
+                throw new IllegalOperationException("");
+            }
+            statement = parseRuleBlock();
+        } else {
+            statement = parseExpression();
         }
         if (statement == null) {
-            throw SyntaxException.withSyntax("错误的语句");
+            throw SyntaxException.withSyntax("未知的符号：" + token.name);
         }
-        if (isNeedSemicolon) {
+
+        if (token.type != TokenType.KEY_FUN
+                && token.type != TokenType.KEY_IF
+                && token.type != TokenType.KEY_FOR
+                && token.type != TokenType.KEY_WHILE
+                && token.type != TokenType.KEY_RULE) {
             AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
             tokenStream.nextToken();
         }
@@ -207,7 +178,7 @@ public class DefaultParser implements Parser {
             case OUT_IDENTIFIER:
             case LEFT_PAREN:
             case KEY_THIS:
-                return parseCallLink(false);
+                return parseCallLink();
             case ADD:
             case SUB:
             case NOT:
@@ -226,10 +197,26 @@ public class DefaultParser implements Parser {
                 return parseNull();
             case LEFT_SQUARE:
                 return parseArray();
+            case RIGHT_PAREN:
+                return parseParen();
             case LEFT_BRACE:
                 return parseRsonNode();
             case KEY_TYPEOF:
                 return parseTypeOfNode();
+            case KEY_IF:
+                return parseIfStatement();
+            case KEY_WHILE:
+                return parseWhileStatement();
+            case KEY_FOR:
+                return parseForEachStatement();
+            case KEY_RETURN:
+                return parseReturn();
+            case KEY_BREAK:
+                return parseBreak();
+            case KEY_CONTINUE:
+                return parseContinue();
+            case KEY_VAR:
+                return parseVariableDefine();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -390,7 +377,7 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
 
-    public BaseNode parseCallLink(boolean isStatement) {
+    public BaseNode parseCallLink() {
         BaseNode firstNode = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER
                 || tokenStream.token().type == TokenType.OUT_IDENTIFIER) {
@@ -421,9 +408,6 @@ public class DefaultParser implements Parser {
         }
         CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls, firstNode.getLocation());
         if (tokenStream.token().type == TokenType.ASSIGN) {
-            if (!isStatement) {
-                throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
-            }
             if (firstNode instanceof OutNameNode) {
                 throw SyntaxException.withSyntax("不能对外部变量进行赋值: $" + ((OutNameNode) firstNode).name.name);
             }

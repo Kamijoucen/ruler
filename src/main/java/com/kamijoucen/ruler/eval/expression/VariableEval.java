@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.constant.NoneValue;
 
 public class VariableEval implements BaseEval<VariableDefineNode> {
     @Override
@@ -15,6 +14,6 @@ public class VariableEval implements BaseEval<VariableDefineNode> {
         BaseNode name = node.getName();
         BaseValue value = node.getExpression().eval(context, scope);
         scope.defineLocal(((NameNode) name).name.name, value);
-        return NoneValue.INSTANCE;
+        return value;
     }
 }

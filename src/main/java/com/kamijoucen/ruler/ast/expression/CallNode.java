@@ -48,7 +48,7 @@ public class CallNode extends OperationNode {
     }
 
     @Override
-    public void assign(BaseNode expression, Scope scope, RuntimeContext context) {
+    public BaseValue assign(BaseNode expression, Scope scope, RuntimeContext context) {
         throw new UnsupportedOperationException();
     }
 

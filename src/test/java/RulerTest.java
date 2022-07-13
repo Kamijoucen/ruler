@@ -380,4 +380,27 @@ public class RulerTest {
 
         System.out.println(v2 - v1);
     }
+
+    @Test
+    public void scopeTest1() {
+
+        String script = "var f = fun() { println(a); }; var a = 100; f();";
+
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        run.run();
+
+    }
+
+    @Test
+    public void testStateExp() {
+
+        String script = "var a = if 2 >= 1 1 + 1; else 'hahaha';; println(a);";
+
+        RuleRunner runner = Ruler.compileScript(script, configuration);
+
+        runner.run();
+
+    }
+
 }

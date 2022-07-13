@@ -14,7 +14,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class DotAssignOperation implements AssignOperation {
 
     @Override
-    public void assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope,
+    public BaseValue assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope,
             RuntimeContext context) {
         if (!(preOperationValue instanceof AbstractRClassValue)) {
             throw SyntaxException.withSyntax(preOperationValue.getType() + "不是一个对象");
@@ -27,5 +27,7 @@ public class DotAssignOperation implements AssignOperation {
         RMetaInfo mataData = rsonValue.getClassInfo();
         BaseValue value = expression.eval(context, scope);
         mataData.put(dotNode.getName(), value);
+
+        return value;
     }
 }

@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NoneValue;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class IfStatementEval implements BaseEval<IfStatementNode> {
     @Override
@@ -28,6 +28,6 @@ public class IfStatementEval implements BaseEval<IfStatementNode> {
                 return elseBlock.eval(context, scope);
             }
         }
-        return NoneValue.INSTANCE;
+        return NullValue.INSTANCE;
     }
 }

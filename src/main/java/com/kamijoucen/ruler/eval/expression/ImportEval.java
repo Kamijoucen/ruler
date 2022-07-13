@@ -16,7 +16,7 @@ import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ModuleValue;
-import com.kamijoucen.ruler.value.constant.NoneValue;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.Collections;
 
@@ -53,7 +53,7 @@ public class ImportEval implements BaseEval<ImportNode> {
 
         ModuleValue moduleValue = new ModuleValue(importModule, runScope);
         scope.putLocal(node.getAlias(), moduleValue);
-        return NoneValue.INSTANCE;
+        return NullValue.INSTANCE;
     }
 
     public RulerModule compilerScript(String text, String fileName, RuntimeContext context) {

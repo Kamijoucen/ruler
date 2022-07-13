@@ -9,7 +9,6 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.constant.NoneValue;
 
 public class AssignEval implements BaseEval<AssignNode> {
     @Override
@@ -19,14 +18,14 @@ public class AssignEval implements BaseEval<AssignNode> {
         if (callLength == 0) {
             NameNode name = (NameNode) leftNode.getFirst();
             BaseValue expBaseValue = node.getExpression().eval(context, scope);
+
             scope.update(name.name.name, expBaseValue);
-            return NoneValue.INSTANCE;
+            return expBaseValue;
         } else {
             leftNode.evalAssign(context, scope);
             OperationNode lastNode = CollectionUtil.last(leftNode.getCalls());
             assert lastNode != null;
-            lastNode.assign(node.getExpression(), scope, context);
+            return lastNode.assign(node.getExpression(), scope, context);
         }
-        return NoneValue.INSTANCE;
     }
 }

@@ -17,8 +17,6 @@ public class TypeMapping {
         mapping.put(ValueType.STRING, "string");
         mapping.put(ValueType.BOOL, "boolean");
         mapping.put(ValueType.ARRAY, "array");
-        mapping.put(ValueType.VOID, "void");
-        mapping.put(ValueType.NONE, "none");
         mapping.put(ValueType.NULL, "null");
         mapping.put(ValueType.RSON, "object");
     }

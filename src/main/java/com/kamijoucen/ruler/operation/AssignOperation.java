@@ -9,6 +9,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public interface AssignOperation {
 
-    void assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope, RuntimeContext context);
+    BaseValue assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope, RuntimeContext context);
 
 }

@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public abstract class OperationNode extends AbstractBaseNode {
 
@@ -19,6 +20,6 @@ public abstract class OperationNode extends AbstractBaseNode {
 
     public abstract void putAssignOperation(AssignOperation operation);
 
-    public abstract void assign(BaseNode expression, Scope scope, RuntimeContext context);
+    public abstract BaseValue assign(BaseNode expression, Scope scope, RuntimeContext context);
 
 }

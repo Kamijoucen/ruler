@@ -16,10 +16,6 @@ public enum ValueType {
 
     ARRAY,
 
-    VOID,
-
-    NONE,
-
     NULL,
 
     BREAK,

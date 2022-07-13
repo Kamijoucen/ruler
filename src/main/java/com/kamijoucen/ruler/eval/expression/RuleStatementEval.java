@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.SubRuleValue;
-import com.kamijoucen.ruler.value.constant.NoneValue;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.List;
 
@@ -29,6 +29,6 @@ public class RuleStatementEval implements BaseEval<RuleStatementNode> {
             scope.putReturnValues(
                     CollectionUtil.list((BaseValue) new SubRuleValue(alias.getValue(), returnValues)));
         }
-        return NoneValue.INSTANCE;
+        return NullValue.INSTANCE;
     }
 }

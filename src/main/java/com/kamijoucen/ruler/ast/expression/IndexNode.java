@@ -49,8 +49,8 @@ public class IndexNode extends OperationNode {
     }
 
     @Override
-    public void assign(BaseNode expression, Scope scope, RuntimeContext context) {
-        this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope, context);
+    public BaseValue assign(BaseNode expression, Scope scope, RuntimeContext context) {
+        return this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope, context);
     }
 
     public BaseNode getIndex() {
