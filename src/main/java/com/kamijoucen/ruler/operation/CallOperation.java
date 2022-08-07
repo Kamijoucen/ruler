@@ -25,7 +25,7 @@ public class CallOperation implements Operation {
             Object[] funcParam = Arrays.copyOfRange(param, 1, param.length);
             if (func.getType() == ValueType.FUNCTION) {
                 RulerFunction function = ((FunctionValue) func).getValue();
-                return (BaseValue) function.call(funcParam);
+                return (BaseValue) function.call(context, funcParam);
             }
             if (func.getType() == ValueType.CLOSURE) {
                 ClosureValue function = ((ClosureValue) func);

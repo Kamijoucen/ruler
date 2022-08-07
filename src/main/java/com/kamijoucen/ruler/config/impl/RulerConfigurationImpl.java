@@ -31,6 +31,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private MetaInfoFactory metaInfoFactory;
     private Integer maxLoopNumber = -1;
     private Integer maxStackDepth = -1;
+    private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
 
     public RulerConfigurationImpl() {
         init();
@@ -164,6 +165,12 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return createRuntimeContextFactory.create(outSpace);
     }
 
+    @Override
+    public IntegerNumberCache getIntegerNumberCache() {
+        return integerNumberCache;
+    }
+
+
     public void setGlobalScope(Scope globalScope) {
         this.globalScope = globalScope;
     }
@@ -191,4 +198,9 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     public void setCreateRuntimeContextFactory(CreateRuntimeContextFactory createRuntimeContextFactory) {
         this.createRuntimeContextFactory = createRuntimeContextFactory;
     }
+
+    public void setIntegerNumberCache(IntegerNumberCache integerNumberCache) {
+        this.integerNumberCache = integerNumberCache;
+    }
+
 }

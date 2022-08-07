@@ -1,5 +1,7 @@
 package com.kamijoucen.ruler.function;
 
+import com.kamijoucen.ruler.runtime.RuntimeContext;
+
 import java.util.Arrays;
 
 public class PrintFunction implements RulerFunction {
@@ -10,7 +12,7 @@ public class PrintFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(Object... param) {
+    public Object call(RuntimeContext context, Object... param) {
         if (param == null || param.length == 0) {
             System.out.println();
         } else if (param.length == 1) {

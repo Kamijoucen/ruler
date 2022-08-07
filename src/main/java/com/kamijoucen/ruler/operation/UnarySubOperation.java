@@ -14,7 +14,7 @@ public class UnarySubOperation implements Operation {
         BaseValue value = param[0];
         if (value.getType() == ValueType.INTEGER) {
             IntegerValue val = (IntegerValue) value;
-            return new IntegerValue(-val.getValue());
+            return context.getConfiguration().getIntegerNumberCache().getValue(-val.getValue());
         } else if (value.getType() == ValueType.DOUBLE) {
             DoubleValue val = (DoubleValue) value;
             return new DoubleValue(-val.getValue());

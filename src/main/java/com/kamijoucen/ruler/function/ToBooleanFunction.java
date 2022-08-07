@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.function;
 
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
@@ -12,7 +13,7 @@ public class ToBooleanFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(Object... param) {
+    public Object call(RuntimeContext context, Object... param) {
         if (param == null || param.length == 0) {
             return null;
         }

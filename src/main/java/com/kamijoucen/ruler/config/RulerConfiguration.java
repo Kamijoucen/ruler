@@ -45,4 +45,6 @@ public interface RulerConfiguration {
 
     RuntimeContext createDefaultRuntimeContext(Map<String, BaseValue> outSpace);
 
+    IntegerNumberCache getIntegerNumberCache();
+
 }

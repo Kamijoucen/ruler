@@ -1,5 +1,7 @@
 package com.kamijoucen.ruler.function;
 
+import com.kamijoucen.ruler.runtime.RuntimeContext;
+
 public class TimestampFunction implements RulerFunction {
 
     @Override
@@ -8,7 +10,7 @@ public class TimestampFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(Object... param) {
+    public Object call(RuntimeContext context, Object... param) {
         return System.currentTimeMillis();
     }
 }

@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.util;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RulerParameter;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
 import com.kamijoucen.ruler.value.IntegerValue;
@@ -18,15 +19,6 @@ import java.util.Map;
 
 public class ConvertUtil {
 
-    public static void main(String[] args) {
-        System.out.println(stringToValue(new StringValue("-1.125")));
-        // TODO 这种情况会失败
-        System.out.println(stringToValue(new StringValue("+1.59")));
-        System.out.println(stringToValue(new StringValue("15")));
-        System.out.println(stringToValue(new StringValue("12.9")));
-    }
-
-
     public static Number parseToNumber(String str) {
         NumberFormat formatter = NumberFormat.getInstance();
         try {
@@ -36,7 +28,7 @@ public class ConvertUtil {
         }
     }
 
-    public static BaseValue stringToValue(String str) {
+    public static BaseValue stringToValue(String str, RuntimeContext context) {
         Number result = parseToNumber(str);
         if (result == null) {
             return null;
@@ -44,10 +36,10 @@ public class ConvertUtil {
         if (result instanceof Double) {
             return new DoubleValue(result.doubleValue());
         }
-        return new IntegerValue(result.intValue());
+        return context.getConfiguration().getIntegerNumberCache().getValue(result.intValue());
     }
 
-    public static BaseValue stringToValue(StringValue strValue) {
+    public static BaseValue stringToValue(StringValue strValue, RuntimeContext context) {
         Number result = parseToNumber(strValue.getValue());
         if (result == null) {
             return strValue;
@@ -55,7 +47,7 @@ public class ConvertUtil {
         if (result instanceof Double) {
             return new DoubleValue(result.doubleValue());
         }
-        return new IntegerValue(result.intValue());
+        return context.getConfiguration().getIntegerNumberCache().getValue(result.intValue());
     }
 
     public static Map<String, BaseValue> convertParamToBase(List<RulerParameter> params, RulerConfiguration configuration) {

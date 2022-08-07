@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.runtime.metafun;
 
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.DateValue;
-import com.kamijoucen.ruler.value.IntegerValue;
 
 import java.util.Calendar;
 
@@ -13,8 +13,8 @@ public class DateGetYearFun extends AbstractMetaFun {
     }
 
     @Override
-    public Object call(Object... param) {
+    public Object call(RuntimeContext context, Object... param) {
         DateValue source = (DateValue) this.getSource();
-        return new IntegerValue(source.getCalendar().get(Calendar.YEAR));
+        return context.getConfiguration().getIntegerNumberCache().getValue(source.getCalendar().get(Calendar.YEAR));
     }
 }

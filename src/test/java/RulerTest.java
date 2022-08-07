@@ -212,7 +212,7 @@ public class RulerTest {
             }
 
             @Override
-            public Object call(Object... param) {
+            public Object call(RuntimeContext context, Object... param) {
                 return "我们gg啦！！！";
             }
         });

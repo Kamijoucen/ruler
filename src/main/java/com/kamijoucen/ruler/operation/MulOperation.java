@@ -17,7 +17,7 @@ public class MulOperation implements Operation {
         if (tempVal1.getType() == ValueType.INTEGER && tempVal2.getType() == ValueType.INTEGER) {
             IntegerValue val1 = (IntegerValue) tempVal1;
             IntegerValue val2 = (IntegerValue) tempVal2;
-            return new IntegerValue(val1.getValue() * val2.getValue());
+            return context.getConfiguration().getIntegerNumberCache().getValue(val1.getValue() * val2.getValue());
         } else if (tempVal1.getType() == ValueType.INTEGER && tempVal2.getType() == ValueType.DOUBLE) {
             IntegerValue val1 = (IntegerValue) tempVal1;
             DoubleValue val2 = (DoubleValue) tempVal2;
