@@ -51,6 +51,9 @@ public enum TokenType {
     KEY_TYPEOF,     // typeof
     KEY_IN,         // in
     KEY_RULE,       // rule
+
+    INFIX,          // infix
+
     EOF,
 
     UN_KNOW,
