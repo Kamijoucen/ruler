@@ -14,6 +14,9 @@ public class ArrayPushFun extends AbstractMetaFun {
 
     @Override
     public Object call(RuntimeContext context, Object... param) {
+        if (param == null || param.length == 0) {
+            return NullValue.INSTANCE;
+        }
         ArrayValue source = (ArrayValue) this.getSource();
         source.getValues().add((BaseValue) param[0]);
         return NullValue.INSTANCE;
