@@ -6,4 +6,6 @@ public interface MetaInfoFactory {
 
     RMetaInfo createDateMetaInfo();
 
+    RMetaInfo createArrayMetaInfo();
+
 }

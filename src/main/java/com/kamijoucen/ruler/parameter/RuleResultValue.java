@@ -21,8 +21,8 @@ public class RuleResultValue {
         return (Boolean) value;
     }
 
-    public Integer toInteger() {
-        return (Integer) value;
+    public Long toInteger() {
+        return (Long) value;
     }
 
     public Double toDouble() {

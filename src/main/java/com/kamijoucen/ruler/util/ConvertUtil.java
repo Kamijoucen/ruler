@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
-import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.StringValue;
 import com.kamijoucen.ruler.value.convert.ValueConvert;
 

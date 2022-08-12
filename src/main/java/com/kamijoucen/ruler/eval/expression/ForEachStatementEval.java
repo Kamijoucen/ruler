@@ -11,6 +11,7 @@ import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.constant.NullValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
 
 import java.util.List;
@@ -37,12 +38,18 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             scope.setCurrentLoopVariable(baseValue);
 
             lastValue = block.eval(context, scope);
+
             if (ValueType.BREAK == lastValue.getType()) {
                 break;
             } else if (ValueType.RETURN == lastValue.getType()) {
                 return ReturnValue.INSTANCE;
             }
         }
+
+        if (lastValue != null && lastValue.getType() == ValueType.BREAK) {
+            return NullValue.INSTANCE;
+        }
+
         return lastValue;
     }
 }

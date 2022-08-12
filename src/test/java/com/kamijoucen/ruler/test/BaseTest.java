@@ -70,4 +70,14 @@ public class BaseTest {
         Assert.assertEquals("lisicen", result.first().toString());
     }
 
+    @Test
+    public void arrayPushTest() {
+        String script = "var a = [1, 2, 3]; println(a); a.push(4); println(a); return a.size();";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+
+        Assert.assertEquals(4, result.first().toInteger().longValue());
+    }
+
 }

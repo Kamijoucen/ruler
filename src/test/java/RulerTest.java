@@ -395,7 +395,7 @@ public class RulerTest {
     @Test
     public void testStateExp() {
 
-        String script = "var a = if 2 >= 1 1 + 1; else 'hahaha';; println(a);";
+        String script = "var a = if 2 >= 1 1 + 1; else 'hahaha'; ; println(a);";
 
         RuleRunner runner = Ruler.compileScript(script, configuration);
 

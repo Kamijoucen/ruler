@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.constant.NullValue;
 import com.kamijoucen.ruler.value.constant.ReturnValue;
 
 public class WhileStatementEval implements BaseEval<WhileStatementNode> {
@@ -29,6 +30,11 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
                 return ReturnValue.INSTANCE;
             }
         }
+
+        if (lastValue != null && lastValue.getType() == ValueType.BREAK) {
+            return NullValue.INSTANCE;
+        }
+
         return lastValue;
     }
 }

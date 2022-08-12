@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.config.impl;
 import com.kamijoucen.ruler.config.CreateRuntimeContextFactory;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.Map;
@@ -23,7 +24,9 @@ public class CreateRuntimeContextFactoryImpl implements CreateRuntimeContextFact
                 configuration.getImportCache(),
                 configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation(),
                 configuration);
-        runtimeContext.setOutSpace(outSpace);
+        if (!CollectionUtil.isEmpty(outSpace)) {
+            runtimeContext.setOutSpace(outSpace);
+        }
         return runtimeContext;
     }
 }

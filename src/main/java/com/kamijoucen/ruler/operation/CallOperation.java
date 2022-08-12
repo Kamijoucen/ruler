@@ -45,8 +45,12 @@ public class CallOperation implements Operation {
             callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
         }
         callScope.initReturnSpace();
+
+        // set array value meta info
+        RMetaInfo arrayMetaInfo = context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo();
         // put args in scope
-        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), new RMetaInfo()));
+        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), arrayMetaInfo));
+
         BaseNode block = closure.getBlock();
         block.eval(context, callScope);
         List<BaseValue> returnValues = callScope.getReturnSpace();
@@ -56,7 +60,7 @@ public class CallOperation implements Operation {
         if (returnValues.size() == 1) {
             return returnValues.get(0);
         }
-        return new ArrayValue(returnValues, new RMetaInfo());
+        return new ArrayValue(returnValues, context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo());
     }
 
 }

@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.*;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
-import com.kamijoucen.ruler.runtime.ObjectMetaInfoFactory;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
@@ -44,7 +43,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private void initEngineBehaviorFactory() {
         this.runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
-        this.metaInfoFactory = new ObjectMetaInfoFactory();
+        this.metaInfoFactory = new ObjectMetaInfoFactoryImpl();
         this.createRuntimeContextFactory = new CreateRuntimeContextFactoryImpl(this);
     }
 

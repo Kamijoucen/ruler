@@ -15,7 +15,7 @@ import java.util.List;
 public class ArrayEval implements BaseEval<ArrayNode> {
     @Override
     public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
-        RMetaInfo mataData = new RMetaInfo();
+        RMetaInfo mataData = context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo();
 
         List<BaseNode> nodes = node.getValues();
         if (nodes.size() == 0) {

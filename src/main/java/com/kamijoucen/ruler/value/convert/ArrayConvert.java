@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.common.ConvertRepository;
-import com.kamijoucen.ruler.common.RMetaInfo;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -31,7 +30,7 @@ public class ArrayConvert implements ValueConvert {
             BaseValue baseValue = ConvertRepository.getConverter(obj).realToBase(obj, configuration);
             list.add(baseValue);
         }
-        return new ArrayValue(list, new RMetaInfo());
+        return new ArrayValue(list, configuration.getMetaInfoFactory().createArrayMetaInfo());
     }
 
     @Override
