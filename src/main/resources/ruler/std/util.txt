@@ -1,7 +1,7 @@
 import "/ruler/std/collections.txt" collections;
 
 fun Eq(val1, val2, compare) {
-    if compare == null
+    if compare == null:
         return val1 == val2;
     return compare(val1, val2);
 }
@@ -12,10 +12,10 @@ fun NotEq(val1, val2, compare) {
 
 // 等于任意一个
 fun ContainsAnyOne(val, list, compare) {
-    if collections.IsNotArray(list)
+    if collections.IsNotArray(list):
         return false;
-    for v in list
-        if Eq(val, v, compare) return true;
+    for v in list:
+        if Eq(val, v, compare): return true;
     return false;
 }
 
@@ -26,31 +26,31 @@ fun NotContainsAnyOne(val, list, compare) {
 
 // 两个数组元素去重后相等
 fun EqArrayEveryOne(list1, list2, compare) {
-    if collections.IsNotArray(list1) || collections.IsNotArray(list2)
+    if collections.IsNotArray(list1) || collections.IsNotArray(list2):
         return false;
-    if collections.IsEmpty(list1) && collections.IsEmpty(list2)
+    if collections.IsEmpty(list1) && collections.IsEmpty(list2):
         return true;
-    if collections.IsEmpty(list1) || collections.IsEmpty(list2)
+    if collections.IsEmpty(list1) || collections.IsEmpty(list2):
         return false;
-    for v1 in list1
-        if !ContainsAnyOne(v1, list2, compare)
+    for v1 in list1:
+        if !ContainsAnyOne(v1, list2, compare):
             return false;
-    for v2 in list2
-        if !ContainsAnyOne(v2, list1, compare)
+    for v2 in list2:
+        if !ContainsAnyOne(v2, list1, compare):
             return false;
     return true;
 }
 
 // 包含任意一个
 fun EqArrayAnyOne(list1, list2, compare) {
-    if collections.IsNotArray(list1) || collections.IsNotArray(list2)
+    if collections.IsNotArray(list1) || collections.IsNotArray(list2):
         return false;
-    if collections.IsEmpty(list1) && collections.IsEmpty(list2)
+    if collections.IsEmpty(list1) && collections.IsEmpty(list2):
         return true;
-    if collections.IsEmpty(list1) || collections.IsEmpty(list2)
+    if collections.IsEmpty(list1) || collections.IsEmpty(list2):
         return false;
-    for v1 in list1
-        if ContainsAnyOne(v1, list2, compare)
+    for v1 in list1:
+        if ContainsAnyOne(v1, list2, compare):
             return true;
     return false;
 }

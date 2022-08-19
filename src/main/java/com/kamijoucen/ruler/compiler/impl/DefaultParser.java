@@ -9,7 +9,6 @@ import com.kamijoucen.ruler.common.RStack;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.exception.IllegalOperationException;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
@@ -18,10 +17,7 @@ import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.type.ArrayType;
 import com.kamijoucen.ruler.type.UnknownType;
-import com.kamijoucen.ruler.util.AssertUtil;
-import com.kamijoucen.ruler.util.CollectionUtil;
-import com.kamijoucen.ruler.util.SyntaxCheckUtil;
-import com.kamijoucen.ruler.util.TokenUtil;
+import com.kamijoucen.ruler.util.*;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.*;
@@ -76,27 +72,60 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseStatement(boolean isRoot) {
-
         Token token = tokenStream.token();
         BaseNode statement = null;
-
-        if (token.type == TokenType.KEY_RULE) {
-            if (!isRoot) {
-                throw new IllegalOperationException("");
-            }
-            statement = parseRuleBlock();
-        } else {
-            statement = parseExpression();
+        boolean isNeedSemicolon = false;
+        switch (token.type) {
+            case IDENTIFIER:
+            case OUT_IDENTIFIER:
+            case LEFT_PAREN:
+            case KEY_THIS:
+                statement = parseCallLink(true);
+                isNeedSemicolon = true;
+                break;
+            case KEY_RETURN:
+                statement = parseReturn();
+                isNeedSemicolon = true;
+                break;
+            case KEY_IF:
+                statement = parseIfStatement();
+                break;
+            case KEY_FOR:
+                statement = parseForEachStatement();
+                break;
+            case KEY_WHILE:
+                statement = parseWhileStatement();
+                break;
+            case KEY_BREAK:
+                statement = parseBreak();
+                isNeedSemicolon = true;
+                break;
+            case KEY_CONTINUE:
+                statement = parseContinue();
+                isNeedSemicolon = true;
+                break;
+            case KEY_FUN:
+                statement = parseFunDefine();
+                break;
+            case KEY_VAR:
+                statement = parseVariableDefine();
+                isNeedSemicolon = true;
+                break;
+            case KEY_RULE:
+                if (isRoot) {
+                    statement = parseRuleBlock();
+                }
+                break;
+            case KEY_INFIX:
+                statement = parseInfixDefinitionNode();
+                break;
+            default:
+                throw SyntaxException.withSyntax("未知的符号：" + token.name);
         }
         if (statement == null) {
-            throw SyntaxException.withSyntax("未知的符号：" + token.name);
+            throw SyntaxException.withSyntax("错误的语句");
         }
-
-        if (token.type != TokenType.KEY_FUN
-                && token.type != TokenType.KEY_IF
-                && token.type != TokenType.KEY_FOR
-                && token.type != TokenType.KEY_WHILE
-                && token.type != TokenType.KEY_RULE) {
+        if (isNeedSemicolon) {
             AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
             tokenStream.nextToken();
         }
@@ -141,11 +170,10 @@ public class DefaultParser implements Parser {
                         SyntaxCheckUtil.logicBinaryTypeCheck(logicBinaryOperationNode, parseContext, runtimeContext);
                         valStack.push(logicBinaryOperationNode);
                     } else {
-                        BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp.type, exp2, exp1,
+                        BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp.type, op.name, exp2, exp1,
                                 OperationDefine.findOperation(binOp.type), binOp.location);
                         SyntaxCheckUtil.binaryTypeCheck(binaryOperationNode, parseContext, runtimeContext);
-                        valStack.push(new BinaryOperationNode(binOp.type, exp2, exp1,
-                                OperationDefine.findOperation(binOp.type), binOp.location));
+                        valStack.push(binaryOperationNode);
                     }
                 }
             }
@@ -162,7 +190,7 @@ public class DefaultParser implements Parser {
                 SyntaxCheckUtil.logicBinaryTypeCheck(logicBinaryOperationNode, parseContext, runtimeContext);
                 valStack.push(logicBinaryOperationNode);
             } else {
-                BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp.type, exp2, exp1,
+                BinaryOperationNode binaryOperationNode = new BinaryOperationNode(binOp.type, binOp.name, exp2, exp1,
                         OperationDefine.findOperation(binOp.type), binOp.location);
                 SyntaxCheckUtil.binaryTypeCheck(binaryOperationNode, parseContext, runtimeContext);
                 valStack.push(binaryOperationNode);
@@ -178,7 +206,7 @@ public class DefaultParser implements Parser {
             case OUT_IDENTIFIER:
             case LEFT_PAREN:
             case KEY_THIS:
-                return parseCallLink();
+                return parseCallLink(false);
             case ADD:
             case SUB:
             case NOT:
@@ -197,26 +225,10 @@ public class DefaultParser implements Parser {
                 return parseNull();
             case LEFT_SQUARE:
                 return parseArray();
-            case RIGHT_PAREN:
-                return parseParen();
             case LEFT_BRACE:
                 return parseRsonNode();
             case KEY_TYPEOF:
                 return parseTypeOfNode();
-            case KEY_IF:
-                return parseIfStatement();
-            case KEY_WHILE:
-                return parseWhileStatement();
-            case KEY_FOR:
-                return parseForEachStatement();
-            case KEY_RETURN:
-                return parseReturn();
-            case KEY_BREAK:
-                return parseBreak();
-            case KEY_CONTINUE:
-                return parseContinue();
-            case KEY_VAR:
-                return parseVariableDefine();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -242,9 +254,12 @@ public class DefaultParser implements Parser {
         BaseNode blockNode = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockNode = parseBlock(true);
-        } else {
+        } else if (tokenStream.token().type == TokenType.COLON) {
+            tokenStream.nextToken();
             BaseNode statement = parseStatement(false);
             blockNode = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
+        } else {
+            throw SyntaxException.withSyntax("for condition expression expected ':' or '{'", tokenStream.token());
         }
         return new ForEachStatementNode(name, arrayExp, blockNode, forToken.location);
     }
@@ -257,9 +272,12 @@ public class DefaultParser implements Parser {
         BaseNode blockAST;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockAST = parseBlock(true);
-        } else {
+        } else if (tokenStream.token().type == TokenType.COLON) {
+            tokenStream.nextToken();
             BaseNode statement = parseStatement(false);
             blockAST = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
+        } else {
+            throw SyntaxException.withSyntax("while condition expression expected ':' or '{'", tokenStream.token());
         }
         return new WhileStatementNode(condition, blockAST, whileToken.location);
     }
@@ -275,9 +293,12 @@ public class DefaultParser implements Parser {
         BaseNode thenBlock = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock(false);
-        } else {
+        } else if (tokenStream.token().type == TokenType.COLON) {
+            tokenStream.nextToken();
             BaseNode statement = parseStatement(false);
             thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+        } else {
+            throw SyntaxException.withSyntax("if condition expression expected ':' or '{'", tokenStream.token());
         }
         BaseNode elseBlock = null;
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
@@ -377,7 +398,7 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
 
-    public BaseNode parseCallLink() {
+    public BaseNode parseCallLink(boolean isStatement) {
         BaseNode firstNode = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER
                 || tokenStream.token().type == TokenType.OUT_IDENTIFIER) {
@@ -408,6 +429,9 @@ public class DefaultParser implements Parser {
         }
         CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls, firstNode.getLocation());
         if (tokenStream.token().type == TokenType.ASSIGN) {
+            if (!isStatement) {
+                throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
+            }
             if (firstNode instanceof OutNameNode) {
                 throw SyntaxException.withSyntax("不能对外部变量进行赋值: $" + ((OutNameNode) firstNode).name.name);
             }
@@ -669,6 +693,21 @@ public class DefaultParser implements Parser {
                 new StringNode(nameToken.name, nameToken.location),
                 (BlockNode) blockNode,
                 ruleToken.location);
+    }
+
+    public BaseNode parseInfixDefinitionNode() {
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_INFIX);
+        Token infixToken = tokenStream.token();
+        // eat the infix token
+        tokenStream.nextToken();
+        // infix operation
+        ClosureDefineNode functionNode = (ClosureDefineNode) parseFunDefine();
+
+        String infixName = functionNode.getName();
+        if (IOUtil.isBlank(infixName)) {
+            throw SyntaxException.withSyntax("infix function name is blank!", infixToken);
+        }
+        return new InfixDefinitionNode(functionNode, infixToken.location);
     }
 
 }

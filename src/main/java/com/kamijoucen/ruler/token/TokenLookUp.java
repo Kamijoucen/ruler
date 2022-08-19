@@ -53,6 +53,7 @@ public class TokenLookUp {
         KEY_WORDS.put("typeof", TokenType.KEY_TYPEOF);
         KEY_WORDS.put("in", TokenType.KEY_IN);
         KEY_WORDS.put("rule", TokenType.KEY_RULE);
+        KEY_WORDS.put("infix", TokenType.KEY_INFIX);
     }
 
     public static TokenType symbol(String str) {

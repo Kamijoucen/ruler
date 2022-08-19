@@ -7,13 +7,13 @@ fun IsNotArray(arr) {
 }
 
 fun Size(arr) {
-    if !IsArray(arr) return null;
+    if !IsArray(arr): return null;
     return length(arr);
 }
 
 fun IsEmpty(list) {
-    if list == null return true;
-    if !IsArray(list) return false;
+    if list == null: return true;
+    if !IsArray(list): return false;
     return length(list) == 0;
 }
 
@@ -28,9 +28,9 @@ fun Swap(arr, i, j) {
 }
 
 fun Contains(obj, list) {
-    if !IsArray(list) return false;
-    for v in list
-        if v == obj return true;
+    if !IsArray(list): return false;
+    for v in list:
+        if v == obj: return true;
     return false;
 }
 

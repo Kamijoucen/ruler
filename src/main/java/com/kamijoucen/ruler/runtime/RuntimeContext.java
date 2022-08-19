@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ClosureValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ public class RuntimeContext {
 
     private final RulerConfiguration configuration;
     private Map<String, BaseValue> outSpace;
+    private Map<String, ClosureValue> infixOperationSpace;
     private Boolean isCallLinkAssign = null;
     private NodeVisitor nodeVisitor;
     private NodeVisitor typeCheckVisitor;
@@ -24,6 +26,7 @@ public class RuntimeContext {
                           StackDepthCheckOperation stackDepthCheckOperation,
                           RulerConfiguration configuration) {
         this.outSpace = new HashMap<String, BaseValue>();
+        this.infixOperationSpace = new HashMap<String, ClosureValue>();
         this.nodeVisitor = nodeVisitor;
         this.typeCheckVisitor = typeCheckVisitor;
         this.importCache = importCache;
@@ -80,6 +83,18 @@ public class RuntimeContext {
             return;
         }
         this.outSpace = outSpace;
+    }
+
+    public Map<String, ClosureValue> getInfixOperationSpace() {
+        return infixOperationSpace;
+    }
+
+    public void addInfixOperation(String name, ClosureValue infixOperationSpace) {
+        this.infixOperationSpace.put(name, infixOperationSpace);
+    }
+
+    public ClosureValue getInfixOperation(String name) {
+        return infixOperationSpace.get(name);
     }
 
     public void setNodeVisitor(NodeVisitor nodeVisitor) {

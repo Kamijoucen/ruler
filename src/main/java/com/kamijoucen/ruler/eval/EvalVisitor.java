@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.eval.expression.*;
 import com.kamijoucen.ruler.eval.facotr.*;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class EvalVisitor extends AbstractVisitor {
@@ -42,6 +43,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final VariableEval variableEval = new VariableEval();
     private static final ImportEval importEval = new ImportEval();
     private static final RuleStatementEval ruleStatementEval = new RuleStatementEval();
+    private static final InfixDefinitionEval infixDefinitionEval = new InfixDefinitionEval();
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
@@ -198,4 +200,8 @@ public class EvalVisitor extends AbstractVisitor {
         return ruleStatementEval.eval(node, scope, context);
     }
 
+    @Override
+    public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
+        return infixDefinitionEval.eval(node, scope, context);
+    }
 }

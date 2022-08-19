@@ -1,0 +1,17 @@
+
+infix fun push(left, right) {
+    if typeof(left) != 'array'{
+        println("left value error!!!");
+        return left;
+    }
+    left.push(right);
+    return left;
+}
+
+var arr = ["1", "2", "3"];
+println("1", arr);
+
+
+arr = arr push "4" push "5";
+println("2", arr);
+

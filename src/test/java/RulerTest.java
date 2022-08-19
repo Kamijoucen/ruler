@@ -393,14 +393,27 @@ public class RulerTest {
     }
 
     @Test
-    public void testStateExp() {
-
-        String script = "var a = if 2 >= 1 1 + 1; else 'hahaha'; ; println(a);";
-
+    public void testAssign() {
+        String script = "for arg in _args_:\n" +
+                "        num = num + ToNumber(arg);";
         RuleRunner runner = Ruler.compileScript(script, configuration);
 
-        runner.run();
+    }
 
+
+    @Test
+    public void testIf() {
+        String script = "if true {} i = i + 1;";
+        RuleRunner runner = Ruler.compileScript(script, configuration);
+    }
+
+    @Test
+    public void infixTest() {
+        String script = IOUtil.read("D:\\dev\\code\\ruler-github\\ruler\\src\\test\\java\\infixtest1.txt");
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        RuleResult result = run.run();
+        System.out.println(result);
     }
 
 }

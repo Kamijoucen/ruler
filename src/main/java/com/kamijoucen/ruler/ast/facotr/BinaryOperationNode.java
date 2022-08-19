@@ -18,12 +18,14 @@ public class BinaryOperationNode extends AbstractBaseNode {
     private TokenType op;
 
     private Operation operation;
+    private String operationName;
 
-    public BinaryOperationNode(TokenType op, BaseNode exp1, BaseNode exp2, Operation operation, TokenLocation location) {
+    public BinaryOperationNode(TokenType op, String operationName, BaseNode exp1, BaseNode exp2, Operation operation, TokenLocation location) {
         super(location);
         this.exp1 = exp1;
         this.exp2 = exp2;
         this.op = op;
+        this.operationName = operationName;
         this.operation = operation;
     }
 
@@ -67,5 +69,13 @@ public class BinaryOperationNode extends AbstractBaseNode {
 
     public void setOperation(Operation operation) {
         this.operation = operation;
+    }
+
+    public String getOperationName() {
+        return operationName;
+    }
+
+    public void setOperationName(String operationName) {
+        this.operationName = operationName;
     }
 }

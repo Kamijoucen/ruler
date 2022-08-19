@@ -51,8 +51,10 @@ public class CallOperation implements Operation {
         // put args in scope
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), arrayMetaInfo));
 
-        BaseNode block = closure.getBlock();
-        block.eval(context, callScope);
+        // call function
+        closure.getBlock().eval(context, callScope);
+
+        // get return value
         List<BaseValue> returnValues = callScope.getReturnSpace();
         if (returnValues == null || returnValues.size() == 0) {
             return NullValue.INSTANCE;

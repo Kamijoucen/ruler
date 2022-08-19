@@ -2,14 +2,14 @@ import "/ruler/std/collections.txt" collections;
 
 fun Add() {
     var num = 0;
-    for arg in _args_
+    for arg in _args_:
         num = num + ToNumber(arg);
     return num;
 }
 
 fun Sub() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
     var i = 1;
@@ -23,14 +23,14 @@ fun Sub() {
 
 fun Mul() {
     var num = 1;
-    for arg in _args_
+    for arg in _args_:
         num = num * ToNumber(arg);
     return num;
 }
 
 fun Div() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
     var i = 1;
@@ -44,7 +44,7 @@ fun Div() {
 
 fun And() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToBoolean(_args_[0]);
 
@@ -68,7 +68,7 @@ fun And() {
 
 fun Or() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToBoolean(_args_[0]);
     if r {
@@ -91,7 +91,7 @@ fun Or() {
 
 fun Not() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     return !ToBoolean(_args_[0]);
 }
@@ -99,7 +99,7 @@ fun Not() {
 // >
 fun Gt() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
     var i = 1;
@@ -118,7 +118,7 @@ fun Gt() {
 // <
 fun Lt() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
     var i = 1;
@@ -136,7 +136,7 @@ fun Lt() {
 // <=
 fun Le() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
     var i = 1;
@@ -154,7 +154,7 @@ fun Le() {
 // >=
 fun Ge() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
     var i = 1;
@@ -172,7 +172,7 @@ fun Ge() {
 // ==
 fun Eq() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = _args_[0];
     var i = 1;
@@ -190,7 +190,7 @@ fun Eq() {
 // !=
 fun Ne() {
     var len = length(_args_);
-    if len == 0 return null;
+    if len == 0: return null;
 
     var r = _args_[0];
     var i = 1;

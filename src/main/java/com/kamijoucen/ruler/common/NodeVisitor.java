@@ -69,4 +69,7 @@ public interface NodeVisitor {
     BaseValue eval(ImportNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context);
+
+    BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context);
+
 }

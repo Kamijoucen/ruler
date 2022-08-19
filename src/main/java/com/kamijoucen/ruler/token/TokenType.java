@@ -52,7 +52,7 @@ public enum TokenType {
     KEY_IN,         // in
     KEY_RULE,       // rule
 
-    INFIX,          // infix
+    KEY_INFIX,      // infix
 
     EOF,
 

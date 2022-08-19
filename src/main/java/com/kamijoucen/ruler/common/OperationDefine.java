@@ -28,6 +28,7 @@ public class OperationDefine {
         PRECEDENCE.put(TokenType.SUB, 30); // -
         PRECEDENCE.put(TokenType.MUL, 40); // *
         PRECEDENCE.put(TokenType.DIV, 40); // /
+        PRECEDENCE.put(TokenType.IDENTIFIER, 30); // custom
 
         OPERATION.put(TokenType.EQ, new EqOperation()); // ==
         OPERATION.put(TokenType.NE, new NeOperation()); // !=
@@ -41,6 +42,7 @@ public class OperationDefine {
         OPERATION.put(TokenType.DIV, new DivOperation()); // /
         OPERATION.put(TokenType.CALL, new CallOperation()); // ()
         OPERATION.put(TokenType.INDEX, new IndexOperation()); // []
+        OPERATION.put(TokenType.IDENTIFIER, new CustomOperation()); // custom
 
         LOGIC_OPERATION.put(TokenType.AND, new AndOperation()); // &&
         LOGIC_OPERATION.put(TokenType.OR, new OrOperation()); // ||
