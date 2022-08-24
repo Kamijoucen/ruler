@@ -15,10 +15,12 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.ModuleValue;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.Collections;
+import java.util.Map;
 
 public class ImportEval implements BaseEval<ImportNode> {
     @Override
@@ -50,6 +52,10 @@ public class ImportEval implements BaseEval<ImportNode> {
         RulerInterpreter interpreter = new RulerInterpreter(importModule, context.getConfiguration());
         interpreter.setHasImportGlobalModule(false);
         interpreter.runScript(Collections.<RulerParameter>emptyList(), runScope);
+
+        //
+        Map<String, ClosureValue> infixOperationSpace = interpreter.getRuntimeContext().getInfixOperationSpace();
+
 
         ModuleValue moduleValue = new ModuleValue(importModule, runScope);
         scope.putLocal(node.getAlias(), moduleValue);

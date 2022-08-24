@@ -1,0 +1,7 @@
+
+import infix "D:\\a.txt"; // 导入中缀但不导入变量
+import infix "D:\\a.txt" a; // 导入中缀并且导入变量
+import "D:\\a.txt" a; // 仅导入变量
+
+
+

@@ -10,11 +10,13 @@ public class ImportNode extends AbstractBaseNode {
 
     private String path;
     private String alias;
+    private boolean hasImportInfix;
 
-    public ImportNode(String path, String alias, TokenLocation location) {
+    public ImportNode(String path, String alias, boolean hasImportInfix, TokenLocation location) {
         super(location);
         this.path = path;
         this.alias = alias;
+        this.hasImportInfix = hasImportInfix;
     }
 
     @Override
@@ -41,5 +43,13 @@ public class ImportNode extends AbstractBaseNode {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+
+    public boolean isHasImportInfix() {
+        return hasImportInfix;
+    }
+
+    public void setHasImportInfix(boolean hasImportInfix) {
+        this.hasImportInfix = hasImportInfix;
     }
 }

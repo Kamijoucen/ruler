@@ -26,6 +26,8 @@ public class RulerInterpreter {
     private transient RulerConfiguration configuration;
     private Boolean hasImportGlobalModule = true;
 
+    private RuntimeContext runtimeContext;
+
     public RulerInterpreter(RulerModule module, RulerConfiguration configuration) {
         this.module = module;
         this.configuration = configuration;
@@ -33,13 +35,13 @@ public class RulerInterpreter {
 
     public RuntimeContext runCustomVisitor(NodeVisitor visitor, Scope runScope) {
 
-        RuntimeContext context = configuration.createDefaultRuntimeContext(null);
-        context.setNodeVisitor(visitor);
+        this.runtimeContext = configuration.createDefaultRuntimeContext(null);
+        this.runtimeContext.setNodeVisitor(visitor);
 
         for (BaseNode statement : module.getStatements()) {
-            statement.eval(context, runScope);
+            statement.eval(this.runtimeContext, runScope);
         }
-        return context;
+        return this.runtimeContext;
     }
 
     public List<Object> runExpression(List<RulerParameter> param, Scope runScope) {
@@ -47,20 +49,20 @@ public class RulerInterpreter {
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         // 运行上下文
-        RuntimeContext context = configuration.createDefaultRuntimeContext(values);
+        this.runtimeContext = configuration.createDefaultRuntimeContext(values);
 
         if (hasImportGlobalModule) {
             List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
             if (CollectionUtil.isNotEmpty(globalImportModules)) {
                 for (ImportNode node : globalImportModules) {
-                    node.eval(context, runScope);
+                    node.eval(this.runtimeContext, runScope);
                 }
             }
         }
         BaseNode firstNode = CollectionUtil.first(module.getStatements());
         // 执行表达式
         AssertUtil.notNull(firstNode);
-        BaseValue value = firstNode.eval(context, runScope);
+        BaseValue value = firstNode.eval(this.runtimeContext, runScope);
         return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value, configuration));
     }
 
@@ -68,7 +70,7 @@ public class RulerInterpreter {
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
-        RuntimeContext context = configuration.createDefaultRuntimeContext(values);
+        this.runtimeContext = configuration.createDefaultRuntimeContext(values);
 
         List<BaseNode> allNode = new ArrayList<BaseNode>(
                 module.getStatements().size() + configuration.getGlobalImportModules().size());
@@ -78,7 +80,7 @@ public class RulerInterpreter {
         allNode.addAll(module.getStatements());
 
         for (BaseNode statement : allNode) {
-            if (statement.eval(context, runScope).getType() == ValueType.RETURN) {
+            if (statement.eval(this.runtimeContext, runScope).getType() == ValueType.RETURN) {
                 break;
             }
         }
@@ -99,5 +101,9 @@ public class RulerInterpreter {
 
     public void setHasImportGlobalModule(Boolean hasImportGlobalModule) {
         this.hasImportGlobalModule = hasImportGlobalModule;
+    }
+
+    public RuntimeContext getRuntimeContext() {
+        return runtimeContext;
     }
 }

@@ -676,7 +676,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
-        return new ImportNode(path, aliasToken.name, importToken.location);
+        return new ImportNode(path, aliasToken.name, false, importToken.location);
     }
 
     public BaseNode parseRuleBlock() {

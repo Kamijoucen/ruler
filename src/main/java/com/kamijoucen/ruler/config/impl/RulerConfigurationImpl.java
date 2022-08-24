@@ -85,12 +85,14 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public void setGlobalImportModule(String path, String alias) {
-        this.globalImport.add(new ImportNode(path, alias, null));
+        // todo import infix
+        this.globalImport.add(new ImportNode(path, alias, false, null));
     }
 
     @Override
     public void setGlobalImportScriptModule(String script, String alias) {
-        this.globalImport.add(new ImportScriptNode(script, alias, null));
+        // todo import infix
+        this.globalImport.add(new ImportScriptNode(script, alias, false, null));
     }
 
     @Override
