@@ -669,14 +669,30 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_IMPORT);
         Token importToken = tokenStream.token();
         tokenStream.nextToken();
+
+        boolean hasImportInfix = false;
+        if (tokenStream.token().type == TokenType.KEY_INFIX) {
+            hasImportInfix = true;
+            tokenStream.nextToken();
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.STRING);
         String path = tokenStream.token().name;
-        Token aliasToken = tokenStream.nextToken();
-        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
         tokenStream.nextToken();
+
+        Token aliasToken = null;
+        if (tokenStream.token().type == TokenType.IDENTIFIER) {
+            aliasToken = tokenStream.nextToken();
+        }
+
+        // 不允许出现无别名切无中缀标识的导入语句
+        if (aliasToken == null && !hasImportInfix) {
+            throw new RuntimeException();
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
-        return new ImportNode(path, aliasToken.name, false, importToken.location);
+        return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix, importToken.location);
     }
 
     public BaseNode parseRuleBlock() {
