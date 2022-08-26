@@ -687,7 +687,7 @@ public class DefaultParser implements Parser {
 
         // 不允许出现无别名切无中缀标识的导入语句
         if (aliasToken == null && !hasImportInfix) {
-            throw new RuntimeException();
+            throw SyntaxException.withSyntax("不允许出现无别名且无中缀标识的导入语句");
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);

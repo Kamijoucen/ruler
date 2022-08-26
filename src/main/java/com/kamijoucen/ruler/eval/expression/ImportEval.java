@@ -13,6 +13,7 @@ import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
@@ -54,8 +55,16 @@ public class ImportEval implements BaseEval<ImportNode> {
         interpreter.runScript(Collections.<RulerParameter>emptyList(), runScope);
 
         //
-        Map<String, ClosureValue> infixOperationSpace = interpreter.getRuntimeContext().getInfixOperationSpace();
-
+        if (node.isHasImportInfix()) {
+            Map<String, ClosureValue> infixOperationSpace = interpreter.getRuntimeContext().getInfixOperationSpace();
+            if (!CollectionUtil.isEmpty(infixOperationSpace)) {
+                for (Map.Entry<String, ClosureValue> entry : infixOperationSpace.entrySet()) {
+                    if (context.getInfixOperation(entry.getKey()) == null) {
+                        context.addInfixOperation(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
+        }
 
         ModuleValue moduleValue = new ModuleValue(importModule, runScope);
         scope.putLocal(node.getAlias(), moduleValue);
