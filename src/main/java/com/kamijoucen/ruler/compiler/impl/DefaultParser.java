@@ -682,7 +682,8 @@ public class DefaultParser implements Parser {
 
         Token aliasToken = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER) {
-            aliasToken = tokenStream.nextToken();
+            aliasToken = tokenStream.token();
+            tokenStream.nextToken();
         }
 
         // 不允许出现无别名切无中缀标识的导入语句
