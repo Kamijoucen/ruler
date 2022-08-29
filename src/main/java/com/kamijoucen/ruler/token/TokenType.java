@@ -49,10 +49,10 @@ public enum TokenType {
     KEY_IMPORT,     // import
     KEY_INIT,       // init
     KEY_TYPEOF,     // typeof
+    KEY_INFIX,      // infix
+    KEY_THEN,       // then
     KEY_IN,         // in
     KEY_RULE,       // rule
-
-    KEY_INFIX,      // infix
 
     EOF,
 
