@@ -3,3 +3,8 @@
 var a = if age > 18 then call1();
 var a = if age > 18 then call1() else call2();
 var a = if age > 18 then call1() else if name == 'xx' then call3() else call4();
+
+
+var a = if age > 10: call1;
+var a = if age > 18: call1() else call2();
+var a = if age > 18: call1() else if name == 'xx': call3() else call4();

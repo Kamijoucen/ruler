@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.eval.facotr;
 
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.CustomOperation;
 import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -22,6 +23,9 @@ public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
 
         if (operation instanceof CustomOperation) {
             ClosureValue fun = context.getInfixOperation(node.getOperationName());
+            if (fun == null) {
+                throw SyntaxException.withSyntax("custom infix not found: '" + node.getOperationName() + "'", node.getLocation());
+            }
             return operation.compute(context, fun, val1, val2);
         }
 

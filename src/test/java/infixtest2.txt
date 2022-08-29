@@ -1,0 +1,7 @@
+import infix "D:\dev\code\ruler-github\ruler\src\test\java\arrayinfixutil.txt" a;
+
+var arr = [1, 2, 3, 4];
+
+println(arr push 5);
+
+println(arr index (arr.size() - 1));

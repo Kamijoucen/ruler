@@ -88,7 +88,7 @@ public class DefaultParser implements Parser {
                 isNeedSemicolon = true;
                 break;
             case KEY_IF:
-                statement = parseIfStatement();
+                statement = parseIfStatement(true);
                 break;
             case KEY_FOR:
                 statement = parseForEachStatement();
@@ -229,6 +229,8 @@ public class DefaultParser implements Parser {
                 return parseRsonNode();
             case KEY_TYPEOF:
                 return parseTypeOfNode();
+            case KEY_IF:
+                return parseIfStatement(false);
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
@@ -282,7 +284,7 @@ public class DefaultParser implements Parser {
         return new WhileStatementNode(condition, blockAST, whileToken.location);
     }
 
-    public BaseNode parseIfStatement() {
+    public BaseNode parseIfStatement(boolean isStatement) {
 
         Token ifToken = tokenStream.token();
 
@@ -291,23 +293,37 @@ public class DefaultParser implements Parser {
 
         BaseNode condition = parseExpression();
         BaseNode thenBlock = null;
-        if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            thenBlock = parseBlock(false);
-        } else if (tokenStream.token().type == TokenType.COLON) {
-            tokenStream.nextToken();
-            BaseNode statement = parseStatement(false);
-            thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+
+        if (isStatement) {
+            if (tokenStream.token().type == TokenType.LEFT_BRACE) {
+                thenBlock = parseBlock(false);
+            } else if (tokenStream.token().type == TokenType.COLON) {
+                tokenStream.nextToken();
+                BaseNode statement = parseStatement(false);
+                thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+            } else {
+                throw SyntaxException.withSyntax("if condition expression expected ':' or '{'", tokenStream.token());
+            }
         } else {
-            throw SyntaxException.withSyntax("if condition expression expected ':' or '{'", tokenStream.token());
+            AssertUtil.assertToken(tokenStream.token(), TokenType.COLON);
+            tokenStream.nextToken();
+
+            thenBlock = parseExpression();
         }
+
+
         BaseNode elseBlock = null;
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
             Token token = tokenStream.nextToken();
-            if (token.type == TokenType.LEFT_BRACE) {
-                elseBlock = parseBlock(false);
+            if (isStatement) {
+                if (token.type == TokenType.LEFT_BRACE) {
+                    elseBlock = parseBlock(false);
+                } else {
+                    BaseNode statement = parseStatement(false);
+                    elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+                }
             } else {
-                BaseNode statement = parseStatement(false);
-                elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+                elseBlock = parseExpression();
             }
         }
         return new IfStatementNode(condition, thenBlock, elseBlock, ifToken.location);

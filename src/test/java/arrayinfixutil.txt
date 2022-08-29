@@ -1,0 +1,10 @@
+
+infix fun push(array, right) {
+    if typeof(array) != 'array': return array;
+    array.push(right);
+    return array;
+}
+
+infix fun index(array, index) {
+    return array[index];
+}

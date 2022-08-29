@@ -416,4 +416,13 @@ public class RulerTest {
         System.out.println(result);
     }
 
+    @Test
+    public void infixImportTest() {
+
+        String script = IOUtil.read("D:\\dev\\code\\ruler-github\\ruler\\src\\test\\java\\infixtest2.txt");
+        RuleRunner run = Ruler.compileScript(script, configuration);
+
+        RuleResult result = run.run();
+    }
+
 }
