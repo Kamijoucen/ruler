@@ -100,4 +100,18 @@ public class BaseTest {
         Assert.assertEquals("b", result.first().toString());
     }
 
+    @Test
+    public void anonymousFunc() {
+        String script = "var f = fun(name) -> \"hello \" + name;\n" +
+                "\n" +
+                "var r = f(\"world!\");\n" +
+                "println(r);\n" +
+                "\n" +
+                "return r;";
+        RuleRunner runner = getScriptRunner(script);
+        RuleResult result = runner.run();
+
+        Assert.assertEquals("hello world!", result.first().toString());
+    }
+
 }

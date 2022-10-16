@@ -1,0 +1,6 @@
+var f = fun(name) -> "hello " + name;
+
+var r = f("world!");
+println(r);
+
+return r;

@@ -378,10 +378,13 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();
 
-        if (tokenStream.token().type == TokenType.SUB
-                && tokenStream.peek().type == TokenType.GT) {
-            
-            return null;
+        if (tokenStream.token().type == TokenType.ARROW) {
+            tokenStream.nextToken();
+            BaseNode exp = parseExpression();
+
+            BaseNode returnNode = new ReturnNode(CollectionUtil.list(exp), exp.getLocation());
+            BlockNode blockNode = new BlockNode(CollectionUtil.list(returnNode), exp.getLocation());
+            return new ClosureDefineNode(name, param, blockNode, funToken.location);
         } else {
             BaseNode block = parseBlock(false);
             return new ClosureDefineNode(name, param, block, funToken.location);
