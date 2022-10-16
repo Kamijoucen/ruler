@@ -26,6 +26,9 @@ public enum TokenType {
     NE,             // <> or !=
     AND,            // &&
     OR,             // ||
+
+    ARROW,          // ->
+
     NOT,            // !
     ADD,            // +
     SUB,            // -

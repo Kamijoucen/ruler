@@ -8,6 +8,10 @@ public interface TokenStream {
 
     Token nextToken();
 
+    Token peek();
+
+    Token peek(int step);
+
     Token[] nextToken(int step);
 
     void rollBackToken();

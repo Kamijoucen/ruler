@@ -377,8 +377,15 @@ public class DefaultParser implements Parser {
         // eat )
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();
-        BaseNode block = parseBlock(false);
-        return new ClosureDefineNode(name, param, block, funToken.location);
+
+        if (tokenStream.token().type == TokenType.SUB
+                && tokenStream.peek().type == TokenType.GT) {
+            
+            return null;
+        } else {
+            BaseNode block = parseBlock(false);
+            return new ClosureDefineNode(name, param, block, funToken.location);
+        }
     }
 
     public BaseNode parseBlock(boolean isLoop) {

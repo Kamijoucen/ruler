@@ -42,6 +42,19 @@ public class TokenStreamImpl implements TokenStream {
     }
 
     @Override
+    public Token peek() {
+        return peek(1);
+    }
+
+    @Override
+    public Token peek(int step) {
+        if (offset + step >= tokens.size()) {
+            return tokens.get(tokens.size() - 1);
+        }
+        return tokens.get(offset + step);
+    }
+
+    @Override
     public Token[] nextToken(int step) {
         return null;
     }

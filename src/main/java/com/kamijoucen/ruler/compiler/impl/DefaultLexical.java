@@ -22,7 +22,7 @@ public class DefaultLexical implements Lexical {
     private StringBuilder buffer;
     private boolean isEnd;
     private char curStringFlag;
-    String fileName;
+    private String fileName;
 
     public DefaultLexical(String content, String fileName) {
         this.offset = 0;
