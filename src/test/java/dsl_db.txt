@@ -1,0 +1,39 @@
+
+
+infix fun select(r, fields) {
+    r.fields = fields;
+    return r;
+}
+
+
+infix fun from(r, tableName) {
+    r.tableName = tableName;
+    return r;
+}
+
+infix fun where(r, condition) {
+    r.tableName.push(condition);
+    return r;
+}
+
+var Query = {
+
+    fields: [],
+
+    conditions: [],
+
+    tableName: null,
+
+    build: fun() -> this,
+
+};
+
+var query = Query select [
+    "name",
+    "age",
+    "sex"
+] from "user_info" where "age > 15";
+
+
+println(query.build());
+
