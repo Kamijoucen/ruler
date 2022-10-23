@@ -70,14 +70,6 @@ public class RuntimeContext {
         return stackDepthCheckOperation;
     }
 
-    public void setStackDepthCheckOperation(StackDepthCheckOperation stackDepthCheckOperation) {
-        this.stackDepthCheckOperation = stackDepthCheckOperation;
-    }
-
-    public Map<String, BaseValue> getOutSpace() {
-        return outSpace;
-    }
-
     public void setOutSpace(Map<String, BaseValue> outSpace) {
         if (outSpace == null) {
             return;
