@@ -48,10 +48,10 @@ public class ConvertRepository {
         if (obj == null) {
             return VALUE_TYPE_MAP.get(ValueType.NULL);
         }
-        if (obj.getClass().isArray() || obj.getClass().isAssignableFrom(Collection.class)) {
+        if (obj.getClass().isArray() || obj instanceof Collection) {
             return VALUE_TYPE_MAP.get(ValueType.ARRAY);
         }
-        if (Map.class.isAssignableFrom(obj.getClass())) {
+        if (obj instanceof Map) {
             return VALUE_TYPE_MAP.get(ValueType.RSON);
         }
         return CLASS_MAP.get(obj.getClass());
