@@ -31,7 +31,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
                 .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
 
-        BaseValue lastValue = null;
+        BaseValue lastValue = NullValue.INSTANCE;
         for (BaseValue baseValue : arrayValues) {
             loopCountCheckOperation.accept(node, scope, context);
             scope.setCurrentLoopVariableName(loopName.name);
@@ -46,7 +46,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             }
         }
 
-        if (lastValue != null && lastValue.getType() == ValueType.BREAK) {
+        if (lastValue.getType() == ValueType.BREAK) {
             return NullValue.INSTANCE;
         }
 

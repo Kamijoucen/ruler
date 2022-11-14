@@ -20,7 +20,7 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
                 .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
 
-        BaseValue lastValue = null;
+        BaseValue lastValue = NullValue.INSTANCE;
         while (((BoolValue) node.getCondition().eval(context, scope)).getValue()) {
             loopCountCheckOperation.accept(node, scope, context);
             lastValue = block.eval(context, scope);
@@ -31,7 +31,7 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
             }
         }
 
-        if (lastValue != null && lastValue.getType() == ValueType.BREAK) {
+        if (lastValue.getType() == ValueType.BREAK) {
             return NullValue.INSTANCE;
         }
 

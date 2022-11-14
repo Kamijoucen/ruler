@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class LoopBlockEval implements BaseEval<LoopBlockNode> {
         }
         List<BaseNode> blocks = node.getBlocks();
 
-        BaseValue lastVal = null;
+        BaseValue lastVal = NullValue.INSTANCE;
         for (BaseNode block : blocks) {
             lastVal = block.eval(context, blockScope);
             if (ValueType.CONTINUE == lastVal.getType()) {
