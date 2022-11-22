@@ -1,0 +1,9 @@
+
+
+var str = "lsc";
+
+println(str[0]);
+println(str[1]);
+println(str[10]);
+
+
