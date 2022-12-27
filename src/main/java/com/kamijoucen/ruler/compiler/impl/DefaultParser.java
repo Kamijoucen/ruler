@@ -553,7 +553,7 @@ public class DefaultParser implements Parser {
         Token token = tokenStream.token();
         tokenStream.nextToken();
         if (token.type == TokenType.INTEGER) {
-            return new IntegerNode(Integer.parseInt(token.name), token.location);
+            return new IntegerNode(Long.parseLong(token.name), token.location);
         }
         if (token.type == TokenType.DOUBLE) {
             return new DoubleNode(Double.parseDouble(token.name), token.location);
