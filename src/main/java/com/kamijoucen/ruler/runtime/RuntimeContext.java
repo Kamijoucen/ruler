@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,11 @@ public class RuntimeContext {
     }
 
     public BaseValue findOutValue(String name) {
-        return outSpace.get(name);
+        BaseValue outBaseValue = outSpace.get(name);
+        if (outBaseValue == null) {
+            return NullValue.INSTANCE;
+        }
+        return outBaseValue;
     }
 
     public Boolean getCallLinkAssign() {
