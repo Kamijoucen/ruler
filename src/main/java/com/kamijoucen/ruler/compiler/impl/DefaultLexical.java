@@ -66,6 +66,8 @@ public class DefaultLexical implements Lexical {
                 state = State.STRING;
             } else if (ch == '/' && peekChar() == '/') {
                 state = State.COMMENT;
+            } else if (ch == '`') {
+                state = State.STRING_IDENTIFIER;
             } else {
                 state = State.SYMBOL;
             }
@@ -96,6 +98,9 @@ public class DefaultLexical implements Lexical {
                 case COMMENT:
                     scanComment();
                     break;
+                case STRING_IDENTIFIER:
+                    scanStringIdentifier();
+                    break;
             }
         }
         if (!match) {
@@ -103,6 +108,20 @@ public class DefaultLexical implements Lexical {
         }
         return currentToken;
     }
+
+    private void scanStringIdentifier() {
+
+        forward();
+
+        while (isNotOver() && charAt() != '`') {
+            appendAndForward();
+        }
+
+        forward();
+
+        makeToken(TokenType.IDENTIFIER);
+    }
+
 
     @Override
     public void scanComment() {
@@ -126,7 +145,7 @@ public class DefaultLexical implements Lexical {
             type = TokenLookUp.symbol(buffer.toString());
             if (type == TokenType.UN_KNOW) {
                 throw SyntaxException.withLexical(
-                        TokenUtil.of("未知的符号:" + buffer.toString(), line, column));
+                    TokenUtil.of("未知的符号:" + buffer.toString(), line, column));
             }
         } else {
             forward();
@@ -165,7 +184,7 @@ public class DefaultLexical implements Lexical {
         }
         if (len == 0) {
             throw SyntaxException.withLexical(
-                    TokenUtil.of("小数点后未跟其他数字", line, column));
+                TokenUtil.of("小数点后未跟其他数字", line, column));
         }
         makeToken(TokenType.DOUBLE);
     }
@@ -175,7 +194,7 @@ public class DefaultLexical implements Lexical {
         forward();
         if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
             throw SyntaxException.withLexical(
-                    TokenUtil.of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
+                TokenUtil.of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
         }
         int len = 0;
         while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
@@ -184,7 +203,7 @@ public class DefaultLexical implements Lexical {
         }
         if (len == 0) {
             throw SyntaxException.withLexical(
-                    TokenUtil.of("标识符 '$' 后必须跟其他标识符", line, column));
+                TokenUtil.of("标识符 '$' 后必须跟其他标识符", line, column));
         }
         makeToken(TokenType.OUT_IDENTIFIER);
     }
