@@ -4,6 +4,8 @@ public enum State {
 
     IDENTIFIER,
 
+    STRING_IDENTIFIER,
+
     OUT_IDENTIFIER,
 
     NUMBER,
