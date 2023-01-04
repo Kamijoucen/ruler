@@ -138,6 +138,10 @@ public class DefaultLexical implements Lexical {
     public void scanString() {
         forward();
         while (isNotOver() && charAt() != curStringFlag) {
+            if (charAt() == '\\') {
+                forward();
+                appendAndForward();
+            }
             appendAndForward();
         }
         if (isOver()) {

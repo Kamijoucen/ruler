@@ -425,4 +425,14 @@ public class RulerTest {
         RuleResult result = run.run();
     }
 
+    @Test
+    public void strEscapeTest() {
+
+        String str = "op.Or(op.And(op.NotContains($customField_6a2b843a_8674_11ed_922f_12c91d3f200a,\"!@#$%^&*(){}\\\":?>|~\")))";
+
+        RuleRunner runner = Ruler.compileExpression(str, configuration);
+
+        System.out.println(runner);
+    }
+
 }
