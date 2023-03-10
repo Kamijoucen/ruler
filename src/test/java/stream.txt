@@ -1,0 +1,10 @@
+
+var stream = fun(obj) -> {value: obj};
+
+
+var list = [1, 3, 5, 4, 7];
+
+
+var filterList = stream(list)
+typeof(fun(item) -> item == 'integer')
+filter(fun(item) -> item > 5);
