@@ -26,6 +26,21 @@ public class NeOperation implements Operation {
             DoubleValue val2 = (DoubleValue) tempVal2;
             return BoolValue.get(val1.getValue() != val2.getValue());
         } else {
+            if (tempVal1.getType() == ValueType.NULL && tempVal2.getType() == ValueType.NULL) {
+                return BoolValue.get(false);
+            }
+            if (tempVal1.getType() == ValueType.NULL || tempVal2.getType() == ValueType.NULL) {
+                return BoolValue.get(true);
+            }
+            if (tempVal1.getType() == ValueType.STRING || tempVal2.getType() == ValueType.STRING) {
+                String strVal1 = tempVal1.toString();
+                String strVal2 = tempVal2.toString();
+                return BoolValue.get(!strVal1.equals(strVal2));
+            }
+
+            if (tempVal1.getType() != tempVal2.getType()) {
+                return BoolValue.get(true);
+            }
             String strVal1 = tempVal1.toString();
             String strVal2 = tempVal2.toString();
             return BoolValue.get(!strVal1.equals(strVal2));
