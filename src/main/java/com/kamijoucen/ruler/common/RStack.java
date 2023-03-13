@@ -5,7 +5,7 @@ import java.util.Deque;
 
 public class RStack<T> {
 
-    private Deque<T> queue;
+    private final Deque<T> queue;
 
     public RStack() {
         queue = new ArrayDeque<T>();

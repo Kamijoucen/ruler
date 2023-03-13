@@ -12,7 +12,7 @@ import java.util.List;
 public abstract class AbstractRClassValue implements MetaValue {
 
     protected RMetaInfo classInfo;
-    protected static CallOperation callOperation = (CallOperation) OperationDefine.findOperation(TokenType.CALL);
+    protected static final CallOperation callOperation = (CallOperation) OperationDefine.findOperation(TokenType.CALL);
 
     public AbstractRClassValue(RMetaInfo classInfo) {
         this.classInfo = classInfo;
