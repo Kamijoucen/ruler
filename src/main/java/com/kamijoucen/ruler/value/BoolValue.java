@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.value;
 
-public class BoolValue implements BaseValue {
+public class BoolValue extends AbstractValue {
 
     public static final BoolValue TRUE = new BoolValue(true);
     public static final BoolValue FALSE = new BoolValue(false);

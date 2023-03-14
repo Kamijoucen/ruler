@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.value;
 
 import java.util.List;
 
-public class SubRuleValue implements BaseValue {
+public class SubRuleValue extends AbstractValue {
 
     private String ruleName;
     private List<BaseValue> values;

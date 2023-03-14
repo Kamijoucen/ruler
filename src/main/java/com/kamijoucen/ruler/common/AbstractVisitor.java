@@ -197,7 +197,7 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(CallLinkNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context) {
         node.getFirst().eval(context, scope);
         List<OperationNode> calls = node.getCalls();
         for (BaseNode baseNode : calls) {

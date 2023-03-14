@@ -80,7 +80,7 @@ public class DefaultParser implements Parser {
             case OUT_IDENTIFIER:
             case LEFT_PAREN:
             case KEY_THIS:
-                statement = parseCallLink(true);
+                statement = parseCallChain(true);
                 isNeedSemicolon = true;
                 break;
             case KEY_RETURN:
@@ -132,12 +132,12 @@ public class DefaultParser implements Parser {
         return statement;
     }
 
-    public BaseNode parseCallLinkAssignNode(BaseNode callLinkNode) {
+    public BaseNode parseCallChainAssignNode(BaseNode callChainNode) {
         Token assignToken = tokenStream.token();
         AssertUtil.assertToken(assignToken, TokenType.ASSIGN);
         tokenStream.nextToken();
         BaseNode expression = parseExpression();
-        return new AssignNode(callLinkNode, expression, assignToken.location);
+        return new AssignNode(callChainNode, expression, assignToken.location);
     }
 
     public BaseNode parseExpression() {
@@ -206,7 +206,7 @@ public class DefaultParser implements Parser {
             case OUT_IDENTIFIER:
             case LEFT_PAREN:
             case KEY_THIS:
-                return parseCallLink(false);
+                return parseCallChain(false);
             case ADD:
             case SUB:
             case NOT:
@@ -424,7 +424,7 @@ public class DefaultParser implements Parser {
         throw SyntaxException.withSyntax("不支持的单目运算符", token);
     }
 
-    public BaseNode parseCallLink(boolean isStatement) {
+    public BaseNode parseCallChain(boolean isStatement) {
         BaseNode firstNode = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER
                 || tokenStream.token().type == TokenType.OUT_IDENTIFIER) {
@@ -453,7 +453,7 @@ public class DefaultParser implements Parser {
                     break;
             }
         }
-        CallLinkNode callLinkNode = new CallLinkNode(firstNode, calls, firstNode.getLocation());
+        CallChainNode callChainNode = new CallChainNode(firstNode, calls, firstNode.getLocation());
         if (tokenStream.token().type == TokenType.ASSIGN) {
             if (!isStatement) {
                 throw SyntaxException.withSyntax("表达式内不允许出现赋值语句");
@@ -461,10 +461,10 @@ public class DefaultParser implements Parser {
             if (firstNode instanceof OutNameNode) {
                 throw SyntaxException.withSyntax("不能对外部变量进行赋值: $" + ((OutNameNode) firstNode).name.name);
             }
-            return parseCallLinkAssignNode(callLinkNode);
+            return parseCallChainAssignNode(callChainNode);
         }
 
-        return callLinkNode;
+        return callChainNode;
     }
 
     public BaseNode parseDot() {

@@ -14,7 +14,7 @@ public class CallEval implements BaseEval<CallNode> {
     public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> param = node.getParam();
         BaseValue[] paramVal = new BaseValue[param.size() + 1];
-        paramVal[0] = scope.getCallLinkPreviousValue();
+        paramVal[0] = scope.getCallChainPreviousValue();
         for (int i = 0; i < param.size(); i++) {
             paramVal[i + 1] = param.get(i).eval(context, scope);
         }

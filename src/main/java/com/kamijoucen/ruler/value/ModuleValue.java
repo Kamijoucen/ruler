@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.value.constant.NullValue;
 
 import java.util.List;
 
-public class ModuleValue extends AbstractRClassValue {
+public class ModuleValue extends AbstractValue {
 
     private RulerModule module;
     private Scope runScope;

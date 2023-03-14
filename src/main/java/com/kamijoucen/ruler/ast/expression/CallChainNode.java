@@ -10,13 +10,13 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 
-public class CallLinkNode extends AbstractBaseNode {
+public class CallChainNode extends AbstractBaseNode {
 
     private BaseNode first;
 
     private List<OperationNode> calls;
 
-    public CallLinkNode(BaseNode first, List<OperationNode> calls, TokenLocation location) {
+    public CallChainNode(BaseNode first, List<OperationNode> calls, TokenLocation location) {
         super(location);
         this.first = first;
         this.calls = calls;
@@ -24,7 +24,7 @@ public class CallLinkNode extends AbstractBaseNode {
 
     @Override
     public BaseValue eval(RuntimeContext context, Scope scope) {
-        context.setCallLinkAssign(false);
+        context.setCallChainAssign(false);
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
@@ -34,7 +34,7 @@ public class CallLinkNode extends AbstractBaseNode {
     }
 
     public BaseValue evalAssign(RuntimeContext context, Scope scope) {
-        context.setCallLinkAssign(true);
+        context.setCallChainAssign(true);
         return context.getNodeVisitor().eval(this, scope, context);
     }
 

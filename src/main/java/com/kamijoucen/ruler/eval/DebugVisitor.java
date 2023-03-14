@@ -135,7 +135,7 @@ public class DebugVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(CallLinkNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context) {
         return super.eval(node, scope, context);
     }
 

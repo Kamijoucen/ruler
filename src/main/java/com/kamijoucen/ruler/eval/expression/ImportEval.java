@@ -54,7 +54,7 @@ public class ImportEval implements BaseEval<ImportNode> {
         interpreter.setHasImportGlobalModule(false);
         interpreter.runScript(Collections.<RulerParameter>emptyList(), runScope);
 
-        //
+        // include infix
         if (node.isHasImportInfix()) {
             Map<String, ClosureValue> infixOperationSpace = interpreter.getRuntimeContext().getInfixOperationSpace();
             if (!CollectionUtil.isEmpty(infixOperationSpace)) {

@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.operation;
 import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.value.*;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class CustomOperation implements Operation {
 

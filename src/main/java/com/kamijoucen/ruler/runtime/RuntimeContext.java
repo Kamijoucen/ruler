@@ -15,7 +15,7 @@ public class RuntimeContext {
     private final RulerConfiguration configuration;
     private Map<String, BaseValue> outSpace;
     private Map<String, ClosureValue> infixOperationSpace;
-    private Boolean isCallLinkAssign = null;
+    private Boolean isCallChainAssign = null;
     private NodeVisitor nodeVisitor;
     private NodeVisitor typeCheckVisitor;
     private ImportCache importCache;
@@ -43,12 +43,12 @@ public class RuntimeContext {
         return outBaseValue;
     }
 
-    public Boolean getCallLinkAssign() {
-        return isCallLinkAssign;
+    public Boolean getCallChainAssign() {
+        return isCallChainAssign;
     }
 
-    public void setCallLinkAssign(Boolean callLinkAssign) {
-        isCallLinkAssign = callLinkAssign;
+    public void setCallChainAssign(Boolean callChainAssign) {
+        isCallChainAssign = callChainAssign;
     }
 
     public NodeVisitor getNodeVisitor() {

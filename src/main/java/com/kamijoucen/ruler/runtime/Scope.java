@@ -15,7 +15,7 @@ public class Scope {
     private Scope parentScope;
     private List<BaseValue> returnSpace;
     private Map<String, BaseValue> valueSpace;
-    private BaseValue callLinkPreviousValue;
+    private BaseValue callChainPreviousValue;
     private MetaValue currentContextMataValue;
     private String currentLoopVariableName;
     private BaseValue currentLoopVariable;
@@ -84,12 +84,12 @@ public class Scope {
         return returnSpace;
     }
 
-    public BaseValue getCallLinkPreviousValue() {
-        return callLinkPreviousValue;
+    public BaseValue getCallChainPreviousValue() {
+        return callChainPreviousValue;
     }
 
-    public void putCallLinkPreviousValue(BaseValue value) {
-        this.callLinkPreviousValue = value;
+    public void putCallChainPreviousValue(BaseValue value) {
+        this.callChainPreviousValue = value;
     }
 
     public void putCurrentMataValue(MetaValue mataValue) {

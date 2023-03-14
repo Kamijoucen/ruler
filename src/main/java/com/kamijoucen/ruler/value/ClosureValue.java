@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 
 import java.util.List;
 
-public class ClosureValue implements BaseValue {
+public class ClosureValue extends AbstractValue {
 
     private Scope defineScope;
     private List<BaseNode> param;

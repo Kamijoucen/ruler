@@ -10,7 +10,7 @@ public class IndexEval implements BaseEval<IndexNode> {
     @Override
     public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
         BaseValue[] computeVals = new BaseValue[2];
-        computeVals[0] = scope.getCallLinkPreviousValue();
+        computeVals[0] = scope.getCallChainPreviousValue();
         computeVals[1] = node.getIndex().eval(context, scope);
         return node.getOperation().compute(context, computeVals);
     }

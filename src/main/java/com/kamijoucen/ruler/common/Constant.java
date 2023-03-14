@@ -7,4 +7,8 @@ public class Constant {
 
     public static final String FUN_ARG_LIST = "_args_";
 
+    public static final String RCLASS_PROPERTIES = "_properties_";
+
+    public static final String RSON_FIELDS = "_fields_";
+
 }

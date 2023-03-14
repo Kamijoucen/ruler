@@ -58,7 +58,7 @@ public interface NodeVisitor {
 
     BaseValue eval(DotNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(CallLinkNode node, Scope scope, RuntimeContext context);
+    BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context);
 

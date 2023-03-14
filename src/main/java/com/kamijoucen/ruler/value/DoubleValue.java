@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.value;
 
-public class DoubleValue implements BaseValue {
+public class DoubleValue extends AbstractValue {
 
     private double value;
 

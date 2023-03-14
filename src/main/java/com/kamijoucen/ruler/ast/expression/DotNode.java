@@ -57,7 +57,7 @@ public class DotNode extends OperationNode {
 
     @Override
     public BaseValue assign(BaseNode expression, Scope scope, RuntimeContext context) {
-        return this.assignOperation.assign(scope.getCallLinkPreviousValue(), this, expression, scope, context);
+        return this.assignOperation.assign(scope.getCallChainPreviousValue(), this, expression, scope, context);
     }
 
     public TokenType getDotType() {

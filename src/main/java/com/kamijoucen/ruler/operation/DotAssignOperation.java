@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.value.AbstractRClassValue;
+import com.kamijoucen.ruler.value.AbstractValue;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class DotAssignOperation implements AssignOperation {
@@ -16,10 +16,10 @@ public class DotAssignOperation implements AssignOperation {
     @Override
     public BaseValue assign(BaseValue preOperationValue, OperationNode call, BaseNode expression, Scope scope,
             RuntimeContext context) {
-        if (!(preOperationValue instanceof AbstractRClassValue)) {
+        if (!(preOperationValue instanceof AbstractValue)) {
             throw SyntaxException.withSyntax(preOperationValue.getType() + "不是一个对象");
         }
-        AbstractRClassValue rsonValue = (AbstractRClassValue) preOperationValue;
+        AbstractValue rsonValue = (AbstractValue) preOperationValue;
         DotNode dotNode = (DotNode) call;
         if (dotNode.getDotType() != TokenType.IDENTIFIER) {
             throw SyntaxException.withSyntax("不能为调用赋值");

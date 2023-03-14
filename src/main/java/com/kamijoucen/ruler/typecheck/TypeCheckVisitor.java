@@ -140,7 +140,7 @@ public class TypeCheckVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(CallLinkNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context) {
         if (!CollectionUtil.isEmpty(node.getCalls())) {
             return UnknownType.INSTANCE;
         }

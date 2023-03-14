@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.value;
 
 import com.kamijoucen.ruler.function.RulerFunction;
 
-public class FunctionValue implements BaseValue {
+public class FunctionValue extends AbstractValue {
 
     private RulerFunction value;
 

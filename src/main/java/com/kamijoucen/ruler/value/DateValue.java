@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.common.RMetaInfo;
-
 import java.util.Calendar;
 import java.util.Date;
 
@@ -10,8 +8,8 @@ public class DateValue extends RsonValue {
     private Date value;
     private Calendar calendar;
 
-    public DateValue(Date value, RMetaInfo metaInfo) {
-        super(metaInfo);
+    public DateValue(Date value, RClassValue classValue) {
+        super(classValue);
         this.value = value;
         this.calendar = Calendar.getInstance();
         this.calendar.setTime(value);

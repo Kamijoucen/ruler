@@ -48,7 +48,7 @@ public class RulerInterpreter {
         runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
-        // 运行上下文
+
         this.runtimeContext = configuration.createDefaultRuntimeContext(values);
 
         if (hasImportGlobalModule) {

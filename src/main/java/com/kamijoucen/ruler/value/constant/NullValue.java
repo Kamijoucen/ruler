@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.value.constant;
 
-import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.AbstractValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-public class NullValue implements BaseValue {
+public class NullValue extends AbstractValue {
 
     public static final NullValue INSTANCE = new NullValue();
 
