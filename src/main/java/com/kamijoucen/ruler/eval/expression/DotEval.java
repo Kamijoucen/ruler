@@ -22,6 +22,7 @@ public class DotEval implements BaseEval<DotNode> {
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         TokenType dotType = node.getDotType();
+        // 这个不能直接call rclass，要先检查本地fields，然后在检查rclass内
         RClassValue classValue = scope.getCallChainPreviousValue().getRClass();
         // todo 这里应该是个fun 而不是
         // RClass 分为两种 可以添加成员，不能添加成员
