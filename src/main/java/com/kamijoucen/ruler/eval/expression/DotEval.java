@@ -30,20 +30,23 @@ public class DotEval implements BaseEval<DotNode> {
         // 对于_properties_的修改，该类型下所有实例都会受影响
 
         // 对于RSON类型对象持有一个_fields_类型的字段，表示实例本身持有成员
-        scope.putCurrentMataValue(metaValue);
+        // 需要处理这种结构o.foo()。 dot时需要带上是谁的dot，call时，要看call的对象是否有dot原始对象
+
         if (dotType == TokenType.IDENTIFIER) {
             return classValue.getProperty(node.getName());
         } else if (dotType == TokenType.CALL) {
             // todo 直接get的函数不能指向self，需要重新设计
             BaseValue funValue = classValue.getProperty(node.getName());
-            List<BaseValue> values = new ArrayList<BaseValue>(node.getParam().size() + 1);
-            values.add(funValue);
-            for (BaseNode p : node.getParam()) {
-                values.add(p.eval(context, scope));
+
+            BaseValue[] baseValues = new BaseValue[node.getParam().size() + 2];
+            baseValues[0] = scope.getCallChainPreviousValue();
+            baseValues[1] = funValue;
+            for (int i = 0; i < node.getParam().size(); i++) {
+                baseValues[i + 2] = node.getParam().get(i).eval(context, scope);
             }
             // todo callOperation.compute(context, null);
             // todo 这里应该通过metadata getProp
-            return callOperation.compute(context, null);
+            return callOperation.compute(context, baseValues);
         } else {
             throw SyntaxException.withSyntax("不支持的DOT调用类型:" + dotType);
         }

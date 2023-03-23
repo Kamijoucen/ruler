@@ -18,18 +18,18 @@ public class CallOperation implements Operation {
 
     @Override
     public BaseValue compute(RuntimeContext context, BaseValue... param) {
-        BaseValue func = param[0];
-
+        BaseValue self = param[0];
+        BaseValue func = param[1];
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            Object[] funcParam = Arrays.copyOfRange(param, 1, param.length);
+            Object[] funcParam = Arrays.copyOfRange(param, 2, param.length);
             if (func.getType() == ValueType.FUNCTION) {
                 RulerFunction function = ((FunctionValue) func).getValue();
                 return (BaseValue) function.call(context, funcParam);
             }
             if (func.getType() == ValueType.CLOSURE) {
                 ClosureValue function = ((ClosureValue) func);
-                return callClosure(context, function, (BaseValue[]) funcParam);
+                return callClosure(context, self, function, (BaseValue[]) funcParam);
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);
@@ -37,7 +37,7 @@ public class CallOperation implements Operation {
         throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
 
-    private BaseValue callClosure(RuntimeContext context, ClosureValue closure, BaseValue[] funcParam) {
+    private BaseValue callClosure(RuntimeContext context, BaseValue self, ClosureValue closure, BaseValue[] funcParam) {
         Scope callScope = new Scope("closure", closure.getDefineScope());
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {

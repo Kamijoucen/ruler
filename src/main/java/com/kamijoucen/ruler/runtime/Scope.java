@@ -11,12 +11,11 @@ import java.util.Map;
 
 public class Scope {
 
-    private String stackName;
-    private Scope parentScope;
+    private final String stackName;
+    private final Scope parentScope;
+    private final Map<String, BaseValue> valueSpace;
     private List<BaseValue> returnSpace;
-    private Map<String, BaseValue> valueSpace;
     private BaseValue callChainPreviousValue;
-    private MetaValue currentContextMataValue;
     private String currentLoopVariableName;
     private BaseValue currentLoopVariable;
 
@@ -90,19 +89,6 @@ public class Scope {
 
     public void putCallChainPreviousValue(BaseValue value) {
         this.callChainPreviousValue = value;
-    }
-
-    public void putCurrentMataValue(MetaValue mataValue) {
-        this.currentContextMataValue = mataValue;
-    }
-
-    public MetaValue getCurrentContextMataValue() {
-        if (currentContextMataValue != null) {
-            return currentContextMataValue;
-        } else if (parentScope != null) {
-            return parentScope.getCurrentContextMataValue();
-        }
-        return null;
     }
 
     public BaseValue getCurrentLoopVariable() {
