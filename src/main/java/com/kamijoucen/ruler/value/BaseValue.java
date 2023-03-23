@@ -6,6 +6,6 @@ public interface BaseValue extends Serializable {
 
     ValueType getType();
 
-    RClassValue getRClass();
+    IRClassValue getRClass();
 
 }

@@ -1,14 +1,14 @@
 package com.kamijoucen.ruler.value;
 
 public abstract class AbstractValue implements BaseValue {
-    private final RClassValue classInfo;
+    private final IRClassValue classInfo;
 
-    public AbstractValue(RClassValue classInfo) {
+    public AbstractValue(IRClassValue classInfo) {
         this.classInfo = classInfo;
     }
 
     @Override
-    public RClassValue getRClass() {
+    public IRClassValue getRClass() {
         return classInfo;
     }
 }

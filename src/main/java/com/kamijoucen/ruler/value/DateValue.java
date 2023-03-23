@@ -8,7 +8,7 @@ public class DateValue extends RsonValue {
     private Date value;
     private Calendar calendar;
 
-    public DateValue(Date value, RClassValue classValue) {
+    public DateValue(Date value, IRClassValue classValue) {
         super(classValue);
         this.value = value;
         this.calendar = Calendar.getInstance();

@@ -1,11 +1,10 @@
 package com.kamijoucen.ruler.config;
 
-import com.kamijoucen.ruler.common.RMetaInfo;
+import com.kamijoucen.ruler.value.IRClassValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public interface MetaInfoFactory {
 
-    RMetaInfo createDateMetaInfo();
-
-    RMetaInfo createArrayMetaInfo();
+    IRClassValue getClassValue(ValueType valueType);
 
 }

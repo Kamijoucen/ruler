@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.eval.expression;
 
-import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.common.OperationDefine;
@@ -10,10 +9,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.RClassValue;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.kamijoucen.ruler.value.IRClassValue;
 
 public class DotEval implements BaseEval<DotNode> {
 
@@ -22,8 +18,8 @@ public class DotEval implements BaseEval<DotNode> {
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         TokenType dotType = node.getDotType();
-        // 这个不能直接call rclass，要先检查本地fields，然后在检查rclass内
-        RClassValue classValue = scope.getCallChainPreviousValue().getRClass();
+        // todo 这个不能直接call rclass，要先检查本地fields，然后在检查rclass内
+        IRClassValue classValue = scope.getCallChainPreviousValue().getRClass();
         // todo 这里应该是个fun 而不是
         // RClass 分为两种 可以添加成员，不能添加成员
         // 所有对象都有个 name._properties_.put("name", fun(str) -> str + 1)

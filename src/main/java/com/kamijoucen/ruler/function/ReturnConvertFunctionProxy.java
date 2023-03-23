@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.function;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.value.BaseValue;
 
 public class ReturnConvertFunctionProxy implements RulerFunction {
 
@@ -20,8 +21,8 @@ public class ReturnConvertFunctionProxy implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Object... param) {
-        Object value = function.call(context, param);
+    public Object call(RuntimeContext context, BaseValue self, Object... param) {
+        Object value = function.call(context, self, param);
         return ConvertRepository.getConverter(value).realToBase(value, configuration);
     }
 

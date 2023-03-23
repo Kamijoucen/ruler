@@ -18,6 +18,8 @@ public enum ValueType {
 
     NULL,
 
+    RCLASS,
+
     BREAK,
 
     CONTINUE,

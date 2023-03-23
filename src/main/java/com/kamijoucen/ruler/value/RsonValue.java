@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.value;
 
 public class RsonValue extends AbstractValue {
 
-    public RsonValue(RClassValue classValue) {
+    public RsonValue(IRClassValue classValue) {
         super(classValue);
     }
 

@@ -24,9 +24,9 @@ public class ValueConvertFunctionProxy implements RulerFunction {
     }
 
     @Override
-    public BaseValue call(RuntimeContext context, Object... param) {
+    public BaseValue call(RuntimeContext context, BaseValue self, Object... param) {
         Object[] realParam = convertParams(param);
-        Object returnVal = function.call(context, realParam);
+        Object returnVal = function.call(context, self, realParam);
         ValueConvert converter = ConvertRepository.getConverter(returnVal);
         if (converter == null) {
             return ConvertRepository.getConverter(ValueType.STRING).realToBase(returnVal.toString(), configuration);

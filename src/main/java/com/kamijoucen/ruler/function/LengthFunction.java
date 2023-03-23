@@ -13,7 +13,7 @@ public class LengthFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Object... param) {
+    public Object call(RuntimeContext context, BaseValue self, Object... param) {
         BaseValue value = (BaseValue) param[0];
         if (value.getType() == ValueType.ARRAY) {
             return ((ArrayValue) value).getValues().size();

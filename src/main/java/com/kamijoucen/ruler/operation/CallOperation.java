@@ -25,7 +25,7 @@ public class CallOperation implements Operation {
             Object[] funcParam = Arrays.copyOfRange(param, 2, param.length);
             if (func.getType() == ValueType.FUNCTION) {
                 RulerFunction function = ((FunctionValue) func).getValue();
-                return (BaseValue) function.call(context, funcParam);
+                return (BaseValue) function.call(context, self, funcParam);
             }
             if (func.getType() == ValueType.CLOSURE) {
                 ClosureValue function = ((ClosureValue) func);
@@ -45,7 +45,9 @@ public class CallOperation implements Operation {
             callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
         }
         callScope.initReturnSpace();
-
+        if (self != null) {
+            callScope.putLocal(Constant.THIS_ARG, self);
+        }
         // set array value meta info
         RMetaInfo arrayMetaInfo = context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo();
         // put args in scope

@@ -13,7 +13,7 @@ public class ToNumberFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Object... param) {
+    public Object call(RuntimeContext context, BaseValue self, Object... param) {
         if (param == null || param.length == 0) {
             return null;
         }

@@ -14,6 +14,8 @@ import java.util.Map;
 public class RsonEval implements BaseEval<RsonNode> {
     @Override
     public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
+
+        context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo()
         RMetaInfo metaInfo = new RMetaInfo();
         for (Map.Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
             String name = entry.getKey();

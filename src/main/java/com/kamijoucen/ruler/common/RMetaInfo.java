@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.value.FunctionValue;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public class RMetaInfo {
 
     private BaseValue source;
