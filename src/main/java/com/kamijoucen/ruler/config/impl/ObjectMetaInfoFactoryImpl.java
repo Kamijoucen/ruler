@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.config.impl;
 
+import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.config.MetaInfoFactory;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.IRClassValue;
@@ -18,12 +19,13 @@ public class ObjectMetaInfoFactoryImpl implements MetaInfoFactory {
         RCLASS_MAP.put(ValueType.ARRAY, createStringClassValue());
     }
 
-    protected IRClassValue createStringClassValue() {
+    private IRClassValue createStringClassValue() {
         return null;
     }
 
-    protected IRClassValue createArrayClassValue() {
+    private IRClassValue createArrayClassValue() {
         IRClassValue val = new RClassValue(null);
+        val.getProperties().put(Constant.RCLASS_PROPERTIES, )
         return val;
     }
 
