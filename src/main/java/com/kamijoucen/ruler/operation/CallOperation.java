@@ -3,8 +3,6 @@ package com.kamijoucen.ruler.operation;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.Constant;
-import com.kamijoucen.ruler.common.RMetaInfo;
-import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -26,15 +24,15 @@ public class CallOperation implements Operation {
             if (func.getType() == ValueType.FUNCTION) {
                 RulerFunction function = ((FunctionValue) func).getValue();
                 return (BaseValue) function.call(context, self, funcParam);
-            }
-            if (func.getType() == ValueType.CLOSURE) {
+            } else if (func.getType() == ValueType.CLOSURE) {
                 ClosureValue function = ((ClosureValue) func);
                 return callClosure(context, self, function, (BaseValue[]) funcParam);
+            } else {
+                throw new IllegalArgumentException(func.toString() + " not is a function!");
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);
         }
-        throw SyntaxException.withSyntax(func + " 不是一个函数");
     }
 
     private BaseValue callClosure(RuntimeContext context, BaseValue self, ClosureValue closure, BaseValue[] funcParam) {
@@ -49,9 +47,9 @@ public class CallOperation implements Operation {
             callScope.putLocal(Constant.THIS_ARG, self);
         }
         // set array value meta info
-        RMetaInfo arrayMetaInfo = context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo();
+        RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.ARRAY);
         // put args in scope
-        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), arrayMetaInfo));
+        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), classValue));
 
         // call function
         closure.getBlock().eval(context, callScope);
@@ -64,7 +62,7 @@ public class CallOperation implements Operation {
         if (returnValues.size() == 1) {
             return returnValues.get(0);
         }
-        return new ArrayValue(returnValues, context.getConfiguration().getMetaInfoFactory().createArrayMetaInfo());
+        return new ArrayValue(returnValues, classValue);
     }
 
 }

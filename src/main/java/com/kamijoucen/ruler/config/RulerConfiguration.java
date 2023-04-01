@@ -37,7 +37,7 @@ public interface RulerConfiguration {
 
     CreateRuntimeContextFactory getCreateDefaultRuntimeContextFactory();
 
-    MetaInfoFactory getMetaInfoFactory();
+    RClassFactory getRClassFactory();
 
     Integer getMaxLoopNumber();
 

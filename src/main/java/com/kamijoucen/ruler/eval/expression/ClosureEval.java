@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> param = node.getParam();
         String funName = node.getName();
-        ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
+        ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock(),
+                context.getConfiguration().getRClassFactory().getClassValue(ValueType.CLOSURE));
         if (funName != null) {
             scope.defineLocal(funName, closureValue);
         }

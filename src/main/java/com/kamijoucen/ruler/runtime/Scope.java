@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.runtime;
 
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.MetaValue;
 
 import java.util.ArrayList;
 import java.util.HashMap;

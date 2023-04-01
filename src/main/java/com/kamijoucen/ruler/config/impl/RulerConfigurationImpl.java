@@ -12,6 +12,8 @@ import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
+import com.kamijoucen.ruler.value.RClass;
+import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +22,14 @@ import java.util.Map;
 public class RulerConfigurationImpl implements RulerConfiguration {
 
     private Scope globalScope = new Scope("root", null);
+    private final List<ImportNode> globalImport = new ArrayList<ImportNode>();
     private NodeVisitor typeCheckVisitor = new TypeCheckVisitor();
     private NodeVisitor evalVisitor = new EvalVisitor();
     private ImportCache importCache = new ImportCache();
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
-    private List<ImportNode> globalImport = new ArrayList<ImportNode>();
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
     private CreateRuntimeContextFactory createRuntimeContextFactory;
-    private MetaInfoFactory metaInfoFactory;
+    private RClassFactory rClassFactory;
     private Integer maxLoopNumber = -1;
     private Integer maxStackDepth = -1;
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
@@ -37,13 +39,13 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     private void init() {
-        initDefaultFunction();
         initEngineBehaviorFactory();
+        initDefaultFunction();
     }
 
     private void initEngineBehaviorFactory() {
         this.runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
-        this.metaInfoFactory = new ObjectMetaInfoFactoryImpl();
+        this.rClassFactory = new ObjectRClassFactoryImpl();
         this.createRuntimeContextFactory = new CreateRuntimeContextFactoryImpl(this);
     }
 
@@ -61,10 +63,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction(), this);
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
-        this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
-        this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
-        this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
-        this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
+        RClass functionClass = this.rClassFactory.getClassValue(ValueType.FUNCTION);
+        this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction, functionClass));
+        this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction, functionClass));
+        this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction, functionClass));
+        this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction, functionClass));
     }
 
     @Override
@@ -74,7 +77,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public void setGlobalFunction(RulerFunction function) {
-        FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this));
+        RClass functionClass = this.rClassFactory.getClassValue(ValueType.FUNCTION);
+        FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this), functionClass);
         this.globalScope.putLocal(funValue.getValue().getName(), funValue);
     }
 
@@ -126,12 +130,12 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public MetaInfoFactory getMetaInfoFactory() {
-        return this.metaInfoFactory;
+    public RClassFactory getRClassFactory() {
+        return this.rClassFactory;
     }
 
-    public void setMetaInfoFactory(MetaInfoFactory metaInfoFactory) {
-        this.metaInfoFactory = metaInfoFactory;
+    public void setrClassFactory(RClassFactory metaInfoFactory) {
+        this.rClassFactory = metaInfoFactory;
     }
 
     public void setRuntimeBehaviorFactory(RuntimeBehaviorFactory runtimeBehaviorFactory) {

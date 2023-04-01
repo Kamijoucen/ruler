@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.value;
 
 import java.util.Map;
 
-public interface IRClassValue extends BaseValue {
+public interface RClass extends BaseValue {
 
     Map<String, BaseValue> getProperties();
 

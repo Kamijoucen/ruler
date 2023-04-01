@@ -6,16 +6,15 @@ var createRClass = fun() ->
         if typeof(this) == 'string' {
             return this;
         }
-
         else if typeof(this) == 'array' {
             var str = '';
             for i in this {
                 str += i;
             }
         }
+        else if typeof(this) == '' {
 
-        else if typeof(this) ==
-
+        }
     },
 
 
@@ -23,6 +22,6 @@ var createRClass = fun() ->
 };
 
 match this {
-| typeof 'array' -> this.map(fun(it) -> it.ToString()).collect();
+| typeof 'array' -> this.stream().map(fun(it) -> it.ToString()).collect();
 | typeof 'array' ->
 }

@@ -200,6 +200,7 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parsePrimaryExpression() {
+
         Token token = tokenStream.token();
         switch (token.type) {
             case IDENTIFIER:
@@ -310,7 +311,6 @@ public class DefaultParser implements Parser {
 
             thenBlock = parseExpression();
         }
-
 
         BaseNode elseBlock = null;
         if (tokenStream.token().type == TokenType.KEY_ELSE) {

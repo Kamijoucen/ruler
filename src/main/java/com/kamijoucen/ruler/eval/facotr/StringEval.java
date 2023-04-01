@@ -5,11 +5,15 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.StringValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class StringEval implements BaseEval<StringNode> {
     @Override
     public BaseValue eval(StringNode node, Scope scope, RuntimeContext context) {
-        return new StringValue(node.getValue());
+        RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.STRING);
+        return new StringValue(node.getValue(), classValue);
     }
+
 }

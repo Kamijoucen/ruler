@@ -4,7 +4,8 @@ public class StringValue extends AbstractValue {
 
     private String value;
 
-    public StringValue(String value) {
+    public StringValue(String value, RClass rClass) {
+        super(rClass);
         this.value = value;
     }
 

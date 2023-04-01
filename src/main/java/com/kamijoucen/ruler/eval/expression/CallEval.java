@@ -10,6 +10,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 import java.util.List;
 
 public class CallEval implements BaseEval<CallNode> {
+
     @Override
     public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> param = node.getParam();
