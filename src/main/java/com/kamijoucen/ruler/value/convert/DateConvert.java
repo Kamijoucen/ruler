@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.value.convert;
 
-import com.kamijoucen.ruler.common.RMetaInfo;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DateValue;
+import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.Date;
@@ -17,10 +17,8 @@ public class DateConvert implements ValueConvert {
 
     @Override
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
-        RMetaInfo dateMetaInfo = configuration.getRClassFactory().createDateMetaInfo();
-        DateValue dateValue = new DateValue((Date) value, dateMetaInfo);
-        dateMetaInfo.setSource(dateValue);
-        return dateValue;
+        RClass classValue = configuration.getRClassFactory().getClassValue(ValueType.DATE);
+        return new DateValue((Date) value, classValue);
     }
 
     @Override

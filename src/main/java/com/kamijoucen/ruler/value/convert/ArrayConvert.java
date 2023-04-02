@@ -30,7 +30,7 @@ public class ArrayConvert implements ValueConvert {
             BaseValue baseValue = ConvertRepository.getConverter(obj).realToBase(obj, configuration);
             list.add(baseValue);
         }
-        return new ArrayValue(list, configuration.getRClassFactory().createArrayMetaInfo());
+        return new ArrayValue(list, configuration.getRClassFactory().getClassValue(ValueType.ARRAY));
     }
 
     @Override

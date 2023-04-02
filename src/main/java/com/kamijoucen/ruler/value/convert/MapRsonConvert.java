@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.common.ConvertRepository;
-import com.kamijoucen.ruler.common.RMetaInfo;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.ValueType;
 
@@ -21,12 +21,13 @@ public class MapRsonConvert implements ValueConvert {
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
         Map<?, ?> map = (Map<?, ?>) value;
 
-        RsonValue rsonValue = new RsonValue(new RMetaInfo());
+        RClass classValue = configuration.getRClassFactory().getClassValue(ValueType.RSON);
+
+        RsonValue rsonValue = new RsonValue(classValue);
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             BaseValue baseValue = ConvertRepository.getConverter(entry.getValue()).realToBase(entry.getValue(), configuration);
-            rsonValue.getClassInfo().put(entry.getKey().toString(), baseValue);
+            rsonValue.getFields().put(entry.getKey().toString(), baseValue);
         }
-
         return rsonValue;
     }
 
@@ -34,8 +35,8 @@ public class MapRsonConvert implements ValueConvert {
     public Object baseToReal(BaseValue value, RulerConfiguration configuration) {
         RsonValue rsonValue = (RsonValue) value;
         Map<String, Object> map = new HashMap<String, Object>(
-                (int) (Math.ceil(rsonValue.getClassInfo().getProperties().size() / 0.75) + 1));
-        for (Map.Entry<String, BaseValue> entry : rsonValue.getClassInfo().getProperties().entrySet()) {
+                (int) (Math.ceil(rsonValue.getFields().size() / 0.75) + 1));
+        for (Map.Entry<String, BaseValue> entry : rsonValue.getFields().entrySet()) {
             map.put(entry.getKey(), ConvertRepository.getConverter(entry.getValue().getType()).baseToReal(entry.getValue(), configuration));
         }
 
