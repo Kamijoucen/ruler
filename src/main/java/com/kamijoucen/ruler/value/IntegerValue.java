@@ -4,8 +4,7 @@ public class IntegerValue extends AbstractValue {
 
     private long value;
 
-    public IntegerValue(long value, RClass rClass) {
-        super(rClass);
+    public IntegerValue(long value) {
         this.value = value;
     }
 

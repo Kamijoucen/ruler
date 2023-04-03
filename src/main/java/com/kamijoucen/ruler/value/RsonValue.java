@@ -7,11 +7,6 @@ public class RsonValue extends AbstractValue {
 
     private final Map<String, BaseValue> fields = new HashMap<String, BaseValue>();
 
-
-    public RsonValue(RClass classValue) {
-        super(classValue);
-    }
-
     @Override
     public ValueType getType() {
         return ValueType.RSON;

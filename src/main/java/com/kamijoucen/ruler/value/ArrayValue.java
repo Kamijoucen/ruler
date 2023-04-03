@@ -6,8 +6,7 @@ public class ArrayValue extends AbstractValue {
 
     private List<BaseValue> values;
 
-    public ArrayValue(List<BaseValue> values, RClass classValue) {
-        super(classValue);
+    public ArrayValue(List<BaseValue> values) {
         this.values = values;
     }
 

@@ -11,8 +11,7 @@ public class ClosureValue extends AbstractValue {
     private List<BaseNode> param;
     private BaseNode block;
 
-    public ClosureValue(Scope defineScope, List<BaseNode> param, BaseNode block, RClass rClass) {
-        super(rClass);
+    public ClosureValue(Scope defineScope, List<BaseNode> param, BaseNode block) {
         this.defineScope = defineScope;
         this.param = param;
         this.block = block;

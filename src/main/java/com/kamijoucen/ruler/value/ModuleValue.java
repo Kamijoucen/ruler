@@ -18,12 +18,6 @@ public class ModuleValue extends AbstractValue {
         super(new RMetaInfo());
         this.module = module;
         this.runScope = scope;
-    }
-
-    @Override
-    public RMetaInfo getClassInfo() {
-        throw new UnsupportedOperationException("不允许对别名进行修改操作");
-    }
 
     @Override
     public BaseValue getProperty(String name) {

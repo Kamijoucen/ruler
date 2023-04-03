@@ -1,4 +1,12 @@
 # 简单可扩展的规则引擎
+
+
+## hello world
+```java
+Ruler.compileExpression("println('hello world!')", new RulerConfigurationImpl()).run();
+```
+
+
 ```java
 // 拼接脚本
 StringBuffer buffer = new StringBuffer();

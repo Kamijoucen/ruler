@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.config.impl;
 
-import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.config.RClassFactory;
 import com.kamijoucen.ruler.function.ToStringFunction;
 import com.kamijoucen.ruler.util.AssertUtil;

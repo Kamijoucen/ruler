@@ -6,8 +6,7 @@ public class FunctionValue extends AbstractValue {
 
     private RulerFunction value;
 
-    public FunctionValue(RulerFunction value, RClass rClass) {
-        super(rClass);
+    public FunctionValue(RulerFunction value) {
         this.value = value;
     }
 

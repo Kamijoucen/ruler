@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.constant.NullValue;
@@ -34,7 +35,8 @@ public class DotEval implements BaseEval<DotNode> {
             callValue = ((RsonValue) prevValue).getFields().get(node.getName());
         }
         if (callValue == null) {
-            callValue = prevValue.getRClass().getProperty(node.getName());
+            RClass rClass = context.getConfiguration().getRClassFactory().getClassValue(prevValue.getType());
+            callValue = rClass.getProperty(node.getName());
             if (callValue == null) {
                 callValue = NullValue.INSTANCE;
             }
