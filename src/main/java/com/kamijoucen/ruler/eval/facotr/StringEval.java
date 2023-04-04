@@ -12,8 +12,7 @@ import com.kamijoucen.ruler.value.ValueType;
 public class StringEval implements BaseEval<StringNode> {
     @Override
     public BaseValue eval(StringNode node, Scope scope, RuntimeContext context) {
-        RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.STRING);
-        return new StringValue(node.getValue(), classValue);
+        return new StringValue(node.getValue());
     }
 
 }

@@ -64,10 +64,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
         RClass functionClass = this.rClassFactory.getClassValue(ValueType.FUNCTION);
-        this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction, functionClass));
-        this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction, functionClass));
-        this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction, functionClass));
-        this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction, functionClass));
+        this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
+        this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
+        this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
+        this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
     }
 
     @Override
@@ -77,8 +77,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public void setGlobalFunction(RulerFunction function) {
-        RClass functionClass = this.rClassFactory.getClassValue(ValueType.FUNCTION);
-        FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this), functionClass);
+        FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this));
         this.globalScope.putLocal(funValue.getValue().getName(), funValue);
     }
 

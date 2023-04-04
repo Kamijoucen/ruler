@@ -49,7 +49,7 @@ public class CallOperation implements Operation {
         // set array value meta info
         RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.ARRAY);
         // put args in scope
-        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam), classValue));
+        callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam)));
 
         // call function
         closure.getBlock().eval(context, callScope);
@@ -62,7 +62,7 @@ public class CallOperation implements Operation {
         if (returnValues.size() == 1) {
             return returnValues.get(0);
         }
-        return new ArrayValue(returnValues, classValue);
+        return new ArrayValue(returnValues);
     }
 
 }

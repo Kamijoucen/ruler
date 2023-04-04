@@ -16,8 +16,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> param = node.getParam();
         String funName = node.getName();
-        ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock(),
-                context.getConfiguration().getRClassFactory().getClassValue(ValueType.CLOSURE));
+        ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
         if (funName != null) {
             scope.defineLocal(funName, closureValue);
         }

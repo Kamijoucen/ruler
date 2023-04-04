@@ -21,9 +21,7 @@ public class MapRsonConvert implements ValueConvert {
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
         Map<?, ?> map = (Map<?, ?>) value;
 
-        RClass classValue = configuration.getRClassFactory().getClassValue(ValueType.RSON);
-
-        RsonValue rsonValue = new RsonValue(classValue);
+        RsonValue rsonValue = new RsonValue();
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             BaseValue baseValue = ConvertRepository.getConverter(entry.getValue()).realToBase(entry.getValue(), configuration);
             rsonValue.getFields().put(entry.getKey().toString(), baseValue);

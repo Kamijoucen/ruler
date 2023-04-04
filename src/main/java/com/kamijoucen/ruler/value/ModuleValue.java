@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.common.RMetaInfo;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -15,9 +14,9 @@ public class ModuleValue extends AbstractValue {
     private Scope runScope;
 
     public ModuleValue(RulerModule module, Scope scope) {
-        super(new RMetaInfo());
         this.module = module;
         this.runScope = scope;
+    }
 
     @Override
     public BaseValue getProperty(String name) {

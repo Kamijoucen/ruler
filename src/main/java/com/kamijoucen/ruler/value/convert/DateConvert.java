@@ -17,8 +17,7 @@ public class DateConvert implements ValueConvert {
 
     @Override
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
-        RClass classValue = configuration.getRClassFactory().getClassValue(ValueType.DATE);
-        return new DateValue((Date) value, classValue);
+        return new DateValue((Date) value);
     }
 
     @Override

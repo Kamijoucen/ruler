@@ -6,12 +6,10 @@ import com.kamijoucen.ruler.value.IntegerValue;
 
 public class IntegerNumberCacheImpl implements IntegerNumberCache {
 
-    private final RulerConfiguration configuration;
     private static final int CACHE_SIZE = 1024;
     private static final IntegerValue[] CACHE = new IntegerValue[CACHE_SIZE];
 
-    public IntegerNumberCacheImpl(RulerConfiguration configuration) {
-        this.configuration = configuration;
+    public IntegerNumberCacheImpl() {
         init();
     }
 

@@ -22,11 +22,11 @@ public class ObjectRClassFactoryImpl implements RClassFactory {
 
     private RClass createBaseRClass() {
 
-        RClass rClassValue = new RClassValue(null);
+        RClass rClassValue = new RClassValue();
 
         ToStringFunction toStringVal = new ToStringFunction();
         // todo function class
-        rClassValue.getProperties().put(toStringVal.getName(), new FunctionValue(toStringVal, null));
+        rClassValue.getProperties().put(toStringVal.getName(), new FunctionValue(toStringVal));
 
         return rClassValue;
     }

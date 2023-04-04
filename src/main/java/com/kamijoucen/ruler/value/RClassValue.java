@@ -5,18 +5,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RClassValue extends AbstractValue implements RClass {
 
-    // todo _properties_ 到底指代的什么，是类中properties本身，还是properties中的一个字段？
     private final Map<String, BaseValue> properties = new ConcurrentHashMap<String, BaseValue>();
 
     @Override
     public Map<String, BaseValue> getProperties() {
-        return null;
+        return properties;
     }
 
     @Override
     public BaseValue getProperty(String name) {
-
-        return null;
+        return properties.get(name);
     }
 
     @Override

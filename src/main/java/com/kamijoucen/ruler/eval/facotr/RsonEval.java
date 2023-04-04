@@ -15,8 +15,7 @@ import java.util.Map;
 public class RsonEval implements BaseEval<RsonNode> {
     @Override
     public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
-        RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.RSON);
-        RsonValue rsonValue = new RsonValue(classValue);
+        RsonValue rsonValue = new RsonValue();
         for (Map.Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
             String name = entry.getKey();
             BaseValue value = entry.getValue().eval(context, scope);

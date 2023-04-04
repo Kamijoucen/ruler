@@ -16,16 +16,14 @@ import java.util.List;
 public class ArrayEval implements BaseEval<ArrayNode> {
     @Override
     public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
-        RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.ARRAY);
-
         List<BaseNode> nodes = node.getValues();
         if (nodes.size() == 0) {
-            return new ArrayValue(new ArrayList<BaseValue>(), classValue);
+            return new ArrayValue(new ArrayList<BaseValue>());
         }
         List<BaseValue> values = new ArrayList<BaseValue>(nodes.size());
         for (BaseNode tempNode : nodes) {
             values.add(tempNode.eval(context, scope));
         }
-        return new ArrayValue(values, classValue);
+        return new ArrayValue(values);
     }
 }

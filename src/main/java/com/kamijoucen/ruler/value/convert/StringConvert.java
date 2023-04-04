@@ -13,7 +13,7 @@ public class StringConvert implements ValueConvert {
 
     @Override
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
-        return new StringValue((String) value, configuration.getRClassFactory().getClassValue(ValueType.STRING));
+        return new StringValue((String) value);
     }
 
     @Override
