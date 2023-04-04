@@ -22,7 +22,7 @@ import java.util.Map;
 public class RulerConfigurationImpl implements RulerConfiguration {
 
     private Scope globalScope = new Scope("root", null);
-    private final List<ImportNode> globalImport = new ArrayList<ImportNode>();
+    private final List<ImportNode> globalImport = new ArrayList<>();
     private NodeVisitor typeCheckVisitor = new TypeCheckVisitor();
     private NodeVisitor evalVisitor = new EvalVisitor();
     private ImportCache importCache = new ImportCache();

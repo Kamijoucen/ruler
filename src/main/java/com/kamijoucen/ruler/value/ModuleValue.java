@@ -10,8 +10,8 @@ import java.util.List;
 
 public class ModuleValue extends AbstractValue {
 
-    private RulerModule module;
-    private Scope runScope;
+    private final RulerModule module;
+    private final Scope runScope;
 
     public ModuleValue(RulerModule module, Scope scope) {
         this.module = module;
