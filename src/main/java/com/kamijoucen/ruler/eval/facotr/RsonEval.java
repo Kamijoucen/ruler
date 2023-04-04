@@ -6,9 +6,7 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.RsonValue;
-import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.Map;
 
@@ -19,7 +17,7 @@ public class RsonEval implements BaseEval<RsonNode> {
         for (Map.Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
             String name = entry.getKey();
             BaseValue value = entry.getValue().eval(context, scope);
-            rsonValue.getFields().put(name, value);
+            rsonValue.putField(name, value);
         }
         return rsonValue;
     }

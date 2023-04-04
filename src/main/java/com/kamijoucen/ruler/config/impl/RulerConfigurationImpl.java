@@ -12,8 +12,6 @@ import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
-import com.kamijoucen.ruler.value.RClass;
-import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +61,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction(), this);
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
-        RClass functionClass = this.rClassFactory.getClassValue(ValueType.FUNCTION);
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
         this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
         this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
@@ -133,7 +130,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return this.rClassFactory;
     }
 
-    public void setrClassFactory(RClassFactory metaInfoFactory) {
+    public void setRClassFactory(RClassFactory metaInfoFactory) {
         this.rClassFactory = metaInfoFactory;
     }
 

@@ -14,10 +14,11 @@ public class CallEval implements BaseEval<CallNode> {
     @Override
     public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> param = node.getParam();
-        BaseValue[] paramVal = new BaseValue[param.size() + 1];
-        paramVal[0] = scope.getCallChainPreviousValue();
+        BaseValue[] paramVal = new BaseValue[param.size() + 2];
+        paramVal[0] = null;
+        paramVal[1] = scope.getCallChainPreviousValue();
         for (int i = 0; i < param.size(); i++) {
-            paramVal[i + 1] = param.get(i).eval(context, scope);
+            paramVal[i + 2] = param.get(i).eval(context, scope);
         }
         return node.getOperation().compute(context, paramVal);
     }

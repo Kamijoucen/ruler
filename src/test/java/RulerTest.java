@@ -436,4 +436,14 @@ public class RulerTest {
         System.out.println(runner);
     }
 
+    @Test
+    public void objcallField() {
+
+        String str = "println(1.ToString())";
+
+        RuleRunner runner = Ruler.compileExpression(str, configuration);
+
+        System.out.println(runner);
+    }
+
 }

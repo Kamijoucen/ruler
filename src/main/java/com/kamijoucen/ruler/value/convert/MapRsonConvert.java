@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.value.convert;
 import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.ValueType;
 
@@ -24,7 +23,7 @@ public class MapRsonConvert implements ValueConvert {
         RsonValue rsonValue = new RsonValue();
         for (Map.Entry<?, ?> entry : map.entrySet()) {
             BaseValue baseValue = ConvertRepository.getConverter(entry.getValue()).realToBase(entry.getValue(), configuration);
-            rsonValue.getFields().put(entry.getKey().toString(), baseValue);
+            rsonValue.putField(entry.getKey().toString(), baseValue);
         }
         return rsonValue;
     }

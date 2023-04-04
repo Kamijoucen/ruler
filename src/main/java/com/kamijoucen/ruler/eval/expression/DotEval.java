@@ -32,7 +32,7 @@ public class DotEval implements BaseEval<DotNode> {
         BaseValue prevValue = scope.getCallChainPreviousValue();
         BaseValue callValue = null;
         if (prevValue.getType() == ValueType.RSON) {
-            callValue = ((RsonValue) prevValue).getFields().get(node.getName());
+            callValue = ((RsonValue) prevValue).getField(node.getName());
         }
         if (callValue == null) {
             RClass rClass = context.getConfiguration().getRClassFactory().getClassValue(prevValue.getType());

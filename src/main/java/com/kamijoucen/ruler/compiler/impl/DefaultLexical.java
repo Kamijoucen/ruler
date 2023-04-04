@@ -180,17 +180,20 @@ public class DefaultLexical implements Lexical {
             makeToken(TokenType.INTEGER);
             return;
         }
-        appendAndForward();
-        int len = 0;
-        while (isNotOver() && Character.isDigit(charAt())) {
+        if (Character.isDigit(peekChar())) {
             appendAndForward();
-            len++;
+            int len = 0;
+            while (isNotOver() && Character.isDigit(charAt())) {
+                appendAndForward();
+                len++;
+            }
+            if (len == 0) {
+                throw SyntaxException.withLexical(
+                        TokenUtil.of("小数点后未跟其他数字", line, column));
+            }
+            makeToken(TokenType.DOUBLE);
         }
-        if (len == 0) {
-            throw SyntaxException.withLexical(
-                TokenUtil.of("小数点后未跟其他数字", line, column));
-        }
-        makeToken(TokenType.DOUBLE);
+        makeToken(TokenType.INTEGER);
     }
 
     @Override

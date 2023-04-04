@@ -14,7 +14,12 @@ public class RClassValue extends AbstractValue implements RClass {
 
     @Override
     public BaseValue getProperty(String name) {
-        return properties.get(name);
+        return this.properties.get(name);
+    }
+
+    @Override
+    public void putProperty(String name, BaseValue value) {
+        this.properties.put(name, value);
     }
 
     @Override

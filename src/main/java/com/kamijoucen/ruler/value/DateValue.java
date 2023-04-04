@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.value;
 import java.util.Calendar;
 import java.util.Date;
 
-public class DateValue extends RsonValue {
+public class DateValue extends AbstractValue {
 
     private Date value;
     private Calendar calendar;
@@ -35,4 +35,5 @@ public class DateValue extends RsonValue {
     public Calendar getCalendar() {
         return calendar;
     }
+
 }

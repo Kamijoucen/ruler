@@ -437,7 +437,7 @@ public class DefaultParser implements Parser {
         } else {
             firstNode = parsePrimaryExpression();
         }
-        List<OperationNode> calls = new ArrayList<OperationNode>();
+        List<OperationNode> calls = new ArrayList<>();
         while (tokenStream.token().type == TokenType.LEFT_PAREN
                 || tokenStream.token().type == TokenType.LEFT_SQUARE
                 || tokenStream.token().type == TokenType.DOT) {

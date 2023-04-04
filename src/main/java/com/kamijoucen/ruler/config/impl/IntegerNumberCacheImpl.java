@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.config.IntegerNumberCache;
-import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.IntegerValue;
 
 public class IntegerNumberCacheImpl implements IntegerNumberCache {

@@ -1,47 +1,42 @@
 package com.kamijoucen.ruler.value;
 
-import com.kamijoucen.ruler.module.RulerModule;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.util.AssertUtil;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
-import java.util.List;
+import java.util.Map;
 
-public class ModuleValue extends AbstractValue {
+public class ModuleValue extends RsonValue {
 
-    private final RulerModule module;
-    private final Scope runScope;
+    private final Scope moduleScope;
 
-    public ModuleValue(RulerModule module, Scope scope) {
-        this.module = module;
-        this.runScope = scope;
+    public ModuleValue(Scope moduleScope) {
+        this.moduleScope = moduleScope;
     }
 
     @Override
-    public BaseValue getProperty(String name) {
-        BaseValue value = runScope.find(name);
-        if (value == null) {
-            return NullValue.INSTANCE;
-        }
-        return value;
+    public BaseValue getField(String name) {
+        return moduleScope.find(name);
     }
 
     @Override
-    public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
-        BaseValue funValue = runScope.find(name);
-        if (funValue == null) {
-            throw new IllegalArgumentException("找不到函数: " + name);
-        }
-        AssertUtil.notNull(funValue);
-        BaseValue[] realParam = new BaseValue[param.size() + 1];
-        realParam[0] = funValue;
-        System.arraycopy(param.toArray(), 0, realParam, 1, param.size());
-        return callOperation.compute(context, realParam);
+    public void putField(String name, BaseValue baseValue) {
+        moduleScope.putLocal(name, baseValue);
     }
 
     @Override
-    public ValueType getType() {
-        return ValueType.RSON;
+    public Map<String, BaseValue> getFields() {
+        throw new UnsupportedOperationException();
     }
+
+//    public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
+//        BaseValue funValue = runScope.find(name);
+//        if (funValue == null) {
+//            throw new IllegalArgumentException("找不到函数: " + name);
+//        }
+//        AssertUtil.notNull(funValue);
+//        BaseValue[] realParam = new BaseValue[param.size() + 1];
+//        realParam[0] = funValue;
+//        System.arraycopy(param.toArray(), 0, realParam, 1, param.size());
+//        return callOperation.compute(context, realParam);
+//    }
+
 }

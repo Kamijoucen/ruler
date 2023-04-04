@@ -26,7 +26,7 @@ public class DotAssignOperation implements AssignOperation {
         }
         BaseValue value = expression.eval(context, scope);
         // set rson field
-        ((RsonValue) preOperationValue).getFields().put(dotNode.getName(), value);
+        ((RsonValue) preOperationValue).putField(dotNode.getName(), value);
         return value;
     }
 }
