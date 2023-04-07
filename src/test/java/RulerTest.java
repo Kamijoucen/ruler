@@ -439,11 +439,11 @@ public class RulerTest {
     @Test
     public void objcallField() {
 
-        String str = "println(1.ToString())";
+        String str = "println(AA.ToString())";
 
         RuleRunner runner = Ruler.compileExpression(str, configuration);
 
-        System.out.println(runner);
+        System.out.println(runner.run());
     }
 
 }

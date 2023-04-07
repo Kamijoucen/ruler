@@ -56,6 +56,10 @@ public enum TokenType {
     KEY_IN,         // in
     KEY_RULE,       // rule
 
+    KEY_ENTER,      // enter
+
+    KEY_MATCH,      // match
+
     EOF,
 
     UN_KNOW,
