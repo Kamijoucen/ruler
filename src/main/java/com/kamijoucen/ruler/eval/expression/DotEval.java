@@ -46,7 +46,7 @@ public class DotEval implements BaseEval<DotNode> {
             if (callValue.getType() != ValueType.FUNCTION
                     && callValue.getType() != ValueType.CLOSURE) {
                 throw new UnsupportedOperationException(
-                        "value " + node.getName() + " not is a function! " + callValue.toString());
+                        "value '" + node.getName() + "' not is a function! " + callValue.toString());
             }
 
             BaseValue[] baseValues = new BaseValue[node.getParam().size() + 2];

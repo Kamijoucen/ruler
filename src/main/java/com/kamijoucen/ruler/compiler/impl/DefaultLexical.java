@@ -192,8 +192,9 @@ public class DefaultLexical implements Lexical {
                         TokenUtil.of("小数点后未跟其他数字", line, column));
             }
             makeToken(TokenType.DOUBLE);
+        } else {
+            makeToken(TokenType.INTEGER);
         }
-        makeToken(TokenType.INTEGER);
     }
 
     @Override
