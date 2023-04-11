@@ -71,32 +71,14 @@ public class DefaultParser implements Parser {
         return imports;
     }
 
-
-
     public BaseNode parseStatement(boolean isRoot) {
         Token token = tokenStream.token();
         BaseNode statement = null;
         boolean isNeedSemicolon = false;
         switch (token.type) {
-            case IDENTIFIER:
-            case OUT_IDENTIFIER:
-            case LEFT_PAREN:
-            case KEY_THIS:
-                statement = parseCallChain(true);
-                isNeedSemicolon = true;
-                break;
             case KEY_RETURN:
                 statement = parseReturn();
                 isNeedSemicolon = true;
-                break;
-            case KEY_IF:
-                statement = parseIfStatement(true);
-                break;
-            case KEY_FOR:
-                statement = parseForEachStatement();
-                break;
-            case KEY_WHILE:
-                statement = parseWhileStatement();
                 break;
             case KEY_BREAK:
                 statement = parseBreak();
@@ -105,9 +87,6 @@ public class DefaultParser implements Parser {
             case KEY_CONTINUE:
                 statement = parseContinue();
                 isNeedSemicolon = true;
-                break;
-            case KEY_FUN:
-                statement = parseFunDefine();
                 break;
             case KEY_VAR:
                 statement = parseVariableDefine();
@@ -122,11 +101,12 @@ public class DefaultParser implements Parser {
                 statement = parseInfixDefinitionNode();
                 break;
             default:
-                throw SyntaxException.withSyntax("未知的符号：" + token.name);
+                statement = parseExpression();
         }
         if (statement == null) {
-            throw SyntaxException.withSyntax("错误的语句");
+            throw SyntaxException.withSyntax("error statement");
         }
+        // todo
         if (isNeedSemicolon) {
             AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
             tokenStream.nextToken();
@@ -202,14 +182,15 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parsePrimaryExpression() {
-
         Token token = tokenStream.token();
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
+                return TokenUtil.buildNameNode(token);
             case LEFT_PAREN:
+                return parseParen();
             case KEY_THIS:
-                return parseCallChain(false);
+                return parseThis();
             case ADD:
             case SUB:
             case NOT:
@@ -234,6 +215,10 @@ public class DefaultParser implements Parser {
                 return parseTypeOfNode();
             case KEY_IF:
                 return parseIfStatement(false);
+            case KEY_FOR:
+                return parseForEachStatement();
+            case KEY_WHILE:
+                return parseWhileStatement();
         }
         throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
