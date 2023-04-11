@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.config.impl;
 
-import com.kamijoucen.ruler.config.RClassFactory;
+import com.kamijoucen.ruler.config.RClassManager;
 import com.kamijoucen.ruler.function.ToStringFunction;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.FunctionValue;
@@ -11,11 +11,11 @@ import com.kamijoucen.ruler.value.ValueType;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ObjectRClassFactoryImpl implements RClassFactory {
+public class ObjectRClassManagerImpl implements RClassManager {
 
     public final Map<ValueType, RClass> RCLASS_MAP = new HashMap<ValueType, RClass>();
 
-    public ObjectRClassFactoryImpl() {
+    public ObjectRClassManagerImpl() {
         RCLASS_MAP.put(ValueType.STRING, createStringClassValue());
         RCLASS_MAP.put(ValueType.ARRAY, createArrayClassValue());
     }

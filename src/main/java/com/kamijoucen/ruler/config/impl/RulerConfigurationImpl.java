@@ -27,7 +27,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
     private CreateRuntimeContextFactory createRuntimeContextFactory;
-    private RClassFactory rClassFactory;
+    private RClassManager rClassFactory;
     private Integer maxLoopNumber = -1;
     private Integer maxStackDepth = -1;
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
@@ -43,7 +43,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private void initEngineBehaviorFactory() {
         this.runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
-        this.rClassFactory = new ObjectRClassFactoryImpl();
+        this.rClassFactory = new ObjectRClassManagerImpl();
         this.createRuntimeContextFactory = new CreateRuntimeContextFactoryImpl(this);
     }
 
@@ -126,11 +126,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public RClassFactory getRClassFactory() {
+    public RClassManager getRClassManager() {
         return this.rClassFactory;
     }
 
-    public void setRClassFactory(RClassFactory metaInfoFactory) {
+    public void setRClassFactory(RClassManager metaInfoFactory) {
         this.rClassFactory = metaInfoFactory;
     }
 

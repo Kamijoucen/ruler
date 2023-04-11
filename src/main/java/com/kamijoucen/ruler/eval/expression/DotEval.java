@@ -21,21 +21,13 @@ public class DotEval implements BaseEval<DotNode> {
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         TokenType dotType = node.getDotType();
-        // RClass 分为两种 可以添加成员，不能添加成员
-        // 所有对象都有个 name._properties_.put("name", fun(str) -> str + 1)
-        // _properties_为相同类型共同持有
-        // 对于_properties_的修改，该类型下所有实例都会受影响
-
-        // 对于RSON类型对象持有一个_fields_类型的字段，表示实例本身持有成员
-        // 需要处理这种结构o.foo()。 dot时需要带上是谁的dot，call时，要看call的对象是否有dot原始对象
-
         BaseValue prevValue = scope.getCallChainPreviousValue();
         BaseValue callValue = null;
         if (prevValue.getType() == ValueType.RSON) {
             callValue = ((RsonValue) prevValue).getField(node.getName());
         }
         if (callValue == null) {
-            RClass rClass = context.getConfiguration().getRClassFactory().getClassValue(prevValue.getType());
+            RClass rClass = context.getConfiguration().getRClassManager().getClassValue(prevValue.getType());
             callValue = rClass.getProperty(node.getName());
             if (callValue == null) {
                 callValue = NullValue.INSTANCE;
@@ -60,7 +52,7 @@ public class DotEval implements BaseEval<DotNode> {
         } else if (dotType == TokenType.IDENTIFIER) {
             return callValue;
         } else {
-            throw SyntaxException.withSyntax("不支持的DOT调用类型:" + dotType);
+            throw SyntaxException.withSyntax("dot calls not supported this type:" + dotType);
         }
     }
 }

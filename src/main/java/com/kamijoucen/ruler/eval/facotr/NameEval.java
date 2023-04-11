@@ -13,7 +13,7 @@ public class NameEval implements BaseEval<NameNode> {
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
         BaseValue baseValue = scope.find(node.name.name);
         if (baseValue == null) {
-            throw SyntaxException.withSyntax("'" + node.name.name + "'未定义");
+            throw SyntaxException.withSyntax("variable '" + node.name.name + "' undefined");
         }
         return baseValue;
     }
