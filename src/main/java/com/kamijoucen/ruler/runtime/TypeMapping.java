@@ -21,7 +21,7 @@ public class TypeMapping {
         mapping.put(ValueType.RSON, "object");
     }
 
-    public static String lookUp(ValueType type) {
+    public static String find(ValueType type) {
         return mapping.get(type);
     }
 

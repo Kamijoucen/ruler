@@ -14,7 +14,7 @@ public class TypeOfEval implements BaseEval<TypeOfNode> {
     @Override
     public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
         BaseValue value = node.getExp().eval(context, scope);
-        String type = TypeMapping.lookUp(value.getType());
+        String type = TypeMapping.find(value.getType());
         if (IOUtil.isBlank(type)) {
             throw SyntaxException.withSyntax("typeof 不支持的表达式");
         }

@@ -6,4 +6,6 @@ public interface BaseValue extends Serializable {
 
     ValueType getType();
 
+    ReferenceType getReferenceType();
+
 }

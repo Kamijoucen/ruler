@@ -124,10 +124,11 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseExpression() {
 
-        RStack<BaseNode> valStack = new RStack<BaseNode>();
-        RStack<Token> opStack = new RStack<Token>();
+        RStack<BaseNode> valStack = new RStack<>();
+        RStack<Token> opStack = new RStack<>();
 
         valStack.push(parsePrimaryExpression()); // first exp
+
         while (true) {
             Token op = tokenStream.token();
             int curPrecedence = OperationDefine.findPrecedence(op.type);

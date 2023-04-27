@@ -20,7 +20,6 @@ public class DotEval implements BaseEval<DotNode> {
 
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
-        TokenType dotType = node.getDotType();
         BaseValue prevValue = scope.getCallChainPreviousValue();
         BaseValue callValue = null;
         if (prevValue.getType() == ValueType.RSON) {
@@ -33,12 +32,13 @@ public class DotEval implements BaseEval<DotNode> {
                 callValue = NullValue.INSTANCE;
             }
         }
+        TokenType dotType = node.getDotType();
         if (dotType == TokenType.CALL) {
 
             if (callValue.getType() != ValueType.FUNCTION
                     && callValue.getType() != ValueType.CLOSURE) {
                 throw new UnsupportedOperationException(
-                        "value '" + node.getName() + "' not is a function! " + callValue.toString());
+                        "value '" + node.getName() + "' not is a function! " + callValue);
             }
 
             BaseValue[] baseValues = new BaseValue[node.getParam().size() + 2];
@@ -52,7 +52,7 @@ public class DotEval implements BaseEval<DotNode> {
         } else if (dotType == TokenType.IDENTIFIER) {
             return callValue;
         } else {
-            throw SyntaxException.withSyntax("dot calls not supported this type:" + dotType);
+            throw SyntaxException.withSyntax("dot calls not support this type:" + dotType);
         }
     }
 }
