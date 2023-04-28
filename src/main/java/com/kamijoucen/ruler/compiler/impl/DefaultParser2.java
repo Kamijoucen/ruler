@@ -53,11 +53,16 @@ public class DefaultParser2 implements Parser {
     public BaseNode parseStatement() {
         Token token = tokenStream.token();
         BaseNode statement = null;
+
+        boolean isRoot = parseContext.isRoot();
         if (token.type == TokenType.KEY_RULE
                 || token.type == TokenType.KEY_INFIX) {
-            if (!parseContext.isRoot()) {
+            if (!isRoot) {
                 throw new UnsupportedOperationException();
             }
+        }
+        if (isRoot) {
+            parseContext.setRoot(false);
         }
         switch (token.type) {
             case KEY_RETURN:
@@ -80,6 +85,9 @@ public class DefaultParser2 implements Parser {
                 break;
             default:
                 statement = parseExpression();
+        }
+        if (isRoot) {
+            parseContext.setRoot(true);
         }
         if (statement == null) {
             throw SyntaxException.withSyntax("error statement");
