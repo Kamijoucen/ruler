@@ -17,7 +17,6 @@ import com.kamijoucen.ruler.type.UnknownType;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.util.TokenUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.*;
@@ -52,8 +51,40 @@ public class DefaultParser2 implements Parser {
 
     @Override
     public BaseNode parseStatement() {
-
-        return null;
+        Token token = tokenStream.token();
+        BaseNode statement = null;
+        if (token.type == TokenType.KEY_RULE
+                || token.type == TokenType.KEY_INFIX) {
+            if (!parseContext.isRoot()) {
+                throw new UnsupportedOperationException();
+            }
+        }
+        switch (token.type) {
+            case KEY_RETURN:
+                statement = parseReturn();
+                break;
+            case KEY_BREAK:
+                statement = parseBreak();
+                break;
+            case KEY_CONTINUE:
+                statement = parseContinue();
+                break;
+            case KEY_VAR:
+                statement = parseVariableDefine();
+                break;
+            case KEY_RULE:
+                statement = parseRuleBlock();
+                break;
+            case KEY_INFIX:
+                statement = parseInfixDefinitionNode();
+                break;
+            default:
+                statement = parseExpression();
+        }
+        if (statement == null) {
+            throw SyntaxException.withSyntax("error statement");
+        }
+        return statement;
     }
 
     @Override
@@ -62,6 +93,26 @@ public class DefaultParser2 implements Parser {
         Objects.requireNonNull(lhs);
         return parseBinaryNode(0, lhs);
     }
+
+    public BaseNode parseVariableDefine() {
+        Token varToken = tokenStream.token();
+        // eat var
+        AssertUtil.assertToken(varToken, TokenType.KEY_VAR);
+        tokenStream.nextToken();
+        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+
+        BaseNode name = parseIdentifier();
+        Objects.requireNonNull(name);
+
+        AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
+        tokenStream.nextToken();
+
+        BaseNode expNode = this.parseExpression();
+        Objects.requireNonNull(expNode);
+
+        return new VariableDefineNode(name, expNode, varToken.location);
+    }
+
     // var name = name.arr()[5].ToString()[1];
 
     // name .arr
