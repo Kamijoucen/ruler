@@ -63,7 +63,7 @@ public class OperationDefine {
     public static Operation findOperation(TokenType type) {
         Operation operation = OPERATION.get(type);
         if (operation == null) {
-            throw SyntaxException.withSyntax("不支持的操作符:" + type);
+            throw new UnsupportedOperationException("Unsupported operator:" + type);
         }
         return operation;
     }

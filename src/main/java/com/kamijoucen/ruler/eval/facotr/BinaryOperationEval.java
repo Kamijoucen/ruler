@@ -13,8 +13,8 @@ import com.kamijoucen.ruler.value.ClosureValue;
 public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        BaseValue val1 = node.getExp1().eval(context, scope);
-        BaseValue val2 = node.getExp2().eval(context, scope);
+        BaseValue val1 = node.getLhs().eval(context, scope);
+        BaseValue val2 = node.getRhs().eval(context, scope);
 
         Operation operation = node.getOperation();
         if (operation == null) {

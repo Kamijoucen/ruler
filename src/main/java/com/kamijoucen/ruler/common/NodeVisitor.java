@@ -22,6 +22,8 @@ public interface NodeVisitor {
 
     BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context);
 
+    BaseValue eval(CallNode2 node, Scope scope, RuntimeContext context);
+
     BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context);

@@ -46,8 +46,6 @@ public class CallOperation implements Operation {
         if (self != null) {
             callScope.putLocal(Constant.THIS_ARG, self);
         }
-        // set array value meta info
-        RClass classValue = context.getConfiguration().getRClassManager().getClassValue(ValueType.ARRAY);
         // put args in scope
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam)));
 

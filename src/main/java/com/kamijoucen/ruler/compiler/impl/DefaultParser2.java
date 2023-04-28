@@ -3,10 +3,13 @@ package com.kamijoucen.ruler.compiler.impl;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.*;
 import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.operation.UnaryAddOperation;
+import com.kamijoucen.ruler.operation.UnarySubOperation;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.type.ArrayType;
@@ -34,6 +37,7 @@ public class DefaultParser2 implements Parser {
         this.configuration = configuration;
         this.parseContext = new ParseContext(this.configuration);
         this.parseContext.setTypeCheckVisitor(this.configuration.getTypeCheckVisitor());
+        this.parseContext.setRoot(true);
     }
 
     @Override
@@ -48,6 +52,7 @@ public class DefaultParser2 implements Parser {
 
     @Override
     public BaseNode parseStatement() {
+
         return null;
     }
 
@@ -55,11 +60,57 @@ public class DefaultParser2 implements Parser {
     public BaseNode parseExpression() {
         BaseNode lhs = parsePrimaryExpression();
         Objects.requireNonNull(lhs);
+        return parseBinaryNode(0, lhs);
+    }
+    // var name = name.arr()[5].ToString()[1];
 
-        // var name = name.arr()[5].toString()[1];
+    // name .arr
 
+    // arr()
+    // 1 + 2 * name()
+    // name() + 1
+    public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
+        while (true) {
+            Token currentToken = tokenStream.token();
+            if (currentToken.type == TokenType.ASSIGN) {
+                BaseNode rightNode = parseExpression();
+                Objects.requireNonNull(rightNode);
+                return new BinaryOperationNode(TokenType.ASSIGN, TokenType.ASSIGN.name(), lhs, rightNode, lhs.getLocation());
+            }
+            if (currentToken.type == TokenType.LEFT_PAREN) {
+                tokenStream.nextToken();
+                List<BaseNode> params = new ArrayList<>();
+                if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
+                    params.add(parseExpression());
+                }
+                while (tokenStream.token().type != TokenType.RIGHT_PAREN) {
+                    AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+                    tokenStream.nextToken();
+                    params.add(parseExpression());
+                }
+                AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
+                tokenStream.nextToken();
+                return new CallNode2(lhs, null, params, lhs.getLocation());
+            }
+            int curTokenProc = OperationDefine.findPrecedence(currentToken.type);
+            if (curTokenProc < expPrec) {
+                return lhs;
+            }
+            tokenStream.nextToken();
+            BaseNode rhs = parsePrimaryExpression();
+            Objects.requireNonNull(rhs);
 
-        return null;
+            Token nextToken = tokenStream.token();
+            int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
+            if (nextTokenProc == -1) {
+                return rhs;
+            }
+            if (curTokenProc < nextTokenProc) {
+                rhs = parseBinaryNode(curTokenProc + 1, rhs);
+                Objects.requireNonNull(rhs);
+            }
+            lhs = new BinaryOperationNode(currentToken.type, currentToken.name, lhs, rhs, lhs.getLocation());
+        }
     }
 
     public BaseNode parsePrimaryExpression() {
@@ -100,8 +151,9 @@ public class DefaultParser2 implements Parser {
                 return parseForEachStatement();
             case KEY_WHILE:
                 return parseWhileStatement();
+            default:
+                throw SyntaxException.withSyntax("unkown token:" + token);
         }
-        throw SyntaxException.withSyntax("未知的表达式起始", token);
     }
 
     public BaseNode parseBlock(boolean isLoop) {
@@ -139,6 +191,20 @@ public class DefaultParser2 implements Parser {
             throw SyntaxException.withSyntax("while condition expression expected ':' or '{'", tokenStream.token());
         }
         return new WhileStatementNode(condition, blockAST, whileToken.location);
+    }
+
+    public BaseNode parseUnaryExpression() {
+        Token token = tokenStream.token();
+        tokenStream.nextToken();
+        if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
+            return new UnaryOperationNode(token.type, parsePrimaryExpression(),
+                    token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(), token.location);
+        } else if (token.type == TokenType.NOT) {
+            return new LogicBinaryOperationNode(TokenType.NOT, parsePrimaryExpression(), null,
+                    OperationDefine.findLogicOperation(TokenType.NOT), token.location);
+        } else {
+            throw SyntaxException.withSyntax("Unsupported unary operator:" + token);
+        }
     }
 
     public BaseNode parseIfStatement() {

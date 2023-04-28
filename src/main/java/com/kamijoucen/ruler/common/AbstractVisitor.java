@@ -46,8 +46,8 @@ public class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        node.getExp1().eval(context, scope);
-        node.getExp2().eval(context, scope);
+        node.getLhs().eval(context, scope);
+        node.getRhs().eval(context, scope);
         return null;
     }
 

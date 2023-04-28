@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.ast.facotr;
 
 import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.operation.Operation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
@@ -11,22 +10,20 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class BinaryOperationNode extends AbstractBaseNode {
 
-    private BaseNode exp1;
+    private BaseNode lhs;
 
-    private BaseNode exp2;
+    private BaseNode rhs;
 
     private TokenType op;
 
-    private Operation operation;
     private String operationName;
 
-    public BinaryOperationNode(TokenType op, String operationName, BaseNode exp1, BaseNode exp2, Operation operation, TokenLocation location) {
+    public BinaryOperationNode(TokenType op, String operationName, BaseNode lhs, BaseNode rhs, TokenLocation location) {
         super(location);
-        this.exp1 = exp1;
-        this.exp2 = exp2;
+        this.lhs = lhs;
+        this.rhs = rhs;
         this.op = op;
         this.operationName = operationName;
-        this.operation = operation;
     }
 
     @Override
@@ -39,20 +36,20 @@ public class BinaryOperationNode extends AbstractBaseNode {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
-    public BaseNode getExp1() {
-        return exp1;
+    public BaseNode getLhs() {
+        return lhs;
     }
 
-    public void setExp1(BaseNode exp1) {
-        this.exp1 = exp1;
+    public void setLhs(BaseNode lhs) {
+        this.lhs = lhs;
     }
 
-    public BaseNode getExp2() {
-        return exp2;
+    public BaseNode getRhs() {
+        return rhs;
     }
 
-    public void setExp2(BaseNode exp2) {
-        this.exp2 = exp2;
+    public void setRhs(BaseNode rhs) {
+        this.rhs = rhs;
     }
 
     public TokenType getOp() {
@@ -61,14 +58,6 @@ public class BinaryOperationNode extends AbstractBaseNode {
 
     public void setOp(TokenType op) {
         this.op = op;
-    }
-
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public void setOperation(Operation operation) {
-        this.operation = operation;
     }
 
     public String getOperationName() {
