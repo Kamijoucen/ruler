@@ -73,11 +73,18 @@ public class DefaultParser2 implements Parser {
         while (true) {
             Token currentToken = tokenStream.token();
             if (currentToken.type == TokenType.ASSIGN) {
-                BaseNode rightNode = parseExpression();
-                Objects.requireNonNull(rightNode);
-                return new BinaryOperationNode(TokenType.ASSIGN, TokenType.ASSIGN.name(), lhs, rightNode, lhs.getLocation());
-            }
-            if (currentToken.type == TokenType.LEFT_PAREN) {
+                BaseNode rhs = parseExpression();
+                Objects.requireNonNull(rhs);
+                lhs = new AssignNode2(lhs, rhs, lhs.getLocation());
+            } else if (currentToken.type == TokenType.DOT) {
+                tokenStream.nextToken();
+                Token dotNameNode = tokenStream.token();
+                AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
+                tokenStream.nextToken();
+                // only identifiers are supported for dot call
+                BaseNode nameNode = parseIdentifier();
+                lhs = new DotNode2(lhs, nameNode, lhs.getLocation());
+            } else if (currentToken.type == TokenType.LEFT_PAREN) {
                 tokenStream.nextToken();
                 List<BaseNode> params = new ArrayList<>();
                 if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
@@ -90,26 +97,32 @@ public class DefaultParser2 implements Parser {
                 }
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
                 tokenStream.nextToken();
-                return new CallNode2(lhs, null, params, lhs.getLocation());
-            }
-            int curTokenProc = OperationDefine.findPrecedence(currentToken.type);
-            if (curTokenProc < expPrec) {
-                return lhs;
-            }
-            tokenStream.nextToken();
-            BaseNode rhs = parsePrimaryExpression();
-            Objects.requireNonNull(rhs);
-
-            Token nextToken = tokenStream.token();
-            int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
-            if (nextTokenProc == -1) {
-                return rhs;
-            }
-            if (curTokenProc < nextTokenProc) {
-                rhs = parseBinaryNode(curTokenProc + 1, rhs);
+                lhs = new CallNode2(lhs, null, params, lhs.getLocation());
+            } else if (currentToken.type == TokenType.LEFT_SQUARE) {
+                tokenStream.nextToken();
+                BaseNode indexNode = parseExpression();
+                Objects.requireNonNull(indexNode);
+                lhs = new IndexNode2(lhs, indexNode, lhs.getLocation());
+            } else {
+                int curTokenProc = OperationDefine.findPrecedence(currentToken.type);
+                if (curTokenProc < expPrec) {
+                    return lhs;
+                }
+                tokenStream.nextToken();
+                BaseNode rhs = parsePrimaryExpression();
                 Objects.requireNonNull(rhs);
+
+                Token nextToken = tokenStream.token();
+                int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
+                if (nextTokenProc == -1) {
+                    return rhs;
+                }
+                if (curTokenProc < nextTokenProc) {
+                    rhs = parseBinaryNode(curTokenProc + 1, rhs);
+                    Objects.requireNonNull(rhs);
+                }
+                lhs = new BinaryOperationNode(currentToken.type, currentToken.name, lhs, rhs, lhs.getLocation());
             }
-            lhs = new BinaryOperationNode(currentToken.type, currentToken.name, lhs, rhs, lhs.getLocation());
         }
     }
 
@@ -118,7 +131,7 @@ public class DefaultParser2 implements Parser {
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
-                return TokenUtil.buildNameNode(token);
+                return parseIdentifier();
             case KEY_THIS:
                 return parseThis();
             case KEY_FALSE:
@@ -154,6 +167,20 @@ public class DefaultParser2 implements Parser {
             default:
                 throw SyntaxException.withSyntax("unkown token:" + token);
         }
+    }
+
+    public BaseNode parseIdentifier() {
+        Token token = tokenStream.token();
+        BaseNode nameNode = null;
+        if (token.type == TokenType.IDENTIFIER) {
+            nameNode = new NameNode(token, token.location);
+        } else if (token.type == TokenType.OUT_IDENTIFIER) {
+            nameNode = new OutNameNode(token, token.location);
+        } else {
+            throw SyntaxException.withSyntax("error identifier: " + token);
+        }
+        tokenStream.nextToken();
+        return nameNode;
     }
 
     public BaseNode parseBlock(boolean isLoop) {

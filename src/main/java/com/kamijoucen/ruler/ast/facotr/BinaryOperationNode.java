@@ -10,13 +10,13 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class BinaryOperationNode extends AbstractBaseNode {
 
-    private BaseNode lhs;
+    private final BaseNode lhs;
 
-    private BaseNode rhs;
+    private final BaseNode rhs;
 
-    private TokenType op;
+    private final TokenType op;
 
-    private String operationName;
+    private final String operationName;
 
     public BinaryOperationNode(TokenType op, String operationName, BaseNode lhs, BaseNode rhs, TokenLocation location) {
         super(location);
@@ -40,31 +40,19 @@ public class BinaryOperationNode extends AbstractBaseNode {
         return lhs;
     }
 
-    public void setLhs(BaseNode lhs) {
-        this.lhs = lhs;
-    }
 
     public BaseNode getRhs() {
         return rhs;
     }
 
-    public void setRhs(BaseNode rhs) {
-        this.rhs = rhs;
-    }
 
     public TokenType getOp() {
         return op;
     }
 
-    public void setOp(TokenType op) {
-        this.op = op;
-    }
 
     public String getOperationName() {
         return operationName;
     }
 
-    public void setOperationName(String operationName) {
-        this.operationName = operationName;
-    }
 }

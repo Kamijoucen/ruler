@@ -8,18 +8,10 @@ import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.List;
+public class AssignNode2 extends BinaryOperationNode {
 
-public class CallNode2 extends BinaryOperationNode {
-
-    private final List<BaseNode> params;
-
-    /**
-     * TODO 逗号列表也可以作为一种node
-     */
-    public CallNode2(BaseNode lhs, BaseNode rhs, List<BaseNode> params, TokenLocation location) {
-        super(TokenType.CALL, TokenType.CALL.name(), lhs, rhs, location);
-        this.params = params;
+    public AssignNode2(BaseNode lhs, BaseNode rhs, TokenLocation location) {
+        super(TokenType.ASSIGN, TokenType.ASSIGN.name(), lhs, rhs, location);
     }
 
     @Override
@@ -30,9 +22,5 @@ public class CallNode2 extends BinaryOperationNode {
     @Override
     public BaseValue typeCheck(RuntimeContext context, Scope scope) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
-    }
-
-    public List<BaseNode> getParams() {
-        return params;
     }
 }
