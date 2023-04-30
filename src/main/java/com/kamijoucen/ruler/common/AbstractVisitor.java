@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.common;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.OperationNode;
 import com.kamijoucen.ruler.ast.expression.*;
 import com.kamijoucen.ruler.ast.facotr.*;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -130,7 +129,7 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(AssignNode2 node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
@@ -159,17 +158,17 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(CallNode2 node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(IndexNode2 node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(DotNode2 node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 

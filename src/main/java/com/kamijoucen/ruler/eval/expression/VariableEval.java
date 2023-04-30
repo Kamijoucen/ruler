@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.eval.expression;
 
-import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -11,9 +11,13 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class VariableEval implements BaseEval<VariableDefineNode> {
     @Override
     public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
-        BaseNode name = node.getName();
-        BaseValue value = node.getExpression().eval(context, scope);
-        scope.defineLocal(((NameNode) name).name.name, value);
-        return value;
+        NameNode lhs = (NameNode) node.getLhs();
+        BaseValue defValue = scope.getByLocal(lhs.name.name);
+        if (defValue != null) {
+            throw SyntaxException.withSyntax("", lhs.getLocation());
+        }
+        BaseValue rValue = node.getRhs().eval(context, scope);
+        scope.putLocal(lhs.name.name, rValue);
+        return rValue;
     }
 }

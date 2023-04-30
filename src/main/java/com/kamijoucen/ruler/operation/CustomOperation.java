@@ -13,7 +13,7 @@ public class CustomOperation implements Operation {
     public BaseValue compute(RuntimeContext context, BaseValue... param) {
         if (param.length != 3) {
             // 自定义操作符需要2个参数和1个函数值本身，因此这里检查参数是否是3个
-            throw new RuntimeException("The custom operator takes two arguments");
+            throw new RuntimeException("The custom operator need three arguments");
         }
         return CALL_OPERATION.compute(context, param);
     }

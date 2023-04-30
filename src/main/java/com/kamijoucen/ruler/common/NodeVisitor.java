@@ -41,7 +41,7 @@ public interface NodeVisitor {
 
     BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(AssignNode2 node, Scope scope, RuntimeContext context);
+    BaseValue eval(AssignNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context);
 
@@ -51,11 +51,11 @@ public interface NodeVisitor {
 
     BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(CallNode2 node, Scope scope, RuntimeContext context);
+    BaseValue eval(CallNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(IndexNode2 node, Scope scope, RuntimeContext context);
+    BaseValue eval(IndexNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(DotNode2 node, Scope scope, RuntimeContext context);
+    BaseValue eval(DotNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context);
 

@@ -14,7 +14,6 @@ public class Scope {
     private final Scope parentScope;
     private final Map<String, BaseValue> valueSpace;
     private List<BaseValue> returnSpace;
-    private BaseValue callChainPreviousValue;
     private String currentLoopVariableName;
     private BaseValue currentLoopVariable;
 
@@ -56,6 +55,10 @@ public class Scope {
         putLocal(name, value);
     }
 
+    public BaseValue getByLocal(String name) {
+        return valueSpace.get(name);
+    }
+
     public void putLocal(String name, BaseValue value) {
         valueSpace.put(name, value);
     }
@@ -80,14 +83,6 @@ public class Scope {
 
     public List<BaseValue> getReturnSpace() {
         return returnSpace;
-    }
-
-    public BaseValue getCallChainPreviousValue() {
-        return callChainPreviousValue;
-    }
-
-    public void putCallChainPreviousValue(BaseValue value) {
-        this.callChainPreviousValue = value;
     }
 
     public BaseValue getCurrentLoopVariable() {

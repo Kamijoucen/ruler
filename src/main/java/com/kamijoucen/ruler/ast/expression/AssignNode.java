@@ -8,10 +8,10 @@ import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class IndexNode2 extends BinaryOperationNode {
+public class AssignNode extends BinaryOperationNode {
 
-    public IndexNode2(BaseNode lhs, BaseNode rhs, TokenLocation location) {
-        super(TokenType.INDEX, TokenType.INDEX.name(), lhs, rhs, location);
+    public AssignNode(BaseNode lhs, BaseNode rhs, TokenLocation location) {
+        super(TokenType.ASSIGN, TokenType.ASSIGN.name(), lhs, rhs, location);
     }
 
     @Override

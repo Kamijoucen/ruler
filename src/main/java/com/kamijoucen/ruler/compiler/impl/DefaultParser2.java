@@ -134,7 +134,7 @@ public class DefaultParser2 implements Parser {
             if (currentToken.type == TokenType.ASSIGN) {
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
-                lhs = new AssignNode2(lhs, rhs, lhs.getLocation());
+                lhs = new AssignNode(lhs, rhs, lhs.getLocation());
             } else if (currentToken.type == TokenType.DOT) {
                 tokenStream.nextToken();
                 Token dotNameNode = tokenStream.token();
@@ -142,7 +142,7 @@ public class DefaultParser2 implements Parser {
                 tokenStream.nextToken();
                 // only identifiers are supported for dot call
                 BaseNode nameNode = parseIdentifier();
-                lhs = new DotNode2(lhs, nameNode, lhs.getLocation());
+                lhs = new DotNode(lhs, nameNode, lhs.getLocation());
             } else if (currentToken.type == TokenType.LEFT_PAREN) {
                 tokenStream.nextToken();
                 List<BaseNode> params = new ArrayList<>();
@@ -156,12 +156,12 @@ public class DefaultParser2 implements Parser {
                 }
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
                 tokenStream.nextToken();
-                lhs = new CallNode2(lhs, null, params, lhs.getLocation());
+                lhs = new CallNode(lhs, null, params, lhs.getLocation());
             } else if (currentToken.type == TokenType.LEFT_SQUARE) {
                 tokenStream.nextToken();
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
-                lhs = new IndexNode2(lhs, indexNode, lhs.getLocation());
+                lhs = new IndexNode(lhs, indexNode, lhs.getLocation());
             } else {
                 int curTokenProc = OperationDefine.findPrecedence(currentToken.type);
                 if (curTokenProc < expPrec) {
