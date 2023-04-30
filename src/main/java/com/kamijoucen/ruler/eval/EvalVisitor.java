@@ -80,11 +80,6 @@ public class EvalVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
-        return logicBinaryOperationEval.eval(node, scope, context);
-    }
-
-    @Override
     public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
         return unaryOperationEval.eval(node, scope, context);
     }
@@ -115,6 +110,7 @@ public class EvalVisitor extends AbstractVisitor {
     }
 
     @Override
+    @Deprecated
     public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
         return loopBlockEval.eval(node, scope, context);
     }

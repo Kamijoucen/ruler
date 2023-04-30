@@ -35,7 +35,7 @@ public class RulerCompiler {
         tokenStream.scan();
         tokenStream.nextToken();
         // 语法分析器
-        DefaultParser parser = new DefaultParser(tokenStream, configuration);
+        DefaultParser2 parser = new DefaultParser2(tokenStream, configuration);
         BaseNode expression = parser.parseExpression();
         if (tokenStream.token().type != TokenType.EOF) {
             throw SyntaxException.withSyntax("错误的表达式结构：" + tokenStream.token());

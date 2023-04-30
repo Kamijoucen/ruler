@@ -16,14 +16,14 @@ public class BinaryOperationNode extends AbstractBaseNode {
 
     private final TokenType op;
 
-    private final String operationName;
+    private final String opName;
 
-    public BinaryOperationNode(TokenType op, String operationName, BaseNode lhs, BaseNode rhs, TokenLocation location) {
+    public BinaryOperationNode(TokenType op, String opName, BaseNode lhs, BaseNode rhs, TokenLocation location) {
         super(location);
         this.lhs = lhs;
         this.rhs = rhs;
         this.op = op;
-        this.operationName = operationName;
+        this.opName = opName;
     }
 
     @Override
@@ -51,8 +51,8 @@ public class BinaryOperationNode extends AbstractBaseNode {
     }
 
 
-    public String getOperationName() {
-        return operationName;
+    public String getOpName() {
+        return opName;
     }
 
 }

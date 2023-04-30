@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class AbstractVisitor implements NodeVisitor {
     @Override
@@ -48,13 +49,6 @@ public class AbstractVisitor implements NodeVisitor {
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         node.getLhs().eval(context, scope);
         node.getRhs().eval(context, scope);
-        return null;
-    }
-
-    @Override
-    public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
-        node.getExp1().eval(context, scope);
-        node.getExp2().eval(context, scope);
         return null;
     }
 
@@ -136,9 +130,7 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
-        node.getLeftNode().eval(context, scope);
-        node.getExpression().eval(context, scope);
+    public BaseValue eval(AssignNode2 node, Scope scope, RuntimeContext context) {
         return null;
     }
 
@@ -167,44 +159,20 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
-        List<BaseNode> param = node.getParam();
-        if (CollectionUtil.isEmpty(param)) {
-            return null;
-        }
-        for (BaseNode baseNode : param) {
-            baseNode.eval(context, scope);
-        }
+    public BaseValue eval(CallNode2 node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
-        node.getIndex().eval(context, scope);
+    public BaseValue eval(IndexNode2 node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
-        List<BaseNode> param = node.getParam();
-        if (CollectionUtil.isEmpty(param)) {
-            return null;
-        }
-        for (BaseNode baseNode : param) {
-            baseNode.eval(context, scope);
-        }
+    public BaseValue eval(DotNode2 node, Scope scope, RuntimeContext context) {
         return null;
     }
 
-    @Override
-    public BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context) {
-        node.getFirst().eval(context, scope);
-        List<OperationNode> calls = node.getCalls();
-        for (BaseNode baseNode : calls) {
-            baseNode.eval(context, scope);
-        }
-        return null;
-    }
 
     @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
@@ -225,8 +193,13 @@ public class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
-        node.getName().eval(context, scope);
-        node.getExpression().eval(context, scope);
+        BaseNode lhs = node.getLhs();
+        Objects.requireNonNull(lhs);
+        lhs.eval(context, scope);
+        BaseNode rhs = node.getRhs();
+        if (rhs != null) {
+            rhs.eval(context, scope);
+        }
         return null;
     }
 

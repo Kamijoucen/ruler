@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
+@Deprecated
 public class LogicBinaryOperationNode extends AbstractBaseNode {
 
     private BaseNode exp1;

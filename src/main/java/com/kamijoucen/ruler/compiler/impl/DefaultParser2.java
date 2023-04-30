@@ -109,8 +109,8 @@ public class DefaultParser2 implements Parser {
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
 
-        BaseNode name = parseIdentifier();
-        Objects.requireNonNull(name);
+        BaseNode nameNode = parseIdentifier();
+        Objects.requireNonNull(nameNode);
 
         AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
         tokenStream.nextToken();
@@ -118,7 +118,7 @@ public class DefaultParser2 implements Parser {
         BaseNode expNode = this.parseExpression();
         Objects.requireNonNull(expNode);
 
-        return new VariableDefineNode(name, expNode, varToken.location);
+        return new VariableDefineNode(nameNode, expNode, varToken.location);
     }
 
     // var name = name.arr()[5].ToString()[1];
@@ -242,14 +242,14 @@ public class DefaultParser2 implements Parser {
         return nameNode;
     }
 
-    public BaseNode parseBlock(boolean isLoop) {
+    public BaseNode parseBlock() {
         Token lToken = tokenStream.token();
         AssertUtil.assertToken(lToken, TokenType.LEFT_BRACE);
         tokenStream.nextToken();
         List<BaseNode> blocks = new ArrayList<>();
         while (tokenStream.token().type != TokenType.EOF
                 && tokenStream.token().type != TokenType.RIGHT_BRACE) {
-            blocks.add(parseStatement(false));
+            blocks.add(parseStatement());
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
@@ -268,10 +268,10 @@ public class DefaultParser2 implements Parser {
         BaseNode condition = parseExpression();
         BaseNode blockAST;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockAST = parseBlock(true);
+            blockAST = parseBlock();
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
-            BaseNode statement = parseStatement(false);
+            BaseNode statement = parseStatement();
             blockAST = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw SyntaxException.withSyntax("while condition expression expected ':' or '{'", tokenStream.token());
@@ -303,35 +303,24 @@ public class DefaultParser2 implements Parser {
         BaseNode condition = parseExpression();
         BaseNode thenBlock = null;
 
-        if (isStatement) {
-            if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-                thenBlock = parseBlock(false);
-            } else if (tokenStream.token().type == TokenType.COLON) {
-                tokenStream.nextToken();
-                BaseNode statement = parseStatement(false);
-                thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
-            } else {
-                throw SyntaxException.withSyntax("if condition expression expected ':' or '{'", tokenStream.token());
-            }
-        } else {
-            AssertUtil.assertToken(tokenStream.token(), TokenType.COLON);
+        if (tokenStream.token().type == TokenType.LEFT_BRACE) {
+            thenBlock = parseBlock();
+        } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
-
-            thenBlock = parseExpression();
+            BaseNode statement = parseStatement();
+            thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+        } else {
+            throw SyntaxException.withSyntax("if condition expression expected ':' or '{'", tokenStream.token());
         }
 
         BaseNode elseBlock = null;
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
             Token token = tokenStream.nextToken();
-            if (isStatement) {
-                if (token.type == TokenType.LEFT_BRACE) {
-                    elseBlock = parseBlock(false);
-                } else {
-                    BaseNode statement = parseStatement(false);
-                    elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
-                }
+            if (token.type == TokenType.LEFT_BRACE) {
+                elseBlock = parseBlock();
             } else {
-                elseBlock = parseExpression();
+                BaseNode statement = parseStatement();
+                elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
             }
         }
         return new IfStatementNode(condition, thenBlock, elseBlock, ifToken.location);
@@ -353,20 +342,13 @@ public class DefaultParser2 implements Parser {
         List<BaseNode> param = new ArrayList<BaseNode>();
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-            Token token = tokenStream.token();
-            param.add(TokenUtil.buildNameNode(token));
-
-            tokenStream.nextToken();
+            param.add(parseIdentifier());
         }
         while (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();
-
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-            Token token = tokenStream.token();
-            param.add(TokenUtil.buildNameNode(token));
-
-            tokenStream.nextToken();
+            param.add(parseIdentifier());
         }
         // eat )
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
@@ -380,7 +362,7 @@ public class DefaultParser2 implements Parser {
             BlockNode blockNode = new BlockNode(CollectionUtil.list(returnNode), exp.getLocation());
             return new ClosureDefineNode(name, param, blockNode, funToken.location);
         } else {
-            BaseNode block = parseBlock(false);
+            BaseNode block = parseBlock();
             return new ClosureDefineNode(name, param, block, funToken.location);
         }
     }
@@ -405,10 +387,10 @@ public class DefaultParser2 implements Parser {
         }
         BaseNode blockNode = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockNode = parseBlock(true);
+            blockNode = parseBlock();
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
-            BaseNode statement = parseStatement(false);
+            BaseNode statement = parseStatement();
             blockNode = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw SyntaxException.withSyntax("for condition expression expected ':' or '{'", tokenStream.token());
@@ -576,7 +558,7 @@ public class DefaultParser2 implements Parser {
         Token nameToken = tokenStream.token();
         tokenStream.nextToken();
 
-        BaseNode blockNode = parseBlock(false);
+        BaseNode blockNode = parseBlock();
         return new RuleStatementNode(
                 new StringNode(nameToken.name, nameToken.location),
                 (BlockNode) blockNode,

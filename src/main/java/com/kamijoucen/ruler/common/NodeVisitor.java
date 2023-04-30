@@ -22,10 +22,6 @@ public interface NodeVisitor {
 
     BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(CallNode2 node, Scope scope, RuntimeContext context);
-
-    BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context);
-
     BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context);
@@ -38,13 +34,14 @@ public interface NodeVisitor {
 
     BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context);
 
+    @Deprecated
     BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(BlockNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(AssignNode node, Scope scope, RuntimeContext context);
+    BaseValue eval(AssignNode2 node, Scope scope, RuntimeContext context);
 
     BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context);
 
@@ -54,13 +51,11 @@ public interface NodeVisitor {
 
     BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(CallNode node, Scope scope, RuntimeContext context);
+    BaseValue eval(CallNode2 node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(IndexNode node, Scope scope, RuntimeContext context);
+    BaseValue eval(IndexNode2 node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(DotNode node, Scope scope, RuntimeContext context);
-
-    BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context);
+    BaseValue eval(DotNode2 node, Scope scope, RuntimeContext context);
 
     BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context);
 

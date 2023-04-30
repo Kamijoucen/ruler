@@ -10,7 +10,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class VariableDefineNode extends BinaryOperationNode {
 
-
     public VariableDefineNode(BaseNode lhs, BaseNode rhs, TokenLocation location) {
         super(TokenType.ASSIGN, TokenType.ASSIGN.name(), lhs, rhs, location);
     }
