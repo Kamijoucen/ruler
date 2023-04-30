@@ -15,12 +15,12 @@ public class VariableDefineNode extends BinaryOperationNode {
     }
 
     @Override
-    public BaseValue eval(RuntimeContext context, Scope scope) {
+    public BaseValue eval(Scope scope, RuntimeContext context) {
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
     @Override
-    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 

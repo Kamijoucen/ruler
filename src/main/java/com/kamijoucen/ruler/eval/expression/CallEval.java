@@ -18,7 +18,7 @@ public class CallEval implements BaseEval<CallNode> {
         paramVal[0] = null;
         paramVal[1] = scope.getCallChainPreviousValue();
         for (int i = 0; i < param.size(); i++) {
-            paramVal[i + 2] = param.get(i).eval(context, scope);
+            paramVal[i + 2] = param.get(i).eval(scope, context);
         }
         return node.getOperation().compute(context, paramVal);
     }

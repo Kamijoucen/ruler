@@ -237,7 +237,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         BaseNode arrayExp = parseExpression();
         // type check
-        BaseValue typeCheckValue = arrayExp.typeCheck(runtimeContext, null);
+        BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
         if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
                 && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
             throw SyntaxException.withSyntax("The value of the expression must be an array!");

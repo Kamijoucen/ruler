@@ -16,7 +16,7 @@ public class VariableEval implements BaseEval<VariableDefineNode> {
         if (defValue != null) {
             throw SyntaxException.withSyntax("", lhs.getLocation());
         }
-        BaseValue rValue = node.getRhs().eval(context, scope);
+        BaseValue rValue = node.getRhs().eval(scope, context);
         scope.putLocal(lhs.name.name, rValue);
         return rValue;
     }

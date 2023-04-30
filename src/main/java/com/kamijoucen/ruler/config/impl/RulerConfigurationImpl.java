@@ -20,16 +20,29 @@ import java.util.Map;
 public class RulerConfigurationImpl implements RulerConfiguration {
 
     private Scope globalScope = new Scope("root", null);
+
     private final List<ImportNode> globalImport = new ArrayList<>();
+
     private NodeVisitor typeCheckVisitor = new TypeCheckVisitor();
+
     private NodeVisitor evalVisitor = new EvalVisitor();
+
     private ImportCache importCache = new ImportCache();
+
+    private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
+
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
+
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
+
     private CreateRuntimeContextFactory createRuntimeContextFactory;
+
     private RClassManager rClassFactory;
+
     private Integer maxLoopNumber = -1;
+
     private Integer maxStackDepth = -1;
+
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
 
     public RulerConfigurationImpl() {
@@ -162,6 +175,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
+    public BinaryOperationFactory getBinaryOperationFactory() {
+        return binaryOperationFactory;
+    }
+
+    @Override
     public RuntimeContext createDefaultRuntimeContext(Map<String, BaseValue> outSpace) {
         return createRuntimeContextFactory.create(outSpace);
     }
@@ -204,4 +222,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.integerNumberCache = integerNumberCache;
     }
 
+    public void setBinaryOperationFactory(BinaryOperationFactory binaryOperationFactory) {
+        this.binaryOperationFactory = binaryOperationFactory;
+    }
 }

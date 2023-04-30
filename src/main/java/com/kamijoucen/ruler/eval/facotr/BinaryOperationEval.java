@@ -4,19 +4,17 @@ import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.CustomOperation;
-import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 
 public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
+
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        BaseValue val1 = node.getLhs().eval(context, scope);
-        BaseValue val2 = node.getRhs().eval(context, scope);
-
-        Operation operation = node.getOperation();
+        BinaryOperation operation = node.getOperation();
         if (operation == null) {
             throw new RuntimeException("not support operation: " + node.getOpName());
         }
@@ -25,9 +23,8 @@ public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
             if (fun == null) {
                 throw SyntaxException.withSyntax("custom infix not found: '" + node.getOpName() + "'", node.getLocation());
             }
-            return operation.compute(context, fun, val1, val2);
+            return operation.invoke(node.getLhs(), node.getRhs(), scope, context, fun);
         }
-
-        return operation.compute(context, val1, val2);
+        return operation.invoke(node.getLhs(), node.getRhs(), scope, context);
     }
 }

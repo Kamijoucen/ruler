@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
 import com.kamijoucen.ruler.token.Token;
@@ -286,8 +287,10 @@ public class DefaultParser2 implements Parser {
             return new UnaryOperationNode(token.type, parsePrimaryExpression(),
                     token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(), token.location);
         } else if (token.type == TokenType.NOT) {
-            return new LogicBinaryOperationNode(TokenType.NOT, parsePrimaryExpression(), null,
-                    OperationDefine.findLogicOperation(TokenType.NOT), token.location);
+            BinaryOperation operation = this.configuration.getBinaryOperationFactory().findOperation(TokenType.NOT.name());
+            Objects.requireNonNull(operation);
+            return new BinaryOperationNode(TokenType.NOT, TokenType.NOT.name(),
+                    parsePrimaryExpression(), null, operation, token.location);
         } else {
             throw SyntaxException.withSyntax("Unsupported unary operator:" + token);
         }
@@ -380,7 +383,7 @@ public class DefaultParser2 implements Parser {
         tokenStream.nextToken();
         BaseNode arrayExp = parseExpression();
         // type check
-        BaseValue typeCheckValue = arrayExp.typeCheck(runtimeContext, null);
+        BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
         if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
                 && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
             throw SyntaxException.withSyntax("The value of the expression must be an array!");

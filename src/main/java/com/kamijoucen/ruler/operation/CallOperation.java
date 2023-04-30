@@ -12,15 +12,18 @@ import com.kamijoucen.ruler.value.constant.NullValue;
 import java.util.Arrays;
 import java.util.List;
 
-public class CallOperation implements Operation {
+public class CallOperation implements BinaryOperation {
 
     @Override
-    public BaseValue compute(RuntimeContext context, BaseValue... param) {
-        BaseValue self = param[0];
-        BaseValue func = param[1];
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+
+        // todo
+
+        BaseValue self = params[0];
+        BaseValue func = params[1];
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            Object[] funcParam = Arrays.copyOfRange(param, 2, param.length);
+            Object[] funcParam = Arrays.copyOfRange(params, 2, params.length);
             if (func.getType() == ValueType.FUNCTION) {
                 RulerFunction function = ((FunctionValue) func).getValue();
                 return (BaseValue) function.call(context, self, funcParam);
@@ -50,7 +53,7 @@ public class CallOperation implements Operation {
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam)));
 
         // call function
-        closure.getBlock().eval(context, callScope);
+        closure.getBlock().eval(callScope, context);
 
         // get return value
         List<BaseValue> returnValues = callScope.getReturnSpace();

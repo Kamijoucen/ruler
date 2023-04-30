@@ -8,12 +8,11 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-public class OrOperation implements LogicOperation {
+public class OrOperation implements BinaryOperation {
+
     @Override
-    public BaseValue compute(RuntimeContext context, Scope scope, BaseNode... nodes) {
-        BaseNode exp1 = nodes[0];
-        BaseNode exp2 = nodes[1];
-        BaseValue tempExp1Val = exp1.eval(context, scope);
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+        BaseValue tempExp1Val = lhs.eval(scope, context);
         if (tempExp1Val.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("该值不支持||:" + tempExp1Val);
         }
@@ -21,7 +20,7 @@ public class OrOperation implements LogicOperation {
         if (exp1Val.getValue()) {
             return BoolValue.get(true);
         }
-        BaseValue tempExp2Val = exp2.eval(context, scope);
+        BaseValue tempExp2Val = rhs.eval(scope, context);
         if (tempExp2Val.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("该值不支持||:" + tempExp2Val);
         }
@@ -30,6 +29,5 @@ public class OrOperation implements LogicOperation {
             return BoolValue.get(true);
         }
         return BoolValue.get(false);
-
     }
 }

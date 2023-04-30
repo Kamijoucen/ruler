@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.ast;
 
 import com.kamijoucen.ruler.operation.AssignOperation;
-import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
@@ -16,7 +16,7 @@ public abstract class OperationNode extends AbstractBaseNode {
 
     public abstract TokenType getOperationType();
 
-    public abstract void putOperation(Operation operation);
+    public abstract void putOperation(BinaryOperation operation);
 
     public abstract void putAssignOperation(AssignOperation operation);
 

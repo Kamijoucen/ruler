@@ -16,7 +16,7 @@ public class RsonEval implements BaseEval<RsonNode> {
         RsonValue rsonValue = new RsonValue();
         for (Map.Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
             String name = entry.getKey();
-            BaseValue value = entry.getValue().eval(context, scope);
+            BaseValue value = entry.getValue().eval(scope, context);
             rsonValue.putField(name, value);
         }
         return rsonValue;

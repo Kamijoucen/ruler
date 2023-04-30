@@ -29,6 +29,8 @@ public interface RulerConfiguration {
 
     ImportCache getImportCache();
 
+    BinaryOperationFactory getBinaryOperationFactory();
+
     NodeVisitor getEvalVisitor();
 
     ParamTypePreProcess getParamTypePreProcess();

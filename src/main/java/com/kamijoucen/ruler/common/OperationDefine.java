@@ -9,10 +9,9 @@ import java.util.Map;
 
 public class OperationDefine {
 
-    private static final Map<TokenType, Integer> PRECEDENCE = new HashMap<TokenType, Integer>();
-    private static final Map<TokenType, Operation> OPERATION = new HashMap<TokenType, Operation>();
-    private static final Map<TokenType, LogicOperation> LOGIC_OPERATION = new HashMap<TokenType, LogicOperation>();
-    private static final Map<TokenType, AssignOperation> ASSIGN_OPERATION = new HashMap<TokenType, AssignOperation>();
+    private static final Map<TokenType, Integer> PRECEDENCE = new HashMap<>();
+    private static final Map<TokenType, BinaryOperation> OPERATION = new HashMap<>();
+    private static final Map<TokenType, AssignOperation> ASSIGN_OPERATION = new HashMap<>();
 
     static {
 
@@ -30,38 +29,12 @@ public class OperationDefine {
         PRECEDENCE.put(TokenType.DIV, 40); // /
         PRECEDENCE.put(TokenType.IDENTIFIER, 30); // custom
 
-        OPERATION.put(TokenType.EQ, new EqOperation()); // ==
-        OPERATION.put(TokenType.NE, new NeOperation()); // !=
-        OPERATION.put(TokenType.LT, new LtOperation()); // <
-        OPERATION.put(TokenType.GT, new GtOperation()); // >
-        OPERATION.put(TokenType.LE, new LeOperation()); // <=
-        OPERATION.put(TokenType.GE, new GeOperation()); // >=
-        OPERATION.put(TokenType.ADD, new AddOperation()); // +
-        OPERATION.put(TokenType.SUB, new SubOperation()); // -
-        OPERATION.put(TokenType.MUL, new MulOperation()); // *
-        OPERATION.put(TokenType.DIV, new DivOperation()); // /
-        OPERATION.put(TokenType.CALL, new CallOperation()); // ()
-        OPERATION.put(TokenType.INDEX, new IndexOperation()); // []
-        OPERATION.put(TokenType.IDENTIFIER, new CustomOperation()); // custom
-
-        LOGIC_OPERATION.put(TokenType.AND, new AndOperation()); // &&
-        LOGIC_OPERATION.put(TokenType.OR, new OrOperation()); // ||
-        LOGIC_OPERATION.put(TokenType.NOT, new NotOperation()); // !
-
         ASSIGN_OPERATION.put(TokenType.INDEX, new IndexAssignOperation()); // []
         ASSIGN_OPERATION.put(TokenType.DOT, new DotAssignOperation()); // .
     }
 
-    public static LogicOperation findLogicOperation(TokenType type) {
-        LogicOperation operation = LOGIC_OPERATION.get(type);
-        if (operation == null) {
-            throw SyntaxException.withSyntax("不支持的逻辑操作符:" + type);
-        }
-        return operation;
-    }
-
-    public static Operation findOperation(TokenType type) {
-        Operation operation = OPERATION.get(type);
+    public static BinaryOperation findOperation(TokenType type) {
+        BinaryOperation operation = OPERATION.get(type);
         if (operation == null) {
             throw new UnsupportedOperationException("Unsupported operator:" + type);
         }

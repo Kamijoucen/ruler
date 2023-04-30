@@ -24,7 +24,7 @@ public class DotAssignOperation implements AssignOperation {
         if (preOperationValue.getType() != ValueType.RSON) {
             throw SyntaxException.withSyntax(preOperationValue.getType() + " not is a rson object!");
         }
-        BaseValue value = expression.eval(context, scope);
+        BaseValue value = expression.eval(scope, context);
         // set rson field
         ((RsonValue) preOperationValue).putField(dotNode.getName(), value);
         return value;

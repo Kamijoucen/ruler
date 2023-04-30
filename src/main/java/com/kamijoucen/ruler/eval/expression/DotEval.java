@@ -48,7 +48,7 @@ public class DotEval implements BaseEval<DotNode> {
             for (int i = 0; i < node.getParam().size(); i++) {
                 baseValues[i + 2] = node.getParam().get(i).eval(context, scope);
             }
-            return callOperation.compute(context, baseValues);
+            return callOperation.invoke(context, , baseValues);
         } else if (dotType == TokenType.IDENTIFIER) {
             return callValue;
         } else {

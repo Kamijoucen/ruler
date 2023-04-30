@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.ast.facotr;
 
 import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
@@ -18,21 +19,25 @@ public class BinaryOperationNode extends AbstractBaseNode {
 
     private final String opName;
 
-    public BinaryOperationNode(TokenType op, String opName, BaseNode lhs, BaseNode rhs, TokenLocation location) {
+    private final BinaryOperation operation;
+
+    public BinaryOperationNode(TokenType op, String opName,
+                               BaseNode lhs, BaseNode rhs, BinaryOperation operation, TokenLocation location) {
         super(location);
         this.lhs = lhs;
         this.rhs = rhs;
         this.op = op;
         this.opName = opName;
+        this.operation = operation;
     }
 
     @Override
-    public BaseValue eval(RuntimeContext context, Scope scope) {
+    public BaseValue eval(Scope scope, RuntimeContext context) {
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
     @Override
-    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
@@ -55,4 +60,7 @@ public class BinaryOperationNode extends AbstractBaseNode {
         return opName;
     }
 
+    public BinaryOperation getOperation() {
+        return operation;
+    }
 }

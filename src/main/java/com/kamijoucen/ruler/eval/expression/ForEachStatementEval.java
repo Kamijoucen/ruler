@@ -20,7 +20,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
 
     @Override
     public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
-        BaseValue listValue = node.getList().eval(context, scope);
+        BaseValue listValue = node.getList().eval(scope, context);
         if (listValue.getType() != ValueType.ARRAY) {
             throw SyntaxException.withSyntax("The value of the expression must be an array!");
         }
@@ -37,7 +37,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             scope.setCurrentLoopVariableName(loopName.name);
             scope.setCurrentLoopVariable(baseValue);
 
-            lastValue = block.eval(context, scope);
+            lastValue = block.eval(scope, context);
 
             if (ValueType.BREAK == lastValue.getType()) {
                 break;

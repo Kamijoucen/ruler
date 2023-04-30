@@ -5,8 +5,8 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public interface LogicOperation {
+public interface BinaryOperation {
 
-    BaseValue compute(RuntimeContext context, Scope scope, BaseNode... param);
+    BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params);
 
 }

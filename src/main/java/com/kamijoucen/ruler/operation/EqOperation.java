@@ -1,14 +1,16 @@
 package com.kamijoucen.ruler.operation;
 
+import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.*;
 
-public class EqOperation implements Operation {
+public class EqOperation implements BinaryOperation {
 
     @Override
-    public BaseValue compute(RuntimeContext context, BaseValue... param) {
-        BaseValue tempVal1 = param[0];
-        BaseValue tempVal2 = param[1];
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+        BaseValue tempVal1 = params[0];
+        BaseValue tempVal2 = params[1];
         if (tempVal1.getType() == ValueType.INTEGER && tempVal2.getType() == ValueType.INTEGER) {
             IntegerValue val1 = (IntegerValue) tempVal1;
             IntegerValue val2 = (IntegerValue) tempVal2;

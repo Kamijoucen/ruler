@@ -25,7 +25,7 @@ public class IndexAssignOperation implements AssignOperation {
             throw SyntaxException.withSyntax("数组的索引必须是数字");
         }
         IntegerValue indexValue = (IntegerValue) tempIndexValue;
-        BaseValue value = expression.eval(context, scope);
+        BaseValue value = expression.eval(scope, context);
         arrayValue.getValues().set((int) indexValue.getValue(), value);
         return value;
     }

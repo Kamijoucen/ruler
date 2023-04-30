@@ -39,7 +39,7 @@ public class RulerInterpreter {
         this.runtimeContext.setNodeVisitor(visitor);
 
         for (BaseNode statement : module.getStatements()) {
-            statement.eval(this.runtimeContext, runScope);
+            statement.eval(runScope, this.runtimeContext);
         }
         return this.runtimeContext;
     }
@@ -55,14 +55,14 @@ public class RulerInterpreter {
             List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
             if (CollectionUtil.isNotEmpty(globalImportModules)) {
                 for (ImportNode node : globalImportModules) {
-                    node.eval(this.runtimeContext, runScope);
+                    node.eval(runScope, this.runtimeContext);
                 }
             }
         }
         BaseNode firstNode = CollectionUtil.first(module.getStatements());
         // 执行表达式
         AssertUtil.notNull(firstNode);
-        BaseValue value = firstNode.eval(this.runtimeContext, runScope);
+        BaseValue value = firstNode.eval(runScope, this.runtimeContext);
         return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value, configuration));
     }
 
@@ -80,7 +80,7 @@ public class RulerInterpreter {
         allNode.addAll(module.getStatements());
 
         for (BaseNode statement : allNode) {
-            if (statement.eval(this.runtimeContext, runScope).getType() == ValueType.RETURN) {
+            if (statement.eval(runScope, this.runtimeContext).getType() == ValueType.RETURN) {
                 break;
             }
         }

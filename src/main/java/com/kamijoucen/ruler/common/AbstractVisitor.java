@@ -46,14 +46,14 @@ public class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        node.getLhs().eval(context, scope);
-        node.getRhs().eval(context, scope);
+        node.getLhs().eval(scope, context);
+        node.getRhs().eval(scope, context);
         return null;
     }
 
     @Override
     public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
-        node.getExp().eval(context, scope);
+        node.getExp().eval(scope, context);
         return null;
     }
 
@@ -63,7 +63,7 @@ public class AbstractVisitor implements NodeVisitor {
             return null;
         }
         for (BaseNode arrNode : node.getValues()) {
-            arrNode.eval(context, scope);
+            arrNode.eval(scope, context);
         }
         return null;
     }
@@ -80,7 +80,7 @@ public class AbstractVisitor implements NodeVisitor {
             return null;
         }
         for (BaseNode prop : properties.values()) {
-            prop.eval(context, scope);
+            prop.eval(scope, context);
         }
         return null;
     }
@@ -92,7 +92,7 @@ public class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
-        node.getExp().eval(context, scope);
+        node.getExp().eval(scope, context);
         return null;
     }
 
@@ -103,7 +103,7 @@ public class AbstractVisitor implements NodeVisitor {
             return null;
         }
         for (BaseNode block : blocks) {
-            block.eval(context, scope);
+            block.eval(scope, context);
         }
         return null;
     }
@@ -115,16 +115,16 @@ public class AbstractVisitor implements NodeVisitor {
             return null;
         }
         for (BaseNode block : blocks) {
-            block.eval(context, scope);
+            block.eval(scope, context);
         }
         return null;
     }
 
     @Override
     public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
-        node.getCondition().eval(context, scope);
-        node.getThenBlock().eval(context, scope);
-        node.getElseBlock().eval(context, scope);
+        node.getCondition().eval(scope, context);
+        node.getThenBlock().eval(scope, context);
+        node.getElseBlock().eval(scope, context);
         return null;
     }
 
@@ -135,15 +135,15 @@ public class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
-        node.getCondition().eval(context, scope);
-        node.getBlock().eval(context, scope);
+        node.getCondition().eval(scope, context);
+        node.getBlock().eval(scope, context);
         return null;
     }
 
     @Override
     public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
-        node.getList().eval(context, scope);
-        node.getBlock().eval(context, scope);
+        node.getList().eval(scope, context);
+        node.getBlock().eval(scope, context);
         return null;
     }
 
@@ -176,16 +176,16 @@ public class AbstractVisitor implements NodeVisitor {
     @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
         for (BaseNode baseNode : node.getParam()) {
-            baseNode.eval(context, scope);
+            baseNode.eval(scope, context);
         }
-        node.getBlock().eval(context, scope);
+        node.getBlock().eval(scope, context);
         return null;
     }
 
     @Override
     public BaseValue eval(ReturnNode node, Scope scope, RuntimeContext context) {
         for (BaseNode baseNode : node.getParam()) {
-            baseNode.eval(context, scope);
+            baseNode.eval(scope, context);
         }
         return null;
     }
@@ -194,10 +194,10 @@ public class AbstractVisitor implements NodeVisitor {
     public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
         BaseNode lhs = node.getLhs();
         Objects.requireNonNull(lhs);
-        lhs.eval(context, scope);
+        lhs.eval(scope, context);
         BaseNode rhs = node.getRhs();
         if (rhs != null) {
-            rhs.eval(context, scope);
+            rhs.eval(scope, context);
         }
         return null;
     }
@@ -210,14 +210,14 @@ public class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
-        node.getAlias().eval(context, scope);
-        node.getBlock().eval(context, scope);
+        node.getAlias().eval(scope, context);
+        node.getBlock().eval(scope, context);
         return null;
     }
 
     @Override
     public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
-        node.getFunction().eval(context, scope);
+        node.getFunction().eval(scope, context);
         return null;
     }
 

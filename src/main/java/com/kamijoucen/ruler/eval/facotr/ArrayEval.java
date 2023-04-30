@@ -20,7 +20,7 @@ public class ArrayEval implements BaseEval<ArrayNode> {
         }
         List<BaseValue> values = new ArrayList<BaseValue>(nodes.size());
         for (BaseNode tempNode : nodes) {
-            values.add(tempNode.eval(context, scope));
+            values.add(tempNode.eval(scope, context));
         }
         return new ArrayValue(values);
     }
