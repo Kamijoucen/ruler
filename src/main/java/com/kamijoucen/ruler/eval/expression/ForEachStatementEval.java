@@ -36,20 +36,16 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             loopCountCheckOperation.accept(node, scope, context);
             scope.setCurrentLoopVariableName(loopName.name);
             scope.setCurrentLoopVariable(baseValue);
-
             lastValue = block.eval(scope, context);
-
             if (ValueType.BREAK == lastValue.getType()) {
                 break;
             } else if (ValueType.RETURN == lastValue.getType()) {
                 return ReturnValue.INSTANCE;
             }
         }
-
         if (lastValue.getType() == ValueType.BREAK) {
             return NullValue.INSTANCE;
         }
-
         return lastValue;
     }
 }

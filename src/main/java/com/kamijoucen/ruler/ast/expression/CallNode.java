@@ -14,9 +14,7 @@ public class CallNode extends BinaryOperationNode {
 
     private final List<BaseNode> params;
 
-    /**
-     * TODO 逗号列表也可以作为一种node
-     */
+    // todo
     public CallNode(BaseNode lhs, BaseNode rhs, List<BaseNode> params, TokenLocation location) {
         super(TokenType.CALL, TokenType.CALL.name(), lhs, rhs, location);
         this.params = params;

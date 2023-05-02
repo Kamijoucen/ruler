@@ -28,9 +28,9 @@ public class DefaultParser2 implements Parser {
 
     private final ParseContext parseContext;
 
-    private final List<BaseNode> statements = new ArrayList<>();
-
     private final TokenStream tokenStream;
+
+    private final List<BaseNode> rootStatements = new ArrayList<>();
 
     public DefaultParser2(TokenStream tokenStream, RulerConfiguration configuration) {
         this.tokenStream = tokenStream;
@@ -123,29 +123,27 @@ public class DefaultParser2 implements Parser {
     }
 
     // var name = name.arr()[5].ToString()[1];
-
-    // name .arr
-
-    // arr()
-    // 1 + 2 * name()
-    // name() + 1
+    // a.b().c = a
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
-            Token currentToken = tokenStream.token();
-            if (currentToken.type == TokenType.ASSIGN) {
+            Token curOpToken = tokenStream.token();
+            tokenStream.nextToken();
+
+            BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                    .findOperation(curOpToken.type.name());
+            Objects.requireNonNull(operation);
+            if (curOpToken.type == TokenType.ASSIGN) {
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
-                lhs = new AssignNode(lhs, rhs, lhs.getLocation());
-            } else if (currentToken.type == TokenType.DOT) {
-                tokenStream.nextToken();
+                lhs = new AssignNode(lhs, rhs, operation, lhs.getLocation());
+            } else if (curOpToken.type == TokenType.DOT) {
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
                 tokenStream.nextToken();
                 // only identifiers are supported for dot call
                 BaseNode nameNode = parseIdentifier();
                 lhs = new DotNode(lhs, nameNode, lhs.getLocation());
-            } else if (currentToken.type == TokenType.LEFT_PAREN) {
-                tokenStream.nextToken();
+            } else if (curOpToken.type == TokenType.LEFT_PAREN) {
                 List<BaseNode> params = new ArrayList<>();
                 if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
                     params.add(parseExpression());
@@ -158,17 +156,15 @@ public class DefaultParser2 implements Parser {
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
                 tokenStream.nextToken();
                 lhs = new CallNode(lhs, null, params, lhs.getLocation());
-            } else if (currentToken.type == TokenType.LEFT_SQUARE) {
-                tokenStream.nextToken();
+            } else if (curOpToken.type == TokenType.LEFT_SQUARE) {
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
                 lhs = new IndexNode(lhs, indexNode, lhs.getLocation());
             } else {
-                int curTokenProc = OperationDefine.findPrecedence(currentToken.type);
+                int curTokenProc = OperationDefine.findPrecedence(curOpToken.type);
                 if (curTokenProc < expPrec) {
                     return lhs;
                 }
-                tokenStream.nextToken();
                 BaseNode rhs = parsePrimaryExpression();
                 Objects.requireNonNull(rhs);
 
@@ -181,7 +177,8 @@ public class DefaultParser2 implements Parser {
                     rhs = parseBinaryNode(curTokenProc + 1, rhs);
                     Objects.requireNonNull(rhs);
                 }
-                lhs = new BinaryOperationNode(currentToken.type, currentToken.name, lhs, rhs, lhs.getLocation());
+                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
+                        lhs, rhs, operation, lhs.getLocation());
             }
         }
     }
@@ -287,7 +284,8 @@ public class DefaultParser2 implements Parser {
             return new UnaryOperationNode(token.type, parsePrimaryExpression(),
                     token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(), token.location);
         } else if (token.type == TokenType.NOT) {
-            BinaryOperation operation = this.configuration.getBinaryOperationFactory().findOperation(TokenType.NOT.name());
+            BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                    .findOperation(TokenType.NOT.name());
             Objects.requireNonNull(operation);
             return new BinaryOperationNode(TokenType.NOT, TokenType.NOT.name(),
                     parsePrimaryExpression(), null, operation, token.location);

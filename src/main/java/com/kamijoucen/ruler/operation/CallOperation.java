@@ -14,24 +14,24 @@ import java.util.List;
 
 public class CallOperation implements BinaryOperation {
 
+
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
 
-        // todo
+        BaseValue callFunc = lhs.eval(scope, context);
 
         BaseValue self = params[0];
-        BaseValue func = params[1];
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            Object[] funcParam = Arrays.copyOfRange(params, 2, params.length);
-            if (func.getType() == ValueType.FUNCTION) {
-                RulerFunction function = ((FunctionValue) func).getValue();
+            Object[] funcParam = Arrays.copyOfRange(params, 1, params.length);
+            if (callFunc.getType() == ValueType.FUNCTION) {
+                RulerFunction function = ((FunctionValue) callFunc).getValue();
                 return (BaseValue) function.call(context, self, funcParam);
-            } else if (func.getType() == ValueType.CLOSURE) {
-                ClosureValue function = ((ClosureValue) func);
+            } else if (callFunc.getType() == ValueType.CLOSURE) {
+                ClosureValue function = ((ClosureValue) callFunc);
                 return callClosure(context, self, function, (BaseValue[]) funcParam);
             } else {
-                throw new IllegalArgumentException(func.toString() + " not is a function!");
+                throw new IllegalArgumentException(callFunc.toString() + " not is a function!");
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);
