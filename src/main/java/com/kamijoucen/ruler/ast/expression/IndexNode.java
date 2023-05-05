@@ -1,75 +1,26 @@
 package com.kamijoucen.ruler.ast.expression;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.OperationNode;
-import com.kamijoucen.ruler.operation.AssignOperation;
-import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class IndexNode extends OperationNode {
+public class IndexNode extends BinaryOperationNode {
 
-    private Operation operation;
-
-    private BaseNode index;
-
-    private AssignOperation assignOperation;
-
-    public IndexNode(BaseNode index, TokenLocation location) {
-        super(location);
-        this.index = index;
+    public IndexNode(BaseNode lhs, BaseNode rhs, TokenLocation location) {
+        super(TokenType.INDEX, TokenType.INDEX.name(), lhs, rhs, location);
     }
 
     @Override
-    public BaseValue eval(RuntimeContext context, Scope scope) {
+    public BaseValue eval(Scope scope, RuntimeContext context) {
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
     @Override
-    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
-    }
-
-    @Override
-    public TokenType getOperationType() {
-        return TokenType.INDEX;
-    }
-
-    @Override
-    public void putOperation(Operation operation) {
-        this.operation = operation;
-    }
-
-    @Override
-    public void putAssignOperation(AssignOperation operation) {
-        this.assignOperation = operation;
-    }
-
-    @Override
-    public BaseValue assign(BaseNode expression, Scope scope, RuntimeContext context) {
-        return this.assignOperation.assign(scope.getCallChainPreviousValue(), this, expression, scope, context);
-    }
-
-    public BaseNode getIndex() {
-        return index;
-    }
-
-    public void setIndex(BaseNode index) {
-        this.index = index;
-    }
-
-    public Operation getOperation() {
-        return operation;
-    }
-
-    public AssignOperation getAssignOperation() {
-        return assignOperation;
-    }
-
-    public void setAssignOperation(AssignOperation assignOperation) {
-        this.assignOperation = assignOperation;
     }
 }

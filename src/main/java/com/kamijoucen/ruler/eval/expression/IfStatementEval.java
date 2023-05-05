@@ -14,18 +14,18 @@ import com.kamijoucen.ruler.value.constant.NullValue;
 public class IfStatementEval implements BaseEval<IfStatementNode> {
     @Override
     public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
-        BaseValue conditionValue = node.getCondition().eval(context, scope);
+        BaseValue conditionValue = node.getCondition().eval(scope, context);
         if (conditionValue.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("需要一个bool类型");
         }
         BoolValue boolValue = (BoolValue) conditionValue;
         if (boolValue.getValue()) {
             BaseNode thenBlock = node.getThenBlock();
-            return thenBlock.eval(context, scope);
+            return thenBlock.eval(scope, context);
         } else {
             BaseNode elseBlock = node.getElseBlock();
             if (elseBlock != null) {
-                return elseBlock.eval(context, scope);
+                return elseBlock.eval(scope, context);
             }
         }
         return NullValue.INSTANCE;

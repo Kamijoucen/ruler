@@ -21,7 +21,7 @@ public class CallChainEval implements BaseEval<CallChainNode> {
         }
         for (int i = 0; i < length; i++) {
             scope.putCallChainPreviousValue(statementValue);
-            statementValue = calls.get(i).eval(context, scope);
+            statementValue = calls.get(i).eval(scope, context);
         }
         if (context.getCallChainAssign()) {
             scope.putCallChainPreviousValue(statementValue);

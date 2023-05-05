@@ -26,8 +26,8 @@ public class RuntimeContext {
                           ImportCache importCache,
                           StackDepthCheckOperation stackDepthCheckOperation,
                           RulerConfiguration configuration) {
-        this.outSpace = new HashMap<String, BaseValue>();
-        this.infixOperationSpace = new HashMap<String, ClosureValue>();
+        this.outSpace = new HashMap<>();
+        this.infixOperationSpace = new HashMap<>();
         this.nodeVisitor = nodeVisitor;
         this.typeCheckVisitor = typeCheckVisitor;
         this.importCache = importCache;

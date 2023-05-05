@@ -446,4 +446,11 @@ public class RulerTest {
         System.out.println(runner.run());
     }
 
+    @Test
+    public void testspacechar() {
+
+        System.out.println(Character.isWhitespace('\n'));
+
+    }
+
 }

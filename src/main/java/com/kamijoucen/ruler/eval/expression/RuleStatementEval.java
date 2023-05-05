@@ -22,7 +22,7 @@ public class RuleStatementEval implements BaseEval<RuleStatementNode> {
         ruleScope.initReturnSpace();
 
         BlockNode block = node.getBlock();
-        block.eval(context, ruleScope);
+        block.eval(ruleScope, context);
 
         List<BaseValue> returnValues = ruleScope.getReturnSpace();
         if (CollectionUtil.isNotEmpty(returnValues)) {

@@ -1,5 +1,7 @@
 package com.kamijoucen.ruler.util;
 
+import com.kamijoucen.ruler.common.Constant;
+
 import java.io.*;
 import java.util.UUID;
 
@@ -89,8 +91,6 @@ public class IOUtil {
             while ((len = reader.read(buf)) != -1) {
                 sb.append(buf, 0, len);
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -118,6 +118,10 @@ public class IOUtil {
 
     public static String getVirtualPath(String script, String alias) {
         return "virtual_path_" + UUID.randomUUID().toString() + "_" + alias.hashCode() + "_" + script.hashCode();
+    }
+
+    public static boolean isWhitespace(char ch) {
+        return ch != Constant.ENTER && Character.isWhitespace(ch);
     }
 
 }

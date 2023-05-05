@@ -13,7 +13,7 @@ public class InfixDefinitionEval implements BaseEval<InfixDefinitionNode> {
     @Override
     public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
         String functionName = node.getFunction().getName();
-        BaseValue functionValue = node.getFunction().eval(context, scope);
+        BaseValue functionValue = node.getFunction().eval(scope, context);
         context.addInfixOperation(functionName, (ClosureValue) functionValue);
         return NullValue.INSTANCE;
     }

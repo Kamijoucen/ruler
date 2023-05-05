@@ -19,7 +19,7 @@ public class BlockEval implements BaseEval<BlockNode> {
 
         BaseValue lastVal = NullValue.INSTANCE;
         for (BaseNode block : blocks) {
-            lastVal = block.eval(context, blockScope);
+            lastVal = block.eval(blockScope, context);
             if (ValueType.RETURN == lastVal.getType()) {
                 return lastVal;
             }

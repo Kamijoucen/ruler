@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.ast.facotr;
 
 import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.operation.Operation;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
@@ -11,71 +11,56 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class BinaryOperationNode extends AbstractBaseNode {
 
-    private BaseNode exp1;
+    private final BaseNode lhs;
 
-    private BaseNode exp2;
+    private final BaseNode rhs;
 
-    private TokenType op;
+    private final TokenType op;
 
-    private Operation operation;
-    private String operationName;
+    private final String opName;
 
-    public BinaryOperationNode(TokenType op, String operationName, BaseNode exp1, BaseNode exp2, Operation operation, TokenLocation location) {
+    private final BinaryOperation operation;
+
+    public BinaryOperationNode(TokenType op, String opName,
+                               BaseNode lhs, BaseNode rhs, BinaryOperation operation, TokenLocation location) {
         super(location);
-        this.exp1 = exp1;
-        this.exp2 = exp2;
+        this.lhs = lhs;
+        this.rhs = rhs;
         this.op = op;
-        this.operationName = operationName;
+        this.opName = opName;
         this.operation = operation;
     }
 
     @Override
-    public BaseValue eval(RuntimeContext context, Scope scope) {
+    public BaseValue eval(Scope scope, RuntimeContext context) {
         return context.getNodeVisitor().eval(this, scope, context);
     }
 
     @Override
-    public BaseValue typeCheck(RuntimeContext context, Scope scope) {
+    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
-    public BaseNode getExp1() {
-        return exp1;
+    public BaseNode getLhs() {
+        return lhs;
     }
 
-    public void setExp1(BaseNode exp1) {
-        this.exp1 = exp1;
+
+    public BaseNode getRhs() {
+        return rhs;
     }
 
-    public BaseNode getExp2() {
-        return exp2;
-    }
-
-    public void setExp2(BaseNode exp2) {
-        this.exp2 = exp2;
-    }
 
     public TokenType getOp() {
         return op;
     }
 
-    public void setOp(TokenType op) {
-        this.op = op;
+
+    public String getOpName() {
+        return opName;
     }
 
-    public Operation getOperation() {
+    public BinaryOperation getOperation() {
         return operation;
-    }
-
-    public void setOperation(Operation operation) {
-        this.operation = operation;
-    }
-
-    public String getOperationName() {
-        return operationName;
-    }
-
-    public void setOperationName(String operationName) {
-        this.operationName = operationName;
     }
 }

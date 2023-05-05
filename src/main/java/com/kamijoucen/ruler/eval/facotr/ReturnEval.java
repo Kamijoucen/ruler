@@ -17,7 +17,7 @@ public class ReturnEval implements BaseEval<ReturnNode> {
         List<BaseNode> param = node.getParam();
         List<BaseValue> values = new ArrayList<BaseValue>(param.size());
         for (BaseNode baseNode : param) {
-            values.add(baseNode.eval(context, scope));
+            values.add(baseNode.eval(scope, context));
         }
         scope.putReturnValues(values);
         return ReturnValue.INSTANCE;

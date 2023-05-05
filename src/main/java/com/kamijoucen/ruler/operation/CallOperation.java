@@ -12,23 +12,26 @@ import com.kamijoucen.ruler.value.constant.NullValue;
 import java.util.Arrays;
 import java.util.List;
 
-public class CallOperation implements Operation {
+public class CallOperation implements BinaryOperation {
+
 
     @Override
-    public BaseValue compute(RuntimeContext context, BaseValue... param) {
-        BaseValue self = param[0];
-        BaseValue func = param[1];
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+
+        BaseValue callFunc = lhs.eval(scope, context);
+
+        BaseValue self = params[0];
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            Object[] funcParam = Arrays.copyOfRange(param, 2, param.length);
-            if (func.getType() == ValueType.FUNCTION) {
-                RulerFunction function = ((FunctionValue) func).getValue();
+            Object[] funcParam = Arrays.copyOfRange(params, 1, params.length);
+            if (callFunc.getType() == ValueType.FUNCTION) {
+                RulerFunction function = ((FunctionValue) callFunc).getValue();
                 return (BaseValue) function.call(context, self, funcParam);
-            } else if (func.getType() == ValueType.CLOSURE) {
-                ClosureValue function = ((ClosureValue) func);
+            } else if (callFunc.getType() == ValueType.CLOSURE) {
+                ClosureValue function = ((ClosureValue) callFunc);
                 return callClosure(context, self, function, (BaseValue[]) funcParam);
             } else {
-                throw new IllegalArgumentException(func.toString() + " not is a function!");
+                throw new IllegalArgumentException(callFunc.toString() + " not is a function!");
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);
@@ -46,13 +49,11 @@ public class CallOperation implements Operation {
         if (self != null) {
             callScope.putLocal(Constant.THIS_ARG, self);
         }
-        // set array value meta info
-        RClass classValue = context.getConfiguration().getRClassFactory().getClassValue(ValueType.ARRAY);
         // put args in scope
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam)));
 
         // call function
-        closure.getBlock().eval(context, callScope);
+        closure.getBlock().eval(callScope, context);
 
         // get return value
         List<BaseValue> returnValues = callScope.getReturnSpace();

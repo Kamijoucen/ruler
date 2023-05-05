@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.token.TokenLocation;
 
 public abstract class AbstractBaseNode implements BaseNode {
 
-    private TokenLocation location;
+    private final TokenLocation location;
 
     public AbstractBaseNode(TokenLocation location) {
         this.location = location;
@@ -15,7 +15,4 @@ public abstract class AbstractBaseNode implements BaseNode {
         return location;
     }
 
-    public void setLocation(TokenLocation location) {
-        this.location = location;
-    }
 }

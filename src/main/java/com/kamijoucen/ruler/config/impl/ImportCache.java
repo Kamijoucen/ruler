@@ -10,10 +10,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ImportCache {
 
-    private Map<String, RulerModule> cache = new ConcurrentHashMap<String, RulerModule>();
+    private final Map<String, RulerModule> cache = new ConcurrentHashMap<String, RulerModule>();
 
     public List<RulerModule> getAllImportModule() {
-        return new ArrayList<RulerModule>(cache.values());
+        return new ArrayList<>(cache.values());
     }
 
     public RulerModule getImportModule(String path) {

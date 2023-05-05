@@ -29,6 +29,8 @@ public interface RulerConfiguration {
 
     ImportCache getImportCache();
 
+    BinaryOperationFactory getBinaryOperationFactory();
+
     NodeVisitor getEvalVisitor();
 
     ParamTypePreProcess getParamTypePreProcess();
@@ -37,7 +39,7 @@ public interface RulerConfiguration {
 
     CreateRuntimeContextFactory getCreateDefaultRuntimeContextFactory();
 
-    RClassFactory getRClassFactory();
+    RClassManager getRClassManager();
 
     Integer getMaxLoopNumber();
 

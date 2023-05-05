@@ -8,11 +8,11 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-public class NotOperation implements LogicOperation {
+public class NotOperation implements BinaryOperation {
+
     @Override
-    public BaseValue compute(RuntimeContext context, Scope scope, BaseNode... nodes) {
-        BaseNode exp = nodes[0];
-        BaseValue tempExpVal = exp.eval(context, scope);
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+        BaseValue tempExpVal = lhs.eval(scope, context);
         if (tempExpVal.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("该值不支持'!'操作:" + tempExpVal);
         }

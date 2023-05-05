@@ -56,7 +56,7 @@ public class TypeCheckVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
-        return node.getExp().typeCheck(context, scope);
+        return node.getExp().typeCheck(scope, context);
     }
 
     @Override

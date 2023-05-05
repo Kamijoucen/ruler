@@ -20,16 +20,29 @@ import java.util.Map;
 public class RulerConfigurationImpl implements RulerConfiguration {
 
     private Scope globalScope = new Scope("root", null);
+
     private final List<ImportNode> globalImport = new ArrayList<>();
+
     private NodeVisitor typeCheckVisitor = new TypeCheckVisitor();
+
     private NodeVisitor evalVisitor = new EvalVisitor();
+
     private ImportCache importCache = new ImportCache();
+
+    private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
+
     private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
+
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
+
     private CreateRuntimeContextFactory createRuntimeContextFactory;
-    private RClassFactory rClassFactory;
+
+    private RClassManager rClassFactory;
+
     private Integer maxLoopNumber = -1;
+
     private Integer maxStackDepth = -1;
+
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
 
     public RulerConfigurationImpl() {
@@ -43,7 +56,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private void initEngineBehaviorFactory() {
         this.runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
-        this.rClassFactory = new ObjectRClassFactoryImpl();
+        this.rClassFactory = new ObjectRClassManagerImpl();
         this.createRuntimeContextFactory = new CreateRuntimeContextFactoryImpl(this);
     }
 
@@ -126,11 +139,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public RClassFactory getRClassFactory() {
+    public RClassManager getRClassManager() {
         return this.rClassFactory;
     }
 
-    public void setRClassFactory(RClassFactory metaInfoFactory) {
+    public void setRClassFactory(RClassManager metaInfoFactory) {
         this.rClassFactory = metaInfoFactory;
     }
 
@@ -159,6 +172,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ImportCache getImportCache() {
         return importCache;
+    }
+
+    @Override
+    public BinaryOperationFactory getBinaryOperationFactory() {
+        return binaryOperationFactory;
     }
 
     @Override
@@ -204,4 +222,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.integerNumberCache = integerNumberCache;
     }
 
+    public void setBinaryOperationFactory(BinaryOperationFactory binaryOperationFactory) {
+        this.binaryOperationFactory = binaryOperationFactory;
+    }
 }

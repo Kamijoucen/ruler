@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class TokenLookUp {
 
-    private static final Map<String, TokenType> KEY_WORDS = new HashMap<String, TokenType>();
+    private static final Map<String, TokenType> KEY_WORDS = new HashMap<>();
 
-    private static final Map<String, TokenType> SYMBOL = new HashMap<String, TokenType>();
+    private static final Map<String, TokenType> SYMBOL = new HashMap<>();
 
     static {
         SYMBOL.put(",", TokenType.COMMA);
@@ -35,6 +35,7 @@ public class TokenLookUp {
         SYMBOL.put("-", TokenType.SUB);
         SYMBOL.put("*", TokenType.MUL);
         SYMBOL.put("/", TokenType.DIV);
+        SYMBOL.put("\n", TokenType.KEY_ENTER);
 
         KEY_WORDS.put("return", TokenType.KEY_RETURN);
         KEY_WORDS.put("if", TokenType.KEY_IF);

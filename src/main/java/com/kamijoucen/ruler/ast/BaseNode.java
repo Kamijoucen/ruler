@@ -9,9 +9,9 @@ import java.io.Serializable;
 
 public interface BaseNode extends Serializable {
 
-    BaseValue eval(RuntimeContext context, Scope scope);
+    BaseValue eval(Scope scope, RuntimeContext context);
 
-    BaseValue typeCheck(RuntimeContext context, Scope scope);
+    BaseValue typeCheck(Scope scope, RuntimeContext context);
 
     TokenLocation getLocation();
 }

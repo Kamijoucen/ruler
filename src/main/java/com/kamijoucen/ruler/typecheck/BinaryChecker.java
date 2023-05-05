@@ -57,8 +57,8 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
 
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        BaseValue val1 = node.getExp1().typeCheck(context, scope);
-        BaseValue val2 = node.getExp2().typeCheck(context, scope);
+        BaseValue val1 = node.getLhs().typeCheck(scope, context);
+        BaseValue val2 = node.getRhs().typeCheck(scope, context);
         if (val1.getType() == ValueType.FAILURE || val2.getType() == ValueType.FAILURE) {
             return FailureType.INSTANCE;
         }

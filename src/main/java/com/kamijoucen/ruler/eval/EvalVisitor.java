@@ -18,7 +18,6 @@ public class EvalVisitor extends AbstractVisitor {
     private static final BooleanEval booleanEval = new BooleanEval();
     private static final StringEval stringEval = new StringEval();
     private static final BinaryOperationEval binaryOperationEval = new BinaryOperationEval();
-    private static final LogicBinaryOperationEval logicBinaryOperationEval = new LogicBinaryOperationEval();
     private static final UnaryOperationEval unaryOperationEval = new UnaryOperationEval();
     private static final ArrayEval arrayEval = new ArrayEval();
     private static final NullEval nullEval = new NullEval();
@@ -39,7 +38,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final CallChainEval callChainEval = new CallChainEval();
     private static final ClosureEval closureEval = new ClosureEval();
     private static final ReturnEval returnEval = new ReturnEval();
-    private static final VariableEval variableEval = new VariableEval();
+    private static final VariableEval varDefineEval = new VariableEval();
     private static final ImportEval importEval = new ImportEval();
     private static final RuleStatementEval ruleStatementEval = new RuleStatementEval();
     private static final InfixDefinitionEval infixDefinitionEval = new InfixDefinitionEval();
@@ -80,11 +79,6 @@ public class EvalVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
-        return logicBinaryOperationEval.eval(node, scope, context);
-    }
-
-    @Override
     public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
         return unaryOperationEval.eval(node, scope, context);
     }
@@ -115,6 +109,7 @@ public class EvalVisitor extends AbstractVisitor {
     }
 
     @Override
+    @Deprecated
     public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
         return loopBlockEval.eval(node, scope, context);
     }
@@ -170,11 +165,6 @@ public class EvalVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context) {
-        return callChainEval.eval(node, scope, context);
-    }
-
-    @Override
     public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
         return closureEval.eval(node, scope, context);
     }
@@ -186,7 +176,7 @@ public class EvalVisitor extends AbstractVisitor {
 
     @Override
     public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
-        return variableEval.eval(node, scope, context);
+        return varDefineEval.eval(node, scope, context);
     }
 
     @Override

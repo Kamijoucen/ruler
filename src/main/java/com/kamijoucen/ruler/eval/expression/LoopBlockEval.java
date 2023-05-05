@@ -22,7 +22,7 @@ public class LoopBlockEval implements BaseEval<LoopBlockNode> {
 
         BaseValue lastVal = NullValue.INSTANCE;
         for (BaseNode block : blocks) {
-            lastVal = block.eval(context, blockScope);
+            lastVal = block.eval(blockScope, context);
             if (ValueType.CONTINUE == lastVal.getType()) {
                 break;
             } else if (ValueType.BREAK == lastVal.getType()) {
