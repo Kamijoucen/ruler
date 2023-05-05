@@ -35,7 +35,6 @@ public class EvalVisitor extends AbstractVisitor {
     private static final CallEval callEval = new CallEval();
     private static final IndexEval indexEval = new IndexEval();
     private static final DotEval dotEval = new DotEval();
-    private static final CallChainEval callChainEval = new CallChainEval();
     private static final ClosureEval closureEval = new ClosureEval();
     private static final ReturnEval returnEval = new ReturnEval();
     private static final VariableEval varDefineEval = new VariableEval();

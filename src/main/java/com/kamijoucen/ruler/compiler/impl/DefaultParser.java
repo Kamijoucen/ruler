@@ -260,6 +260,7 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseWhileStatement() {
+
         Token whileToken = tokenStream.token();
         AssertUtil.assertToken(whileToken, TokenType.KEY_WHILE);
         tokenStream.nextToken();

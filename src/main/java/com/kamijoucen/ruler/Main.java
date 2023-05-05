@@ -28,6 +28,7 @@ public class Main {
         String content = IOUtil.read(file);
         if (IOUtil.isBlank(content)) {
             throw new IllegalArgumentException("空文件输入！");
+	    
         }
 
         RulerScript script = new RulerScript();

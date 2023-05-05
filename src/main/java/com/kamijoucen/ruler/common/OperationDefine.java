@@ -1,20 +1,15 @@
 package com.kamijoucen.ruler.common;
 
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.operation.*;
-import com.kamijoucen.ruler.token.TokenType;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.kamijoucen.ruler.token.TokenType;
 
 public class OperationDefine {
 
     private static final Map<TokenType, Integer> PRECEDENCE = new HashMap<>();
-    private static final Map<TokenType, BinaryOperation> OPERATION = new HashMap<>();
-    private static final Map<TokenType, AssignOperation> ASSIGN_OPERATION = new HashMap<>();
 
     static {
-
         PRECEDENCE.put(TokenType.OR, 8); // ||
         PRECEDENCE.put(TokenType.AND, 9); // &&
         PRECEDENCE.put(TokenType.EQ, 10); // ==
@@ -28,25 +23,6 @@ public class OperationDefine {
         PRECEDENCE.put(TokenType.MUL, 40); // *
         PRECEDENCE.put(TokenType.DIV, 40); // /
         PRECEDENCE.put(TokenType.IDENTIFIER, 30); // custom
-
-        ASSIGN_OPERATION.put(TokenType.INDEX, new IndexAssignOperation()); // []
-        ASSIGN_OPERATION.put(TokenType.DOT, new DotAssignOperation()); // .
-    }
-
-    public static BinaryOperation findOperation(TokenType type) {
-        BinaryOperation operation = OPERATION.get(type);
-        if (operation == null) {
-            throw new UnsupportedOperationException("Unsupported operator:" + type);
-        }
-        return operation;
-    }
-
-    public static AssignOperation findAssignOperation(TokenType type) {
-        AssignOperation operation = ASSIGN_OPERATION.get(type);
-        if (operation == null) {
-            throw SyntaxException.withSyntax("不支持的赋值操作:" + type);
-        }
-        return operation;
     }
 
     public static int findPrecedence(TokenType type) {
