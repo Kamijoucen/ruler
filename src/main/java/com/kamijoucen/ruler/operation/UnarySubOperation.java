@@ -20,7 +20,8 @@ public class UnarySubOperation implements BinaryOperation {
         } else if (value.getType() == ValueType.DOUBLE) {
             DoubleValue val = (DoubleValue) value;
             return new DoubleValue(-val.getValue());
+        } else {
+            throw new RuntimeException("该值不支持取负数:" + Arrays.toString(params));
         }
-        throw new RuntimeException("该值不支持取负数:" + Arrays.toString(params));
     }
 }
