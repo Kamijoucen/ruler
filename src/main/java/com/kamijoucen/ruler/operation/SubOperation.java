@@ -32,7 +32,8 @@ public class SubOperation implements BinaryOperation {
             DoubleValue val1 = (DoubleValue) lValue;
             DoubleValue val2 = (DoubleValue) rValue;
             return new DoubleValue(val1.getValue() - val2.getValue());
+        } else {
+            throw SyntaxException.withSyntax("该值不支持做减法:" + Arrays.toString(params));
         }
-        throw SyntaxException.withSyntax("该值不支持做减法:" + Arrays.toString(params));
     }
 }

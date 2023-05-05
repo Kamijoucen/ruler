@@ -30,7 +30,8 @@ public class GtOperation implements BinaryOperation {
             DoubleValue val1 = (DoubleValue) lValue;
             DoubleValue val2 = (DoubleValue) rValue;
             return BoolValue.get(val1.getValue() > val2.getValue());
+        } else {
+            throw SyntaxException.withSyntax("该值不支持 '>':" + Arrays.toString(params));
         }
-        throw SyntaxException.withSyntax("该值不支持 '>':" + Arrays.toString(params));
     }
 }

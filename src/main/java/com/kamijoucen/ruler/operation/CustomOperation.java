@@ -15,6 +15,12 @@ public class CustomOperation implements BinaryOperation {
         BinaryOperation callOperation = context.getConfiguration()
                 .getBinaryOperationFactory().findOperation(TokenType.CALL.name());
         Objects.requireNonNull(callOperation);
+
+        BaseValue lValue = lhs.eval(scope, context);
+        BaseValue rValue = rhs.eval(scope, context);
+
+        BaseValue infixValue = params[0];
+
         return callOperation.invoke(lhs, null, scope, context, null);
     }
 
