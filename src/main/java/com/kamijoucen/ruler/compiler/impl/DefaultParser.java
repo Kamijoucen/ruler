@@ -167,8 +167,10 @@ public class DefaultParser implements Parser {
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
+            if (curOpToken.type == TokenType.KEY_ENTER || curOpToken.type == TokenType.SEMICOLON) {
+                return lhs;
+            }
             tokenStream.nextToken();
-
             if (curOpToken.type == TokenType.ASSIGN) {
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
@@ -179,12 +181,10 @@ public class DefaultParser implements Parser {
             } else if (curOpToken.type == TokenType.DOT) {
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
-                tokenStream.nextToken();
                 // only identifiers are supported for dot call
                 BaseNode nameNode = parseIdentifier();
 
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
-
                 lhs = new DotNode(lhs, nameNode, dotOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_PAREN) {
                 List<BaseNode> params = new ArrayList<>();
