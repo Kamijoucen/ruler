@@ -14,13 +14,15 @@ public class IndexOperation implements BinaryOperation {
 
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
-        BaseValue tempArray = params[0];
-        BaseValue tempIndex = params[1];
-        if (tempIndex.getType() != ValueType.INTEGER) {
+
+        BaseValue lValue = lhs.eval(scope, context);
+        BaseValue indexValue = rhs.eval(scope, context);
+
+        if (indexValue.getType() != ValueType.INTEGER) {
             throw SyntaxException.withSyntax("数组的索引必须是数字");
         }
-        ArrayValue array = (ArrayValue) tempArray;
-        IntegerValue index = (IntegerValue) tempIndex;
+        ArrayValue array = (ArrayValue) lValue;
+        IntegerValue index = (IntegerValue) indexValue;
         if (index.getValue() >= array.getValues().size()) {
             // todo 是否允许数组越界
             return NullValue.INSTANCE;

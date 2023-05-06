@@ -14,12 +14,9 @@ import java.util.List;
 
 public class CallOperation implements BinaryOperation {
 
-
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
-
         BaseValue callFunc = lhs.eval(scope, context);
-
         BaseValue self = params[0];
         context.getStackDepthCheckOperation().addDepth(context);
         try {
@@ -31,7 +28,7 @@ public class CallOperation implements BinaryOperation {
                 ClosureValue function = ((ClosureValue) callFunc);
                 return callClosure(context, self, function, (BaseValue[]) funcParam);
             } else {
-                throw new IllegalArgumentException(callFunc.toString() + " not is a function!");
+                throw new IllegalArgumentException(callFunc + " not is a function!");
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);
