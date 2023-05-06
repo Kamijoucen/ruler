@@ -22,7 +22,6 @@ public class AssignEval implements BaseEval<AssignNode> {
     @Override
     public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
         BaseNode lhs = node.getLhs();
-
         // 直接更新变量
         if (lhs instanceof NameNode) {
             String varName = ((NameNode) lhs).name.name;
@@ -35,7 +34,6 @@ public class AssignEval implements BaseEval<AssignNode> {
             scope.update(varName, value);
             return value;
         } else if (lhs instanceof BinaryOperation) {
-
             BinaryOperationNode binaryNode = (BinaryOperationNode) lhs;
             BaseValue preValue = binaryNode.getLhs().eval(scope, context);
             if (binaryNode.getOp() == TokenType.INDEX) {
@@ -59,7 +57,6 @@ public class AssignEval implements BaseEval<AssignNode> {
                     // TODO update meta data
                     throw new UnsupportedOperationException();
                 }
-
             } else {
                 throw new UnsupportedOperationException();
             }

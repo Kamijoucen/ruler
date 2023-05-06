@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.util;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
-import com.kamijoucen.ruler.ast.facotr.LogicBinaryOperationNode;
 import com.kamijoucen.ruler.compiler.impl.ParseContext;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -32,14 +31,6 @@ public class SyntaxCheckUtil {
     }
 
     public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
-        BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
-        if (typeVal.getType() == ValueType.FAILURE) {
-            throw SyntaxException.withSyntax("表达式类型错误：" + node.toString());
-        }
-    }
-
-    public static void logicBinaryTypeCheck(LogicBinaryOperationNode node, ParseContext parseContext,
-            RuntimeContext context) {
         BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
         if (typeVal.getType() == ValueType.FAILURE) {
             throw SyntaxException.withSyntax("表达式类型错误：" + node.toString());

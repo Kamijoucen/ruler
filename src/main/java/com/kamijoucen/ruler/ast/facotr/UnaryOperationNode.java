@@ -11,9 +11,9 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class UnaryOperationNode extends AbstractBaseNode {
 
-    private TokenType op;
-    private BaseNode exp;
-    private BinaryOperation operation;
+    private final TokenType op;
+    private final BaseNode exp;
+    private final BinaryOperation operation;
 
     public UnaryOperationNode(TokenType op, BaseNode exp, BinaryOperation operation, TokenLocation location) {
         super(location);
@@ -36,23 +36,11 @@ public class UnaryOperationNode extends AbstractBaseNode {
         return op;
     }
 
-    public void setOp(TokenType op) {
-        this.op = op;
-    }
-
     public BaseNode getExp() {
         return exp;
     }
 
-    public void setExp(BaseNode exp) {
-        this.exp = exp;
-    }
-
     public BinaryOperation getOperation() {
         return operation;
-    }
-
-    public void setOperation(BinaryOperation operation) {
-        this.operation = operation;
     }
 }

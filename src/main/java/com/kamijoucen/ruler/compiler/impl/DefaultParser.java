@@ -13,12 +13,9 @@ import com.kamijoucen.ruler.operation.UnaryAddOperation;
 import com.kamijoucen.ruler.operation.UnarySubOperation;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.type.ArrayType;
-import com.kamijoucen.ruler.type.UnknownType;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.*;
 
@@ -142,7 +139,10 @@ public class DefaultParser implements Parser {
                 tokenStream.nextToken();
                 // only identifiers are supported for dot call
                 BaseNode nameNode = parseIdentifier();
-                lhs = new DotNode(lhs, nameNode, lhs.getLocation());
+
+                BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
+
+                lhs = new DotNode(lhs, nameNode, dotOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_PAREN) {
                 List<BaseNode> params = new ArrayList<>();
                 if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
@@ -155,11 +155,15 @@ public class DefaultParser implements Parser {
                 }
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
                 tokenStream.nextToken();
-                lhs = new CallNode(lhs, null, params, lhs.getLocation());
+
+                BinaryOperation callOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.CALL.name());
+                lhs = new CallNode(lhs, null, params, callOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_SQUARE) {
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
-                lhs = new IndexNode(lhs, indexNode, lhs.getLocation());
+
+                BinaryOperation indexOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.INDEX.name());
+                lhs = new IndexNode(lhs, indexNode, indexOperation, lhs.getLocation());
             } else {
                 int curTokenProc = OperationDefine.findPrecedence(curOpToken.type);
                 if (curTokenProc < expPrec) {
@@ -252,11 +256,11 @@ public class DefaultParser implements Parser {
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
-        if (isLoop) {
-            return new LoopBlockNode(blocks, lToken.location);
-        } else {
-            return new BlockNode(blocks, lToken.location);
-        }
+//        if (isLoop) {
+//            return new LoopBlockNode(blocks, lToken.location);
+//        } else {
+//        }
+        return new BlockNode(blocks, lToken.location);
     }
 
     public BaseNode parseWhileStatement() {
@@ -381,12 +385,12 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_IN);
         tokenStream.nextToken();
         BaseNode arrayExp = parseExpression();
-        // type check
-        BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
-        if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
-                && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
-            throw SyntaxException.withSyntax("The value of the expression must be an array!");
-        }
+        // TODO type check
+//        BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
+//        if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
+//                && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
+//            throw SyntaxException.withSyntax("The value of the expression must be an array!");
+//        }
         BaseNode blockNode = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockNode = parseBlock();

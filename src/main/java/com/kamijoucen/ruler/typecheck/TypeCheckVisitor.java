@@ -12,8 +12,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class TypeCheckVisitor extends AbstractVisitor {
 
     private static final BinaryChecker binaryChecker = new BinaryChecker();
-    private static final LogicBinaryChecker logicBinaryCheck = new LogicBinaryChecker();
-
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
         return UnknownType.INSTANCE;
@@ -47,11 +45,6 @@ public class TypeCheckVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         return binaryChecker.eval(node, scope, context);
-    }
-
-    @Override
-    public BaseValue eval(LogicBinaryOperationNode node, Scope scope, RuntimeContext context) {
-        return logicBinaryCheck.eval(node, scope, context);
     }
 
     @Override
@@ -137,14 +130,6 @@ public class TypeCheckVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         return UnknownType.INSTANCE;
-    }
-
-    @Override
-    public BaseValue eval(CallChainNode node, Scope scope, RuntimeContext context) {
-        if (!CollectionUtil.isEmpty(node.getCalls())) {
-            return UnknownType.INSTANCE;
-        }
-        return node.getFirst().typeCheck(context, scope);
     }
 
     @Override

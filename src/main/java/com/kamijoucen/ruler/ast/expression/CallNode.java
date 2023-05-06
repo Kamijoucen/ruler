@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.ast.expression;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
@@ -15,8 +16,8 @@ public class CallNode extends BinaryOperationNode {
     private final List<BaseNode> params;
 
     // todo
-    public CallNode(BaseNode lhs, BaseNode rhs, List<BaseNode> params, TokenLocation location) {
-        super(TokenType.CALL, TokenType.CALL.name(), lhs, rhs, location);
+    public CallNode(BaseNode lhs, BaseNode rhs, List<BaseNode> params, BinaryOperation operation, TokenLocation location) {
+        super(TokenType.CALL, TokenType.CALL.name(), lhs, rhs, operation, location);
         this.params = params;
     }
 
