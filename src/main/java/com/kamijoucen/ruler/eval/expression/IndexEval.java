@@ -9,9 +9,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class IndexEval implements BaseEval<IndexNode> {
     @Override
     public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
-        BaseValue[] computeVals = new BaseValue[2];
-        computeVals[0] = scope.getCallChainPreviousValue();
-        computeVals[1] = node.getIndex().eval(context, scope);
-        return node.getOperation().compute(context, computeVals);
+        return node.getOperation().invoke(node.getLhs(), node.getRhs(), scope, context);
     }
 }

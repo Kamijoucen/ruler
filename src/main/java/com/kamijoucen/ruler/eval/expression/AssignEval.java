@@ -10,11 +10,7 @@ import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.value.ArrayValue;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.IntegerValue;
-import com.kamijoucen.ruler.value.RsonValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class AssignEval implements BaseEval<AssignNode> {

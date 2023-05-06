@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.common;
 
+import com.kamijoucen.ruler.token.TokenType;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import com.kamijoucen.ruler.token.TokenType;
 
 public class OperationDefine {
 

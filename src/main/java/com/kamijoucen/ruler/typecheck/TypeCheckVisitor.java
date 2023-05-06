@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.type.*;
-import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class TypeCheckVisitor extends AbstractVisitor {
