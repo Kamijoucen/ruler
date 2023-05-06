@@ -39,12 +39,46 @@ public class DefaultParser implements Parser {
 
     @Override
     public List<BaseNode> parse() {
-        return null;
+        tokenStream.nextToken();
+        while (tokenStream.token().type == TokenType.KEY_IMPORT) {
+            this.rootStatements.add(parseImport());
+        }
+        while (tokenStream.token().type != TokenType.EOF) {
+            this.rootStatements.add(parseStatement());
+        }
+        return this.rootStatements;
     }
 
     @Override
     public ImportNode parseImport() {
-        return null;
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_IMPORT);
+        Token importToken = tokenStream.token();
+        tokenStream.nextToken();
+
+        boolean hasImportInfix = false;
+        if (tokenStream.token().type == TokenType.KEY_INFIX) {
+            hasImportInfix = true;
+            tokenStream.nextToken();
+        }
+
+        AssertUtil.assertToken(tokenStream, TokenType.STRING);
+        String path = tokenStream.token().name;
+        tokenStream.nextToken();
+
+        Token aliasToken = null;
+        if (tokenStream.token().type == TokenType.IDENTIFIER) {
+            aliasToken = tokenStream.token();
+            tokenStream.nextToken();
+        }
+
+        // 不允许出现无别名切无中缀标识的导入语句
+        if (aliasToken == null && !hasImportInfix) {
+            throw SyntaxException.withSyntax("不允许出现无别名且无中缀标识的导入语句");
+        }
+
+        AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
+        tokenStream.nextToken();
+        return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix, importToken.location);
     }
 
     @Override
@@ -62,6 +96,8 @@ public class DefaultParser implements Parser {
         if (isRoot) {
             parseContext.setRoot(false);
         }
+
+        boolean isNeedSemicolon = true;
         switch (token.type) {
             case KEY_RETURN:
                 statement = parseReturn();
@@ -74,15 +110,22 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_VAR:
                 statement = parseVariableDefine();
+                isNeedSemicolon = false;
                 break;
             case KEY_RULE:
                 statement = parseRuleBlock();
+                isNeedSemicolon = false;
                 break;
             case KEY_INFIX:
                 statement = parseInfixDefinitionNode();
+                isNeedSemicolon = false;
                 break;
             default:
                 statement = parseExpression();
+        }
+        if (isNeedSemicolon) {
+            AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
+            tokenStream.nextToken();
         }
         if (isRoot) {
             parseContext.setRoot(true);
@@ -126,12 +169,12 @@ public class DefaultParser implements Parser {
             Token curOpToken = tokenStream.token();
             tokenStream.nextToken();
 
-            BinaryOperation operation = this.configuration.getBinaryOperationFactory()
-                    .findOperation(curOpToken.type.name());
-            Objects.requireNonNull(operation);
             if (curOpToken.type == TokenType.ASSIGN) {
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
+                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                        .findOperation(TokenType.ASSIGN.name());
+                Objects.requireNonNull(operation);
                 lhs = new AssignNode(lhs, rhs, operation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.DOT) {
                 Token dotNameNode = tokenStream.token();
@@ -174,13 +217,13 @@ public class DefaultParser implements Parser {
 
                 Token nextToken = tokenStream.token();
                 int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
-                if (nextTokenProc == -1) {
-                    return rhs;
-                }
                 if (curTokenProc < nextTokenProc) {
                     rhs = parseBinaryNode(curTokenProc + 1, rhs);
                     Objects.requireNonNull(rhs);
                 }
+                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                        .findOperation(curOpToken.type.name());
+                Objects.requireNonNull(operation);
                 lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
                         lhs, rhs, operation, lhs.getLocation());
             }
