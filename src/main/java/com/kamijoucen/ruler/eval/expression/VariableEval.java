@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class VariableEval implements BaseEval<VariableDefineNode> {
     @Override
@@ -16,8 +17,13 @@ public class VariableEval implements BaseEval<VariableDefineNode> {
         if (defValue != null) {
             throw SyntaxException.withSyntax("", lhs.getLocation());
         }
-        BaseValue rValue = node.getRhs().eval(scope, context);
-        scope.putLocal(lhs.name.name, rValue);
-        return rValue;
+        if (node.getRhs() != null) {
+            BaseValue rValue = node.getRhs().eval(scope, context);
+            scope.putLocal(lhs.name.name, rValue);
+            return rValue;
+        } else {
+            scope.putLocal(lhs.name.name, NullValue.INSTANCE);
+            return NullValue.INSTANCE;
+        }
     }
 }

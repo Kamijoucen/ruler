@@ -84,8 +84,6 @@ public class DefaultParser implements Parser {
     @Override
     public BaseNode parseStatement() {
         Token token = tokenStream.token();
-        BaseNode statement = null;
-
         boolean isRoot = parseContext.isRoot();
         if (token.type == TokenType.KEY_RULE
                 || token.type == TokenType.KEY_INFIX) {
@@ -96,7 +94,7 @@ public class DefaultParser implements Parser {
         if (isRoot) {
             parseContext.setRoot(false);
         }
-
+        BaseNode statement = null;
         boolean isNeedSemicolon = true;
         switch (token.type) {
             case KEY_RETURN:
@@ -153,13 +151,14 @@ public class DefaultParser implements Parser {
         BaseNode nameNode = parseIdentifier();
         Objects.requireNonNull(nameNode);
 
-        AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
-        tokenStream.nextToken();
-
-        BaseNode expNode = this.parseExpression();
-        Objects.requireNonNull(expNode);
-
-        return new VariableDefineNode(nameNode, expNode, varToken.location);
+        if (tokenStream.token().type == TokenType.ASSIGN) {
+            tokenStream.nextToken();
+            BaseNode expNode = this.parseExpression();
+            Objects.requireNonNull(expNode);
+            return new VariableDefineNode(nameNode, expNode, varToken.location);
+        } else {
+            return new VariableDefineNode(nameNode, null, varToken.location);
+        }
     }
 
     // var name = name.arr()[5].ToString()[1];
@@ -174,10 +173,7 @@ public class DefaultParser implements Parser {
             if (curOpToken.type == TokenType.ASSIGN) {
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
-                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
-                        .findOperation(TokenType.ASSIGN.name());
-                Objects.requireNonNull(operation);
-                lhs = new AssignNode(lhs, rhs, operation, lhs.getLocation());
+                lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
             } else if (curOpToken.type == TokenType.DOT) {
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
