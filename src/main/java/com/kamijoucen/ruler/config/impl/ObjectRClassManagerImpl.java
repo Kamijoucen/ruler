@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ObjectRClassManagerImpl implements RClassManager {
 
-    public final Map<ValueType, RClass> RCLASS_MAP = new HashMap<ValueType, RClass>();
+    public final Map<ValueType, RClass> RCLASS_MAP = new HashMap<>();
 
     public ObjectRClassManagerImpl() {
         RCLASS_MAP.put(ValueType.STRING, createStringClassValue());

@@ -108,7 +108,6 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_VAR:
                 statement = parseVariableDefine();
-                isNeedSemicolon = false;
                 break;
             case KEY_RULE:
                 statement = parseRuleBlock();
@@ -116,6 +115,22 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_INFIX:
                 statement = parseInfixDefinitionNode();
+                isNeedSemicolon = false;
+                break;
+            case KEY_IF:
+                statement = parseIfStatement();
+                isNeedSemicolon = false;
+                break;
+            case KEY_WHILE:
+                statement = parseWhileStatement();
+                isNeedSemicolon = false;
+                break;
+            case KEY_FOR:
+                statement = parseForEachStatement();
+                isNeedSemicolon = false;
+                break;
+            case KEY_FUN:
+                statement = parseFunDefine();
                 isNeedSemicolon = false;
                 break;
             default:
@@ -166,15 +181,13 @@ public class DefaultParser implements Parser {
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
-            if (curOpToken.type == TokenType.KEY_ENTER || curOpToken.type == TokenType.SEMICOLON) {
-                return lhs;
-            }
-            tokenStream.nextToken();
             if (curOpToken.type == TokenType.ASSIGN) {
+                tokenStream.nextToken();
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
                 lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
             } else if (curOpToken.type == TokenType.DOT) {
+                tokenStream.nextToken();
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
                 // only identifiers are supported for dot call
@@ -183,6 +196,7 @@ public class DefaultParser implements Parser {
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
                 lhs = new DotNode(lhs, nameNode, dotOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_PAREN) {
+                tokenStream.nextToken();
                 List<BaseNode> params = new ArrayList<>();
                 if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
                     params.add(parseExpression());
@@ -198,8 +212,12 @@ public class DefaultParser implements Parser {
                 BinaryOperation callOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.CALL.name());
                 lhs = new CallNode(lhs, null, params, callOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_SQUARE) {
+                tokenStream.nextToken();
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
+
+                AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
+                tokenStream.nextToken();
 
                 BinaryOperation indexOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.INDEX.name());
                 lhs = new IndexNode(lhs, indexNode, indexOperation, lhs.getLocation());
@@ -208,6 +226,7 @@ public class DefaultParser implements Parser {
                 if (curTokenProc < expPrec) {
                     return lhs;
                 }
+                tokenStream.nextToken();
                 BaseNode rhs = parsePrimaryExpression();
                 Objects.requireNonNull(rhs);
 
@@ -384,7 +403,7 @@ public class DefaultParser implements Parser {
         // eat (
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
         tokenStream.nextToken();
-        List<BaseNode> param = new ArrayList<BaseNode>();
+        List<BaseNode> param = new ArrayList<>();
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
             param.add(parseIdentifier());
