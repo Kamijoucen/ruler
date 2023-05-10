@@ -21,6 +21,8 @@ public class CustomOperation implements BinaryOperation {
 
         BaseValue infixValue = params[0];
 
+        // TODO
+
         return callOperation.invoke(lhs, null, scope, context, null);
     }
 

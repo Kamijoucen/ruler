@@ -39,19 +39,51 @@ public class DefaultParser implements Parser {
 
     @Override
     public List<BaseNode> parse() {
-        return null;
+        tokenStream.nextToken();
+        while (tokenStream.token().type == TokenType.KEY_IMPORT) {
+            this.rootStatements.add(parseImport());
+        }
+        while (tokenStream.token().type != TokenType.EOF) {
+            this.rootStatements.add(parseStatement());
+        }
+        return this.rootStatements;
     }
 
     @Override
     public ImportNode parseImport() {
-        return null;
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_IMPORT);
+        Token importToken = tokenStream.token();
+        tokenStream.nextToken();
+
+        boolean hasImportInfix = false;
+        if (tokenStream.token().type == TokenType.KEY_INFIX) {
+            hasImportInfix = true;
+            tokenStream.nextToken();
+        }
+
+        AssertUtil.assertToken(tokenStream, TokenType.STRING);
+        String path = tokenStream.token().name;
+        tokenStream.nextToken();
+
+        Token aliasToken = null;
+        if (tokenStream.token().type == TokenType.IDENTIFIER) {
+            aliasToken = tokenStream.token();
+            tokenStream.nextToken();
+        }
+
+        // 不允许出现无别名切无中缀标识的导入语句
+        if (aliasToken == null && !hasImportInfix) {
+            throw SyntaxException.withSyntax("不允许出现无别名且无中缀标识的导入语句");
+        }
+
+        AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
+        tokenStream.nextToken();
+        return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix, importToken.location);
     }
 
     @Override
     public BaseNode parseStatement() {
         Token token = tokenStream.token();
-        BaseNode statement = null;
-
         boolean isRoot = parseContext.isRoot();
         if (token.type == TokenType.KEY_RULE
                 || token.type == TokenType.KEY_INFIX) {
@@ -62,6 +94,8 @@ public class DefaultParser implements Parser {
         if (isRoot) {
             parseContext.setRoot(false);
         }
+        BaseNode statement = null;
+        boolean isNeedSemicolon = true;
         switch (token.type) {
             case KEY_RETURN:
                 statement = parseReturn();
@@ -77,12 +111,34 @@ public class DefaultParser implements Parser {
                 break;
             case KEY_RULE:
                 statement = parseRuleBlock();
+                isNeedSemicolon = false;
                 break;
             case KEY_INFIX:
                 statement = parseInfixDefinitionNode();
+                isNeedSemicolon = false;
+                break;
+            case KEY_IF:
+                statement = parseIfStatement();
+                isNeedSemicolon = false;
+                break;
+            case KEY_WHILE:
+                statement = parseWhileStatement();
+                isNeedSemicolon = false;
+                break;
+            case KEY_FOR:
+                statement = parseForEachStatement();
+                isNeedSemicolon = false;
+                break;
+            case KEY_FUN:
+                statement = parseFunDefine();
+                isNeedSemicolon = false;
                 break;
             default:
                 statement = parseExpression();
+        }
+        if (isNeedSemicolon) {
+            AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
+            tokenStream.nextToken();
         }
         if (isRoot) {
             parseContext.setRoot(true);
@@ -110,13 +166,14 @@ public class DefaultParser implements Parser {
         BaseNode nameNode = parseIdentifier();
         Objects.requireNonNull(nameNode);
 
-        AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
-        tokenStream.nextToken();
-
-        BaseNode expNode = this.parseExpression();
-        Objects.requireNonNull(expNode);
-
-        return new VariableDefineNode(nameNode, expNode, varToken.location);
+        if (tokenStream.token().type == TokenType.ASSIGN) {
+            tokenStream.nextToken();
+            BaseNode expNode = this.parseExpression();
+            Objects.requireNonNull(expNode);
+            return new VariableDefineNode(nameNode, expNode, varToken.location);
+        } else {
+            return new VariableDefineNode(nameNode, null, varToken.location);
+        }
     }
 
     // var name = name.arr()[5].ToString()[1];
@@ -124,26 +181,22 @@ public class DefaultParser implements Parser {
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
-            tokenStream.nextToken();
-
-            BinaryOperation operation = this.configuration.getBinaryOperationFactory()
-                    .findOperation(curOpToken.type.name());
-            Objects.requireNonNull(operation);
             if (curOpToken.type == TokenType.ASSIGN) {
+                tokenStream.nextToken();
                 BaseNode rhs = parseExpression();
                 Objects.requireNonNull(rhs);
-                lhs = new AssignNode(lhs, rhs, operation, lhs.getLocation());
+                lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
             } else if (curOpToken.type == TokenType.DOT) {
+                tokenStream.nextToken();
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
-                tokenStream.nextToken();
                 // only identifiers are supported for dot call
                 BaseNode nameNode = parseIdentifier();
 
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
-
                 lhs = new DotNode(lhs, nameNode, dotOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_PAREN) {
+                tokenStream.nextToken();
                 List<BaseNode> params = new ArrayList<>();
                 if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
                     params.add(parseExpression());
@@ -159,8 +212,12 @@ public class DefaultParser implements Parser {
                 BinaryOperation callOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.CALL.name());
                 lhs = new CallNode(lhs, null, params, callOperation, lhs.getLocation());
             } else if (curOpToken.type == TokenType.LEFT_SQUARE) {
+                tokenStream.nextToken();
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
+
+                AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
+                tokenStream.nextToken();
 
                 BinaryOperation indexOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.INDEX.name());
                 lhs = new IndexNode(lhs, indexNode, indexOperation, lhs.getLocation());
@@ -169,18 +226,19 @@ public class DefaultParser implements Parser {
                 if (curTokenProc < expPrec) {
                     return lhs;
                 }
+                tokenStream.nextToken();
                 BaseNode rhs = parsePrimaryExpression();
                 Objects.requireNonNull(rhs);
 
                 Token nextToken = tokenStream.token();
                 int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
-                if (nextTokenProc == -1) {
-                    return rhs;
-                }
                 if (curTokenProc < nextTokenProc) {
                     rhs = parseBinaryNode(curTokenProc + 1, rhs);
                     Objects.requireNonNull(rhs);
                 }
+                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                        .findOperation(curOpToken.type.name());
+                Objects.requireNonNull(operation);
                 lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
                         lhs, rhs, operation, lhs.getLocation());
             }
@@ -345,7 +403,7 @@ public class DefaultParser implements Parser {
         // eat (
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
         tokenStream.nextToken();
-        List<BaseNode> param = new ArrayList<BaseNode>();
+        List<BaseNode> param = new ArrayList<>();
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
             param.add(parseIdentifier());

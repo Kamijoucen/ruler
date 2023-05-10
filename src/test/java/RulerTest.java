@@ -21,10 +21,10 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
-        configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
-        configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
-        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
-        configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
+//        configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
+//        configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
+//        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
+//        configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
 //        configuration.setMaxLoopNumber(5);
     }
 
@@ -447,9 +447,13 @@ public class RulerTest {
     }
 
     @Test
-    public void testspacechar() {
+    public void testb() {
 
-        System.out.println(Character.isWhitespace('\n'));
+        String str = "a(a[1]);";
+
+        RuleRunner runner = Ruler.compileScript(str, configuration);
+
+        System.out.println(runner.run());
 
     }
 
