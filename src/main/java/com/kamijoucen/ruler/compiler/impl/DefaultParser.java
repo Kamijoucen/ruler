@@ -226,6 +226,7 @@ public class DefaultParser implements Parser {
             case SUB:
             case NOT:
                 node = parseUnaryExpression();
+                break;
             case INTEGER:
             case DOUBLE:
                 node = parseNumber();
