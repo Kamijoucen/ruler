@@ -15,7 +15,6 @@ public class CallNode extends BinaryOperationNode {
 
     private final List<BaseNode> params;
 
-    // todo
     public CallNode(BaseNode lhs, BaseNode rhs, List<BaseNode> params, BinaryOperation operation, TokenLocation location) {
         super(TokenType.CALL, TokenType.CALL.name(), lhs, rhs, operation, location);
         this.params = params;

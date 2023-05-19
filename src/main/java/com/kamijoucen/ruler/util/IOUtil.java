@@ -121,7 +121,11 @@ public class IOUtil {
     }
 
     public static boolean isWhitespace(char ch) {
-        return ch != Constant.ENTER && Character.isWhitespace(ch);
+        return Character.isWhitespace(ch);
     }
+
+//    public static boolean isWhitespace(char ch) {
+//        return ch != Constant.ENTER && Character.isWhitespace(ch);
+//    }
 
 }

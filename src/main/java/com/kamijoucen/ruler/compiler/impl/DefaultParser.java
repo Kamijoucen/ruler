@@ -176,8 +176,6 @@ public class DefaultParser implements Parser {
         }
     }
 
-    // var name = name.arr()[5].ToString()[1];
-    // a.b().c = a
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
@@ -195,17 +193,23 @@ public class DefaultParser implements Parser {
                 rhs = parseBinaryNode(curTokenProc + 1, rhs);
                 Objects.requireNonNull(rhs);
             }
-            BinaryOperation operation = this.configuration.getBinaryOperationFactory()
-                    .findOperation(curOpToken.type.name());
-            Objects.requireNonNull(operation);
-            lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
-                    lhs, rhs, operation, lhs.getLocation());
+            if (curOpToken.type == TokenType.ASSIGN) {
+                if (!(lhs instanceof IndexNode) && !(lhs instanceof NameNode) && !(lhs instanceof DotNode)) {
+                    throw SyntaxException.withSyntax("error assign");
+                }
+                lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
+            } else {
+                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                        .findOperation(curOpToken.type.name());
+                Objects.requireNonNull(operation);
+                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
+                        lhs, rhs, operation, lhs.getLocation());
+            }
         }
     }
 
     public BaseNode parsePrimaryExpression() {
         Token token = tokenStream.token();
-
         BaseNode node = null;
         switch (token.type) {
             case IDENTIFIER:
@@ -283,7 +287,6 @@ public class DefaultParser implements Parser {
             } else if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
                 tokenStream.nextToken();
 
-
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
 
@@ -292,7 +295,7 @@ public class DefaultParser implements Parser {
 
                 BinaryOperation indexOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.INDEX.name());
                 node = new IndexNode(node, indexNode, indexOperation, node.getLocation());
-            } else if (tokenStream.token().type == TokenType.DOT) {
+            } else {
                 tokenStream.nextToken();
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
@@ -301,8 +304,6 @@ public class DefaultParser implements Parser {
 
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
                 node = new DotNode(node, nameNode, dotOperation, node.getLocation());
-            } else {
-                break;
             }
         }
         return node;
