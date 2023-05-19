@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.util;
 
-import com.kamijoucen.ruler.common.Constant;
-
 import java.io.*;
 import java.util.UUID;
 
