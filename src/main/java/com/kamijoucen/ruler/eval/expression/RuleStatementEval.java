@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.expression.BlockNode;
 import com.kamijoucen.ruler.ast.expression.RuleStatementNode;
 import com.kamijoucen.ruler.ast.facotr.StringNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.EvalResult;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.CollectionUtil;
@@ -16,7 +17,7 @@ import java.util.List;
 public class RuleStatementEval implements BaseEval<RuleStatementNode> {
 
     @Override
-    public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
+    public EvalResult eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
         StringNode alias = node.getAlias();
         Scope ruleScope = new Scope(alias.getValue(), scope);
         ruleScope.initReturnSpace();

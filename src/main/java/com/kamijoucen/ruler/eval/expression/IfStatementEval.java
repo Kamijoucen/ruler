@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.eval.expression;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.IfStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.EvalResult;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -13,7 +14,7 @@ import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class IfStatementEval implements BaseEval<IfStatementNode> {
     @Override
-    public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
+    public EvalResult eval(IfStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue conditionValue = node.getCondition().eval(scope, context);
         if (conditionValue.getType() != ValueType.BOOL) {
             throw SyntaxException.withSyntax("需要一个bool类型");
