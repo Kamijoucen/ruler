@@ -4,7 +4,6 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
-import com.kamijoucen.ruler.common.EvalResult;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -18,7 +17,7 @@ import java.util.Objects;
 public class DotEval implements BaseEval<DotNode> {
 
     @Override
-    public EvalResult eval(DotNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         BaseValue prevValue = node.getLhs().eval(scope, context);
 
         BaseNode nodeName = node.getRhs();

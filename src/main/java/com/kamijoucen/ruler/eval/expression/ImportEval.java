@@ -4,7 +4,6 @@ import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.BaseEval;
-import com.kamijoucen.ruler.common.EvalResult;
 import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
 import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.config.impl.ImportCache;
@@ -16,6 +15,7 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
+import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.ModuleValue;
 import com.kamijoucen.ruler.value.constant.NullValue;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 public class ImportEval implements BaseEval<ImportNode> {
     @Override
-    public EvalResult eval(ImportNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
         String path = node.getPath();
 
         ImportCache importCache = context.getImportCache();

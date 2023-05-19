@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.typecheck;
 
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.common.BaseEval;
-import com.kamijoucen.ruler.common.EvalResult;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
@@ -57,18 +56,18 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
     }
 
     @Override
-    public EvalResult eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         BaseValue val1 = node.getLhs().typeCheck(scope, context);
         BaseValue val2 = node.getRhs().typeCheck(scope, context);
         if (val1.getType() == ValueType.FAILURE || val2.getType() == ValueType.FAILURE) {
-            return EvalResult.value(FailureType.INSTANCE);
+            return FailureType.INSTANCE;
         }
         TokenType op = node.getOp();
         if (op == TokenType.EQ || op == TokenType.NE) {
-            return EvalResult.value(BoolType.INSTANCE);
+            return BoolType.INSTANCE;
         }
         if (val1.getType() == ValueType.UN_KNOWN || val2.getType() == ValueType.UN_KNOWN) {
-            return EvalResult.value(UnknownType.INSTANCE);
+            return UnknownType.INSTANCE;
         }
         BaseValue typeValue = null;
         if (op == TokenType.ADD) {
@@ -81,8 +80,9 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
             typeValue = typeBaseMap[val1.getType().ordinal()][val2.getType().ordinal()];
         }
         if (typeValue == null) {
-            return EvalResult.value(FailureType.INSTANCE);
+            return FailureType.INSTANCE;
         }
-        return EvalResult.value(typeValue);
+        return typeValue;
     }
+
 }

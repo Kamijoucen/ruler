@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.eval.expression;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
-import com.kamijoucen.ruler.common.EvalResult;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -20,7 +19,7 @@ import java.util.List;
 public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
 
     @Override
-    public EvalResult eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue listValue = node.getList().eval(scope, context);
         if (listValue.getType() != ValueType.ARRAY) {
             throw SyntaxException.withSyntax("The value of the expression must be an array!");

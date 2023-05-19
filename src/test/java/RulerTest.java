@@ -449,9 +449,9 @@ public class RulerTest {
     @Test
     public void testb() {
 
-        String str = "a.b()";
+        String str = "a(a[1]);";
 
-        RuleRunner runner = Ruler.compileExpression(str, configuration);
+        RuleRunner runner = Ruler.compileScript(str, configuration);
 
         System.out.println(runner.run());
 
