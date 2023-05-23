@@ -19,6 +19,7 @@ public class RuntimeContext {
     private NodeVisitor typeCheckVisitor;
     private ImportCache importCache;
     private StackDepthCheckOperation stackDepthCheckOperation;
+    private BaseValue currentSelfValue;
 
     public RuntimeContext(NodeVisitor nodeVisitor,
                           NodeVisitor typeCheckVisitor,
@@ -96,4 +97,13 @@ public class RuntimeContext {
     public void setImportCache(ImportCache importCache) {
         this.importCache = importCache;
     }
+
+    public BaseValue getCurrentSelfValue() {
+        return currentSelfValue;
+    }
+
+    public void setCurrentSelfValue(BaseValue currentSelfValue) {
+        this.currentSelfValue = currentSelfValue;
+    }
+
 }

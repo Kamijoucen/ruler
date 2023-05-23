@@ -77,11 +77,6 @@ public class TypeCheckVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
-        return FailureType.INSTANCE;
-    }
-
-    @Override
     public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
         return FailureType.INSTANCE;
     }

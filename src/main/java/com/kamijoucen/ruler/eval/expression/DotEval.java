@@ -12,21 +12,18 @@ import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.constant.NullValue;
 
-import java.util.Objects;
-
 public class DotEval implements BaseEval<DotNode> {
 
     @Override
     public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
         BaseValue prevValue = node.getLhs().eval(scope, context);
+        context.setCurrentSelfValue(prevValue);
 
         BaseNode nodeName = node.getRhs();
         if (!(nodeName instanceof NameNode)) {
             throw new IllegalArgumentException();
         }
         String callName = ((NameNode) nodeName).name.name;
-        Objects.requireNonNull(callName);
-
         BaseValue callValue = null;
         if (prevValue.getType() == ValueType.RSON) {
             callValue = ((RsonValue) prevValue).getField(callName);

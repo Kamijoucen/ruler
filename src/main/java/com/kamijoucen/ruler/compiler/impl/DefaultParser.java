@@ -335,14 +335,13 @@ public class DefaultParser implements Parser {
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
-//        if (isLoop) {
-//            return new LoopBlockNode(blocks, lToken.location);
-//        } else {
-//        }
         return new BlockNode(blocks, lToken.location);
     }
 
     public BaseNode parseWhileStatement() {
+
+        boolean inLoop = parseContext.isInLoop();
+        parseContext.setInLoop(true);
 
         Token whileToken = tokenStream.token();
         AssertUtil.assertToken(whileToken, TokenType.KEY_WHILE);
@@ -354,9 +353,12 @@ public class DefaultParser implements Parser {
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
-            blockAST = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
+            blockAST = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw SyntaxException.withSyntax("while condition expression expected ':' or '{'", tokenStream.token());
+        }
+        if (!inLoop) {
+            parseContext.setInLoop(false);
         }
         return new WhileStatementNode(condition, blockAST, whileToken.location);
     }
@@ -476,7 +478,7 @@ public class DefaultParser implements Parser {
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
-            blockNode = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
+            blockNode = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw SyntaxException.withSyntax("for condition expression expected ':' or '{'", tokenStream.token());
         }
@@ -528,6 +530,11 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseContinue() {
+
+        if (!parseContext.isInLoop()) {
+            throw SyntaxException.withLexical("not in loop");
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);
         Token token = tokenStream.token();
         tokenStream.nextToken();
@@ -535,6 +542,11 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseBreak() {
+
+        if (!parseContext.isInLoop()) {
+            throw SyntaxException.withLexical("not in loop");
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
         Token token = tokenStream.token();
         tokenStream.nextToken();

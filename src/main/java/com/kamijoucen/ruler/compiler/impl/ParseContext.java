@@ -11,6 +11,8 @@ public class ParseContext {
 
     private boolean isRoot;
 
+    private boolean inLoop;
+
     public ParseContext(RulerConfiguration configuration) {
         this.configuration = configuration;
     }
@@ -30,4 +32,13 @@ public class ParseContext {
     public void setRoot(boolean root) {
         isRoot = root;
     }
+
+    public boolean isInLoop() {
+        return inLoop;
+    }
+
+    public void setInLoop(boolean inLoop) {
+        this.inLoop = inLoop;
+    }
+
 }

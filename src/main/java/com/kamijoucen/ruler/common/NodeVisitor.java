@@ -34,9 +34,6 @@ public interface NodeVisitor {
 
     BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context);
 
-    @Deprecated
-    BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context);
-
     BaseValue eval(BlockNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context);
