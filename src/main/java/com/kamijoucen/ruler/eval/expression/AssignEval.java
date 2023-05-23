@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
@@ -29,7 +28,7 @@ public class AssignEval implements BaseEval<AssignNode> {
             }
             scope.update(varName, value);
             return value;
-        } else if (lhs instanceof BinaryOperation) {
+        } else if (lhs instanceof BinaryOperationNode) {
             BinaryOperationNode binaryNode = (BinaryOperationNode) lhs;
             BaseValue preValue = binaryNode.getLhs().eval(scope, context);
             if (binaryNode.getOp() == TokenType.INDEX) {
