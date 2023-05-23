@@ -17,10 +17,10 @@ public class CallOperation implements BinaryOperation {
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue callFunc = lhs.eval(scope, context);
-        BaseValue self = params[0];
+        BaseValue self = context.getCurrentSelfValue();
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            Object[] funcParam = Arrays.copyOfRange(params, 1, params.length);
+            Object[] funcParam = Arrays.copyOfRange(params, 0, params.length);
             if (callFunc.getType() == ValueType.FUNCTION) {
                 RulerFunction function = ((FunctionValue) callFunc).getValue();
                 return (BaseValue) function.call(context, self, funcParam);

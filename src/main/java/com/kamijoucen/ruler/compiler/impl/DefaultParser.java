@@ -604,7 +604,7 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
         Token lToken = tokenStream.token();
         tokenStream.nextToken();
-        Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
+        Map<String, BaseNode> properties = new HashMap<>();
         if (tokenStream.token().type != TokenType.RIGHT_BRACE) {
             if (tokenStream.token().type != TokenType.IDENTIFIER
                     && tokenStream.token().type != TokenType.STRING) {
