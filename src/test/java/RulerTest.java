@@ -21,11 +21,11 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
-//        configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
-//        configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
-//        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
-//        configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
-//        configuration.setMaxLoopNumber(5);
+       configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
+       configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
+       configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
+       configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
+       configuration.setMaxLoopNumber(5);
     }
 
     @Test
@@ -449,7 +449,7 @@ public class RulerTest {
     @Test
     public void testb() {
 
-        String str = "a(a[1]);";
+        String str = "name.test()[1].num = 15;";
 
         RuleRunner runner = Ruler.compileScript(str, configuration);
 

@@ -14,8 +14,6 @@ public class Scope {
     private final Scope parentScope;
     private final Map<String, BaseValue> valueSpace;
     private List<BaseValue> returnSpace;
-    private String currentLoopVariableName;
-    private BaseValue currentLoopVariable;
 
     public Scope(String stackName, Scope parentScope) {
         this.stackName = stackName;
@@ -83,21 +81,5 @@ public class Scope {
 
     public List<BaseValue> getReturnSpace() {
         return returnSpace;
-    }
-
-    public BaseValue getCurrentLoopVariable() {
-        return currentLoopVariable;
-    }
-
-    public void setCurrentLoopVariable(BaseValue currentLoopVariable) {
-        this.currentLoopVariable = currentLoopVariable;
-    }
-
-    public String getCurrentLoopVariableName() {
-        return currentLoopVariableName;
-    }
-
-    public void setCurrentLoopVariableName(String currentLoopVariableName) {
-        this.currentLoopVariableName = currentLoopVariableName;
     }
 }

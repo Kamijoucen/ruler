@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.config.RClassManager;
+import com.kamijoucen.ruler.function.LengthFunction;
 import com.kamijoucen.ruler.function.ToStringFunction;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.FunctionValue;
@@ -38,6 +39,10 @@ public class ObjectRClassManagerImpl implements RClassManager {
 
     private RClass createArrayClassValue() {
         RClass baseRClass = createBaseRClass();
+
+        LengthFunction lengthFunction = new LengthFunction();
+        baseRClass.getProperties().put(lengthFunction.getName(), new FunctionValue(lengthFunction));
+
         return baseRClass;
     }
 

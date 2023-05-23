@@ -31,12 +31,16 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
                 .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
 
+
+        Scope forScope = new Scope("for each scope", scope);
+
         BaseValue lastValue = NullValue.INSTANCE;
         for (BaseValue baseValue : arrayValues) {
             loopCountCheckOperation.accept(node, scope, context);
-            scope.setCurrentLoopVariableName(loopName.name);
-            scope.setCurrentLoopVariable(baseValue);
-            lastValue = block.eval(scope, context);
+
+            forScope.putLocal(loopName.name, baseValue);
+
+            lastValue = block.eval(forScope, context);
             if (ValueType.BREAK == lastValue.getType()) {
                 break;
             } else if (ValueType.RETURN == lastValue.getType()) {
