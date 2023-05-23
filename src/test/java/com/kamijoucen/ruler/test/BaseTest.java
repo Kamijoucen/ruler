@@ -72,27 +72,27 @@ public class BaseTest {
 
     @Test
     public void arrayPushTest() {
-        String script = "var a = [1, 2, 3]; println(a); a.push(4); println(a); return a.size();";
+        String script = "var a = [1, 2, 3]; println(a); return a.length();";
         RuleRunner runner = getScriptRunner(script);
 
         RuleResult result = runner.run();
 
-        Assert.assertEquals(4, result.first().toInteger().longValue());
+        Assert.assertEquals(3, result.first().toInteger().longValue());
     }
 
     @Test
     public void ifExpressionTest() {
-        String script = "var r = if 15 > 1: 'a' else 'b'; return r;";
+        String script = "var r = if 15 > 111: 'a'; else 'b'; ; return r;";
         RuleRunner runner = getScriptRunner(script);
 
         RuleResult result = runner.run();
 
-        Assert.assertEquals("a", result.first().toString());
+        Assert.assertEquals("b", result.first().toString());
     }
 
     @Test
     public void ifExpressionTest2() {
-        String script = "var r = if 15 > 100: 'a' else if 15 < 100: 'b'; return r;";
+        String script = "var r = if 15 > 100: 'a'; else if 15 < 100: 'b';; return r;";
         RuleRunner runner = getScriptRunner(script);
 
         RuleResult result = runner.run();

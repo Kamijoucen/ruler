@@ -13,12 +13,11 @@ public class CallEval implements BaseEval<CallNode> {
 
     @Override
     public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
-        List<BaseNode> param = node.getParams();
-        BaseValue[] paramVal = new BaseValue[param.size() + 1];
-        paramVal[0] = null;
-        for (int i = 0; i < param.size(); i++) {
-            paramVal[i + 1] = param.get(i).eval(scope, context);
+        List<BaseNode> callParams = node.getParams();
+        BaseValue[] invokeParams = new BaseValue[callParams.size()];
+        for (int i = 0; i < callParams.size(); i++) {
+            invokeParams[i] = callParams.get(i).eval(scope, context);
         }
-        return node.getOperation().invoke(node.getLhs(), node.getRhs(), scope, context, paramVal);
+        return node.getOperation().invoke(node.getLhs(), null, scope, context, invokeParams);
     }
 }

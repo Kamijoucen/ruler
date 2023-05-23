@@ -16,9 +16,9 @@ public class DefaultLexical implements Lexical {
     public int line;
     public int column;
     private State state;
-    private String content;
+    private final String content;
     private Token currentToken;
-    private StringBuilder buffer;
+    private final StringBuilder buffer;
     private boolean isEnd;
     private char curStringFlag;
     private String fileName;
@@ -313,6 +313,6 @@ public class DefaultLexical implements Lexical {
     }
 
     public static String of(String msg, int line, int column) {
-        return msg + ", 位置在{line:" + line + ", column:" + column + "}";
+        return msg + ", at {line:" + line + ", column:" + column + "}";
     }
 }

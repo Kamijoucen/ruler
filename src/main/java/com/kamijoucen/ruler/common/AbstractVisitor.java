@@ -97,18 +97,6 @@ public class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
-        List<BaseNode> blocks = node.getBlocks();
-        if (CollectionUtil.isEmpty(blocks)) {
-            return null;
-        }
-        for (BaseNode block : blocks) {
-            block.eval(scope, context);
-        }
-        return null;
-    }
-
-    @Override
     public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> blocks = node.getBlocks();
         if (CollectionUtil.isEmpty(blocks)) {

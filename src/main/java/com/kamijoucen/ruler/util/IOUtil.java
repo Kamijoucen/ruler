@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.util;
 
-import com.kamijoucen.ruler.common.Constant;
-
 import java.io.*;
 import java.util.UUID;
 
@@ -121,7 +119,11 @@ public class IOUtil {
     }
 
     public static boolean isWhitespace(char ch) {
-        return ch != Constant.ENTER && Character.isWhitespace(ch);
+        return Character.isWhitespace(ch);
     }
+
+//    public static boolean isWhitespace(char ch) {
+//        return ch != Constant.ENTER && Character.isWhitespace(ch);
+//    }
 
 }

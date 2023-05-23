@@ -176,26 +176,99 @@ public class DefaultParser implements Parser {
         }
     }
 
-    // var name = name.arr()[5].ToString()[1];
-    // a.b().c = a
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
-            if (curOpToken.type == TokenType.ASSIGN) {
-                tokenStream.nextToken();
-                BaseNode rhs = parseExpression();
-                Objects.requireNonNull(rhs);
-                lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
-            } else if (curOpToken.type == TokenType.DOT) {
-                tokenStream.nextToken();
-                Token dotNameNode = tokenStream.token();
-                AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
-                // only identifiers are supported for dot call
-                BaseNode nameNode = parseIdentifier();
+            int curTokenProc = OperationDefine.findPrecedence(curOpToken.type);
+            if (curTokenProc < expPrec) {
+                return lhs;
+            }
+            tokenStream.nextToken();
+            BaseNode rhs = parsePrimaryExpression();
+            Objects.requireNonNull(rhs);
 
-                BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
-                lhs = new DotNode(lhs, nameNode, dotOperation, lhs.getLocation());
-            } else if (curOpToken.type == TokenType.LEFT_PAREN) {
+            Token nextToken = tokenStream.token();
+            int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
+            if (curTokenProc < nextTokenProc) {
+                rhs = parseBinaryNode(curTokenProc + 1, rhs);
+                Objects.requireNonNull(rhs);
+            }
+            if (curOpToken.type == TokenType.ASSIGN) {
+                if (!(lhs instanceof IndexNode) && !(lhs instanceof NameNode) && !(lhs instanceof DotNode)) {
+                    throw SyntaxException.withSyntax("error assign");
+                }
+                lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
+            } else {
+                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
+                        .findOperation(curOpToken.type.name());
+                Objects.requireNonNull(operation);
+                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
+                        lhs, rhs, operation, lhs.getLocation());
+            }
+        }
+    }
+
+    public BaseNode parsePrimaryExpression() {
+        Token token = tokenStream.token();
+        BaseNode node = null;
+        switch (token.type) {
+            case IDENTIFIER:
+            case OUT_IDENTIFIER:
+                node = parseIdentifier();
+                break;
+            case KEY_THIS:
+                node = parseThis();
+                break;
+            case KEY_FALSE:
+            case KEY_TRUE:
+                node = parseBool();
+                break;
+            case LEFT_PAREN:
+                node = parseParen();
+                break;
+            case ADD:
+            case SUB:
+            case NOT:
+                node = parseUnaryExpression();
+                break;
+            case INTEGER:
+            case DOUBLE:
+                node = parseNumber();
+                break;
+            case STRING:
+                node = parseString();
+                break;
+            case KEY_FUN:
+                node = parseFunDefine();
+                break;
+            case KEY_NULL:
+                node = parseNull();
+                break;
+            case LEFT_SQUARE:
+                node = parseArray();
+                break;
+            case LEFT_BRACE:
+                node = parseRsonNode();
+                break;
+            case KEY_TYPEOF:
+                node = parseTypeOfNode();
+                break;
+            case KEY_IF:
+                node = parseIfStatement();
+                break;
+            case KEY_FOR:
+                node = parseForEachStatement();
+                break;
+            case KEY_WHILE:
+                node = parseWhileStatement();
+                break;
+            default:
+                throw SyntaxException.withSyntax("unkown token:" + token);
+        }
+        while (tokenStream.token().type == TokenType.DOT
+                || tokenStream.token().type == TokenType.LEFT_PAREN
+                || tokenStream.token().type == TokenType.LEFT_SQUARE) {
+            if (tokenStream.token().type == TokenType.LEFT_PAREN) {
                 tokenStream.nextToken();
                 List<BaseNode> params = new ArrayList<>();
                 if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
@@ -210,9 +283,10 @@ public class DefaultParser implements Parser {
                 tokenStream.nextToken();
 
                 BinaryOperation callOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.CALL.name());
-                lhs = new CallNode(lhs, null, params, callOperation, lhs.getLocation());
-            } else if (curOpToken.type == TokenType.LEFT_SQUARE) {
+                node = new CallNode(node, null, params, callOperation, node.getLocation());
+            } else if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
                 tokenStream.nextToken();
+
                 BaseNode indexNode = parseExpression();
                 Objects.requireNonNull(indexNode);
 
@@ -220,72 +294,19 @@ public class DefaultParser implements Parser {
                 tokenStream.nextToken();
 
                 BinaryOperation indexOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.INDEX.name());
-                lhs = new IndexNode(lhs, indexNode, indexOperation, lhs.getLocation());
+                node = new IndexNode(node, indexNode, indexOperation, node.getLocation());
             } else {
-                int curTokenProc = OperationDefine.findPrecedence(curOpToken.type);
-                if (curTokenProc < expPrec) {
-                    return lhs;
-                }
                 tokenStream.nextToken();
-                BaseNode rhs = parsePrimaryExpression();
-                Objects.requireNonNull(rhs);
+                Token dotNameNode = tokenStream.token();
+                AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
+                // only identifiers are supported for dot call
+                BaseNode nameNode = parseIdentifier();
 
-                Token nextToken = tokenStream.token();
-                int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
-                if (curTokenProc < nextTokenProc) {
-                    rhs = parseBinaryNode(curTokenProc + 1, rhs);
-                    Objects.requireNonNull(rhs);
-                }
-                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
-                        .findOperation(curOpToken.type.name());
-                Objects.requireNonNull(operation);
-                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
-                        lhs, rhs, operation, lhs.getLocation());
+                BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
+                node = new DotNode(node, nameNode, dotOperation, node.getLocation());
             }
         }
-    }
-
-    public BaseNode parsePrimaryExpression() {
-        Token token = tokenStream.token();
-        switch (token.type) {
-            case IDENTIFIER:
-            case OUT_IDENTIFIER:
-                return parseIdentifier();
-            case KEY_THIS:
-                return parseThis();
-            case KEY_FALSE:
-            case KEY_TRUE:
-                return parseBool();
-            case LEFT_PAREN:
-                return parseParen();
-            case ADD:
-            case SUB:
-            case NOT:
-                return parseUnaryExpression();
-            case INTEGER:
-            case DOUBLE:
-                return parseNumber();
-            case STRING:
-                return parseString();
-            case KEY_FUN:
-                return parseFunDefine();
-            case KEY_NULL:
-                return parseNull();
-            case LEFT_SQUARE:
-                return parseArray();
-            case LEFT_BRACE:
-                return parseRsonNode();
-            case KEY_TYPEOF:
-                return parseTypeOfNode();
-            case KEY_IF:
-                return parseIfStatement();
-            case KEY_FOR:
-                return parseForEachStatement();
-            case KEY_WHILE:
-                return parseWhileStatement();
-            default:
-                throw SyntaxException.withSyntax("unkown token:" + token);
-        }
+        return node;
     }
 
     public BaseNode parseIdentifier() {
@@ -314,14 +335,13 @@ public class DefaultParser implements Parser {
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
-//        if (isLoop) {
-//            return new LoopBlockNode(blocks, lToken.location);
-//        } else {
-//        }
         return new BlockNode(blocks, lToken.location);
     }
 
     public BaseNode parseWhileStatement() {
+
+        boolean inLoop = parseContext.isInLoop();
+        parseContext.setInLoop(true);
 
         Token whileToken = tokenStream.token();
         AssertUtil.assertToken(whileToken, TokenType.KEY_WHILE);
@@ -333,9 +353,12 @@ public class DefaultParser implements Parser {
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
-            blockAST = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
+            blockAST = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw SyntaxException.withSyntax("while condition expression expected ':' or '{'", tokenStream.token());
+        }
+        if (!inLoop) {
+            parseContext.setInLoop(false);
         }
         return new WhileStatementNode(condition, blockAST, whileToken.location);
     }
@@ -455,7 +478,7 @@ public class DefaultParser implements Parser {
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
-            blockNode = new LoopBlockNode(Collections.singletonList(statement), statement.getLocation());
+            blockNode = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw SyntaxException.withSyntax("for condition expression expected ':' or '{'", tokenStream.token());
         }
@@ -507,6 +530,11 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseContinue() {
+
+        if (!parseContext.isInLoop()) {
+            throw SyntaxException.withLexical("not in loop");
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);
         Token token = tokenStream.token();
         tokenStream.nextToken();
@@ -514,6 +542,11 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseBreak() {
+
+        if (!parseContext.isInLoop()) {
+            throw SyntaxException.withLexical("not in loop");
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
         Token token = tokenStream.token();
         tokenStream.nextToken();
@@ -571,7 +604,7 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
         Token lToken = tokenStream.token();
         tokenStream.nextToken();
-        Map<String, BaseNode> properties = new HashMap<String, BaseNode>();
+        Map<String, BaseNode> properties = new HashMap<>();
         if (tokenStream.token().type != TokenType.RIGHT_BRACE) {
             if (tokenStream.token().type != TokenType.IDENTIFIER
                     && tokenStream.token().type != TokenType.STRING) {

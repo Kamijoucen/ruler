@@ -15,11 +15,11 @@ public class RuntimeContext {
     private final RulerConfiguration configuration;
     private Map<String, BaseValue> outSpace;
     private Map<String, ClosureValue> infixOperationSpace;
-    private Boolean isCallChainAssign = null;
     private NodeVisitor nodeVisitor;
     private NodeVisitor typeCheckVisitor;
     private ImportCache importCache;
     private StackDepthCheckOperation stackDepthCheckOperation;
+    private BaseValue currentSelfValue;
 
     public RuntimeContext(NodeVisitor nodeVisitor,
                           NodeVisitor typeCheckVisitor,
@@ -41,14 +41,6 @@ public class RuntimeContext {
             return NullValue.INSTANCE;
         }
         return outBaseValue;
-    }
-
-    public Boolean getCallChainAssign() {
-        return isCallChainAssign;
-    }
-
-    public void setCallChainAssign(Boolean callChainAssign) {
-        isCallChainAssign = callChainAssign;
     }
 
     public NodeVisitor getNodeVisitor() {
@@ -105,4 +97,13 @@ public class RuntimeContext {
     public void setImportCache(ImportCache importCache) {
         this.importCache = importCache;
     }
+
+    public BaseValue getCurrentSelfValue() {
+        return currentSelfValue;
+    }
+
+    public void setCurrentSelfValue(BaseValue currentSelfValue) {
+        this.currentSelfValue = currentSelfValue;
+    }
+
 }

@@ -24,7 +24,6 @@ public class EvalVisitor extends AbstractVisitor {
     private static final RsonEval rsonEval = new RsonEval();
     private static final ThisEval thisEval = new ThisEval();
     private static final TypeOfEval typeOfEval = new TypeOfEval();
-    private static final LoopBlockEval loopBlockEval = new LoopBlockEval();
     private static final BlockEval blockEval = new BlockEval();
     private static final IfStatementEval ifStatementEval = new IfStatementEval();
     private static final AssignEval assignEval = new AssignEval();
@@ -105,12 +104,6 @@ public class EvalVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
         return typeOfEval.eval(node, scope, context);
-    }
-
-    @Override
-    @Deprecated
-    public BaseValue eval(LoopBlockNode node, Scope scope, RuntimeContext context) {
-        return loopBlockEval.eval(node, scope, context);
     }
 
     @Override

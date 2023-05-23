@@ -22,8 +22,13 @@ public class BlockEval implements BaseEval<BlockNode> {
             lastVal = block.eval(blockScope, context);
             if (ValueType.RETURN == lastVal.getType()) {
                 return lastVal;
+            } else if (ValueType.BREAK == lastVal.getType()) {
+                return lastVal;
+            } else if (ValueType.CONTINUE == lastVal.getType()) {
+                break;
             }
         }
+        context.setCurrentSelfValue(null);
         return lastVal;
     }
 }

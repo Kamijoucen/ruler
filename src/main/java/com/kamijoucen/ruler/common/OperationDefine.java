@@ -10,6 +10,7 @@ public class OperationDefine {
     private static final Map<TokenType, Integer> PRECEDENCE = new HashMap<>();
 
     static {
+        PRECEDENCE.put(TokenType.ASSIGN, 5);
         PRECEDENCE.put(TokenType.OR, 8); // ||
         PRECEDENCE.put(TokenType.AND, 9); // &&
         PRECEDENCE.put(TokenType.EQ, 10); // ==
