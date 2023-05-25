@@ -71,12 +71,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
 
-        RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction(), this);
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
         this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
-        this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
         this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
     }
 
