@@ -433,7 +433,7 @@ public class RulerTest {
 
         RuleRunner runner = Ruler.compileExpression(str, configuration);
 
-        System.out.println(runner);
+        System.out.println(runner.run());
     }
 
     @Test
