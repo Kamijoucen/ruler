@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.expression.DefaultParamValueNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.function.RulerFunction;
@@ -39,8 +40,15 @@ public class CallOperation implements BinaryOperation {
         Scope callScope = new Scope("closure", closure.getDefineScope());
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {
-            NameNode name = (NameNode) defineParam.get(i);
-            callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
+            BaseNode paramNode = defineParam.get(i);
+            if (paramNode instanceof NameNode) {
+                NameNode name = (NameNode) defineParam.get(i);
+                callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
+            } else if (paramNode instanceof DefaultParamValueNode) {
+                // TODO def value
+            } else {
+                throw new IllegalArgumentException();
+            }
         }
         callScope.initReturnSpace();
         if (self != null) {

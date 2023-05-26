@@ -23,7 +23,6 @@ public class IntegerNumberCacheImpl implements IntegerNumberCache {
     private void init() {
         for (int i = 0; i < CACHE_SIZE; i++) {
             CACHE[i] = new IntegerValue(i);
-
         }
     }
 

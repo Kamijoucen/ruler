@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class AbstractVisitor implements NodeVisitor {
+public abstract class AbstractVisitor implements NodeVisitor {
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
         return null;
@@ -206,6 +206,13 @@ public class AbstractVisitor implements NodeVisitor {
     @Override
     public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
         node.getFunction().eval(scope, context);
+        return null;
+    }
+
+    @Override
+    public BaseValue evel(DefaultParamValueNode node, Scope scope, RuntimeContext context) {
+        node.getName().eval(scope, context);
+        node.getExp().eval(scope, context);
         return null;
     }
 

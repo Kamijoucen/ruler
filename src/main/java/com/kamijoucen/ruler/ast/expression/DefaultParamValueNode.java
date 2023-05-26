@@ -10,8 +10,8 @@ import com.kamijoucen.ruler.value.BaseValue;
 
 public class DefaultParamValueNode extends AbstractBaseNode {
 
-    private NameNode name;
-    private BaseNode exp;
+    private final NameNode name;
+    private final BaseNode exp;
 
     public DefaultParamValueNode(NameNode name, BaseNode exp, TokenLocation location) {
         super(location);

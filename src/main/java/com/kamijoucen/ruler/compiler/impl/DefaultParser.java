@@ -429,13 +429,30 @@ public class DefaultParser implements Parser {
         List<BaseNode> param = new ArrayList<>();
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-            param.add(parseIdentifier());
+            BaseNode nameNode = parseIdentifier();
+            if (tokenStream.token().type == TokenType.ASSIGN) {
+                tokenStream.nextToken();
+                DefaultParamValueNode paramValNode =
+                        new DefaultParamValueNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
+                param.add(paramValNode);
+            } else {
+                param.add(nameNode);
+            }
         }
         while (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-            param.add(parseIdentifier());
+
+            BaseNode nameNode = parseIdentifier();
+            if (tokenStream.token().type == TokenType.ASSIGN) {
+                tokenStream.nextToken();
+                DefaultParamValueNode paramValNode =
+                        new DefaultParamValueNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
+                param.add(paramValNode);
+            } else {
+                param.add(nameNode);
+            }
         }
         // eat )
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);

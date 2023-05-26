@@ -185,4 +185,10 @@ public class EvalVisitor extends AbstractVisitor {
     public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
         return infixDefinitionEval.eval(node, scope, context);
     }
+
+    @Override
+    public BaseValue evel(DefaultParamValueNode node, Scope scope, RuntimeContext context) {
+
+        return super.evel(node, scope, context);
+    }
 }

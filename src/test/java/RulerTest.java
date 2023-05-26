@@ -457,4 +457,15 @@ public class RulerTest {
 
     }
 
+    @Test
+    public void testc() {
+
+        String str = "var f = fun(a = 1, b = 2) -> null;";
+
+        RuleRunner runner = Ruler.compileScript(str, configuration);
+
+        System.out.println(runner.run());
+
+    }
+
 }
