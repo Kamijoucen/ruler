@@ -9,7 +9,7 @@ public class LengthFunction implements RulerFunction {
 
     @Override
     public String getName() {
-        return "length";
+        return "Length";
     }
 
     @Override
