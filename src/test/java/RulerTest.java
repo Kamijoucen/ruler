@@ -460,7 +460,7 @@ public class RulerTest {
     @Test
     public void testc() {
 
-        String str = "var f = fun(a = 1, b = 2) -> null;";
+        String str = "var f = fun(a = 1, b = 2) -> a; return f();";
 
         RuleRunner runner = Ruler.compileScript(str, configuration);
 

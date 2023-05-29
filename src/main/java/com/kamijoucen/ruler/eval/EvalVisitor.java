@@ -188,7 +188,7 @@ public class EvalVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue evel(DefaultParamValNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
         return defaultParamValEval.eval(node, scope, context);
     }
 }

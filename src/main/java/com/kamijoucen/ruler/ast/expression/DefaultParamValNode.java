@@ -21,12 +21,12 @@ public class DefaultParamValNode extends AbstractBaseNode {
 
     @Override
     public BaseValue eval(Scope scope, RuntimeContext context) {
-        return null;
+        return context.getNodeVisitor().eval(this, scope, context);
     }
 
     @Override
     public BaseValue typeCheck(Scope scope, RuntimeContext context) {
-        return null;
+        return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
     public NameNode getName() {
