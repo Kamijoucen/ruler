@@ -439,6 +439,7 @@ public class DefaultParser implements Parser {
                 param.add(nameNode);
             }
         }
+
         while (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();

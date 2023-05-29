@@ -11,7 +11,6 @@ public class DefaultParamValueEval implements BaseEval<DefaultParamValueNode> {
     @Override
     public BaseValue eval(DefaultParamValueNode node, Scope scope, RuntimeContext context) {
 
-
         return null;
     }
 

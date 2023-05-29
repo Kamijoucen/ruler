@@ -38,24 +38,34 @@ public class CallOperation implements BinaryOperation {
 
     private BaseValue callClosure(RuntimeContext context, BaseValue self, ClosureValue closure, BaseValue[] funcParam) {
         Scope callScope = new Scope("closure", closure.getDefineScope());
-        List<BaseNode> defineParam = closure.getParam();
-        for (int i = 0; i < defineParam.size(); i++) {
-            BaseNode paramNode = defineParam.get(i);
-            if (paramNode instanceof NameNode) {
-                NameNode name = (NameNode) defineParam.get(i);
-                callScope.putLocal(name.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
-            } else if (paramNode instanceof DefaultParamValueNode) {
-                // TODO def value
-            } else {
-                throw new IllegalArgumentException();
-            }
-        }
         callScope.initReturnSpace();
         if (self != null) {
             callScope.putLocal(Constant.THIS_ARG, self);
         }
         // put args in scope
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(funcParam)));
+
+        List<BaseNode> defineParam = closure.getParam();
+        for (int i = 0; i < defineParam.size(); i++) {
+            BaseNode paramNode = defineParam.get(i);
+            if (paramNode instanceof NameNode) {
+                NameNode nameNode = (NameNode) defineParam.get(i);
+                callScope.putLocal(nameNode.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
+            } else if (paramNode instanceof DefaultParamValueNode) {
+                DefaultParamValueNode defParamNode = (DefaultParamValueNode) paramNode;
+                // 如果没有参数设置默认值
+                if (i >= funcParam.length) {
+                    String paramName = defParamNode.getName().name.name;
+                    BaseValue defValue = defParamNode.getExp().eval(callScope, context);
+                    callScope.putLocal(paramName, defValue);
+                } else {
+                    NameNode nameNode = (NameNode) defineParam.get(i);
+                    callScope.putLocal(nameNode.name.name, funcParam[i]);
+                }
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
 
         // call function
         closure.getBlock().eval(callScope, context);
