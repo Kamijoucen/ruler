@@ -48,22 +48,11 @@ public class CallOperation implements BinaryOperation {
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {
             BaseNode paramNode = defineParam.get(i);
-            if (paramNode instanceof NameNode) {
+            if (paramNode instanceof DefaultParamValueNode && i >= funcParam.length) {
+                paramNode.eval(callScope, context);
+            } else {
                 NameNode nameNode = (NameNode) defineParam.get(i);
                 callScope.putLocal(nameNode.name.name, i >= funcParam.length ? NullValue.INSTANCE : funcParam[i]);
-            } else if (paramNode instanceof DefaultParamValueNode) {
-                DefaultParamValueNode defParamNode = (DefaultParamValueNode) paramNode;
-                // 如果没有参数设置默认值
-                if (i >= funcParam.length) {
-                    String paramName = defParamNode.getName().name.name;
-                    BaseValue defValue = defParamNode.getExp().eval(callScope, context);
-                    callScope.putLocal(paramName, defValue);
-                } else {
-                    NameNode nameNode = (NameNode) defineParam.get(i);
-                    callScope.putLocal(nameNode.name.name, funcParam[i]);
-                }
-            } else {
-                throw new IllegalArgumentException();
             }
         }
 
