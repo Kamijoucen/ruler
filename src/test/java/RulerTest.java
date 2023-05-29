@@ -464,7 +464,8 @@ public class RulerTest {
 
         RuleRunner runner = Ruler.compileScript(str, configuration);
 
-        System.out.println(runner.run());
+        RuleResult result = runner.run();
+        System.out.println(result);
 
     }
 
