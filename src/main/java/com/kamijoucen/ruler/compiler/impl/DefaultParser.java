@@ -432,8 +432,8 @@ public class DefaultParser implements Parser {
             BaseNode nameNode = parseIdentifier();
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
-                DefaultParamValueNode paramValNode =
-                        new DefaultParamValueNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
+                DefaultParamValNode paramValNode =
+                        new DefaultParamValNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
                 param.add(paramValNode);
             } else {
                 param.add(nameNode);
@@ -448,8 +448,8 @@ public class DefaultParser implements Parser {
             BaseNode nameNode = parseIdentifier();
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
-                DefaultParamValueNode paramValNode =
-                        new DefaultParamValueNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
+                DefaultParamValNode paramValNode =
+                        new DefaultParamValNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
                 param.add(paramValNode);
             } else {
                 param.add(nameNode);

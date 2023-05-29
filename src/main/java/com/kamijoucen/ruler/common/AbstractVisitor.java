@@ -210,7 +210,7 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue evel(DefaultParamValueNode node, Scope scope, RuntimeContext context) {
+    public BaseValue evel(DefaultParamValNode node, Scope scope, RuntimeContext context) {
         node.getName().eval(scope, context);
         node.getExp().eval(scope, context);
         return null;

@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.expression.DefaultParamValueNode;
+import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.function.RulerFunction;
@@ -48,7 +48,7 @@ public class CallOperation implements BinaryOperation {
         List<BaseNode> defineParam = closure.getParam();
         for (int i = 0; i < defineParam.size(); i++) {
             BaseNode paramNode = defineParam.get(i);
-            if (paramNode instanceof DefaultParamValueNode && i >= funcParam.length) {
+            if (paramNode instanceof DefaultParamValNode && i >= funcParam.length) {
                 paramNode.eval(callScope, context);
             } else {
                 NameNode nameNode = (NameNode) defineParam.get(i);
