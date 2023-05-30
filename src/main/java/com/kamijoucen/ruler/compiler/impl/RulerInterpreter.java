@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
-import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.module.RulerModule;
@@ -14,6 +13,7 @@ import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +63,9 @@ public class RulerInterpreter {
         // 执行表达式
         AssertUtil.notNull(firstNode);
         BaseValue value = firstNode.eval(runScope, this.runtimeContext);
-        return CollectionUtil.list(ConvertRepository.getConverter(value.getType()).baseToReal(value, configuration));
+
+        ValueConvert convert = this.configuration.getValueConvertManager().getConverter(value.getType());
+        return CollectionUtil.list(convert.baseToReal(value, configuration));
     }
 
     public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
@@ -90,7 +92,8 @@ public class RulerInterpreter {
         }
         List<Object> realValue = new ArrayList<Object>(returnValue.size());
         for (BaseValue baseValue : returnValue) {
-            realValue.add(ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue, configuration));
+            ValueConvert convert = this.configuration.getValueConvertManager().getConverter(baseValue.getType());
+            realValue.add(convert.baseToReal(baseValue, configuration));
         }
         return realValue;
     }

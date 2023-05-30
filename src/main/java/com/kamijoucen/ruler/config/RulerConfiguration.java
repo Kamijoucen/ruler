@@ -49,4 +49,6 @@ public interface RulerConfiguration {
 
     IntegerNumberCache getIntegerNumberCache();
 
+    ValueConvertManager getValueConvertManager();
+
 }

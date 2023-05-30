@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.value.convert;
 
-import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.SubRuleResultValue;
 import com.kamijoucen.ruler.util.CollectionUtil;
@@ -32,7 +31,8 @@ public class SubRuleResultConvert implements ValueConvert {
         }
         List<Object> realValue = new ArrayList<Object>(subRuleValue.getValues().size());
         for (BaseValue val : subRuleValue.getValues()) {
-            realValue.add(ConvertRepository.getConverter(val.getType()).baseToReal(val, configuration));
+            ValueConvert convert = configuration.getValueConvertManager().getConverter(val.getType());
+            realValue.add(convert.baseToReal(val, configuration));
         }
         return new SubRuleResultValue(subRuleValue.getRuleName(), realValue);
     }

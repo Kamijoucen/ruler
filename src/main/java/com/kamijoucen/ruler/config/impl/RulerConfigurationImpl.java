@@ -31,7 +31,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
 
-    private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
+    private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl(this);
 
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
 
@@ -44,6 +44,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private Integer maxStackDepth = -1;
 
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
+
+    private ValueConvertManager valueConvertManager = new ValueConvertManagerImpl();
 
     public RulerConfigurationImpl() {
         init();
@@ -187,6 +189,14 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return integerNumberCache;
     }
 
+    @Override
+    public ValueConvertManager getValueConvertManager() {
+        return valueConvertManager;
+    }
+
+    public void setValueConvertManager(ValueConvertManager valueConvertManager) {
+        this.valueConvertManager = valueConvertManager;
+    }
 
     public void setGlobalScope(Scope globalScope) {
         this.globalScope = globalScope;
