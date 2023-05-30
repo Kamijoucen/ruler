@@ -17,7 +17,7 @@ public class VirtualNode implements BaseNode {
 
     @Override
     public BaseValue eval(Scope scope, RuntimeContext context) {
-        return null;
+        return baseValue;
     }
 
     @Override

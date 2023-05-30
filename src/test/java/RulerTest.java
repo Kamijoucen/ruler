@@ -184,7 +184,8 @@ public class RulerTest {
     @Test
     public void array_call() {
 
-        String script = "var arr = [[1]];  println(length(arr[0]));";
+        String script = "var arr = [[1]];  println(arr[0].Length());";
+//        String script = "var arr = [[1]];  println(arr[0]?.Length());";
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 
