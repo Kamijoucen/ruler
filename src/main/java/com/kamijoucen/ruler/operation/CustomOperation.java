@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.facotr.VirtualNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
@@ -19,11 +20,8 @@ public class CustomOperation implements BinaryOperation {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
 
-        BaseValue infixValue = params[0];
-
-        // TODO
-
-        return callOperation.invoke(lhs, null, scope, context, null);
+        VirtualNode virtualNode = new VirtualNode(params[0]);
+        return callOperation.invoke(virtualNode, null, scope, context, lValue, rValue);
     }
 
 }
