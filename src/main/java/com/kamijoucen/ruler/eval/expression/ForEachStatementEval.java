@@ -31,7 +31,6 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
                 .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
 
-
         Scope forScope = new Scope("for each scope", scope);
 
         BaseValue lastValue = NullValue.INSTANCE;

@@ -40,6 +40,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final ImportEval importEval = new ImportEval();
     private static final RuleStatementEval ruleStatementEval = new RuleStatementEval();
     private static final InfixDefinitionEval infixDefinitionEval = new InfixDefinitionEval();
+    private static final DefaultParamValEval defaultParamValEval = new DefaultParamValEval();
 
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
@@ -184,5 +185,10 @@ public class EvalVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
         return infixDefinitionEval.eval(node, scope, context);
+    }
+
+    @Override
+    public BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
+        return defaultParamValEval.eval(node, scope, context);
     }
 }

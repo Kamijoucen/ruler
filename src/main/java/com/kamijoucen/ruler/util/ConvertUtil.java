@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.util;
 
-import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -55,7 +54,7 @@ public class ConvertUtil {
         }
         Map<String, BaseValue> values = new HashMap<String, BaseValue>();
         for (RulerParameter param : params) {
-            ValueConvert convert = ConvertRepository.getConverter(param.getType());
+            ValueConvert convert = configuration.getValueConvertManager().getConverter(param.getType());
             if (convert == null) {
                 continue;
             }

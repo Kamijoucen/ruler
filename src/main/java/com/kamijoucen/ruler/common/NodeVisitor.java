@@ -66,4 +66,6 @@ public interface NodeVisitor {
 
     BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context);
 
+    BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context);
+
 }

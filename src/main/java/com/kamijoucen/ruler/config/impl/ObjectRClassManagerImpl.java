@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.config.RClassManager;
 import com.kamijoucen.ruler.function.LengthFunction;
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.function.ToStringFunction;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.FunctionValue;
@@ -23,13 +24,10 @@ public class ObjectRClassManagerImpl implements RClassManager {
 
     private RClass createBaseRClass() {
 
-        RClass rClassValue = new RClassValue();
+        RClass rClass = new RClassValue();
+        putFuncToRClass(new ToStringFunction(), rClass);
 
-        ToStringFunction toStringVal = new ToStringFunction();
-        // todo function class
-        rClassValue.getProperties().put(toStringVal.getName(), new FunctionValue(toStringVal));
-
-        return rClassValue;
+        return rClass;
     }
 
     private RClass createStringClassValue() {
@@ -38,12 +36,9 @@ public class ObjectRClassManagerImpl implements RClassManager {
     }
 
     private RClass createArrayClassValue() {
-        RClass baseRClass = createBaseRClass();
-
-        LengthFunction lengthFunction = new LengthFunction();
-        baseRClass.getProperties().put(lengthFunction.getName(), new FunctionValue(lengthFunction));
-
-        return baseRClass;
+        RClass rClass = createBaseRClass();
+        putFuncToRClass(new LengthFunction(), rClass);
+        return rClass;
     }
 
     @Override
@@ -51,5 +46,10 @@ public class ObjectRClassManagerImpl implements RClassManager {
         RClass value = RCLASS_MAP.get(valueType);
         AssertUtil.notNull(value);
         return value;
+    }
+
+
+    private void putFuncToRClass(RulerFunction func, RClass rClass) {
+        rClass.getProperties().put(func.getName(), new FunctionValue(func));
     }
 }

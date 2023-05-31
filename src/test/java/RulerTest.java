@@ -184,7 +184,8 @@ public class RulerTest {
     @Test
     public void array_call() {
 
-        String script = "var arr = [[1]];  println(length(arr[0]));";
+        String script = "var arr = [[1]];  println(arr[0].Length());";
+//        String script = "var arr = [[1]];  println(arr[0]?.Length());";
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 
@@ -433,7 +434,7 @@ public class RulerTest {
 
         RuleRunner runner = Ruler.compileExpression(str, configuration);
 
-        System.out.println(runner);
+        System.out.println(runner.run());
     }
 
     @Test
@@ -454,6 +455,18 @@ public class RulerTest {
         RuleRunner runner = Ruler.compileScript(str, configuration);
 
         System.out.println(runner.run());
+
+    }
+
+    @Test
+    public void testc() {
+
+        String str = "var f = fun(a = 1, b = 2) -> a; return f();";
+
+        RuleRunner runner = Ruler.compileScript(str, configuration);
+
+        RuleResult result = runner.run();
+        System.out.println(result);
 
     }
 

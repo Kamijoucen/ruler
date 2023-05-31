@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.value.convert;
 
-import com.kamijoucen.ruler.common.ConvertRepository;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -27,7 +26,8 @@ public class ArrayConvert implements ValueConvert {
         }
         List<BaseValue> list = new ArrayList<BaseValue>(realArr.size());
         for (Object obj : realArr) {
-            BaseValue baseValue = ConvertRepository.getConverter(obj).realToBase(obj, configuration);
+            ValueConvert convert = configuration.getValueConvertManager().getConverter(obj);
+            BaseValue baseValue = convert.realToBase(obj, configuration);
             list.add(baseValue);
         }
         return new ArrayValue(list);
@@ -39,7 +39,8 @@ public class ArrayConvert implements ValueConvert {
         List<BaseValue> values = arrayValue.getValues();
         List<Object> objs = new ArrayList<Object>(values.size());
         for (BaseValue val : values) {
-            Object obj = ConvertRepository.getConverter(val.getType()).baseToReal(val, configuration);
+            ValueConvert convert = configuration.getValueConvertManager().getConverter(val.getType());
+            Object obj = convert.baseToReal(val, configuration);
             objs.add(obj);
         }
         return objs;

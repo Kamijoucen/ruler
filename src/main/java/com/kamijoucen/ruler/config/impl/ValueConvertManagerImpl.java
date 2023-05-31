@@ -1,5 +1,6 @@
-package com.kamijoucen.ruler.common;
+package com.kamijoucen.ruler.config.impl;
 
+import com.kamijoucen.ruler.config.ValueConvertManager;
 import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.*;
 
@@ -8,13 +9,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ConvertRepository {
+public class ValueConvertManagerImpl implements ValueConvertManager {
 
-    private static final Map<ValueType, ValueConvert> VALUE_TYPE_MAP = new HashMap<ValueType, ValueConvert>();
+    private final Map<ValueType, ValueConvert> VALUE_TYPE_MAP = new HashMap<>();
 
-    private static final Map<Class<?>, ValueConvert> CLASS_MAP = new HashMap<Class<?>, ValueConvert>();
+    private final Map<Class<?>, ValueConvert> CLASS_MAP = new HashMap<>();
 
-    static {
+    public ValueConvertManagerImpl() {
+
         IntegerConvert integerConvert = new IntegerConvert();
         DoubleConvert doubleConvert = new DoubleConvert();
         StringConvert stringConvert = new StringConvert();
@@ -42,9 +44,11 @@ public class ConvertRepository {
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
         CLASS_MAP.put(Date.class, dateConvert);
+
     }
 
-    public static ValueConvert getConverter(Object obj) {
+    @Override
+    public ValueConvert getConverter(Object obj) {
         if (obj == null) {
             return VALUE_TYPE_MAP.get(ValueType.NULL);
         }
@@ -57,7 +61,8 @@ public class ConvertRepository {
         return CLASS_MAP.get(obj.getClass());
     }
 
-    public static ValueConvert getConverter(ValueType type) {
+    @Override
+    public ValueConvert getConverter(ValueType type) {
         return VALUE_TYPE_MAP.get(type);
     }
 }

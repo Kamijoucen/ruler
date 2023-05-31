@@ -8,12 +8,12 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class DefaultParameterValueNode extends AbstractBaseNode {
+public class DefaultParamValNode extends AbstractBaseNode {
 
-    private NameNode name;
-    private BaseNode exp;
+    private final NameNode name;
+    private final BaseNode exp;
 
-    public DefaultParameterValueNode(NameNode name, BaseNode exp, TokenLocation location) {
+    public DefaultParamValNode(NameNode name, BaseNode exp, TokenLocation location) {
         super(location);
         this.name = name;
         this.exp = exp;
@@ -21,12 +21,12 @@ public class DefaultParameterValueNode extends AbstractBaseNode {
 
     @Override
     public BaseValue eval(Scope scope, RuntimeContext context) {
-        return null;
+        return context.getNodeVisitor().eval(this, scope, context);
     }
 
     @Override
     public BaseValue typeCheck(Scope scope, RuntimeContext context) {
-        return null;
+        return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
     public NameNode getName() {

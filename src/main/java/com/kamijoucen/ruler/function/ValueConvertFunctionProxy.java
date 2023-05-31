@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.function;
 
-import com.kamijoucen.ruler.common.ConvertRepository;
+
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -27,11 +27,13 @@ public class ValueConvertFunctionProxy implements RulerFunction {
     public BaseValue call(RuntimeContext context, BaseValue self, Object... param) {
         Object[] realParam = convertParams(param);
         Object returnVal = function.call(context, self, realParam);
-        ValueConvert converter = ConvertRepository.getConverter(returnVal);
-        if (converter == null) {
-            return ConvertRepository.getConverter(ValueType.STRING).realToBase(returnVal.toString(), configuration);
+
+        ValueConvert convert = context.getConfiguration().getValueConvertManager().getConverter(returnVal);
+        if (convert == null) {
+            return context.getConfiguration().getValueConvertManager().getConverter(ValueType.STRING)
+                    .realToBase(returnVal.toString(), configuration);
         }
-        return converter.realToBase(returnVal, configuration);
+        return convert.realToBase(returnVal, configuration);
     }
 
     private Object[] convertParams(Object... param) {
@@ -49,7 +51,8 @@ public class ValueConvertFunctionProxy implements RulerFunction {
         } else {
             throw SyntaxException.withSyntax("错误的类型");
         }
-        return ConvertRepository.getConverter(baseValue.getType()).baseToReal(baseValue, configuration);
+        ValueConvert convert = configuration.getValueConvertManager().getConverter(baseValue.getType());
+        return convert.baseToReal(baseValue, configuration);
     }
 
 }

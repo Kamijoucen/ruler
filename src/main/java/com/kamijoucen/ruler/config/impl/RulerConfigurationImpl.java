@@ -31,7 +31,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
 
-    private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl();
+    private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl(this);
 
     private RuntimeBehaviorFactory runtimeBehaviorFactory;
 
@@ -44,6 +44,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private Integer maxStackDepth = -1;
 
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
+
+    private ValueConvertManager valueConvertManager = new ValueConvertManagerImpl();
 
     public RulerConfigurationImpl() {
         init();
@@ -71,12 +73,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
 
-        RulerFunction lengthFunction = new ReturnConvertFunctionProxy(new LengthFunction(), this);
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
         this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
-        this.globalScope.putLocal(lengthFunction.getName(), new FunctionValue(lengthFunction));
         this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
     }
 
@@ -189,6 +189,14 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return integerNumberCache;
     }
 
+    @Override
+    public ValueConvertManager getValueConvertManager() {
+        return valueConvertManager;
+    }
+
+    public void setValueConvertManager(ValueConvertManager valueConvertManager) {
+        this.valueConvertManager = valueConvertManager;
+    }
 
     public void setGlobalScope(Scope globalScope) {
         this.globalScope = globalScope;
