@@ -517,11 +517,11 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         if (token.type == TokenType.INTEGER) {
             return new IntegerNode(Long.parseLong(token.name), token.location);
-        }
-        if (token.type == TokenType.DOUBLE) {
+        } else if (token.type == TokenType.DOUBLE) {
             return new DoubleNode(Double.parseDouble(token.name), token.location);
+        } else {
+            throw SyntaxException.withSyntax("需要一个数字", token);
         }
-        throw SyntaxException.withSyntax("需要一个数字", token);
     }
 
     public BaseNode parseString() {

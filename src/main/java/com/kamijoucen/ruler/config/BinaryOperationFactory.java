@@ -6,6 +6,6 @@ public interface BinaryOperationFactory {
 
     BinaryOperation findOperation(String type);
 
-    void updateOperation(String type, BinaryOperation operation);
+    void putOperation(String type, BinaryOperation operation);
 
 }
