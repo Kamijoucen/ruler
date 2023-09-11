@@ -6,7 +6,7 @@ import java.util.Map;
 public class RsonValue extends AbstractValue implements Rson {
 
     private final Map<String, BaseValue> fields = new HashMap<>();
-
+    
     @Override
     public ValueType getType() {
         return ValueType.RSON;

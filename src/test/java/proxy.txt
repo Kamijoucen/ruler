@@ -1,0 +1,19 @@
+
+
+var r = {
+    name: "lsc",
+    age: 15
+};
+
+var p = Proxy(r, {
+    get: func(self, key, value) {
+        // todo
+        return null;
+    },
+
+    put: func(self, key) {
+        // todo
+    }
+});
+
+
