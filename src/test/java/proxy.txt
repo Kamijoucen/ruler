@@ -6,12 +6,12 @@ var r = {
 };
 
 var p = Proxy(r, {
-    get: func(self, key, value) {
+    get: func(self, key) {
         // todo
         return null;
     },
 
-    put: func(self, key) {
+    put: func(self, key, value) {
         // todo
     }
 });

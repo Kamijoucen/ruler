@@ -5,8 +5,16 @@ import java.util.Map;
 
 public class RsonValue extends AbstractValue implements Rson {
 
-    private final Map<String, BaseValue> fields = new HashMap<>();
+    private Map<String, BaseValue> fields;
+
+    public RsonValue() {
+        this(new HashMap<>());
+    }
     
+    public RsonValue(Map<String, BaseValue> fields) {
+        this.fields = fields;
+    }
+
     @Override
     public ValueType getType() {
         return ValueType.RSON;
