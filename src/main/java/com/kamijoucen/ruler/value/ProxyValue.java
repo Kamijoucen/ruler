@@ -10,26 +10,26 @@ public class ProxyValue extends RsonValue {
 
     private RsonValue value;
 
-    private ClosureValue getCallback;
-
-    private ClosureValue putCallback;
+    private RsonValue configValue;
 
     private RuntimeContext context;
 
-    public ProxyValue(RsonValue value, ClosureValue getCallback, ClosureValue putCallback) {
+    public ProxyValue(RsonValue value, RsonValue rsonValue) {
         super(null);
         this.value = value;
-        this.getCallback = getCallback;
-        this.putCallback = putCallback;
+        this.configValue = rsonValue;
     }
 
     @Override
     public BaseValue getField(String name) {
-
+        BaseValue getCallback = configValue.getField("get");
+        if (!(getCallback instanceof ClosureValue)) {
+            return value.getField(name);
+        }
         if (Objects.nonNull(getCallback)) {
             CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
             // TODO 这里的self指代原始value还是info value？
-            return executor.call(value, getCallback, null, context, value, new StringValue(name));
+            return executor.call(value, ((ClosureValue) getCallback), null, context, value, new StringValue(name));
         } else {
             return value.getField(name);
         }
@@ -42,11 +42,15 @@ public class ProxyValue extends RsonValue {
 
     @Override
     public void putField(String name, BaseValue baseValue) {
-
+        BaseValue putCallback = configValue.getField("put");
+        if (!(putCallback instanceof ClosureValue)) {
+            value.putField(name, baseValue);
+            return;
+        }
         if (Objects.nonNull(putCallback)) {
             CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
             // TODO 这里的self指代原始value还是info value？
-            executor.call(value, putCallback, null, context, value, new StringValue(name), baseValue);
+            executor.call(value, ((ClosureValue) putCallback), null, context, value, new StringValue(name), baseValue);
         } else {
             value.putField(name, baseValue);
         }
