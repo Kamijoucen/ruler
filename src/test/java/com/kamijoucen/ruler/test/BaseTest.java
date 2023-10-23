@@ -101,7 +101,7 @@ public class BaseTest {
     }
 
     @Test
-    public void anonymousFunc() {
+    public void anonymousFuncTest() {
         String script = "var f = fun(name) -> \"hello \" + name;\n" +
                 "\n" +
                 "var r = f(\"world!\");\n" +
@@ -110,6 +110,20 @@ public class BaseTest {
                 "return r;";
         RuleRunner runner = getScriptRunner(script);
         RuleResult result = runner.run();
+
+        Assert.assertEquals("hello world!", result.first().toString());
+    }
+
+    @Test
+    public void outStringIdenTest() {
+
+        String script = "var `t  test`= $`123 `; return `t  test`;";
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("123 ", "hello world!");
+        
+        RuleRunner runner = getScriptRunner(script);
+        RuleResult result = runner.run(map);
 
         Assert.assertEquals("hello world!", result.first().toString());
     }
