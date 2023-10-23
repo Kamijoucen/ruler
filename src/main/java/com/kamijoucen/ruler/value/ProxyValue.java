@@ -14,10 +14,10 @@ public class ProxyValue extends RsonValue {
 
     private RuntimeContext context;
 
-    public ProxyValue(RsonValue value, RsonValue rsonValue) {
+    public ProxyValue(RsonValue value, RsonValue configValue) {
         super(null);
         this.value = value;
-        this.configValue = rsonValue;
+        this.configValue = configValue;
     }
 
     @Override

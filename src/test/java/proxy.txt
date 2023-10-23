@@ -7,12 +7,11 @@ var r = {
 
 var p = Proxy(r, {
     get: func(self, key) {
-        // todo
-        return null;
+        return self[key] + 1;
     },
 
     put: func(self, key, value) {
-        // todo
+        self[]        
     }
 });
 
