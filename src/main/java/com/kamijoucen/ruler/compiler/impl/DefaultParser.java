@@ -40,18 +40,28 @@ public class DefaultParser implements Parser {
     @Override
     public List<BaseNode> parse() {
         tokenStream.nextToken();
+        parseImports();
+        parseStatements();
+        return this.rootStatements;
+    }
+
+    private void parseImports() {
         while (tokenStream.token().type == TokenType.KEY_IMPORT) {
             this.rootStatements.add(parseImport());
         }
+    }
+
+    private void parseStatements() {
         while (tokenStream.token().type != TokenType.EOF) {
             this.rootStatements.add(parseStatement());
         }
-        return this.rootStatements;
     }
 
     @Override
     public ImportNode parseImport() {
-        AssertUtil.assertToken(tokenStream, TokenType.KEY_IMPORT);
+        if (tokenStream.token().type != TokenType.KEY_IMPORT) {
+            throw new IllegalArgumentException("Expected KEY_IMPORT token, but got " + tokenStream.token().type);
+        }
         Token importToken = tokenStream.token();
         tokenStream.nextToken();
 
@@ -282,7 +292,8 @@ public class DefaultParser implements Parser {
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
                 tokenStream.nextToken();
 
-                BinaryOperation callOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.CALL.name());
+                BinaryOperation callOperation = configuration.getBinaryOperationFactory()
+                        .findOperation(TokenType.CALL.name());
                 node = new CallNode(node, null, params, callOperation, node.getLocation());
             } else if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
                 tokenStream.nextToken();
@@ -293,7 +304,8 @@ public class DefaultParser implements Parser {
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
                 tokenStream.nextToken();
 
-                BinaryOperation indexOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.INDEX.name());
+                BinaryOperation indexOperation = configuration.getBinaryOperationFactory()
+                        .findOperation(TokenType.INDEX.name());
                 node = new IndexNode(node, indexNode, indexOperation, node.getLocation());
             } else {
                 tokenStream.nextToken();
@@ -302,7 +314,8 @@ public class DefaultParser implements Parser {
                 // only identifiers are supported for dot call
                 BaseNode nameNode = parseIdentifier();
 
-                BinaryOperation dotOperation = configuration.getBinaryOperationFactory().findOperation(TokenType.DOT.name());
+                BinaryOperation dotOperation = configuration.getBinaryOperationFactory()
+                        .findOperation(TokenType.DOT.name());
                 node = new DotNode(node, nameNode, dotOperation, node.getLocation());
             }
         }
@@ -432,8 +445,8 @@ public class DefaultParser implements Parser {
             BaseNode nameNode = parseIdentifier();
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
-                DefaultParamValNode paramValNode =
-                        new DefaultParamValNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
+                DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode, parseExpression(),
+                        nameNode.getLocation());
                 param.add(paramValNode);
             } else {
                 param.add(nameNode);
@@ -448,8 +461,8 @@ public class DefaultParser implements Parser {
             BaseNode nameNode = parseIdentifier();
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
-                DefaultParamValNode paramValNode =
-                        new DefaultParamValNode((NameNode) nameNode, parseExpression(), nameNode.getLocation());
+                DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode, parseExpression(),
+                        nameNode.getLocation());
                 param.add(paramValNode);
             } else {
                 param.add(nameNode);
@@ -485,11 +498,12 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         BaseNode arrayExp = parseExpression();
         // TODO type check
-//        BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
-//        if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
-//                && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
-//            throw SyntaxException.withSyntax("The value of the expression must be an array!");
-//        }
+        // BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
+        // if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
+        // && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
+        // throw SyntaxException.withSyntax("The value of the expression must be an
+        // array!");
+        // }
         BaseNode blockNode = null;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockNode = parseBlock();
