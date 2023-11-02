@@ -128,4 +128,18 @@ public class BaseTest {
         Assert.assertEquals("hello world!", result.first().toString());
     }
 
+    @Test
+    public void mapGetTest() {
+        String script = "var a = $obj['name']; println(a); return a;";
+        RuleRunner runner = getScriptRunner(script);
+
+        Map<String, Object> parameter = new HashMap<String, Object>();
+        Map<String, String> obj = new HashMap<String, String>();
+        obj.put("name", "lisicen");
+        parameter.put("obj", obj);
+
+        RuleResult result = runner.run(parameter);
+        Assert.assertEquals("lisicen", result.first().toString());
+    }
+
 }
