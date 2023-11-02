@@ -1,0 +1,7 @@
+
+
+fun ForEach(i, j, f) {
+
+    
+
+}

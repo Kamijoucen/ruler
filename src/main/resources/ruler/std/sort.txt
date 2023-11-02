@@ -26,6 +26,7 @@ fun Sort(arr, compare) {
     if (!collections.IsArray(arr)) {
         return;
     }
+    // TODO
     if (compare == null) || (typeof(compare) != "function") {
         compare = fun(val1, val2) {
             return var1 - var2;

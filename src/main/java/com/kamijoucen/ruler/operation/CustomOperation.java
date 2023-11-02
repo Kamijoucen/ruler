@@ -11,11 +11,19 @@ import java.util.Objects;
 
 public class CustomOperation implements BinaryOperation {
 
+    private BinaryOperation callOperation;
+
+    private void init(RuntimeContext context) {
+        if (callOperation == null) {
+            callOperation = context.getConfiguration().getBinaryOperationFactory()
+                    .findOperation(TokenType.CALL.name());
+            Objects.requireNonNull(callOperation);
+        }
+    }
+
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
-        BinaryOperation callOperation = context.getConfiguration()
-                .getBinaryOperationFactory().findOperation(TokenType.CALL.name());
-        Objects.requireNonNull(callOperation);
+        init(context);
 
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);

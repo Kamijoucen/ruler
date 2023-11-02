@@ -7,31 +7,37 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 public class GeOperation implements BinaryOperation {
+
+    private static final Map<Pair<ValueType, ValueType>, BiFunction<BaseValue, BaseValue, BaseValue>> operations = new HashMap<>();
+
+    static {
+        operations.put(Pair.of(ValueType.INTEGER, ValueType.INTEGER),
+                (l, r) -> BoolValue.get(((IntegerValue) l).getValue() >= ((IntegerValue) r).getValue()));
+        operations.put(Pair.of(ValueType.INTEGER, ValueType.DOUBLE),
+                (l, r) -> BoolValue.get(((IntegerValue) l).getValue() >= ((DoubleValue) r).getValue()));
+        operations.put(Pair.of(ValueType.DOUBLE, ValueType.INTEGER),
+                (l, r) -> BoolValue.get(((DoubleValue) l).getValue() >= ((IntegerValue) r).getValue()));
+        operations.put(Pair.of(ValueType.DOUBLE, ValueType.DOUBLE),
+                (l, r) -> BoolValue.get(((DoubleValue) l).getValue() >= ((DoubleValue) r).getValue()));
+    }
 
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
-        if (lValue.getType() == ValueType.INTEGER && rValue.getType() == ValueType.INTEGER) {
-            IntegerValue val1 = (IntegerValue) lValue;
-            IntegerValue val2 = (IntegerValue) rValue;
-            return BoolValue.get(val1.getValue() >= val2.getValue());
-        } else if (lValue.getType() == ValueType.INTEGER && rValue.getType() == ValueType.DOUBLE) {
-            IntegerValue val1 = (IntegerValue) lValue;
-            DoubleValue val2 = (DoubleValue) rValue;
-            return BoolValue.get(val1.getValue() >= val2.getValue());
-        } else if (lValue.getType() == ValueType.DOUBLE && rValue.getType() == ValueType.INTEGER) {
-            DoubleValue val1 = (DoubleValue) lValue;
-            IntegerValue val2 = (IntegerValue) rValue;
-            return BoolValue.get(val1.getValue() >= val2.getValue());
-        } else if (lValue.getType() == ValueType.DOUBLE && rValue.getType() == ValueType.DOUBLE) {
-            DoubleValue val1 = (DoubleValue) lValue;
-            DoubleValue val2 = (DoubleValue) rValue;
-            return BoolValue.get(val1.getValue() >= val2.getValue());
+        BiFunction<BaseValue, BaseValue, BaseValue> operation = operations
+                .get(Pair.of(lValue.getType(), rValue.getType()));
+        if (operation != null) {
+            return operation.apply(lValue, rValue);
         } else {
-            throw SyntaxException.withSyntax("该值不支持 '>=':" + Arrays.toString(params));
+            throw SyntaxException.withSyntax("Unsupported operation for these types: " + Arrays.toString(params));
         }
     }
 }

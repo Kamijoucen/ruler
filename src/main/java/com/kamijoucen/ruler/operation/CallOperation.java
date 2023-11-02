@@ -17,15 +17,16 @@ public class CallOperation implements BinaryOperation {
         context.getStackDepthCheckOperation().addDepth(context);
         try {
             Object[] funcParam = Arrays.copyOfRange(params, 0, params.length);
-            if (callFunc.getType() == ValueType.FUNCTION) {
-                RulerFunction function = ((FunctionValue) callFunc).getValue();
-                return (BaseValue) function.call(context, self, funcParam);
-            } else if (callFunc.getType() == ValueType.CLOSURE) {
-                ClosureValue function = ((ClosureValue) callFunc);
-                return context.getConfiguration().getCallClosureExecutor()
-                        .call(self, function, scope, context, params);
-            } else {
-                throw new IllegalArgumentException(callFunc + " not is a function!");
+            switch (callFunc.getType()) {
+                case FUNCTION:
+                    RulerFunction function = ((FunctionValue) callFunc).getValue();
+                    return (BaseValue) function.call(context, self, funcParam);
+                case CLOSURE:
+                    ClosureValue closureFunction = ((ClosureValue) callFunc);
+                    return context.getConfiguration().getCallClosureExecutor()
+                            .call(self, closureFunction, scope, context, params);
+                default:
+                    throw new IllegalArgumentException(callFunc + " not is a function!");
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);
