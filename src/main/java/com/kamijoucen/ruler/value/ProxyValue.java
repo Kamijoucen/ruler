@@ -7,13 +7,13 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 
 public class ProxyValue extends RsonValue {
 
-    private RsonValue value;
+    private BaseValue value;
 
     private RsonValue configValue;
 
     private RuntimeContext context;
 
-    public ProxyValue(RsonValue value, RsonValue configValue) {
+    public ProxyValue(BaseValue value, RsonValue configValue) {
         super(null);
         this.value = value;
         this.configValue = configValue;
@@ -26,7 +26,12 @@ public class ProxyValue extends RsonValue {
             CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
             return executor.call(value, ((ClosureValue) getCallback), null, context, value, new StringValue(name));
         }
-        return value.getField(name);
+        if (value.getType() == ValueType.RSON) {
+            return ((RsonValue) value).getField(name);
+        } else {
+            
+            return value.getField(name);
+        }
     }
 
     @Override

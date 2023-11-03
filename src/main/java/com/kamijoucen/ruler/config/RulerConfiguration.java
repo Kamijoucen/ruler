@@ -54,4 +54,6 @@ public interface RulerConfiguration {
 
     CallClosureExecutor getCallClosureExecutor();
 
+    ObjectAccessControlManager getObjectAccessControlManager();
+
 }

@@ -175,4 +175,14 @@ public class BaseTest {
         Assert.assertEquals("lisicen", result.first().toString());
     }
 
+    // 使用proxy为数组拦截length方法
+    @Test
+    public void arrayLengthTest() {
+        String script = "var a = [1, 2, 3]; a = Proxy(a, {get: fun(self, name) { return 100; }});  return a.length;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(3, result.first().toInteger().longValue());
+    }
+
 }
