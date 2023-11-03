@@ -1,0 +1,17 @@
+
+
+var r = {
+    name: "lsc",
+    age: 15
+};
+
+var p = Proxy(r, {
+    get: func(self, key) {
+        return self[key] + 1;
+    },
+
+    put: func(self, key, value) {
+        self[]        
+    }
+});
+

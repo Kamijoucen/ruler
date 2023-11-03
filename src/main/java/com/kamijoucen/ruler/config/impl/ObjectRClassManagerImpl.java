@@ -1,9 +1,7 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.config.RClassManager;
-import com.kamijoucen.ruler.function.LengthFunction;
-import com.kamijoucen.ruler.function.RulerFunction;
-import com.kamijoucen.ruler.function.ToStringFunction;
+import com.kamijoucen.ruler.function.*;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.FunctionValue;
 import com.kamijoucen.ruler.value.RClass;
@@ -18,26 +16,33 @@ public class ObjectRClassManagerImpl implements RClassManager {
     public final Map<ValueType, RClass> RCLASS_MAP = new HashMap<>();
 
     public ObjectRClassManagerImpl() {
-        RCLASS_MAP.put(ValueType.STRING, createStringClassValue());
-        RCLASS_MAP.put(ValueType.ARRAY, createArrayClassValue());
+        RCLASS_MAP.put(ValueType.STRING, createStringClass());
+        RCLASS_MAP.put(ValueType.ARRAY, createArrayClass());
+        RCLASS_MAP.put(ValueType.INTEGER, createIntegerClass());
     }
 
     private RClass createBaseRClass() {
-
         RClass rClass = new RClassValue();
+
         putFuncToRClass(new ToStringFunction(), rClass);
+        putFuncToRClass(new PrintSelfFunction(), rClass);
 
         return rClass;
     }
 
-    private RClass createStringClassValue() {
+    private RClass createStringClass() {
         RClass baseRClass = createBaseRClass();
         return baseRClass;
     }
 
-    private RClass createArrayClassValue() {
+    private RClass createArrayClass() {
         RClass rClass = createBaseRClass();
         putFuncToRClass(new LengthFunction(), rClass);
+        return rClass;
+    }
+
+    private RClass createIntegerClass() {
+        RClass rClass = createBaseRClass();
         return rClass;
     }
 

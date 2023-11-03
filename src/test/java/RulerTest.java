@@ -461,9 +461,9 @@ public class RulerTest {
     @Test
     public void testc() {
 
-        String str = "var f = fun(a = 1, b = 2) -> a; return f();";
+        String str = "'aaaa'.println()";
 
-        RuleRunner runner = Ruler.compileScript(str, configuration);
+        RuleRunner runner = Ruler.compileExpression(str, configuration);
 
         RuleResult result = runner.run();
         System.out.println(result);

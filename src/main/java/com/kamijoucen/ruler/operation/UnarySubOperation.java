@@ -9,19 +9,30 @@ import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 public class UnarySubOperation implements BinaryOperation {
+
+    private static final Map<ValueType, Function<BaseValue, BaseValue>> operations = new HashMap<>();
+
+    static {
+        operations.put(ValueType.INTEGER,
+                val -> new IntegerValue(-((IntegerValue) val).getValue()));
+        operations.put(ValueType.DOUBLE,
+                val -> new DoubleValue(-((DoubleValue) val).getValue()));
+    }
+
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue value = params[0];
-        if (value.getType() == ValueType.INTEGER) {
-            IntegerValue val = (IntegerValue) value;
-            return context.getConfiguration().getIntegerNumberCache().getValue(-val.getValue());
-        } else if (value.getType() == ValueType.DOUBLE) {
-            DoubleValue val = (DoubleValue) value;
-            return new DoubleValue(-val.getValue());
+        Function<BaseValue, BaseValue> operation = operations.get(value.getType());
+        if (operation != null) {
+            return operation.apply(value);
         } else {
-            throw new RuntimeException("该值不支持取负数:" + Arrays.toString(params));
+            throw new RuntimeException(
+                    "Negation operation is not supported for this value: " + Arrays.toString(params));
         }
     }
 }

@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.impl.ImportCache;
 import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -50,5 +51,7 @@ public interface RulerConfiguration {
     IntegerNumberCache getIntegerNumberCache();
 
     ValueConvertManager getValueConvertManager();
+
+    CallClosureExecutor getCallClosureExecutor();
 
 }

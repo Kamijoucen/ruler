@@ -16,12 +16,12 @@ public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         BinaryOperation operation = node.getOperation();
         if (operation == null) {
-            throw new RuntimeException("not support operation: " + node.getOpName());
+            throw new RuntimeException("Operation not supported: " + node.getOpName());
         }
         if (operation instanceof CustomOperation) {
             ClosureValue fun = context.getInfixOperation(node.getOpName());
             if (fun == null) {
-                throw SyntaxException.withSyntax("custom infix not found: '" + node.getOpName() + "'", node.getLocation());
+                throw SyntaxException.withSyntax("Custom infix not found: '" + node.getOpName() + "'");
             }
             return operation.invoke(node.getLhs(), node.getRhs(), scope, context, fun);
         }

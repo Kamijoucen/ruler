@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -10,30 +11,44 @@ import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiFunction;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 public class SubOperation implements BinaryOperation {
+
+    private static final Map<Pair<ValueType, ValueType>, BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue>> operations = new HashMap<>();
+
+    static {
+        operations.put(Pair.of(ValueType.INTEGER, ValueType.INTEGER), (ctx, tuple) -> {
+            return ctx.getConfiguration().getIntegerNumberCache()
+                    .getValue(((IntegerValue) tuple.v1).getValue() - ((IntegerValue) tuple.v2).getValue());
+        });
+        operations.put(Pair.of(ValueType.INTEGER, ValueType.DOUBLE),
+                (ctx, tuple) -> new DoubleValue(
+                        ((IntegerValue) tuple.v1).getValue() - ((DoubleValue) tuple.v2).getValue()));
+        operations.put(Pair.of(ValueType.DOUBLE, ValueType.INTEGER),
+                (ctx, tuple) -> new DoubleValue(
+                        ((DoubleValue) tuple.v1).getValue() - ((IntegerValue) tuple.v2).getValue()));
+        operations.put(Pair.of(ValueType.DOUBLE, ValueType.DOUBLE),
+                (ctx, tuple) -> new DoubleValue(
+                        ((DoubleValue) tuple.v1).getValue() - ((DoubleValue) tuple.v2).getValue()));
+    }
+
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
-        if (lValue.getType() == ValueType.INTEGER && rValue.getType() == ValueType.INTEGER) {
-            IntegerValue val1 = (IntegerValue) lValue;
-            IntegerValue val2 = (IntegerValue) rValue;
-            return context.getConfiguration().getIntegerNumberCache().getValue(val1.getValue() - val2.getValue());
-        } else if (lValue.getType() == ValueType.INTEGER && rValue.getType() == ValueType.DOUBLE) {
-            IntegerValue val1 = (IntegerValue) lValue;
-            DoubleValue val2 = (DoubleValue) rValue;
-            return new DoubleValue(val1.getValue() - val2.getValue());
-        } else if (lValue.getType() == ValueType.DOUBLE && rValue.getType() == ValueType.INTEGER) {
-            DoubleValue val1 = (DoubleValue) lValue;
-            IntegerValue val2 = (IntegerValue) rValue;
-            return new DoubleValue(val1.getValue() - val2.getValue());
-        } else if (lValue.getType() == ValueType.DOUBLE && rValue.getType() == ValueType.DOUBLE) {
-            DoubleValue val1 = (DoubleValue) lValue;
-            DoubleValue val2 = (DoubleValue) rValue;
-            return new DoubleValue(val1.getValue() - val2.getValue());
+        BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation = operations
+                .get(Pair.of(lValue.getType(), rValue.getType()));
+        if (operation != null) {
+            return operation.apply(context, new Tuple2<BaseValue, BaseValue>(lValue, rValue));
         } else {
-            throw SyntaxException.withSyntax("该值不支持做减法:" + Arrays.toString(params));
+            throw SyntaxException
+                    .withSyntax("Subtraction operation is not supported for these values: " + Arrays.toString(params));
         }
     }
+
 }

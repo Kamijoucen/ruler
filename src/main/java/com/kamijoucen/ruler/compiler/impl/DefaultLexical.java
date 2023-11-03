@@ -32,7 +32,6 @@ public class DefaultLexical implements Lexical {
         this.buffer = new StringBuilder();
     }
 
-
     @Override
     public Token getToken() {
         return currentToken;
@@ -121,7 +120,6 @@ public class DefaultLexical implements Lexical {
         makeToken(TokenType.IDENTIFIER);
     }
 
-
     @Override
     public void scanComment() {
 
@@ -144,7 +142,7 @@ public class DefaultLexical implements Lexical {
             type = TokenLookUp.symbol(buffer.toString());
             if (type == TokenType.UN_KNOW) {
                 throw SyntaxException.withLexical(
-                    of("未知的符号:" + buffer.toString(), line, column));
+                        of("未知的符号:" + buffer.toString(), line, column));
             }
         } else {
             forward();
@@ -199,18 +197,30 @@ public class DefaultLexical implements Lexical {
     @Override
     public void scanOutIdentifier() {
         forward();
-        if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
-            throw SyntaxException.withLexical(
-                of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
-        }
-        int len = 0;
-        while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
-            appendAndForward();
-            len++;
-        }
-        if (len == 0) {
-            throw SyntaxException.withLexical(
-                of("标识符 '$' 后必须跟其他标识符", line, column));
+
+        if (safeCharAt() == '`') {
+            forward();
+
+            while (isNotOver() && charAt() != '`') {
+                appendAndForward();
+            }
+
+            forward();
+        } else {
+
+            if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
+                throw SyntaxException.withLexical(
+                        of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
+            }
+            int len = 0;
+            while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
+                appendAndForward();
+                len++;
+            }
+            if (len == 0) {
+                throw SyntaxException.withLexical(
+                        of("标识符 '$' 后必须跟其他标识符", line, column));
+            }
         }
         makeToken(TokenType.OUT_IDENTIFIER);
     }

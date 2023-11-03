@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.*;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
+import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
@@ -46,6 +47,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
 
     private ValueConvertManager valueConvertManager = new ValueConvertManagerImpl();
+
+    private CallClosureExecutor callClosureExecutor = new CallClosureExecutor(this);
 
     public RulerConfigurationImpl() {
         init();
@@ -192,6 +195,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ValueConvertManager getValueConvertManager() {
         return valueConvertManager;
+    }
+
+    @Override
+    public CallClosureExecutor getCallClosureExecutor() {
+        return callClosureExecutor;
     }
 
     public void setValueConvertManager(ValueConvertManager valueConvertManager) {

@@ -17,11 +17,23 @@ var createRClass = fun() ->
         }
     },
 
-
-
+    ToString2: match this {
+    | typeof 'string' -> this
+    | typeof 'array'  -> {
+        var str = "";
+        for i in this {
+            str += i;
+        }
+    }
+    }
 };
 
 match this {
 | typeof 'array' -> this.stream().map(fun(it) -> it.ToString()).collect();
 | typeof 'array' ->
+}
+
+var r = match (result, succe) {
+| (typeof 'array' && \"%success%", _) -> "ok"
+| (_, 'error') -> "error"
 }
