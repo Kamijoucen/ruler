@@ -121,11 +121,44 @@ public class BaseTest {
 
         Map<String, Object> map = new HashMap<>();
         map.put("123 ", "hello world!");
-        
+
         RuleRunner runner = getScriptRunner(script);
         RuleResult result = runner.run(map);
 
         Assert.assertEquals("hello world!", result.first().toString());
+    }
+
+    // 数组赋值测试
+    @Test
+    public void arrayAssignTest() {
+        String script = "var a = [1, 2, 3]; a[1] = 5; return a[1];";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+
+        Assert.assertEquals(5, result.first().toInteger().longValue());
+    }
+
+    // 对象赋值测试
+    @Test
+    public void objectAssignTest() {
+        String script = "var a = {name: 'lisicen', age: 18}; a.name = 'lisicen2'; return a.name;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+
+        Assert.assertEquals("lisicen2", result.first().toString());
+    }
+
+    // 嵌套对象赋值测试
+    @Test
+    public void objectAssignTest2() {
+        String script = "var a = {name: 'lisicen', age: 18, obj: {name: 'lisicen2'}}; a.obj.name = 'lisicen3'; return a.obj.name;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+
+        Assert.assertEquals("lisicen3", result.first().toString());
     }
 
     @Test
