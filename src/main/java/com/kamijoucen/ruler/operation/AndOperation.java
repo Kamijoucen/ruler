@@ -14,18 +14,15 @@ public class AndOperation implements BinaryOperation {
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         if (lValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持&&:" + lValue);
+            throw SyntaxException.withSyntax("The '&&' operation is not supported for this value: " + lValue);
         }
         if (!((BoolValue) lValue).getValue()) {
             return BoolValue.get(false);
         }
         BaseValue rValue = rhs.eval(scope, context);
         if (rValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持&&:" + rValue);
+            throw SyntaxException.withSyntax("The '&&' operation is not supported for this value: " + rValue);
         }
-        if (!((BoolValue) rValue).getValue()) {
-            return BoolValue.get(false);
-        }
-        return BoolValue.get(true);
+        return rValue;
     }
 }

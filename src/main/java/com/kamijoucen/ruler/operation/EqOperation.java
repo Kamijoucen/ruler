@@ -39,6 +39,9 @@ public class EqOperation implements BinaryOperation {
         operations.put(Pair.of(ValueType.STRING, ValueType.STRING), (l, r) -> {
             return BoolValue.get(l.toString().equals(r.toString()));
         });
+        operations.put(Pair.of(ValueType.NULL, ValueType.NULL), (l, r) -> {
+            return BoolValue.get(true);
+        });
 
         operations.put(Pair.of(ValueType.STRING, ValueType.INTEGER), (l, r) -> {
             try {
@@ -89,9 +92,6 @@ public class EqOperation implements BinaryOperation {
         if (operation != null) {
             return operation.apply(lValue, rValue);
         } else {
-            if (lValue.getType() == ValueType.NULL && rValue.getType() == ValueType.NULL) {
-                return BoolValue.get(true);
-            }
             if (lValue.getType() == ValueType.NULL || rValue.getType() == ValueType.NULL) {
                 return BoolValue.get(false);
             }

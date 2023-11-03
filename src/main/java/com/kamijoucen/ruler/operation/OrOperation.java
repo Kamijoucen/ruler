@@ -12,22 +12,17 @@ public class OrOperation implements BinaryOperation {
 
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
-        BaseValue tempExp1Val = lhs.eval(scope, context);
-        if (tempExp1Val.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持||:" + tempExp1Val);
+        BaseValue lValue = lhs.eval(scope, context);
+        if (lValue.getType() != ValueType.BOOL) {
+            throw SyntaxException.withSyntax("The '||' operation is not supported for this value: " + lValue);
         }
-        BoolValue exp1Val = (BoolValue) tempExp1Val;
-        if (exp1Val.getValue()) {
+        if (((BoolValue) lValue).getValue()) {
             return BoolValue.get(true);
         }
-        BaseValue tempExp2Val = rhs.eval(scope, context);
-        if (tempExp2Val.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持||:" + tempExp2Val);
+        BaseValue rValue = rhs.eval(scope, context);
+        if (rValue.getType() != ValueType.BOOL) {
+            throw SyntaxException.withSyntax("The '||' operation is not supported for this value: " + rValue);
         }
-        BoolValue exp2Val = (BoolValue) tempExp2Val;
-        if (exp2Val.getValue()) {
-            return BoolValue.get(true);
-        }
-        return BoolValue.get(false);
+        return rValue;
     }
 }

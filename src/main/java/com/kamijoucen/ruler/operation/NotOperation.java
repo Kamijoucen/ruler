@@ -14,9 +14,8 @@ public class NotOperation implements BinaryOperation {
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue value = lhs.eval(scope, context);
         if (value.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("该值不支持'!'操作:" + value);
+            throw SyntaxException.withSyntax("The '!' operation is not supported for this value: " + value);
         }
-        BoolValue expVal = (BoolValue) value;
-        return BoolValue.get(!expVal.getValue());
+        return BoolValue.get(!((BoolValue) value).getValue());
     }
 }
