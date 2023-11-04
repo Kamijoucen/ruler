@@ -50,6 +50,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private CallClosureExecutor callClosureExecutor = new CallClosureExecutor(this);
 
+    private ObjectAccessControlManager objectAccessControlManager = new ObjectAccessControlManagerImpl();
+
     public RulerConfigurationImpl() {
         init();
     }
@@ -75,12 +77,14 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
+        RulerFunction proxyFunction = new ProxyFunction();
 
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
         this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
         this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
+        this.globalScope.putLocal(proxyFunction.getName(), new FunctionValue(proxyFunction));
     }
 
     @Override
@@ -144,6 +148,15 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public RClassManager getRClassManager() {
         return this.rClassFactory;
+    }
+
+    @Override
+    public ObjectAccessControlManager getObjectAccessControlManager() {
+        return this.objectAccessControlManager;
+    }
+
+    public void setObjectAccessControlManager(ObjectAccessControlManager objectAccessControlManager) {
+        this.objectAccessControlManager = objectAccessControlManager;
     }
 
     public void setRClassFactory(RClassManager metaInfoFactory) {
@@ -241,4 +254,5 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     public void setBinaryOperationFactory(BinaryOperationFactory binaryOperationFactory) {
         this.binaryOperationFactory = binaryOperationFactory;
     }
+
 }

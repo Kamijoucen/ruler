@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.eval.expression;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
@@ -17,46 +18,69 @@ public class AssignEval implements BaseEval<AssignNode> {
     @Override
     public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
         BaseNode lhs = node.getLhs();
-        // 直接更新变量
         if (lhs instanceof NameNode) {
-            String varName = ((NameNode) lhs).name.name;
-            BaseValue value;
-            if (node.getRhs() == null) {
-                value = NullValue.INSTANCE;
-            } else {
-                value = node.getRhs().eval(scope, context);
-            }
-            scope.update(varName, value);
-            return value;
+            return evalVariableNode(node, scope, context, (NameNode) lhs);
         } else if (lhs instanceof BinaryOperationNode) {
-            BinaryOperationNode binaryNode = (BinaryOperationNode) lhs;
-            BaseValue preValue = binaryNode.getLhs().eval(scope, context);
-            if (binaryNode.getOp() == TokenType.INDEX) {
-                // todo name["name"]
-                if (preValue.getType() != ValueType.ARRAY) {
-                    throw SyntaxException.withSyntax(preValue.getType() + " not is array");
-                }
-                ArrayValue arrayValue = (ArrayValue) preValue;
-
-                BaseValue indexValue = binaryNode.getRhs().eval(scope, context);
-                if (indexValue.getType() != ValueType.INTEGER) {
-                    throw SyntaxException.withSyntax("数组的索引必须是数字");
-                }
-                return arrayValue.getValues().get((int) ((IntegerValue) indexValue).getValue());
-            } else if (binaryNode.getOp() == TokenType.DOT) {
-                if (preValue.getType() == ValueType.RSON) {
-                    BaseValue value = node.getRhs().eval(scope, context);
-                    ((RsonValue) preValue).putField(null, value);
-                    return value;
-                } else {
-                    // TODO update meta data
-                    throw new UnsupportedOperationException();
-                }
-            } else {
-                throw new UnsupportedOperationException();
-            }
+            return evalBinaryOperationNode(node, scope, context, (BinaryOperationNode) lhs);
         } else {
             throw new UnsupportedOperationException();
+        }
+    }
+
+    private BaseValue evalVariableNode(AssignNode node, Scope scope, RuntimeContext context, NameNode variableNode) {
+        BaseValue value = node.getRhs() == null ? NullValue.INSTANCE : node.getRhs().eval(scope, context);
+        scope.update(variableNode.name.name, value);
+        return value;
+    }
+
+    private BaseValue evalBinaryOperationNode(AssignNode node, Scope scope, RuntimeContext context,
+            BinaryOperationNode binaryNode) {
+        BaseValue preValue = binaryNode.getLhs().eval(scope, context);
+
+        if (binaryNode.getOp() == TokenType.INDEX) {
+            return evalIndexOperation(node, scope, context, binaryNode, preValue);
+        } else if (binaryNode.getOp() == TokenType.DOT) {
+            return evalDotOperation(node, scope, context, preValue);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private BaseValue evalIndexOperation(AssignNode node, Scope scope, RuntimeContext context,
+            BinaryOperationNode binaryNode, BaseValue preValue) {
+        BaseValue indexValue = binaryNode.getRhs().eval(scope, context);
+
+        BaseValue value = node.getRhs().eval(scope, context);
+
+        if (preValue.getType() == ValueType.ARRAY) {
+            checkType(indexValue, ValueType.INTEGER, "Array index must be an integer");
+            ArrayValue arrayValue = (ArrayValue) preValue;
+            arrayValue.getValues().set((int) ((IntegerValue) indexValue).getValue(), value);
+        } else if (preValue.getType() == ValueType.RSON) {
+            checkType(indexValue, ValueType.STRING, "Object key must be a string");
+            RsonValue rsonValue = (RsonValue) preValue;
+
+            context.getConfiguration().getObjectAccessControlManager().modifyObject(rsonValue,
+                    ((StringValue) indexValue).getValue(), value, context);
+        } else {
+            throw SyntaxException.withSyntax(preValue.getType() + " is not indexable");
+        }
+        return value;
+    }
+
+    private BaseValue evalDotOperation(AssignNode node, Scope scope, RuntimeContext context, BaseValue preValue) {
+        if (preValue.getType() != ValueType.RSON) {
+            throw SyntaxException.withSyntax(preValue.getType() + " is not indexable");
+        }
+        String fieldKey = ((NameNode) ((DotNode) node.getLhs()).getRhs()).name.name;
+        BaseValue value = node.getRhs().eval(scope, context);
+        context.getConfiguration().getObjectAccessControlManager().modifyObject(preValue, fieldKey, value, context);
+        return value;
+    }
+
+    private void checkType(BaseValue value, ValueType expectedType, String errorMessage) {
+        if (value.getType() != expectedType) {
+            throw SyntaxException.withSyntax(errorMessage);
         }
     }
 }

@@ -7,10 +7,6 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.RClass;
-import com.kamijoucen.ruler.value.RsonValue;
-import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class DotEval implements BaseEval<DotNode> {
 
@@ -24,17 +20,8 @@ public class DotEval implements BaseEval<DotNode> {
             throw new IllegalArgumentException();
         }
         String callName = ((NameNode) nodeName).name.name;
-        BaseValue callValue = null;
-        if (prevValue.getType() == ValueType.RSON) {
-            callValue = ((RsonValue) prevValue).getField(callName);
-        }
-        if (callValue == null) {
-            RClass rClass = context.getConfiguration().getRClassManager().getClassValue(prevValue.getType());
-            callValue = rClass.getProperty(callName);
-            if (callValue == null) {
-                callValue = NullValue.INSTANCE;
-            }
-        }
+        BaseValue callValue = context.getConfiguration().getObjectAccessControlManager().accessObject(prevValue,
+                callName, context);
         return callValue;
     }
 

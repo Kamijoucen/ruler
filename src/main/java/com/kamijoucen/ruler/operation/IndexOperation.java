@@ -10,7 +10,6 @@ import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.StringValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class IndexOperation implements BinaryOperation {
 
@@ -29,19 +28,10 @@ public class IndexOperation implements BinaryOperation {
             }
             return array.getValues().get((int) index.getValue());
         } else if (lval.getType() == ValueType.RSON && idx.getType() == ValueType.STRING) {
-
             RsonValue rson = (RsonValue) lval;
             StringValue string = (StringValue) idx;
-
-            BaseValue callValue = rson.getField(string.getValue());
-            if (callValue == null) {
-                callValue = context.getConfiguration().getRClassManager().getClassValue(ValueType.RSON)
-                        .getProperty(string.getValue());           
-                if (callValue == null) {
-                    callValue = NullValue.INSTANCE;
-                }
-            }
-            return callValue;
+            return context.getConfiguration().getObjectAccessControlManager().accessObject(rson, string.getValue(),
+                    context);
         } else {
             throw SyntaxException.withSyntax("Index operations can only be used for arrays and RSON.");
         }

@@ -15,26 +15,25 @@ public class ProxyFunction implements RulerFunction {
 
     @Override
     public Object call(RuntimeContext context, BaseValue self, Object... param) {
-
         if (param == null || param.length == 0) {
-            throw new IllegalArgumentException("the args of Proxy fucntion is null");
+            throw new IllegalArgumentException("the args of Proxy function is null");
         }
         BaseValue value = (BaseValue) param[0];
-
-        if (value.getType() != ValueType.RSON) {
-            throw new IllegalArgumentException("the value not is rson!");
+        // 如果已经是代理对象了，直接返回
+        if (value instanceof ProxyValue) {
+            return value;
         }
-
         if (param.length == 1) {
-            return new ProxyValue((RsonValue) value, null);
+            return value;
         }
-
         BaseValue configValue = (BaseValue) param[1];
-        if (configValue.getType() != ValueType.RSON) {
-            throw new IllegalArgumentException("the callback info not is rson!");
+        if (configValue == null || configValue.getType() == ValueType.NULL) {
+            return value;
         }
-        return new ProxyValue((RsonValue) value, (RsonValue) configValue);
-
+        if (configValue.getType() != ValueType.RSON) {
+            throw new IllegalArgumentException("the proxy config info not is rson!");
+        }
+        return new ProxyValue(value, (RsonValue) configValue);
     }
 
 }
