@@ -19,6 +19,10 @@ public class ProxyFunction implements RulerFunction {
             throw new IllegalArgumentException("the args of Proxy function is null");
         }
         BaseValue value = (BaseValue) param[0];
+        // 如果已经是代理对象了，直接返回
+        if (value instanceof ProxyValue) {
+            return value;
+        }
         if (param.length == 1) {
             return value;
         }

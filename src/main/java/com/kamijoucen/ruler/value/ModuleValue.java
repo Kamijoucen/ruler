@@ -11,32 +11,14 @@ public class ModuleValue extends RsonValue {
     public ModuleValue(Scope moduleScope) {
         this.moduleScope = moduleScope;
     }
-
-    @Override
-    public BaseValue getField(String name) {
-        return moduleScope.find(name);
-    }
-
-    @Override
-    public void putField(String name, BaseValue baseValue) {
-        moduleScope.putLocal(name, baseValue);
-    }
-
+    
     @Override
     public Map<String, BaseValue> getFields() {
-        throw new UnsupportedOperationException();
+        throw new UnsupportedOperationException("module value can not get fields");
     }
 
-//    public BaseValue invoke(RuntimeContext context, String name, List<BaseValue> param) {
-//        BaseValue funValue = runScope.find(name);
-//        if (funValue == null) {
-//            throw new IllegalArgumentException("找不到函数: " + name);
-//        }
-//        AssertUtil.notNull(funValue);
-//        BaseValue[] realParam = new BaseValue[param.size() + 1];
-//        realParam[0] = funValue;
-//        System.arraycopy(param.toArray(), 0, realParam, 1, param.size());
-//        return callOperation.compute(context, realParam);
-//    }
+    public Scope getModuleScope() {
+        return moduleScope;
+    }
 
 }

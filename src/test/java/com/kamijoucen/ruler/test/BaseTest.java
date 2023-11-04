@@ -178,11 +178,11 @@ public class BaseTest {
     // 使用proxy为数组拦截length方法
     @Test
     public void arrayLengthTest() {
-        String script = "var a = [1, 2, 3]; a = Proxy(a, {get: fun(self, name) { return 100; }});  return a.length;";
+        String script = "var a = [1, 2, 3]; a = Proxy(a, {get: fun(self, name) { return self.length() + 1; }});  return a.length;";
         RuleRunner runner = getScriptRunner(script);
 
         RuleResult result = runner.run();
-        Assert.assertEquals(3, result.first().toInteger().longValue());
+        Assert.assertEquals(4, result.first().toInteger().longValue());
     }
 
 }

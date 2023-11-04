@@ -59,7 +59,9 @@ public class AssignEval implements BaseEval<AssignNode> {
         } else if (preValue.getType() == ValueType.RSON) {
             checkType(indexValue, ValueType.STRING, "Object key must be a string");
             RsonValue rsonValue = (RsonValue) preValue;
-            rsonValue.putField(((StringValue) indexValue).getValue(), value);
+
+            context.getConfiguration().getObjectAccessControlManager().modifyObject(rsonValue,
+                    ((StringValue) indexValue).getValue(), value, context);
         } else {
             throw SyntaxException.withSyntax(preValue.getType() + " is not indexable");
         }
@@ -72,7 +74,7 @@ public class AssignEval implements BaseEval<AssignNode> {
         }
         String fieldKey = ((NameNode) ((DotNode) node.getLhs()).getRhs()).name.name;
         BaseValue value = node.getRhs().eval(scope, context);
-        ((RsonValue) preValue).putField(fieldKey, value);
+        context.getConfiguration().getObjectAccessControlManager().modifyObject(preValue, fieldKey, value, context);
         return value;
     }
 
