@@ -36,6 +36,8 @@ public class TokenLookUp {
         SYMBOL.put("*", TokenType.MUL);
         SYMBOL.put("/", TokenType.DIV);
         SYMBOL.put("\n", TokenType.KEY_ENTER);
+        SYMBOL.put("===", TokenType.STRICT_EQ);
+        SYMBOL.put("!==", TokenType.STRICT_NE);
 
         KEY_WORDS.put("return", TokenType.KEY_RETURN);
         KEY_WORDS.put("if", TokenType.KEY_IF);
