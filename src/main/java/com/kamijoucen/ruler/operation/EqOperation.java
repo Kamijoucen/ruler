@@ -13,9 +13,16 @@ import com.kamijoucen.ruler.value.*;
 
 public class EqOperation implements BinaryOperation {
 
-    private static final Map<Pair<ValueType, ValueType>, BiFunction<BaseValue, BaseValue, BaseValue>> operations = new HashMap<>();
+    private final Map<Pair<ValueType, ValueType>, BiFunction<BaseValue, BaseValue, BaseValue>> operations = new HashMap<>();
 
-    static {
+    public EqOperation(boolean strict) {
+        initStrictOp();
+        if (!strict) {
+            initNonStrictOp();
+        }
+    }
+
+    private void initStrictOp() {
         operations.put(Pair.of(ValueType.INTEGER, ValueType.INTEGER), (l, r) -> {
             IntegerValue val1 = (IntegerValue) l;
             IntegerValue val2 = (IntegerValue) r;
@@ -42,7 +49,9 @@ public class EqOperation implements BinaryOperation {
         operations.put(Pair.of(ValueType.NULL, ValueType.NULL), (l, r) -> {
             return BoolValue.get(true);
         });
+    }
 
+    private void initNonStrictOp() {
         operations.put(Pair.of(ValueType.STRING, ValueType.INTEGER), (l, r) -> {
             try {
                 long val1 = Long.parseLong(r.toString());
@@ -85,8 +94,7 @@ public class EqOperation implements BinaryOperation {
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
-        // TODO 目前还未实现全等
-        boolean strict = false;
+
         BiFunction<BaseValue, BaseValue, BaseValue> operation = operations
                 .get(Pair.of(lValue.getType(), rValue.getType()));
         if (operation != null) {
@@ -95,7 +103,7 @@ public class EqOperation implements BinaryOperation {
             if (lValue.getType() == ValueType.NULL || rValue.getType() == ValueType.NULL) {
                 return BoolValue.get(false);
             }
-            if (strict && lValue.getType() != rValue.getType()) {
+            if (lValue.getType() != rValue.getType()) {
                 return BoolValue.get(false);
             }
             return BoolValue.get(lValue.toString().equals(rValue.toString()));

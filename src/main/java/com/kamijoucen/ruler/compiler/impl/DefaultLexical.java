@@ -134,19 +134,26 @@ public class DefaultLexical implements Lexical {
 
     @Override
     public void scanSymbol() {
-        appendAndForward();
-        append(safeCharAt());
-        TokenType type = TokenLookUp.symbol(buffer.toString());
-        if (type == TokenType.UN_KNOW) {
-            buffer.delete(1, buffer.length());
-            type = TokenLookUp.symbol(buffer.toString());
-            if (type == TokenType.UN_KNOW) {
-                throw SyntaxException.withLexical(
-                        of("未知的符号:" + buffer.toString(), line, column));
-            }
-        } else {
-            forward();
+
+        int step = 0;
+        String symbol = charAt() + "";
+
+        forward();
+        
+        symbol += peekChar(step++);
+        symbol += peekChar(step++);
+
+        TokenType type = TokenLookUp.symbol(symbol);
+        while (step > 0 && type == TokenType.UN_KNOW) {
+            symbol = symbol.substring(0, step--);
+            type = TokenLookUp.symbol(symbol);
         }
+        if (type == TokenType.UN_KNOW) {
+            throw SyntaxException.withLexical(
+                    of("'" + safeCharAt() + "' 不是合法的符号", line, column));
+        }
+        forward(step);
+        append(symbol);
         makeToken(type);
     }
 
@@ -288,6 +295,12 @@ public class DefaultLexical implements Lexical {
         buffer.append(charAt());
     }
 
+    private void forward(int step) {
+        for (int i = 0; i < step; i++) {
+            forward();
+        }
+    }
+
     private void forward() {
         offset = offset + 1;
         if (safeCharAt() != '\n') {
@@ -301,6 +314,14 @@ public class DefaultLexical implements Lexical {
     private char peekChar() {
         if (offset + 1 < content.length()) {
             return charAt(1);
+        } else {
+            return Constant.EOF;
+        }
+    }
+
+    private char peekChar(int step) {
+        if (offset + step < content.length()) {
+            return charAt(step);
         } else {
             return Constant.EOF;
         }

@@ -16,8 +16,10 @@ public class BinaryOperationFactoryImpl implements BinaryOperationFactory {
     }
 
     private void init() {
-        operationMap.put(TokenType.EQ.name(), new EqOperation()); // ==
-        operationMap.put(TokenType.NE.name(), new NeOperation()); // !=
+        operationMap.put(TokenType.EQ.name(), new EqOperation(false)); // ==
+        operationMap.put(TokenType.STRICT_EQ.name(), new EqOperation(true)); // ===
+        operationMap.put(TokenType.NE.name(), new NeOperation(false)); // !=
+        operationMap.put(TokenType.STRICT_NE.name(), new NeOperation(true)); // !==
         operationMap.put(TokenType.LT.name(), new LtOperation()); // <
         operationMap.put(TokenType.GT.name(), new GtOperation()); // >
         operationMap.put(TokenType.LE.name(), new LeOperation()); // <=
