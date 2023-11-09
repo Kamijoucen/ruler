@@ -14,7 +14,9 @@ public class OperationDefine {
         PRECEDENCE.put(TokenType.OR, 8); // ||
         PRECEDENCE.put(TokenType.AND, 9); // &&
         PRECEDENCE.put(TokenType.EQ, 10); // ==
+        PRECEDENCE.put(TokenType.STRICT_EQ, 10); // ===
         PRECEDENCE.put(TokenType.NE, 10); // !=
+        PRECEDENCE.put(TokenType.STRICT_NE, 10); // !==
         PRECEDENCE.put(TokenType.LT, 20); // <
         PRECEDENCE.put(TokenType.GT, 20); // >
         PRECEDENCE.put(TokenType.LE, 20); // <=

@@ -185,4 +185,64 @@ public class BaseTest {
         Assert.assertEquals(4, result.first().toInteger().longValue());
     }
 
+    // 全等于测试
+    @Test
+    public void strictEqTest() {
+        String script = "var a = 1; var b = 1; return a === b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(true, result.first().toBoolean());
+    }
+    
+    // 全等于测试2
+    @Test
+    public void strictEqTest2() {
+        String script = "var a = 1; var b = 1.0; return a === b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(true, result.first().toBoolean());
+    }
+
+    // 全等于测试3
+    @Test
+    public void strictEqTest3() {
+        String script = "var a = 1; var b = '1'; return a === b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(false, result.first().toBoolean());
+    }
+
+    // 等于测试
+    @Test
+    public void eqTest() {
+        String script = "var a = 1; var b = 1; return a == b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(true, result.first().toBoolean());
+    }
+    
+    // 等于测试2
+    @Test
+    public void eqTest2() {
+        String script = "var a = 1; var b = 1.0; return a == b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(true, result.first().toBoolean());
+    }
+
+    // 等于测试3
+    @Test
+    public void eqTest3() {
+        String script = "var a = 1; var b = '1'; return a == b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(true, result.first().toBoolean());
+    }
+    
 }

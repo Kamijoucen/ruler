@@ -14,6 +14,10 @@ import java.util.Set;
 
 public class SyntaxCheckUtil {
 
+    public static boolean isNumber(ValueType type) {
+        return type == ValueType.INTEGER || type == ValueType.DOUBLE;
+    }
+
     public static void importPathCheck(String[] pathParts) {
         if (pathParts == null || pathParts.length == 0) {
             throw SyntaxException.withSyntax("The import path is empty");
