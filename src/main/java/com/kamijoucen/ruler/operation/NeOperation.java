@@ -18,7 +18,15 @@ import com.kamijoucen.ruler.value.ValueType;
 public class NeOperation implements BinaryOperation {
 
     private final Map<Pair<ValueType, ValueType>, BiFunction<BaseValue, BaseValue, BaseValue>> operations = new HashMap<>();
-    {
+
+    public NeOperation(boolean strict) {
+        initStrictOp();
+        if (!strict) {
+            initNonStrictOp();
+        }
+    }
+    
+    private void initStrictOp() {
         operations.put(Pair.of(ValueType.INTEGER, ValueType.INTEGER),
                 (l, r) -> BoolValue.get(((IntegerValue) l).getValue() != ((IntegerValue) r).getValue()));
         operations.put(Pair.of(ValueType.INTEGER, ValueType.DOUBLE),
@@ -30,12 +38,6 @@ public class NeOperation implements BinaryOperation {
         operations.put(Pair.of(ValueType.STRING, ValueType.STRING),
                 (l, r) -> BoolValue.get(!l.toString().equals(r.toString())));
         operations.put(Pair.of(ValueType.NULL, ValueType.NULL), (l, r) -> BoolValue.get(false));
-    }
-
-    public NeOperation(boolean strict) {
-        if (!strict) {
-            initNonStrictOp();
-        }
     }
 
     private void initNonStrictOp() {
