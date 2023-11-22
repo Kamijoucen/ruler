@@ -8,8 +8,8 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
+import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class IfStatementEval implements BaseEval<IfStatementNode> {
     @Override

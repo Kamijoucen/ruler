@@ -2,8 +2,8 @@ package com.kamijoucen.ruler.value.convert;
 
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class NullConvert implements ValueConvert {
     @Override

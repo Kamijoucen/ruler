@@ -12,7 +12,6 @@ import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ public class RulerInterpreter {
     }
 
     public List<Object> runExpression(List<RulerParameter> param, Scope runScope) {
-        runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
 
@@ -69,7 +67,6 @@ public class RulerInterpreter {
     }
 
     public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
-        runScope.initReturnSpace();
 
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         this.runtimeContext = configuration.createDefaultRuntimeContext(values);
@@ -82,11 +79,16 @@ public class RulerInterpreter {
         allNode.addAll(module.getStatements());
 
         for (BaseNode statement : allNode) {
-            if (statement.eval(runScope, this.runtimeContext).getType() == ValueType.RETURN) {
+            statement.eval(runScope, this.runtimeContext);
+            if (this.runtimeContext.isReturnFlag()) {
                 break;
             }
         }
-        List<BaseValue> returnValue = runScope.getReturnSpace();
+
+        this.runtimeContext.setReturnFlag(false);
+        List<BaseValue> returnValue = this.runtimeContext.getReturnSpace();        
+        this.runtimeContext.clearReturnSpace();
+        
         if (CollectionUtil.isEmpty(returnValue)) {
             return Collections.emptyList();
         }

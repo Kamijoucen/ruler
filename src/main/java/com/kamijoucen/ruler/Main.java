@@ -28,7 +28,7 @@ public class Main {
         String content = IOUtil.read(file);
         if (IOUtil.isBlank(content)) {
             throw new IllegalArgumentException("空文件输入！");
-	    
+
         }
 
         RulerScript script = new RulerScript();
@@ -39,7 +39,8 @@ public class Main {
         RulerModule program = new RulerCompiler(script, configuration).compileScript();
 
         new RulerInterpreter(program, configuration)
-                .runScript(Collections.<RulerParameter>emptyList(), new Scope("main", configuration.getGlobalScope()));
+                .runScript(Collections.<RulerParameter>emptyList(),
+                        new Scope("main", true, configuration.getGlobalScope(), null));
     }
 
 }

@@ -18,7 +18,7 @@ import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.ModuleValue;
-import com.kamijoucen.ruler.value.constant.NullValue;
+import com.kamijoucen.ruler.value.NullValue;
 
 import java.util.Collections;
 import java.util.Map;
@@ -48,7 +48,8 @@ public class ImportEval implements BaseEval<ImportNode> {
 
             importCache.putImportModule(path, importModule);
         }
-        Scope runScope = new Scope("runtime file", new Scope("file", context.getGlobalScope()));
+        Scope runScope = new Scope("runtime file", false, new Scope("file", false, context.getGlobalScope(), null),
+                null);
         // run
         RulerInterpreter interpreter = new RulerInterpreter(importModule, context.getConfiguration());
         interpreter.setHasImportGlobalModule(false);

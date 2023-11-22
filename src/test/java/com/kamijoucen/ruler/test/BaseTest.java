@@ -77,7 +77,7 @@ public class BaseTest {
 
         RuleResult result = runner.run();
 
-        Assert.assertEquals(3, result.first().toInteger().longValue());
+        Assert.assertEquals(3, result.first().toInteger());
     }
 
     @Test
@@ -136,7 +136,7 @@ public class BaseTest {
 
         RuleResult result = runner.run();
 
-        Assert.assertEquals(5, result.first().toInteger().longValue());
+        Assert.assertEquals(5, result.first().toInteger());
     }
 
     // 对象赋值测试
@@ -182,7 +182,7 @@ public class BaseTest {
         RuleRunner runner = getScriptRunner(script);
 
         RuleResult result = runner.run();
-        Assert.assertEquals(4, result.first().toInteger().longValue());
+        Assert.assertEquals(4, result.first().toInteger());
     }
 
     // 全等于测试

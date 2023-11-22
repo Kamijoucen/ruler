@@ -8,11 +8,10 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
-import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
-import com.kamijoucen.ruler.value.constant.ReturnValue;
+import com.kamijoucen.ruler.value.NullValue;
 
 public class WhileStatementEval implements BaseEval<WhileStatementNode> {
+
     @Override
     public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
         BaseNode block = node.getBlock();
@@ -22,16 +21,14 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
         while (((BoolValue) node.getCondition().eval(scope, context)).getValue()) {
             loopCountCheckOperation.accept(node, scope, context);
             lastValue = block.eval(scope, context);
-            if (ValueType.BREAK == lastValue.getType()) {
+            if (context.isReturnFlag()) {
                 break;
-            } else if (ValueType.RETURN == lastValue.getType()) {
-                return ReturnValue.INSTANCE;
+            } else if (context.isBreakFlag()) {
+                context.setBreakFlag(false);
+                break;
             }
         }
-        if (lastValue.getType() == ValueType.BREAK) {
-            return NullValue.INSTANCE;
-        }
-
         return lastValue;
     }
+    
 }

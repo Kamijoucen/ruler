@@ -3,13 +3,16 @@ package com.kamijoucen.ruler.runtime;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.impl.ImportCache;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
-import com.kamijoucen.ruler.value.constant.NullValue;
+import com.kamijoucen.ruler.value.NullValue;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+// TODO 如果后期支持多线程，这里的上下文与每个线程绑定，抽象一个对于一次执行公用的上下文
 public class RuntimeContext {
 
     private final RulerConfiguration configuration;
@@ -20,6 +23,12 @@ public class RuntimeContext {
     private ImportCache importCache;
     private StackDepthCheckOperation stackDepthCheckOperation;
     private BaseValue currentSelfValue;
+
+    private boolean breakFlag = false;
+    private boolean continueFlag = false;
+    private boolean returnFlag = false;
+
+    private List<BaseValue> returnSpace;
 
     public RuntimeContext(NodeVisitor nodeVisitor,
                           NodeVisitor typeCheckVisitor,
@@ -33,6 +42,30 @@ public class RuntimeContext {
         this.importCache = importCache;
         this.stackDepthCheckOperation = stackDepthCheckOperation;
         this.configuration = configuration;
+    }
+
+    public boolean isBreakFlag() {
+        return breakFlag;
+    }
+
+    public void setBreakFlag(boolean breakFlag) {
+        this.breakFlag = breakFlag;
+    }
+
+    public boolean isContinueFlag() {
+        return continueFlag;
+    }
+
+    public void setContinueFlag(boolean continueFlag) {
+        this.continueFlag = continueFlag;
+    }
+
+    public boolean isReturnFlag() {
+        return returnFlag;
+    }
+
+    public void setReturnFlag(boolean returnFlag) {
+        this.returnFlag = returnFlag;
     }
 
     public BaseValue findOutValue(String name) {
@@ -106,4 +139,28 @@ public class RuntimeContext {
         this.currentSelfValue = currentSelfValue;
     }
 
+    // hasReturnValue
+    public boolean hasReturnValue() {
+        return CollectionUtil.isNotEmpty(returnSpace);
+    }
+
+    public List<BaseValue> getReturnSpace() {
+        return returnSpace;
+    }
+
+    public void setReturnSpace(List<BaseValue> returnSpace) {
+        this.returnSpace = returnSpace;
+    }
+
+    public void addReturnSpace(BaseValue value) {
+        if (returnSpace == null) {
+            returnSpace = CollectionUtil.list();
+        }
+        returnSpace.add(value);
+    }
+
+    public void clearReturnSpace() {
+        this.returnSpace = null;
+    }
+    
 }

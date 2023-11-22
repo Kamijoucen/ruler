@@ -32,9 +32,11 @@ public class RuleRunner implements Serializable {
         List<Object> values = null;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         if (isScript) {
-            values = interpreter.runScript(param, new Scope("runtime root", configuration.getGlobalScope()));
+            values = interpreter.runScript(param,
+                    new Scope("runtime root", true, configuration.getGlobalScope(), null));
         } else {
-            values = interpreter.runExpression(param, new Scope("runtime root", configuration.getGlobalScope()));
+            values = interpreter.runExpression(param,
+                    new Scope("runtime root", true, configuration.getGlobalScope(), null));
         }
 
         List<RuleResultValue> ruleResultValues = new ArrayList<RuleResultValue>(values.size());
@@ -49,7 +51,7 @@ public class RuleRunner implements Serializable {
     }
 
     public RuleResult run(List<RulerParameter> param) {
-        return run(param,  configuration);
+        return run(param, configuration);
     }
 
     public RuleResult run(Map<String, Object> param) {
@@ -60,17 +62,16 @@ public class RuleRunner implements Serializable {
         return run(parameter);
     }
 
-    //------------------------------------------------------------------------------------------------------------------
+    // ------------------------------------------------------------------------------------------------------------------
     public RuntimeContext customRun(NodeVisitor visitor, RulerConfiguration configuration) {
         AssertUtil.notNull(visitor);
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        return interpreter.runCustomVisitor(visitor, new Scope("runtime root", configuration.getGlobalScope()));
+        return interpreter.runCustomVisitor(visitor, new Scope("runtime root", true, configuration.getGlobalScope(), null));
     }
 
     public RuntimeContext customRun(NodeVisitor visitor) {
         return customRun(visitor, configuration);
     }
-
 
     public RulerConfiguration getConfiguration() {
         return configuration;

@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.constant.ReturnValue;
+import com.kamijoucen.ruler.value.NullValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,8 @@ public class ReturnEval implements BaseEval<ReturnNode> {
         for (BaseNode baseNode : param) {
             values.add(baseNode.eval(scope, context));
         }
-        scope.putReturnValues(values);
-        return ReturnValue.INSTANCE;
+        context.setReturnFlag(true);
+        context.setReturnSpace(values);        
+        return NullValue.INSTANCE;
     }
 }

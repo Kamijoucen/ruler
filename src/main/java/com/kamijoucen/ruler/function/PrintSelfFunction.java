@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.function;
 
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.constant.NullValue;
+import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 public class PrintSelfFunction implements RulerFunction {

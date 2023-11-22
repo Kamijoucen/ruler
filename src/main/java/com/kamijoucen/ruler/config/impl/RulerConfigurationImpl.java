@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
-    private Scope globalScope = new Scope("root", null);
+    private Scope globalScope = new Scope("root", false, null, null);
 
     private final List<ImportNode> globalImport = new ArrayList<>();
 

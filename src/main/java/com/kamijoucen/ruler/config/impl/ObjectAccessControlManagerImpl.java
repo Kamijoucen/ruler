@@ -8,12 +8,12 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.ModuleValue;
+import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.ProxyValue;
 import com.kamijoucen.ruler.value.RClass;
 import com.kamijoucen.ruler.value.RsonValue;
 import com.kamijoucen.ruler.value.StringValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class ObjectAccessControlManagerImpl implements ObjectAccessControlManager {
 
