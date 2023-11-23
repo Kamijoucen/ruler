@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RsonEval implements BaseEval<RsonNode> {
+
     @Override
     public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
 

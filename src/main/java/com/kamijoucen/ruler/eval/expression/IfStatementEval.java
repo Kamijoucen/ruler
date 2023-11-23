@@ -12,11 +12,12 @@ import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.ValueType;
 
 public class IfStatementEval implements BaseEval<IfStatementNode> {
+    
     @Override
     public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue conditionValue = node.getCondition().eval(scope, context);
         if (conditionValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("需要一个bool类型");
+            throw SyntaxException.withSyntax("The condition of the if statement must be a boolean type!");
         }
         BoolValue boolValue = (BoolValue) conditionValue;
         if (boolValue.getValue()) {

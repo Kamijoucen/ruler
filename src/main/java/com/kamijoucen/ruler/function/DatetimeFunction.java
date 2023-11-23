@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.function;
 
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.text.ParseException;
@@ -15,7 +16,7 @@ public class DatetimeFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
         if (param.length == 0) {
             return new Date();
         }

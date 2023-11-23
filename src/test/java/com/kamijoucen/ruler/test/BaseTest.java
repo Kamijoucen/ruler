@@ -245,4 +245,27 @@ public class BaseTest {
         Assert.assertEquals(true, result.first().toBoolean());
     }
     
+    // if 表达式测试
+    @Test
+    public void ifExpressionTest3() {
+        String script = "var a = $`var`; var b = if a === 1: 1; else { 3; 2; 5; } ; return b;";
+        RuleRunner runner = getScriptRunner(script);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("var", 9);
+        
+        RuleResult result = runner.run();
+        Assert.assertEquals(5, result.first().toInteger());
+    }
+
+    // Call函数测试
+    @Test
+    public void callFunctionTest() {
+        String script = "fun Test(n) { return n + 1; } var a = Call('Test')(100); return a;";
+        RuleRunner runner = getScriptRunner(script);
+
+        RuleResult result = runner.run();
+        Assert.assertEquals(101, result.first().toInteger());
+    }
+    
 }

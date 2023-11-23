@@ -20,7 +20,7 @@ public class CallOperation implements BinaryOperation {
             switch (callFunc.getType()) {
                 case FUNCTION:
                     RulerFunction function = ((FunctionValue) callFunc).getValue();
-                    return (BaseValue) function.call(context, self, funcParam);
+                    return (BaseValue) function.call(context, scope, self, funcParam);
                 case CLOSURE:
                     ClosureValue closureFunction = ((ClosureValue) callFunc);
                     return context.getConfiguration().getCallClosureExecutor()
