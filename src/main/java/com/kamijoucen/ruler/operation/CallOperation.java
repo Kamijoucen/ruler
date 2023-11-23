@@ -26,7 +26,8 @@ public class CallOperation implements BinaryOperation {
                     return context.getConfiguration().getCallClosureExecutor()
                             .call(self, closureFunction, scope, context, params);
                 default:
-                    throw new IllegalArgumentException(callFunc + " not is a function!");
+                    // TODO 优化错误信息
+                    throw new IllegalArgumentException(lhs + " not is a function!");
             }
         } finally {
             context.getStackDepthCheckOperation().subDepth(context);

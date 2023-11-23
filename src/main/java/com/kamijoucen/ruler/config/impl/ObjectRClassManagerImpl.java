@@ -24,8 +24,8 @@ public class ObjectRClassManagerImpl implements RClassManager {
     private RClass createBaseRClass() {
         RClass rClass = new RClassValue();
 
-        putFuncToRClass(new ToStringFunction(), rClass);
-        putFuncToRClass(new PrintSelfFunction(), rClass);
+        addFunToRClass(new ToStringFunction(), rClass);
+        addFunToRClass(new PrintSelfFunction(), rClass);
 
         return rClass;
     }
@@ -37,7 +37,7 @@ public class ObjectRClassManagerImpl implements RClassManager {
 
     private RClass createArrayClass() {
         RClass rClass = createBaseRClass();
-        putFuncToRClass(new LengthFunction(), rClass);
+        addFunToRClass(new LengthFunction(), rClass);
         return rClass;
     }
 
@@ -54,7 +54,7 @@ public class ObjectRClassManagerImpl implements RClassManager {
     }
 
 
-    private void putFuncToRClass(RulerFunction func, RClass rClass) {
+    private void addFunToRClass(RulerFunction func, RClass rClass) {
         rClass.getProperties().put(func.getName(), new FunctionValue(func));
     }
 }

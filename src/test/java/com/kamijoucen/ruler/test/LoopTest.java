@@ -59,4 +59,14 @@ public class LoopTest {
         Assert.assertEquals(10L, result.first().toInteger());
     }
 
+    // array push测试
+    @Test
+    public void arrayPushTest() {
+
+        String script = "var i = 0; var r = []; while i < 10 { i = i + 1; if (i == 5) { continue; } r.push(i);} return r;";
+        RuleRunner runner = Ruler.compileScript(script, configuration);
+        RuleResult result = runner.run();
+        Assert.assertEquals("[1, 2, 3, 4, 6, 7, 8, 9, 10]", result.first().toString());
+    }
+
 }

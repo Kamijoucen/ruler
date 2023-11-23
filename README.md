@@ -16,7 +16,7 @@ buffer.append("println(text);");
 RulerConfiguration configuration = new RulerConfigurationImpl();
 // runner是可复用并且线程安全的，尽可能将runner缓存起来，因为执行complie有较大开销
 RuleScript runner = Ruler.compileScript(buffer.toString(), configuration);
-// 每次润run都会产生新的执行上下文，因此runner.run线程安全
+// 每次run都会产生新的执行上下文，因此runner.run线程安全
 runner.run();
 // 运行结果打印 hello world!
 ```
@@ -60,8 +60,47 @@ while a < b {
 }
 ```
 ## 获取引擎外部的值
+
 ```javascript
 var a = 1;
 var b = $out; // $表示从外部取值
 println(a + b);
 ```
+
+## 自定义中缀表达式
+
+```javascript
+
+// 使用infix关键字定义名为 push 的中缀运算
+infix fun push(array, right) {
+    if typeof(array) != 'array': return array;
+    array.push(right);
+    return array;
+}
+
+var arr = [1, 2, 3];
+
+// 
+arr push 4 push 5;
+
+// 此时arr的值为 [1, 2, 3, 4, 5]
+println(arr);
+
+```
+
+## 代理
+
+```javascript
+
+
+
+```
+
+
+# 未来更新计划（优先级排序）
+## 模式匹配
+## 分号插补
+## 不可变数据类型
+## 性能优化
+## 优化报错信息（打印堆栈，行号等等）
+## 内置标准库（网络，json，web，安全等）
