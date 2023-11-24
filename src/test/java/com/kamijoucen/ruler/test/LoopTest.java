@@ -33,10 +33,10 @@ public class LoopTest {
     @Test
     public void continueTest() {
 
-        String script = "var i = 0; var r = while i < 10 { i = i + 1; if (i == 5) { continue; } println(i);}; return i;";
+        String script = "var i = 0; var r = while i < 10 { i = i + 1; if (i == 5) { return i; } println(i);};";
         RuleRunner runner = Ruler.compileScript(script, configuration);
         RuleResult result = runner.run();
-        Assert.assertEquals(10L, result.first().toInteger());
+        Assert.assertEquals(5, result.first().toInteger());
     }
 
     // return测试

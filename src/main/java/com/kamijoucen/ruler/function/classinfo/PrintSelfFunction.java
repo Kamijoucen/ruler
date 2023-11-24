@@ -1,5 +1,6 @@
-package com.kamijoucen.ruler.function;
+package com.kamijoucen.ruler.function.classinfo;
 
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;

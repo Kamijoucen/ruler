@@ -26,6 +26,9 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
             } else if (context.isBreakFlag()) {
                 context.setBreakFlag(false);
                 break;
+            } else if (context.isContinueFlag()) {
+                context.setContinueFlag(false);
+                continue;
             }
         }
         return lastValue;

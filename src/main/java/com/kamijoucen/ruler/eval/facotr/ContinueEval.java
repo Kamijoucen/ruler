@@ -10,7 +10,7 @@ import com.kamijoucen.ruler.value.NullValue;
 public class ContinueEval implements BaseEval<ContinueNode> {
     @Override
     public BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context) {
-        context.setContinueFlag(false);
+        context.setContinueFlag(true);
         return NullValue.INSTANCE;
     }
 }

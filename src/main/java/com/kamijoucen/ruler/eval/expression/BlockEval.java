@@ -18,10 +18,7 @@ public class BlockEval implements BaseEval<BlockNode> {
         BaseValue lastVal = NullValue.INSTANCE;
         for (BaseNode block : blocks) {
             lastVal = block.eval(blockScope, context);
-            if (context.isReturnFlag() || context.isBreakFlag()) {
-                break;
-            } else if (context.isContinueFlag()) {
-                context.setContinueFlag(false);
+            if (context.isReturnFlag() || context.isBreakFlag() || context.isContinueFlag()) {
                 break;
             }
         }

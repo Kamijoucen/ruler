@@ -44,6 +44,9 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             } else if (context.isBreakFlag()) {
                 context.setBreakFlag(false);
                 break;
+            } else if (context.isContinueFlag()) {
+                context.setContinueFlag(false);
+                continue;
             }
         }
         return lastValue;
