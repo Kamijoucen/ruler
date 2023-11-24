@@ -17,15 +17,15 @@ public class RuleResultValue {
         return value.toString();
     }
 
-    public Boolean toBoolean() {
+    public boolean toBoolean() {
         return (Boolean) value;
     }
 
-    public Long toInteger() {
-        return (Long) value;
+    public long toInteger() {
+        return (long) value;
     }
 
-    public Double toDouble() {
+    public double toDouble() {
         return (Double) value;
     }
 

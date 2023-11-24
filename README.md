@@ -16,7 +16,7 @@ buffer.append("println(text);");
 RulerConfiguration configuration = new RulerConfigurationImpl();
 // runner是可复用并且线程安全的，尽可能将runner缓存起来，因为执行complie有较大开销
 RuleScript runner = Ruler.compileScript(buffer.toString(), configuration);
-// 每次润run都会产生新的执行上下文，因此runner.run线程安全
+// 每次run都会产生新的执行上下文，因此runner.run线程安全
 runner.run();
 // 运行结果打印 hello world!
 ```
@@ -60,8 +60,126 @@ while a < b {
 }
 ```
 ## 获取引擎外部的值
+
 ```javascript
 var a = 1;
 var b = $out; // $表示从外部取值
 println(a + b);
 ```
+
+## 自定义中缀表达式
+
+```javascript
+
+// 使用infix关键字定义名为 push 的中缀运算
+infix fun push(array, right) {
+    if typeof(array) != 'array': return array;
+    array.push(right);
+    return array;
+}
+
+var arr = [1, 2, 3];
+
+// 这里的push，就是上面infix定义的函数，左右两边的值会作为函数的两个参数
+arr push 4 push 5;
+
+// 此时arr的值为 [1, 2, 3, 4, 5]
+println(arr);
+
+```
+
+## 代理
+
+```javascript
+
+var a = [1, 2, 3];
+
+// 配置代理对象
+var proxyConfig = {
+    get: fun(self, name) { 
+        if name === 'myLength' { 
+            return self.length() + 1;
+        } else {
+            return self[name];
+        }
+    },
+    // 如果有了模式匹配可以这样写，和上面效果等同
+    // get: fun(self, name) -> match(name) {
+    //     case "myLength" -> self.length() + 1;
+    //     _ -> self[name];
+    // },
+
+    // 也可以这样, 同时匹配了类似否是array，name是否是myLength
+    // get: fun(self, name) -> match(self, name) {
+    //     case array, "myLength" -> self.length() + 1;
+    //     _ -> self[name];
+    // },
+    put: fun(self, name, newValue) {
+        // ...
+    }
+};
+
+// Proxy是一个内置函数，用于创建一个代理对象
+a = Proxy(a, proxyConfig);  
+
+// 此时访问a上的成员，实际会执行代理配置代理对象中的get方法
+println(a.myLength);
+
+// 同理如果这样写，会进入代理配置对象中的put方法
+a.myLength = 100;
+
+```
+
+# 未来更新计划（优先级排序）
+## 重构类型系统
+## 类型标注
+
+```javascript
+
+var a: int = $name;
+var b: string = 1; // compile error!
+var c: any = 123;
+
+var d = 456; // 等价于 var d: any = 456;
+
+fun add(a: int, b: float): float {
+    return a + b;
+}
+
+var n: int = add(1, 1.0); // compile error! 返回值类型与n的标注类型不匹配
+
+```
+
+## 模式匹配
+
+```javascript
+
+var value = 'hello';
+match (value) {
+    case 'hello' -> println('Hello, world!');
+    case 'goodbye' -> println('Goodbye, world!');
+    case _ -> println('Unknown greeting');
+}
+
+var value = 42;
+match (value) {
+    case int && 42 -> println(`${n} is a number`);
+    case string -> println(`${s} is a string`);
+    case _ => println('Unknown type');
+}
+
+let numbers = [1, 2, 3, 4, 5];
+
+match (numbers) {
+    case [head | tail] => println(`Head is ${head}, tail is ${tail}`);
+    case [] => println('Empty array');
+    case _ => println('Not an array');
+}
+
+```
+
+## 分号插补
+## 不可变数据类型
+## 性能优化
+## 优化报错信息（打印堆栈，行号等等）
+## 内置标准库（网络，json，web，安全等）

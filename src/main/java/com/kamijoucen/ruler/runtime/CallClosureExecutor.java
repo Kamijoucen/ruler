@@ -8,10 +8,11 @@ import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
 import com.kamijoucen.ruler.ast.facotr.NameNode;
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
-import com.kamijoucen.ruler.value.constant.NullValue;
+import com.kamijoucen.ruler.value.NullValue;
 
 public class CallClosureExecutor {
 
@@ -23,8 +24,8 @@ public class CallClosureExecutor {
 
     public BaseValue call(BaseValue self, ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
 
-        Scope callScope = new Scope("closure", closure.getDefineScope());
-        callScope.initReturnSpace();
+        // TODO 
+        Scope callScope = new Scope("closure", false, closure.getDefineScope(), null);
         if (self != null) {
             callScope.putLocal(Constant.THIS_ARG, self);
         }
@@ -50,19 +51,17 @@ public class CallClosureExecutor {
                 throw new IllegalArgumentException();
             }
         }
-
         // call function
         closure.getBlock().eval(callScope, context);
-
         // get return value
-        List<BaseValue> returnValues = callScope.getReturnSpace();
-        if (returnValues == null || returnValues.size() == 0) {
+        List<BaseValue> returnSpace = context.getReturnSpace();        
+        if (CollectionUtil.isEmpty(returnSpace)) {
             return NullValue.INSTANCE;
         }
-        if (returnValues.size() == 1) {
-            return returnValues.get(0);
+        if (returnSpace.size() == 1) {
+            return returnSpace.get(0);
         }
-        return new ArrayValue(returnValues);
+        return new ArrayValue(returnSpace);
 
     }
 

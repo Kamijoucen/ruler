@@ -11,7 +11,6 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.*;
-import com.kamijoucen.ruler.value.constant.NullValue;
 
 public class AssignEval implements BaseEval<AssignNode> {
 

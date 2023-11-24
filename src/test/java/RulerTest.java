@@ -6,9 +6,12 @@ import com.kamijoucen.ruler.module.RuleRunner;
 import com.kamijoucen.ruler.parameter.RuleResult;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
+
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,11 +24,11 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
-       configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
-       configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
-       configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
-       configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
-       configuration.setMaxLoopNumber(5);
+        configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
+        configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
+        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
+        configuration.setMaxLoopNumber(5);
     }
 
     @Test
@@ -147,7 +150,7 @@ public class RulerTest {
         System.out.println(outNameVisitor.outNameTokens);
     }
 
-    //    @Test
+    // @Test
     public void str_bin_test() {
         String sql = "'500' < 500";
         RuleRunner script = Ruler.compileExpression(sql, configuration);
@@ -185,7 +188,7 @@ public class RulerTest {
     public void array_call() {
 
         String script = "var arr = [[1]];  println(arr[0].length());";
-//        String script = "var arr = [[1]];  println(arr[0]?.Length());";
+        // String script = "var arr = [[1]]; println(arr[0]?.Length());";
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 
@@ -214,7 +217,7 @@ public class RulerTest {
             }
 
             @Override
-            public Object call(RuntimeContext context, BaseValue self, Object... param) {
+            public Object call(RuntimeContext context, Scope scope, BaseValue self, Object... param) {
                 return "我们gg啦！！！";
             }
         });
@@ -268,7 +271,8 @@ public class RulerTest {
 
         RuleRunner run = Ruler.compileExpression(s, configuration);
 
-        RulerParameter p = new RulerParameter(ValueType.STRING, "var_623a8e5cfe7b9e1b639f2679", "9b5c863074464179bf98acf53344bf21");
+        RulerParameter p = new RulerParameter(ValueType.STRING, "var_623a8e5cfe7b9e1b639f2679",
+                "9b5c863074464179bf98acf53344bf21");
 
         List list = new ArrayList();
         list.add(p);
@@ -279,13 +283,12 @@ public class RulerTest {
 
     @Test
     public void i18n_test() {
-        ResourceBundle.getBundle("Messages", Locale.US);//原文出自【易百教程】，商业转载请联系作者获得授权，非商业请保留原文链接：https://www.yiibai.com/java_i18n/java_i18n_resourcebundle.html#article-start
+        ResourceBundle.getBundle("Messages", Locale.US);// 原文出自【易百教程】，商业转载请联系作者获得授权，非商业请保留原文链接：https://www.yiibai.com/java_i18n/java_i18n_resourcebundle.html#article-start
     }
 
     @Test
     public void loop_count_check() {
         String script = "var i = 0; while i < 10 { i = i + 1; println(i); }";
-
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 
@@ -296,7 +299,6 @@ public class RulerTest {
     @Test
     public void time_stamp_check() {
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
-
 
         RuleRunner run = Ruler.compileScript(script, configuration);
 
@@ -402,7 +404,6 @@ public class RulerTest {
 
     }
 
-
     @Test
     public void testIf() {
         String script = "if true {} i = i + 1;";
@@ -467,6 +468,17 @@ public class RulerTest {
 
         RuleResult result = runner.run();
         System.out.println(result);
+    }
+
+    @Test
+    public void testSimpleBreak() {
+
+        String str = "var i = 0; while i < 10 { i = i + 1; if i == 5 { break; } } return i;";
+
+        RuleRunner runner = Ruler.compileScript(str, configuration);
+
+
+        Assert.assertEquals(5, runner.run().first().toInteger());
 
     }
 

@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.function;
 
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.StringValue;
@@ -13,7 +14,7 @@ public class CharAtFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
         if (!(param[0] instanceof StringValue)) {
             throw new RuntimeException("stringCharAt function only accept string type");
         }

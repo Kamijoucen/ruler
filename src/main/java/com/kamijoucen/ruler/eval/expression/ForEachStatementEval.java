@@ -10,9 +10,8 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.ValueType;
-import com.kamijoucen.ruler.value.constant.NullValue;
-import com.kamijoucen.ruler.value.constant.ReturnValue;
 
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
                 .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
 
-        Scope forScope = new Scope("for each scope", scope);
+        Scope forScope = new Scope("for each scope", false, scope, null);
 
         BaseValue lastValue = NullValue.INSTANCE;
         for (BaseValue baseValue : arrayValues) {
@@ -40,14 +39,15 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             forScope.putLocal(loopName.name, baseValue);
 
             lastValue = block.eval(forScope, context);
-            if (ValueType.BREAK == lastValue.getType()) {
+            if (context.isReturnFlag()) {
                 break;
-            } else if (ValueType.RETURN == lastValue.getType()) {
-                return ReturnValue.INSTANCE;
+            } else if (context.isBreakFlag()) {
+                context.setBreakFlag(false);
+                break;
+            } else if (context.isContinueFlag()) {
+                context.setContinueFlag(false);
+                continue;
             }
-        }
-        if (lastValue.getType() == ValueType.BREAK) {
-            return NullValue.INSTANCE;
         }
         return lastValue;
     }

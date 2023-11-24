@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
-    private Scope globalScope = new Scope("root", null);
+    private Scope globalScope = new Scope("root", false, null, null);
 
     private final List<ImportNode> globalImport = new ArrayList<>();
 
@@ -81,10 +81,13 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
         RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
 
+        CallFunction callFunction = new CallFunction();
+
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
         this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
         this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
         this.globalScope.putLocal(proxyFunction.getName(), new FunctionValue(proxyFunction));
+        this.globalScope.putLocal(callFunction.getName(), new FunctionValue(callFunction));
     }
 
     @Override

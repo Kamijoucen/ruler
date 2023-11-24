@@ -17,18 +17,18 @@ public class Main {
 
     public static void main(String[] args) {
         if (args == null || args.length == 0) {
-            throw new IllegalArgumentException("空文件输入！");
+            throw new IllegalArgumentException("args is empty");
         }
 
         File file = new File(args[0]);
         if (!file.exists() || file.isDirectory()) {
-            throw new IllegalArgumentException("\"" + args[0] + "\"不是一个合法的文件");
+            throw new IllegalArgumentException("\"" + args[0] + "\" file not exists");
         }
 
         String content = IOUtil.read(file);
         if (IOUtil.isBlank(content)) {
-            throw new IllegalArgumentException("空文件输入！");
-	    
+            throw new IllegalArgumentException("\"" + args[0] + "\" file is empty");
+
         }
 
         RulerScript script = new RulerScript();
@@ -39,7 +39,8 @@ public class Main {
         RulerModule program = new RulerCompiler(script, configuration).compileScript();
 
         new RulerInterpreter(program, configuration)
-                .runScript(Collections.<RulerParameter>emptyList(), new Scope("main", configuration.getGlobalScope()));
+                .runScript(Collections.<RulerParameter>emptyList(),
+                        new Scope("main", true, configuration.getGlobalScope(), null));
     }
 
 }

@@ -1,24 +1,26 @@
 package com.kamijoucen.ruler.runtime;
 
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Scope {
 
+    private final boolean isCallScope;
+    private final TokenLocation callLocation;
     private final String stackName;
     private final Scope parentScope;
     private final Map<String, BaseValue> valueSpace;
-    private List<BaseValue> returnSpace;
 
-    public Scope(String stackName, Scope parentScope) {
+    public Scope(String stackName, boolean isCallScope, Scope parentScope, TokenLocation callLocation) {
         this.stackName = stackName;
         this.parentScope = parentScope;
         this.valueSpace = new HashMap<String, BaseValue>();
+        this.isCallScope = isCallScope;
+        this.callLocation = callLocation;
     }
 
     public String getStackName() {
@@ -61,25 +63,11 @@ public class Scope {
         valueSpace.put(name, value);
     }
 
-    public boolean hasLocalReturnSpace() {
-        return returnSpace != null;
+    public boolean isCallScope() {
+        return isCallScope;
     }
 
-    public void initReturnSpace() {
-        returnSpace = new ArrayList<BaseValue>();
-    }
-
-    public void putReturnValues(List<BaseValue> values) {
-        if (hasLocalReturnSpace()) {
-            this.returnSpace.addAll(values);
-        } else if (parentScope != null) {
-            this.parentScope.putReturnValues(values);
-        } else {
-            throw SyntaxException.withSyntax("未找到返回值空间");
-        }
-    }
-
-    public List<BaseValue> getReturnSpace() {
-        return returnSpace;
+    public TokenLocation getCallLocation() {
+        return callLocation;
     }
 }

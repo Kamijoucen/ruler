@@ -159,6 +159,7 @@ public class DefaultParser implements Parser {
         return statement;
     }
 
+    // TODO 常量折叠
     @Override
     public BaseNode parseExpression() {
         BaseNode lhs = parsePrimaryExpression();

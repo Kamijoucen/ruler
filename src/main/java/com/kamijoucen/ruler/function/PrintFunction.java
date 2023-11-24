@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.function;
 
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 import java.util.Arrays;
@@ -13,7 +14,7 @@ public class PrintFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
         if (param == null || param.length == 0) {
             System.out.println();
         } else if (param.length == 1) {

@@ -1,6 +1,8 @@
-package com.kamijoucen.ruler.function;
+package com.kamijoucen.ruler.function.classinfo;
 
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class ToStringFunction implements RulerFunction {
@@ -10,7 +12,7 @@ public class ToStringFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
         return self.toString();
     }
 }

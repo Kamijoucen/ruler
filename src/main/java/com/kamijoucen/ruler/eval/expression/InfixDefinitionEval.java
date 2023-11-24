@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
-import com.kamijoucen.ruler.value.constant.NullValue;
+import com.kamijoucen.ruler.value.NullValue;
 
 public class InfixDefinitionEval implements BaseEval<InfixDefinitionNode> {
 

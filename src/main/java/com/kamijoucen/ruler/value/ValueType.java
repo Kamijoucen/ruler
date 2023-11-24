@@ -20,12 +20,6 @@ public enum ValueType {
 
     RCLASS,
 
-    BREAK,
-
-    CONTINUE,
-
-    RETURN,
-
     RSON,
 
     UN_KNOWN,
