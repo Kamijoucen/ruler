@@ -8,13 +8,13 @@ fun IsNotArray(arr) {
 
 fun Size(arr) {
     if !IsArray(arr): return null;
-    return length(arr);
+    return arr.length();
 }
 
 fun IsEmpty(list) {
     if list == null: return true;
     if !IsArray(list): return false;
-    return length(list) == 0;
+    return list.length() == 0;
 }
 
 fun IsNotEmpty(list) {

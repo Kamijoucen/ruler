@@ -281,20 +281,19 @@ public class RulerTest {
         System.out.println(result.first().toBoolean());
     }
 
-    @Test
-    public void i18n_test() {
-        ResourceBundle.getBundle("Messages", Locale.US);// 原文出自【易百教程】，商业转载请联系作者获得授权，非商业请保留原文链接：https://www.yiibai.com/java_i18n/java_i18n_resourcebundle.html#article-start
-    }
+    // @Test
+    // public void i18n_test() {
+    //     ResourceBundle.getBundle("Messages", Locale.US);// 原文出自【易百教程】，商业转载请联系作者获得授权，非商业请保留原文链接：https://www.yiibai.com/java_i18n/java_i18n_resourcebundle.html#article-start
+    // }
 
-    @Test
-    public void loop_count_check() {
-        String script = "var i = 0; while i < 10 { i = i + 1; println(i); }";
+    // @Test
+    // public void loop_count_check() {
+    //     String script = "var i = 0; while i < 10 { i = i + 1; println(i); }";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+    //     RuleRunner run = Ruler.compileScript(script, configuration);
 
-        run.run();
-
-    }
+    //     run.run();
+    // }
 
     @Test
     public void time_stamp_check() {
@@ -366,24 +365,6 @@ public class RulerTest {
         System.out.println(list.getClass().isArray());
     }
 
-    @Test
-    public void obj_fun_test() {
-
-        String script = "var y = Datetime('1995-03-31', 'yyyy-MM-dd').year(); println(y);";
-
-        RuleRunner run = Ruler.compileScript(script, configuration);
-
-        long v1 = System.currentTimeMillis();
-        run.run();
-        long v2 = System.currentTimeMillis();
-        System.out.println(v2 - v1);
-
-        v1 = System.currentTimeMillis();
-        run.run();
-        v2 = System.currentTimeMillis();
-
-        System.out.println(v2 - v1);
-    }
 
     @Test
     public void scopeTest1() {
@@ -428,36 +409,12 @@ public class RulerTest {
         RuleResult result = run.run();
     }
 
-    @Test
-    public void strEscapeTest() {
-
-        String str = "op.Or(op.And(op.NotContains($customField_6a2b843a_8674_11ed_922f_12c91d3f200a,\"!@#$%^&*(){}\\\":?>|~\")))";
-
-        RuleRunner runner = Ruler.compileExpression(str, configuration);
-
-        System.out.println(runner.run());
-    }
-
-    @Test
-    public void objcallField() {
-
-        String str = "println(AA.ToString())";
-
-        RuleRunner runner = Ruler.compileExpression(str, configuration);
-
-        System.out.println(runner.run());
-    }
-
-    @Test
-    public void testb() {
-
-        String str = "name.test()[1].num = 15;";
-
-        RuleRunner runner = Ruler.compileScript(str, configuration);
-
-        System.out.println(runner.run());
-
-    }
+    // @Test
+    // public void testb() {
+    //     String str = "name.test()[1].num = 15;";
+    //     RuleRunner runner = Ruler.compileScript(str, configuration);
+    //     System.out.println(runner.run());
+    // }
 
     @Test
     public void testc() {

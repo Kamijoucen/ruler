@@ -16,7 +16,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
         List<BaseNode> param = node.getParam();
         String funName = node.getName();
         ClosureValue closureValue = new ClosureValue(scope, param, node.getBlock());
-        if (funName != null) {
+        if (funName != null) {            
             scope.defineLocal(funName, closureValue);
         }
         return closureValue;
