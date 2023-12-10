@@ -9,6 +9,7 @@ public class SyntaxException extends RuntimeException {
         super(s);
     }
 
+    @Deprecated
     public static SyntaxException withSyntax(String msg) {
         return new SyntaxException("syntax error! " + msg);
     }

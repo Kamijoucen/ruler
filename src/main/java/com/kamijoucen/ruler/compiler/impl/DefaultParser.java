@@ -83,7 +83,8 @@ public class DefaultParser implements Parser {
 
         // 不允许出现无别名切无中缀标识的导入语句
         if (aliasToken == null && !hasImportInfix) {
-            throw SyntaxException.withSyntax("不允许出现无别名且无中缀标识的导入语句");
+            throw SyntaxException.withSyntax("import statement without alias and infix is not allowed",
+                    importToken.location);
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
