@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.token.TokenLocation;
 
 public class SyntaxException extends RuntimeException {
 
-    private SyntaxException(String s) {
+    public SyntaxException(String s) {
         super(s);
     }
 
@@ -20,10 +20,6 @@ public class SyntaxException extends RuntimeException {
 
     public static SyntaxException withSyntax(String msg, TokenLocation location) {
         return new SyntaxException("syntax error! " + msg + "\t location=" + location);
-    }
-
-    public static SyntaxException withLexical(String msg) {
-        return new SyntaxException("lexical error! " + msg);
     }
 
 }

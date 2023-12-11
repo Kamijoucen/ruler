@@ -565,24 +565,26 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseContinue() {
 
-        if (!parseContext.isInLoop()) {
-            throw SyntaxException.withLexical("not in loop");
-        }
-
         AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);
         Token token = tokenStream.token();
+        
+        if (!parseContext.isInLoop()) {
+            String message = this.configuration.getMessageManager().continueNotInLoop(token.location);
+            throw new SyntaxException(message);
+        }
         tokenStream.nextToken();
         return new ContinueNode(token.location);
     }
 
     public BaseNode parseBreak() {
 
-        if (!parseContext.isInLoop()) {
-            throw SyntaxException.withLexical("not in loop");
-        }
-
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
         Token token = tokenStream.token();
+        
+        if (!parseContext.isInLoop()) {
+            String message = this.configuration.getMessageManager().breakNotInLoop(token.location);
+            throw new SyntaxException(message);
+        }
         tokenStream.nextToken();
         return new BreakNode(token.location);
     }

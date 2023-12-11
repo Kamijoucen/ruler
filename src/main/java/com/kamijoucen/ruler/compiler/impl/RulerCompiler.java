@@ -29,7 +29,7 @@ public class RulerCompiler {
     public RulerModule compileExpression() {
         RulerModule module = new RulerModule("runtime expression");
         // 词法分析器
-        DefaultLexical lexical = new DefaultLexical(mainScript.getContent(), module.getFullName());
+        DefaultLexical lexical = new DefaultLexical(mainScript.getContent(), module.getFullName(), configuration);
         // 开始词法分析
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
@@ -47,7 +47,7 @@ public class RulerCompiler {
     private RulerModule compileModule(RulerScript script) {
         RulerModule module = new RulerModule(script.getFileName());
         // 词法分析器
-        DefaultLexical lexical = new DefaultLexical(script.getContent(), module.getFullName());
+        DefaultLexical lexical = new DefaultLexical(script.getContent(), module.getFullName(), configuration);
         // 开始词法分析
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();

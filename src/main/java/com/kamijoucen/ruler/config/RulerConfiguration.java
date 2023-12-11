@@ -56,4 +56,6 @@ public interface RulerConfiguration {
 
     ObjectAccessControlManager getObjectAccessControlManager();
 
+    MessageManager getMessageManager();
+
 }

@@ -52,6 +52,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private ObjectAccessControlManager objectAccessControlManager = new ObjectAccessControlManagerImpl();
 
+    private MessageManager messageManager = new MessageManagerImpl();
+
     public RulerConfigurationImpl() {
         init();
     }
@@ -160,6 +162,15 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     public void setObjectAccessControlManager(ObjectAccessControlManager objectAccessControlManager) {
         this.objectAccessControlManager = objectAccessControlManager;
+    }
+    
+    @Override
+    public MessageManager getMessageManager() {
+        return messageManager;
+    }
+
+    public void setMessageManager(MessageManager messageManager) {
+        this.messageManager = messageManager;
     }
 
     public void setRClassFactory(RClassManager metaInfoFactory) {
