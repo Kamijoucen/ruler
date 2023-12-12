@@ -33,6 +33,7 @@ public enum TokenType {
 
     NOT,            // !
     ADD,            // +
+    STRING_ADD,     // ++
     SUB,            // -
     MUL,            // *
     DIV,            // /
