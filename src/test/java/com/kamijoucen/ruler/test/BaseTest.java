@@ -103,7 +103,7 @@ public class BaseTest {
 
     @Test
     public void anonymousFuncTest() {
-        String script = "var f = fun(name) -> \"hello \" + name;\n" +
+        String script = "var f = fun(name) -> \"hello \" ++ name;\n" +
                 "\n" +
                 "var r = f(\"world!\");\n" +
                 "println(r);\n" +

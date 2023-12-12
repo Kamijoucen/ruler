@@ -16,6 +16,7 @@ import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
+import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 
 import java.util.*;
 
@@ -46,9 +47,12 @@ public class DefaultParser implements Parser {
     }
 
     private void parseImports() {
+        List<ImportNode> list = new ArrayList<>();
         while (tokenStream.token().type == TokenType.KEY_IMPORT) {
-            this.rootStatements.add(parseImport());
+            list.add(parseImport());
         }
+        SyntaxCheckUtil.availableImport(list);
+        this.rootStatements.addAll(list);
     }
 
     private void parseStatements() {
@@ -567,7 +571,7 @@ public class DefaultParser implements Parser {
 
         AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);
         Token token = tokenStream.token();
-        
+
         if (!parseContext.isInLoop()) {
             String message = this.configuration.getMessageManager().continueNotInLoop(token.location);
             throw new SyntaxException(message);
@@ -580,7 +584,7 @@ public class DefaultParser implements Parser {
 
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
         Token token = tokenStream.token();
-        
+
         if (!parseContext.isInLoop()) {
             String message = this.configuration.getMessageManager().breakNotInLoop(token.location);
             throw new SyntaxException(message);

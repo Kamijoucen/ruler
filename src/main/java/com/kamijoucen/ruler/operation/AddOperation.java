@@ -17,6 +17,7 @@ public class AddOperation implements BinaryOperation {
             .values().length * ValueType.values().length];
 
     static {
+
         for (ValueType type1 : ValueType.values()) {
             for (ValueType type2 : ValueType.values()) {
                 int index = type1.ordinal() * ValueType.values().length + type2.ordinal();
@@ -44,12 +45,6 @@ public class AddOperation implements BinaryOperation {
                         DoubleValue val1 = (DoubleValue) tuple.v1;
                         DoubleValue val2 = (DoubleValue) tuple.v2;
                         return new DoubleValue(val1.getValue() + val2.getValue());
-                    };
-                } else if (type1 == ValueType.STRING && type2 == ValueType.STRING) {
-                    operations[index] = (ctx, tuple) -> {
-                        StringValue val1 = (StringValue) tuple.v1;
-                        StringValue val2 = (StringValue) tuple.v2;
-                        return new StringValue(val1.getValue() + val2.getValue());
                     };
                 } else {
                     operations[index] = null;

@@ -93,4 +93,13 @@ public class LexicalTest {
         Assert.assertEquals(nextToken.type, TokenType.DIV);
     }
 
+    // ++ 分词测试
+    @Test
+    public void incTokenTest() {
+        String s = "++";
+        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
+        Token nextToken = lexical.nextToken();
+        Assert.assertEquals(nextToken.type, TokenType.STRING_ADD);
+    }
+
 }

@@ -25,6 +25,7 @@ public class BinaryOperationFactoryImpl implements BinaryOperationFactory {
         operationMap.put(TokenType.LE.name(), new LeOperation()); // <=
         operationMap.put(TokenType.GE.name(), new GeOperation()); // >=
         operationMap.put(TokenType.ADD.name(), new AddOperation()); // +
+        operationMap.put(TokenType.STRING_ADD.name(), new StringAddOperation()); // ++
         operationMap.put(TokenType.SUB.name(), new SubOperation()); // -
         operationMap.put(TokenType.MUL.name(), new MulOperation()); // *
         operationMap.put(TokenType.DIV.name(), new DivOperation()); // /
