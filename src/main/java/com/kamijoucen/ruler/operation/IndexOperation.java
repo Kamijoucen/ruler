@@ -14,26 +14,28 @@ import com.kamijoucen.ruler.value.ValueType;
 public class IndexOperation implements BinaryOperation {
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
+            BaseValue... params) {
 
-        BaseValue lval = lhs.eval(scope, context);
+        BaseValue lVal = lhs.eval(scope, context);
         BaseValue idx = rhs.eval(scope, context);
 
-        if (lval.getType() == ValueType.ARRAY && idx.getType() == ValueType.INTEGER) {
-            ArrayValue array = (ArrayValue) lval;
+        if (lVal.getType() == ValueType.ARRAY && idx.getType() == ValueType.INTEGER) {
+            ArrayValue array = (ArrayValue) lVal;
             IntegerValue index = (IntegerValue) idx;
             // 检查数组是否越界
             if (index.getValue() >= array.getValues().size()) {
                 throw new IndexOutOfBoundsException("Array index out of bounds");
             }
             return array.getValues().get((int) index.getValue());
-        } else if (lval.getType() == ValueType.RSON && idx.getType() == ValueType.STRING) {
-            RsonValue rson = (RsonValue) lval;
+        } else if (lVal.getType() == ValueType.RSON && idx.getType() == ValueType.STRING) {
+            RsonValue rson = (RsonValue) lVal;
             StringValue string = (StringValue) idx;
-            return context.getConfiguration().getObjectAccessControlManager().accessObject(rson, string.getValue(),
-                    context);
+            return context.getConfiguration().getObjectAccessControlManager().accessObject(rson,
+                    string.getValue(), context);
         } else {
-            throw SyntaxException.withSyntax("Index operations can only be used for arrays and RSON.");
+            throw SyntaxException
+                    .withSyntax("Index operations can only be used for arrays and RSON.");
         }
     }
 

@@ -1,16 +1,17 @@
 package com.kamijoucen.ruler.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.module.RuleRunner;
 import com.kamijoucen.ruler.parameter.RuleResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseTest {
 
@@ -102,7 +103,7 @@ public class BaseTest {
 
     @Test
     public void anonymousFuncTest() {
-        String script = "var f = fun(name) -> \"hello \" + name;\n" +
+        String script = "var f = fun(name) -> \"hello \" ++ name;\n" +
                 "\n" +
                 "var r = f(\"world!\");\n" +
                 "println(r);\n" +

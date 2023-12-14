@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.compiler.impl;
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.common.State;
 import com.kamijoucen.ruler.compiler.Lexical;
+import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenLocation;
@@ -11,6 +12,8 @@ import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.IOUtil;
 
 public class DefaultLexical implements Lexical {
+
+    private final RulerConfiguration configuration;
 
     private int offset;
     public int line;
@@ -23,13 +26,14 @@ public class DefaultLexical implements Lexical {
     private char curStringFlag;
     private String fileName;
 
-    public DefaultLexical(String content, String fileName) {
+    public DefaultLexical(String content, String fileName, RulerConfiguration configuration) {
         this.offset = 0;
         this.content = content;
         this.state = State.NONE;
         this.fileName = fileName;
         this.isEnd = false;
         this.buffer = new StringBuilder();
+        this.configuration = configuration;
     }
 
     @Override
@@ -139,7 +143,7 @@ public class DefaultLexical implements Lexical {
         String symbol = charAt() + "";
 
         forward();
-        
+
         symbol += peekChar(step++);
         symbol += peekChar(step++);
 
@@ -149,8 +153,9 @@ public class DefaultLexical implements Lexical {
             type = TokenLookUp.symbol(symbol);
         }
         if (type == TokenType.UN_KNOW) {
-            throw SyntaxException.withLexical(
-                    of("'" + safeCharAt() + "' 不是合法的符号", line, column));
+            String message = this.configuration.getMessageManager().unknownSymbol(symbol,
+                    new TokenLocation(line, column, fileName));
+            throw new SyntaxException(message);
         }
         forward(step);
         append(symbol);
@@ -168,7 +173,9 @@ public class DefaultLexical implements Lexical {
             appendAndForward();
         }
         if (isOver()) {
-            throw SyntaxException.withLexical("字符串未发现结束符");
+            String message = this.configuration.getMessageManager().notFoundStringEnd(curStringFlag,
+                    new TokenLocation(line, column, fileName));
+            throw new SyntaxException(message);
         }
         forward();
         makeToken(TokenType.STRING);
@@ -192,8 +199,9 @@ public class DefaultLexical implements Lexical {
                 len++;
             }
             if (len == 0) {
-                throw SyntaxException.withLexical(
-                        of("小数点后未跟其他数字", line, column));
+                String message = this.configuration.getMessageManager().numberFormatError(buffer.toString(),
+                        new TokenLocation(line, column, fileName));
+                throw new SyntaxException(message);
             }
             makeToken(TokenType.DOUBLE);
         } else {
@@ -214,10 +222,10 @@ public class DefaultLexical implements Lexical {
 
             forward();
         } else {
-
             if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
-                throw SyntaxException.withLexical(
-                        of("'" + safeCharAt() + "' 不是合法的标识符起始", line, column));
+                String message = configuration.getMessageManager().illegalIdentifier(charAt() + "",
+                        new TokenLocation(line, column, fileName));
+                throw new SyntaxException(message);
             }
             int len = 0;
             while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
@@ -225,8 +233,9 @@ public class DefaultLexical implements Lexical {
                 len++;
             }
             if (len == 0) {
-                throw SyntaxException.withLexical(
-                        of("标识符 '$' 后必须跟其他标识符", line, column));
+                String message = configuration.getMessageManager().illegalIdentifier(buffer.toString(),
+                        new TokenLocation(line, column, fileName));
+                throw new SyntaxException(message);
             }
         }
         makeToken(TokenType.OUT_IDENTIFIER);

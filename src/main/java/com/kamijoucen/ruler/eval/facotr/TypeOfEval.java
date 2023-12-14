@@ -16,7 +16,7 @@ public class TypeOfEval implements BaseEval<TypeOfNode> {
         BaseValue value = node.getExp().eval(scope, context);
         String type = TypeMapping.find(value.getType());
         if (IOUtil.isBlank(type)) {
-            throw SyntaxException.withSyntax("typeof 不支持的表达式");
+            throw SyntaxException.withSyntax("typeof unsupported expression", node.getLocation());
         }
         return new StringValue(type);
     }

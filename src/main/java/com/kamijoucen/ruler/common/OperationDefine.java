@@ -22,6 +22,7 @@ public class OperationDefine {
         PRECEDENCE.put(TokenType.LE, 20); // <=
         PRECEDENCE.put(TokenType.GE, 20); // >=
         PRECEDENCE.put(TokenType.ADD, 30); // +
+        PRECEDENCE.put(TokenType.STRING_ADD, 30); // ++
         PRECEDENCE.put(TokenType.SUB, 30); // -
         PRECEDENCE.put(TokenType.MUL, 40); // *
         PRECEDENCE.put(TokenType.DIV, 40); // /

@@ -1,0 +1,12 @@
+
+
+fun test(x: int?, y: double?): double? | string {
+    
+}
+
+type Test {
+    T1(name: string?, age: int?),
+    T2(obj: rson),
+    TT,
+}
+

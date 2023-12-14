@@ -32,6 +32,7 @@ public class TokenLookUp {
         SYMBOL.put("->", TokenType.ARROW);
         SYMBOL.put("!", TokenType.NOT);
         SYMBOL.put("+", TokenType.ADD);
+        SYMBOL.put("++", TokenType.STRING_ADD);
         SYMBOL.put("-", TokenType.SUB);
         SYMBOL.put("*", TokenType.MUL);
         SYMBOL.put("/", TokenType.DIV);

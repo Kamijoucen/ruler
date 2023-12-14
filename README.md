@@ -134,7 +134,7 @@ a.myLength = 100;
 ## 重构类型系统
 ## 类型标注
 
-```javascript
+```typescript
 
 var a: int = $name;
 var b: string = 1; // compile error!
@@ -152,7 +152,7 @@ var n: int = add(1, 1.0); // compile error! 返回值类型与n的标注类型�
 
 ## 模式匹配
 
-```javascript
+```typescript
 
 var value = 'hello';
 match (value) {
@@ -163,17 +163,25 @@ match (value) {
 
 var value = 42;
 match (value) {
-    case int && 42 -> println(`${n} is a number`);
-    case string -> println(`${s} is a string`);
+    case int(n) && 42 -> println('${n} is a number');
+    case any(n) && 44 -> println('${n} is a number');
+    case string(s) -> println('${s} is a string');
     case _ => println('Unknown type');
 }
 
-let numbers = [1, 2, 3, 4, 5];
+var numbers = [1, 2, 3, 4, 5];
 
 match (numbers) {
     case [head | tail] => println(`Head is ${head}, tail is ${tail}`);
     case [] => println('Empty array');
     case _ => println('Not an array');
+}
+
+var a = $out;
+
+match(a) {
+    case int; [1, 2, 3] -> println();
+    _ -> null;
 }
 
 ```

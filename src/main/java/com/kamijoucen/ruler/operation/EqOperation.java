@@ -1,19 +1,18 @@
 package com.kamijoucen.ruler.operation;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.BiFunction;
-
-import org.apache.commons.lang3.tuple.Pair;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.*;
 
 public class EqOperation implements BinaryOperation {
 
-    private final Map<Pair<ValueType, ValueType>, BiFunction<BaseValue, BaseValue, BaseValue>> operations = new HashMap<>();
+    @SuppressWarnings("unchecked")
+    private final BiFunction<BaseValue, BaseValue, BaseValue>[] operations =
+            new BiFunction[ValueType.values().length * ValueType.values().length];
 
     public EqOperation(boolean strict) {
         initStrictOp();
@@ -23,63 +22,81 @@ public class EqOperation implements BinaryOperation {
     }
 
     private void initStrictOp() {
-        operations.put(Pair.of(ValueType.INTEGER, ValueType.INTEGER), (l, r) -> {
+
+        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.INTEGER)] = (l, r) -> {
             IntegerValue val1 = (IntegerValue) l;
             IntegerValue val2 = (IntegerValue) r;
             return BoolValue.get(val1.getValue() == val2.getValue());
-        });
-        operations.put(Pair.of(ValueType.INTEGER, ValueType.DOUBLE), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (l, r) -> {
             IntegerValue val1 = (IntegerValue) l;
             DoubleValue val2 = (DoubleValue) r;
             return BoolValue.get(val1.getValue() == val2.getValue());
-        });
-        operations.put(Pair.of(ValueType.DOUBLE, ValueType.INTEGER), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (l, r) -> {
             DoubleValue val1 = (DoubleValue) l;
             IntegerValue val2 = (IntegerValue) r;
             return BoolValue.get(val1.getValue() == val2.getValue());
-        });
-        operations.put(Pair.of(ValueType.DOUBLE, ValueType.DOUBLE), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (l, r) -> {
             DoubleValue val1 = (DoubleValue) l;
             DoubleValue val2 = (DoubleValue) r;
             return BoolValue.get(val1.getValue() == val2.getValue());
-        });
-        operations.put(Pair.of(ValueType.STRING, ValueType.STRING), (l, r) -> {
-            return BoolValue.get(l.toString().equals(r.toString()));
-        });
-        operations.put(Pair.of(ValueType.NULL, ValueType.NULL), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.BOOL, ValueType.BOOL)] = (l, r) -> {
+            BoolValue val1 = (BoolValue) l;
+            BoolValue val2 = (BoolValue) r;
+            return BoolValue.get(val1.getValue() == val2.getValue());
+        };
+
+        operations[IOUtil.getIndex(ValueType.STRING, ValueType.STRING)] = (l, r) -> {
+            StringValue val1 = (StringValue) l;
+            StringValue val2 = (StringValue) r;
+            return BoolValue.get(val1.getValue().equals(val2.getValue()));
+        };
+
+        operations[IOUtil.getIndex(ValueType.NULL, ValueType.NULL)] = (l, r) -> {
             return BoolValue.get(true);
-        });
+        };
     }
 
     private void initNonStrictOp() {
-        operations.put(Pair.of(ValueType.STRING, ValueType.INTEGER), (l, r) -> {
+
+        operations[IOUtil.getIndex(ValueType.STRING, ValueType.INTEGER)] = (l, r) -> {
             try {
-                long val1 = Long.parseLong(r.toString());
                 IntegerValue val2 = (IntegerValue) l;
+                long val1 = Long.parseLong(r.toString());
                 return BoolValue.get(val1 == val2.getValue());
             } catch (NumberFormatException e) {
                 return BoolValue.get(false);
             }
-        });
-        operations.put(Pair.of(ValueType.INTEGER, ValueType.STRING), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.STRING)] = (l, r) -> {
             try {
-                IntegerValue val1 = (IntegerValue) l;
+                long val1 = Long.parseLong(l.toString());
                 StringValue val2 = (StringValue) r;
-                return BoolValue.get(val1.getValue() == Long.parseLong(val2.getValue()));
+                return BoolValue.get(val1 == Long.parseLong(val2.getValue()));
             } catch (NumberFormatException e) {
                 return BoolValue.get(false);
             }
-        });
-        operations.put(Pair.of(ValueType.STRING, ValueType.DOUBLE), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.STRING, ValueType.DOUBLE)] = (l, r) -> {
             try {
-                double val1 = Double.parseDouble(r.toString());
                 DoubleValue val2 = (DoubleValue) l;
+                double val1 = Double.parseDouble(r.toString());
                 return BoolValue.get(val1 == val2.getValue());
             } catch (NumberFormatException e) {
                 return BoolValue.get(false);
             }
-        });
-        operations.put(Pair.of(ValueType.DOUBLE, ValueType.STRING), (l, r) -> {
+        };
+
+        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.STRING)] = (l, r) -> {
             try {
                 double val1 = Double.parseDouble(l.toString());
                 StringValue val2 = (StringValue) r;
@@ -87,16 +104,16 @@ public class EqOperation implements BinaryOperation {
             } catch (NumberFormatException e) {
                 return BoolValue.get(false);
             }
-        });
+        };
     }
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
+            BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
 
-        BiFunction<BaseValue, BaseValue, BaseValue> operation = operations
-                .get(Pair.of(lValue.getType(), rValue.getType()));
+        BiFunction<BaseValue, BaseValue, BaseValue> operation = operations[IOUtil.getIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {
             return operation.apply(lValue, rValue);
         } else {

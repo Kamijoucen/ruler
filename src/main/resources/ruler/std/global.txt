@@ -8,7 +8,7 @@ fun Add() {
 }
 
 fun Sub() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
@@ -29,7 +29,7 @@ fun Mul() {
 }
 
 fun Div() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
@@ -43,7 +43,7 @@ fun Div() {
 }
 
 fun And() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToBoolean(_args_[0]);
@@ -67,7 +67,7 @@ fun And() {
 }
 
 fun Or() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToBoolean(_args_[0]);
@@ -90,7 +90,7 @@ fun Or() {
 }
 
 fun Not() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     return !ToBoolean(_args_[0]);
@@ -98,7 +98,7 @@ fun Not() {
 
 // >
 fun Gt() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
@@ -117,7 +117,7 @@ fun Gt() {
 
 // <
 fun Lt() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
@@ -135,7 +135,7 @@ fun Lt() {
 
 // <=
 fun Le() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
@@ -153,7 +153,7 @@ fun Le() {
 
 // >=
 fun Ge() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = ToNumber(_args_[0]);
@@ -171,7 +171,7 @@ fun Ge() {
 
 // ==
 fun Eq() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = _args_[0];
@@ -189,7 +189,7 @@ fun Eq() {
 
 // !=
 fun Ne() {
-    var len = length(_args_);
+    var len = _args_.length();
     if len == 0: return null;
 
     var r = _args_[0];
