@@ -25,8 +25,8 @@ public class ObjectAccessControlManagerImpl implements ObjectAccessControlManage
             BaseValue getCallback = this.accessObject(proxyValue.getConfigValue(), "get", context);
             if (getCallback.getType() == ValueType.CLOSURE) {
                 CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
-                return executor.call(proxyValue.getValue(), ((ClosureValue) getCallback), null, context,
-                        proxyValue.getValue(), new StringValue(name));
+                return executor.call(proxyValue.getValue(), ((ClosureValue) getCallback), null,
+                        context, proxyValue.getValue(), new StringValue(name));
             }
         }
         BaseValue result = null;
@@ -36,7 +36,8 @@ public class ObjectAccessControlManagerImpl implements ObjectAccessControlManage
             result = ((RsonValue) value).getFields().get(name);
         }
         if (result == null) {
-            RClass rClass = context.getConfiguration().getRClassManager().getClassValue(value.getType());
+            RClass rClass =
+                    context.getConfiguration().getRClassManager().getClassValue(value.getType());
             Objects.requireNonNull(rClass, "class not found: " + value.getType());
             result = rClass.getProperty(name);
         }
@@ -44,15 +45,15 @@ public class ObjectAccessControlManagerImpl implements ObjectAccessControlManage
     }
 
     @Override
-    public void modifyObject(BaseValue value, String name, BaseValue newValue, RuntimeContext context) {
+    public void modifyObject(BaseValue value, String name, BaseValue newValue,
+            RuntimeContext context) {
         if (value instanceof ProxyValue) {
             ProxyValue proxyValue = (ProxyValue) value;
             BaseValue putCallback = this.accessObject(proxyValue.getConfigValue(), "put", context);
             if (putCallback != null && putCallback.getType() == ValueType.CLOSURE) {
                 CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
-                executor.call(proxyValue.getValue(), ((ClosureValue) putCallback), null, context, proxyValue.getValue(),
-                        new StringValue(name),
-                        newValue);
+                executor.call(proxyValue.getValue(), ((ClosureValue) putCallback), null, context,
+                        proxyValue.getValue(), new StringValue(name), newValue);
                 return;
             } else {
                 this.modifyObject(proxyValue.getValue(), name, newValue, context);

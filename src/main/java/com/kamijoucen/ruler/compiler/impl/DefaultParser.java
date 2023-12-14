@@ -64,7 +64,8 @@ public class DefaultParser implements Parser {
     @Override
     public ImportNode parseImport() {
         if (tokenStream.token().type != TokenType.KEY_IMPORT) {
-            throw new IllegalArgumentException("Expected KEY_IMPORT token, but got " + tokenStream.token().type);
+            throw new IllegalArgumentException(
+                    "Expected KEY_IMPORT token, but got " + tokenStream.token().type);
         }
         Token importToken = tokenStream.token();
         tokenStream.nextToken();
@@ -87,21 +88,22 @@ public class DefaultParser implements Parser {
 
         // 不允许出现无别名切无中缀标识的导入语句
         if (aliasToken == null && !hasImportInfix) {
-            throw SyntaxException.withSyntax("import statement without alias and infix is not allowed",
+            throw SyntaxException.withSyntax(
+                    "import statement without alias and infix is not allowed",
                     importToken.location);
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
-        return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix, importToken.location);
+        return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix,
+                importToken.location);
     }
 
     @Override
     public BaseNode parseStatement() {
         Token token = tokenStream.token();
         boolean isRoot = parseContext.isRoot();
-        if (token.type == TokenType.KEY_RULE
-                || token.type == TokenType.KEY_INFIX) {
+        if (token.type == TokenType.KEY_RULE || token.type == TokenType.KEY_INFIX) {
             if (!isRoot) {
                 throw new UnsupportedOperationException();
             }
@@ -210,7 +212,8 @@ public class DefaultParser implements Parser {
                 Objects.requireNonNull(rhs);
             }
             if (curOpToken.type == TokenType.ASSIGN) {
-                if (!(lhs instanceof IndexNode) && !(lhs instanceof NameNode) && !(lhs instanceof DotNode)) {
+                if (!(lhs instanceof IndexNode) && !(lhs instanceof NameNode)
+                        && !(lhs instanceof DotNode)) {
                     throw SyntaxException.withSyntax("error assign");
                 }
                 lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
@@ -218,8 +221,8 @@ public class DefaultParser implements Parser {
                 BinaryOperation operation = this.configuration.getBinaryOperationFactory()
                         .findOperation(curOpToken.type.name());
                 Objects.requireNonNull(operation);
-                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name,
-                        lhs, rhs, operation, lhs.getLocation());
+                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name, lhs, rhs, operation,
+                        lhs.getLocation());
             }
         }
     }
@@ -374,7 +377,8 @@ public class DefaultParser implements Parser {
             BaseNode statement = parseStatement();
             blockAST = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
-            throw SyntaxException.withSyntax("while condition expression expected ':' or '{'", tokenStream.token());
+            throw SyntaxException.withSyntax("while condition expression expected ':' or '{'",
+                    tokenStream.token());
         }
         if (!inLoop) {
             parseContext.setInLoop(false);
@@ -387,7 +391,8 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(token.type, parsePrimaryExpression(),
-                    token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(), token.location);
+                    token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(),
+                    token.location);
         } else if (token.type == TokenType.NOT) {
             BinaryOperation operation = this.configuration.getBinaryOperationFactory()
                     .findOperation(TokenType.NOT.name());
@@ -414,9 +419,11 @@ public class DefaultParser implements Parser {
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
-            thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+            thenBlock =
+                    new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
-            throw SyntaxException.withSyntax("if condition expression expected ':' or '{'", tokenStream.token());
+            throw SyntaxException.withSyntax("if condition expression expected ':' or '{'",
+                    tokenStream.token());
         }
 
         BaseNode elseBlock = null;
@@ -426,7 +433,8 @@ public class DefaultParser implements Parser {
                 elseBlock = parseBlock();
             } else {
                 BaseNode statement = parseStatement();
-                elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+                elseBlock = new BlockNode(Collections.singletonList(statement),
+                        statement.getLocation());
             }
         }
         return new IfStatementNode(condition, thenBlock, elseBlock, ifToken.location);
@@ -451,8 +459,8 @@ public class DefaultParser implements Parser {
             BaseNode nameNode = parseIdentifier();
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
-                DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode, parseExpression(),
-                        nameNode.getLocation());
+                DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode,
+                        parseExpression(), nameNode.getLocation());
                 param.add(paramValNode);
             } else {
                 param.add(nameNode);
@@ -467,8 +475,8 @@ public class DefaultParser implements Parser {
             BaseNode nameNode = parseIdentifier();
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
-                DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode, parseExpression(),
-                        nameNode.getLocation());
+                DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode,
+                        parseExpression(), nameNode.getLocation());
                 param.add(paramValNode);
             } else {
                 param.add(nameNode);
@@ -516,9 +524,11 @@ public class DefaultParser implements Parser {
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
-            blockNode = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+            blockNode =
+                    new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
-            throw SyntaxException.withSyntax("for condition expression expected ':' or '{'", tokenStream.token());
+            throw SyntaxException.withSyntax("for condition expression expected ':' or '{'",
+                    tokenStream.token());
         }
         return new ForEachStatementNode(name, arrayExp, blockNode, forToken.location);
     }
@@ -573,7 +583,8 @@ public class DefaultParser implements Parser {
         Token token = tokenStream.token();
 
         if (!parseContext.isInLoop()) {
-            String message = this.configuration.getMessageManager().continueNotInLoop(token.location);
+            String message =
+                    this.configuration.getMessageManager().continueNotInLoop(token.location);
             throw new SyntaxException(message);
         }
         tokenStream.nextToken();
@@ -696,10 +707,8 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
 
         BaseNode blockNode = parseBlock();
-        return new RuleStatementNode(
-                new StringNode(nameToken.name, nameToken.location),
-                (BlockNode) blockNode,
-                ruleToken.location);
+        return new RuleStatementNode(new StringNode(nameToken.name, nameToken.location),
+                (BlockNode) blockNode, ruleToken.location);
     }
 
     public BaseNode parseInfixDefinitionNode() {

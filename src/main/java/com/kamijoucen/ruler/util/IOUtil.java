@@ -1,7 +1,16 @@
 package com.kamijoucen.ruler.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.UUID;
+
+import com.kamijoucen.ruler.value.ValueType;
 
 public class IOUtil {
 
@@ -122,8 +131,12 @@ public class IOUtil {
         return Character.isWhitespace(ch);
     }
 
-//    public static boolean isWhitespace(char ch) {
-//        return ch != Constant.ENTER && Character.isWhitespace(ch);
-//    }
+    public static int getIndex(ValueType type1, ValueType type2) {
+        return type1.ordinal() * ValueType.values().length + type2.ordinal();
+    }
+
+    // public static boolean isWhitespace(char ch) {
+    // return ch != Constant.ENTER && Character.isWhitespace(ch);
+    // }
 
 }
