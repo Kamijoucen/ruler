@@ -23,8 +23,7 @@ public class CallClosureExecutor {
     }
 
     public BaseValue call(BaseValue self, ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
-
-        // TODO 
+        // TODO
         Scope callScope = new Scope("closure", false, closure.getDefineScope(), null);
         if (self != null) {
             callScope.putLocal(Constant.THIS_ARG, self);
@@ -54,7 +53,7 @@ public class CallClosureExecutor {
         // call function
         closure.getBlock().eval(callScope, context);
         // get return value
-        List<BaseValue> returnSpace = context.getReturnSpace();        
+        List<BaseValue> returnSpace = context.getReturnSpace();
         if (CollectionUtil.isEmpty(returnSpace)) {
             return NullValue.INSTANCE;
         }

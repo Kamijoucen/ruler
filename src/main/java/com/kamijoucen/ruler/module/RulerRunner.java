@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.module;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.parameter.RuleResult;
+import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -16,19 +16,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class RuleRunner implements Serializable {
+public class RulerRunner implements Serializable {
 
     private RulerModule module;
     private boolean isScript;
     private transient RulerConfiguration configuration;
 
-    public RuleRunner(RulerModule module, boolean isScript, RulerConfiguration configuration) {
+    public RulerRunner(RulerModule module, boolean isScript, RulerConfiguration configuration) {
         this.module = module;
         this.isScript = isScript;
         this.configuration = configuration;
     }
 
-    public RuleResult run(List<RulerParameter> param, RulerConfiguration configuration) {
+    public RulerResult run(List<RulerParameter> param, RulerConfiguration configuration) {
         List<Object> values = null;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         if (isScript) {
@@ -43,18 +43,18 @@ public class RuleRunner implements Serializable {
         for (Object value : values) {
             ruleResultValues.add(new RuleResultValue(value));
         }
-        return new RuleResult(ruleResultValues);
+        return new RulerResult(ruleResultValues);
     }
 
-    public RuleResult run() {
+    public RulerResult run() {
         return run((Map<String, Object>) null);
     }
 
-    public RuleResult run(List<RulerParameter> param) {
+    public RulerResult run(List<RulerParameter> param) {
         return run(param, configuration);
     }
 
-    public RuleResult run(Map<String, Object> param) {
+    public RulerResult run(Map<String, Object> param) {
         if (param == null) {
             param = Collections.emptyMap();
         }

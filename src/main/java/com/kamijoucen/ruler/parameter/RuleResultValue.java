@@ -12,6 +12,13 @@ public class RuleResultValue {
         return value;
     }
 
+    public String toFormattedString() {
+        if (value instanceof String) {
+            return "\"" + value + "\"";
+        }
+        return value.toString();
+    }
+
     @Override
     public String toString() {
         return value.toString();

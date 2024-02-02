@@ -86,9 +86,9 @@ public class RulerInterpreter {
         }
 
         this.runtimeContext.setReturnFlag(false);
-        List<BaseValue> returnValue = this.runtimeContext.getReturnSpace();        
+        List<BaseValue> returnValue = this.runtimeContext.getReturnSpace();
         this.runtimeContext.clearReturnSpace();
-        
+
         if (CollectionUtil.isEmpty(returnValue)) {
             return Collections.emptyList();
         }

@@ -1,6 +1,7 @@
-package com.kamijoucen.ruler.compiler.impl;
+package com.kamijoucen.ruler.module;
 
 import java.util.stream.Collectors;
+import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
@@ -9,19 +10,23 @@ import org.jline.terminal.TerminalBuilder;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.parameter.RuleResult;
+import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
+import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.IOUtil;
 
-public class RulerShell {
+public class ShellRunner {
 
     private final RulerConfiguration configuration;
+    private final Scope runScope;
     private int line = 0;
 
-    public RulerShell(RulerConfiguration configuration) {
+    public ShellRunner(RulerConfiguration configuration) {
         this.configuration = configuration;
+        this.runScope = new Scope("runtime root", true, configuration.getGlobalScope(), null);
     }
 
-    public void start() {
+    public void run() {
         System.out.println("Ruler shell start.");
         try {
             Terminal terminal = TerminalBuilder.builder().build();
@@ -29,10 +34,13 @@ public class RulerShell {
             while (true) {
                 try {
                     String code = lineReader.readLine("ruler[" + line + "]> ");
-                    RuleResult result = Ruler.compileExpression(code, configuration).run();
+                    if (IOUtil.isBlank(code)) {
+                        continue;
+                    }
+                    RulerResult result = runScript(code);
                     printResult(result);
                     line++;
-                } catch (UserInterruptException e) {
+                } catch (UserInterruptException | EndOfFileException e) {
                     break;
                 } catch (Exception e) {
                     System.out.println("Error: " + e.getMessage());
@@ -41,22 +49,27 @@ public class RulerShell {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println();
+        System.out.println("Ruler shell end.");
     }
 
-    private void printResult(RuleResult result) {
+    private RulerResult runScript(String code) {
+
+        return Ruler.compileExpression(code, configuration).run();
+    }
+
+    private void printResult(RulerResult result) {
         if (result.isEmpty()) {
             System.out.println("Empty result.");
             return;
         }
-        // 使用 stream api 通过, 逗号分隔
-        System.out.println(result.getResult().stream().map(RuleResultValue::getValue)
-                .map(Object::toString).collect(Collectors.joining(", ")));
+        System.out.println("< " + result.getResult().stream()
+                .map(RuleResultValue::toFormattedString).collect(Collectors.joining(", ")));
     }
 
-
     public static void main(String[] args) {
-        RulerShell shell = new RulerShell(new RulerConfigurationImpl());
-        shell.start();
+        ShellRunner shell = new ShellRunner(new RulerConfigurationImpl());
+        shell.run();
     }
 
 }
