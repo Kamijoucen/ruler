@@ -58,7 +58,6 @@ public class AssignEval implements BaseEval<AssignNode> {
         } else if (preValue.getType() == ValueType.RSON) {
             checkType(indexValue, ValueType.STRING, "Object key must be a string");
             RsonValue rsonValue = (RsonValue) preValue;
-
             context.getConfiguration().getObjectAccessControlManager().modifyObject(rsonValue,
                     ((StringValue) indexValue).getValue(), value, context);
         } else {

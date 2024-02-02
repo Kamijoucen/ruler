@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
+import com.kamijoucen.ruler.module.ShellRunner;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
@@ -16,6 +17,19 @@ import java.util.Collections;
 public class Main {
 
     public static void main(String[] args) {
+        if (args == null || args.length == 0) {
+            startShell();
+        } else {
+            startFile(args);
+        }
+    }
+
+    private static void startShell() {
+        ShellRunner shell = new ShellRunner(new RulerConfigurationImpl());
+        shell.run();
+    }
+
+    private static void startFile(String[] args) {
         if (args == null || args.length == 0) {
             throw new IllegalArgumentException("args is empty");
         }

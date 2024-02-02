@@ -2,8 +2,8 @@ import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
-import com.kamijoucen.ruler.module.RuleRunner;
-import com.kamijoucen.ruler.parameter.RuleResult;
+import com.kamijoucen.ruler.module.RulerRunner;
+import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -36,7 +36,7 @@ public class RulerTest {
 
         String str = "var a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
 
-        RuleRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compileScript(str, configuration);
 
         runner.run();
 
@@ -49,7 +49,7 @@ public class RulerTest {
 
         String str2 = "text = \"hello world!\"; println(text);";
 
-        RuleRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compileScript(str, configuration);
 
         runner.run();
 
@@ -58,7 +58,7 @@ public class RulerTest {
     @Test
     public void test9() {
         String str2 = "var i = 15; println(i);";
-        RuleRunner runner = Ruler.compileScript(str2, configuration);
+        RulerRunner runner = Ruler.compileScript(str2, configuration);
 
         runner.run();
 
@@ -69,7 +69,7 @@ public class RulerTest {
 
         String str = "var rson = {name:'name', age:1, doit:fun() { println('gogogogo'); },}; println(rson.name, rson.age, rson.doit());";
 
-        RuleRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compileScript(str, configuration);
 
         script.run();
 
@@ -82,7 +82,7 @@ public class RulerTest {
 
         String str = "var rson = {f: { ff: fun() {println('go!');} }};";
 
-        RuleRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compileScript(str, configuration);
 
         System.out.println(script);
 
@@ -92,7 +92,7 @@ public class RulerTest {
     public void test_dot_call2() {
         String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
 
-        RuleRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compileScript(str, configuration);
 
         script.run();
     }
@@ -102,7 +102,7 @@ public class RulerTest {
 
         String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f(18));";
 
-        RuleRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compileScript(str, configuration);
 
         script.run();
 
@@ -113,7 +113,7 @@ public class RulerTest {
 
         String str = "println(({a:1}).a);";
 
-        RuleRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compileScript(str, configuration);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("a", "lisicen");
@@ -128,7 +128,7 @@ public class RulerTest {
     public void typeof_test() {
         String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
         String sql = "var a = 5; println($a);";
-        RuleRunner script = Ruler.compileScript(sql, configuration);
+        RulerRunner script = Ruler.compileScript(sql, configuration);
         script.run();
     }
 
@@ -137,11 +137,11 @@ public class RulerTest {
 
         String sql = "(fun(i){return i >= 10;})(1)";
 
-        RuleRunner script = Ruler.compileExpression(sql, configuration);
+        RulerRunner script = Ruler.compileExpression(sql, configuration);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("level", 500);
-        RuleResult result = script.run(param);
+        RulerResult result = script.run(param);
 
         System.out.println(result.first().toBoolean());
 
@@ -153,16 +153,16 @@ public class RulerTest {
     // @Test
     public void str_bin_test() {
         String sql = "'500' < 500";
-        RuleRunner script = Ruler.compileExpression(sql, configuration);
-        RuleResult result = script.run();
+        RulerRunner script = Ruler.compileExpression(sql, configuration);
+        RulerResult result = script.run();
         System.out.println(result.first().toBoolean());
     }
 
     // @Test
     public void out_name_find_test() {
         String sql = "$level < 500";
-        RuleRunner script = Ruler.compileExpression(sql, configuration);
-        RuleResult result = script.run();
+        RulerRunner script = Ruler.compileExpression(sql, configuration);
+        RulerResult result = script.run();
         System.out.println(result.first().toBoolean());
 
         RuntimeContext context = script.customRun(new OutNameVisitor());
@@ -173,12 +173,12 @@ public class RulerTest {
     public void null_input_test() {
 
         String script = "$name == '12'";
-        RuleRunner runner = Ruler.compileExpression(script, configuration);
+        RulerRunner runner = Ruler.compileExpression(script, configuration);
 
         Map<String, Object> args = new HashMap<String, Object>();
         args.put("name", 12);
 
-        RuleResult result = runner.run(args);
+        RulerResult result = runner.run(args);
 
         System.out.println(result.first().toBoolean());
 
@@ -190,7 +190,7 @@ public class RulerTest {
         String script = "var arr = [[1]];  println(arr[0].length());";
         // String script = "var arr = [[1]]; println(arr[0]?.Length());";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
 
@@ -201,7 +201,7 @@ public class RulerTest {
 
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
 
@@ -224,7 +224,7 @@ public class RulerTest {
 
         String text = "var a = 哈哈哈哈(); println(typeof(哈哈哈哈));";
 
-        RuleRunner run = Ruler.compileScript(text, configuration);
+        RulerRunner run = Ruler.compileScript(text, configuration);
 
         run.run();
 
@@ -235,7 +235,7 @@ public class RulerTest {
 
         String script = "var arr = [2, 1, 85, 15,3]; println(listUtil.In(825, arr));";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
 
@@ -245,7 +245,7 @@ public class RulerTest {
     public void util_test() {
         String script = "import '/ruler/std/util.txt' util; var arr = [2, 1, 85, 15,3]; println(util.NotContainsAnyOne(63, arr, fun(v1, v2) { return v1 == v2; }));";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
     }
@@ -253,14 +253,14 @@ public class RulerTest {
     @Test
     public void util_eq_arr_test() {
         String script = "import '/ruler/std/util.txt' util; println(util.EqArrayEveryOne([1,2, 3], [3, 2, 1]));";
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
         run.run();
     }
 
     @Test
     public void util_eq_arr_any() {
         String script = "import '/ruler/std/util.txt' util; println(util.EqArrayAnyOne([11,21, 31], [311, 211, 11]));";
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
         run.run();
     }
 
@@ -269,7 +269,7 @@ public class RulerTest {
 
         String s = "((util.EqArrayAnyOne($_start_user_key, ['125'])) && (util.Eq($var_623a8e5cfe7b9e1b639f2679, 'c8024e9451db4b37b86643c6fb8b8c71')))";
 
-        RuleRunner run = Ruler.compileExpression(s, configuration);
+        RulerRunner run = Ruler.compileExpression(s, configuration);
 
         RulerParameter p = new RulerParameter(ValueType.STRING, "var_623a8e5cfe7b9e1b639f2679",
                 "9b5c863074464179bf98acf53344bf21");
@@ -277,7 +277,7 @@ public class RulerTest {
         List list = new ArrayList();
         list.add(p);
 
-        RuleResult result = run.run(list);
+        RulerResult result = run.run(list);
         System.out.println(result.first().toBoolean());
     }
 
@@ -299,7 +299,7 @@ public class RulerTest {
     public void time_stamp_check() {
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
         System.out.println("- " + System.currentTimeMillis());
         run.run();
@@ -310,18 +310,18 @@ public class RulerTest {
     @Test
     public void loop_root_return() {
         String script = "var i = 0; println((fun() {return 'aaa'; })()); while i < 10 { i = i + 1; if i == 5 { return 'lisicen'; } } return 'hehe';";
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
-        RuleResult result = run.run();
+        RulerResult result = run.run();
         System.out.println(result);
     }
 
     @Test
     public void rule_key_test() {
         String script = IOUtil.read("D:\\dev\\code\\ruler\\ruler\\src\\test\\java\\rule_key_test.txt");
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
-        RuleResult result = run.run();
+        RulerResult result = run.run();
         System.out.println(result);
     }
 
@@ -329,17 +329,17 @@ public class RulerTest {
     public void fun_args_test() {
         String script = "var a = fun() { println(_args_); }; a(1, [1, 2], 1.1);";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
-        RuleResult result = run.run();
+        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerResult result = run.run();
     }
 
     @Test
     public void global_test() {
         String script = "println(op.Add(1, 2, -3)); println(op.Sub(6, 3, -1));";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
         long v1 = System.currentTimeMillis();
-        RuleResult result = run.run();
+        RulerResult result = run.run();
         long v2 = System.currentTimeMillis();
         System.out.println("time1: " + (v2 - v1));
 
@@ -354,7 +354,7 @@ public class RulerTest {
 
         String script = "println(ok.Ok());";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
         run.run();
 
     }
@@ -371,7 +371,7 @@ public class RulerTest {
 
         String script = "var f = fun() { println(a); }; var a = 100; f();";
 
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
 
@@ -381,22 +381,22 @@ public class RulerTest {
     public void testAssign() {
         String script = "for arg in _args_:\n" +
                 "        num = num + ToNumber(arg);";
-        RuleRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compileScript(script, configuration);
 
     }
 
     @Test
     public void testIf() {
         String script = "if true {} i = i + 1;";
-        RuleRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compileScript(script, configuration);
     }
 
     @Test
     public void infixTest() {
         String script = IOUtil.read("D:\\dev\\code\\ruler-github\\ruler\\src\\test\\java\\infixtest1.txt");
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
-        RuleResult result = run.run();
+        RulerResult result = run.run();
         System.out.println(result);
     }
 
@@ -404,9 +404,9 @@ public class RulerTest {
     public void infixImportTest() {
 
         String script = IOUtil.read("D:\\dev\\code\\ruler-github\\ruler\\src\\test\\java\\infixtest2.txt");
-        RuleRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compileScript(script, configuration);
 
-        RuleResult result = run.run();
+        RulerResult result = run.run();
     }
 
     // @Test
@@ -421,9 +421,9 @@ public class RulerTest {
 
         String str = "'aaaa'.println()";
 
-        RuleRunner runner = Ruler.compileExpression(str, configuration);
+        RulerRunner runner = Ruler.compileExpression(str, configuration);
 
-        RuleResult result = runner.run();
+        RulerResult result = runner.run();
         System.out.println(result);
     }
 
@@ -432,7 +432,7 @@ public class RulerTest {
 
         String str = "var i = 0; while i < 10 { i = i + 1; if i == 5 { break; } } return i;";
 
-        RuleRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compileScript(str, configuration);
 
 
         Assert.assertEquals(5, runner.run().first().toInteger());

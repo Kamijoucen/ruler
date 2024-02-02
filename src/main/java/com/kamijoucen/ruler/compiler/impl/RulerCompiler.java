@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -8,7 +9,8 @@ import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.CollectionUtil;
-
+import com.kamijoucen.ruler.util.SyntaxCheckUtil;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RulerCompiler {
@@ -28,9 +30,8 @@ public class RulerCompiler {
 
     public RulerModule compileExpression() {
         RulerModule module = new RulerModule("runtime expression");
-        // 词法分析器
-        DefaultLexical lexical = new DefaultLexical(mainScript.getContent(), module.getFullName(), configuration);
-        // 开始词法分析
+        DefaultLexical lexical =
+                new DefaultLexical(mainScript.getContent(), module.getFullName(), configuration);
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
         tokenStream.nextToken();
@@ -44,18 +45,47 @@ public class RulerCompiler {
         return module;
     }
 
-    private RulerModule compileModule(RulerScript script) {
-        RulerModule module = new RulerModule(script.getFileName());
-        // 词法分析器
-        DefaultLexical lexical = new DefaultLexical(script.getContent(), module.getFullName(), configuration);
-        // 开始词法分析
+    public RulerModule compileStatement() {
+        RulerModule module = new RulerModule("shell statement");
+        DefaultLexical lexical =
+                new DefaultLexical(mainScript.getContent(), module.getFullName(), configuration);
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
-        // 语法分析器
+        tokenStream.nextToken();
+
         Parser parser = new DefaultParser(tokenStream, configuration);
-        // 开始解析语法
-        List<BaseNode> statements = parser.parse();
+        List<BaseNode> statements = new ArrayList<>();
+        while (tokenStream.token().type != TokenType.EOF) {
+            statements.add(parser.parseStatement());
+        }
         module.setStatements(statements);
         return module;
     }
+
+    private RulerModule compileModule(RulerScript script) {
+
+        final List<BaseNode> rootStatements = new ArrayList<>();
+
+        RulerModule module = new RulerModule(script.getFileName());
+        DefaultLexical lexical =
+                new DefaultLexical(script.getContent(), module.getFullName(), configuration);
+        TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
+        tokenStream.scan();
+        tokenStream.nextToken();
+        Parser parser = new DefaultParser(tokenStream, configuration);
+        // parse import
+        List<ImportNode> list = new ArrayList<>();
+        while (tokenStream.token().type == TokenType.KEY_IMPORT) {
+            list.add(parser.parseImport());
+        }
+        SyntaxCheckUtil.availableImport(list);
+        rootStatements.addAll(list);
+        // parse statements
+        while (tokenStream.token().type != TokenType.EOF) {
+            rootStatements.add(parser.parseStatement());
+        }
+        module.setStatements(rootStatements);
+        return module;
+    }
+
 }

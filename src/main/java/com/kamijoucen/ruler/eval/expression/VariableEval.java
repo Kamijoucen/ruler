@@ -15,7 +15,7 @@ public class VariableEval implements BaseEval<VariableDefineNode> {
         NameNode lhs = (NameNode) node.getLhs();
         BaseValue defValue = scope.getByLocal(lhs.name.name);
         if (defValue != null) {
-            throw SyntaxException.withSyntax("", lhs.getLocation());
+            throw SyntaxException.withSyntax("variable '" + lhs.name.name + "' has been defined", lhs.getLocation());
         }
         if (node.getRhs() != null) {
             BaseValue rValue = node.getRhs().eval(scope, context);

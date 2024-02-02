@@ -4,11 +4,11 @@ import com.kamijoucen.ruler.util.CollectionUtil;
 
 import java.util.List;
 
-public class RuleResult {
+public class RulerResult {
 
     private final List<RuleResultValue> result;
 
-    public RuleResult(List<RuleResultValue> value) {
+    public RulerResult(List<RuleResultValue> value) {
         this.result = value;
     }
 

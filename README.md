@@ -1,11 +1,13 @@
-# 简单可扩展的规则引擎
+# 使用简单且可扩展的脚本引擎
 
+## Shell
+项目支持 jar 包独立运行，启动 jar 文件会创建一个运行 ruler 语法的 shell 控制台
+![ruler shell](pic/shell.gif)
 
 ## hello world
 ```java
 Ruler.compileExpression("println('hello world!')", new RulerConfigurationImpl()).run();
 ```
-
 
 ```java
 // 拼接脚本
@@ -96,8 +98,8 @@ var a = [1, 2, 3];
 
 // 配置代理对象
 var proxyConfig = {
-    get: fun(self, name) { 
-        if name === 'myLength' { 
+    get: fun(self, name) {
+        if name === 'myLength' {
             return self.length() + 1;
         } else {
             return self[name];
@@ -120,7 +122,7 @@ var proxyConfig = {
 };
 
 // Proxy是一个内置函数，用于创建一个代理对象
-a = Proxy(a, proxyConfig);  
+a = Proxy(a, proxyConfig);
 
 // 此时访问a上的成员，实际会执行代理配置代理对象中的get方法
 println(a.myLength);

@@ -12,7 +12,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.module.RuleRunner;
+import com.kamijoucen.ruler.module.RulerRunner;
 
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.AverageTime, Mode.Throughput})
@@ -20,7 +20,7 @@ public class PerformanceTest {
 
     public static final RulerConfigurationImpl configuration;
 
-    public static final RuleRunner addTestRunner;
+    public static final RulerRunner addTestRunner;
 
     static {
 
@@ -33,7 +33,7 @@ public class PerformanceTest {
     public void testMethod() {
         addTestRunner.run();
     }
-    
+
     public static void main(String[] args) throws RunnerException {
 
         Options opt = new OptionsBuilder()
@@ -42,7 +42,7 @@ public class PerformanceTest {
                 .build();
 
         new Runner(opt).run();
-        
+
     }
-    
+
 }
