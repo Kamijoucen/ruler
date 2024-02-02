@@ -1,8 +1,42 @@
 package com.kamijoucen.ruler.compiler.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.BlockNode;
+import com.kamijoucen.ruler.ast.expression.CallNode;
+import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
+import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
+import com.kamijoucen.ruler.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
+import com.kamijoucen.ruler.ast.expression.InfixDefinitionNode;
+import com.kamijoucen.ruler.ast.expression.RuleStatementNode;
+import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.facotr.ArrayNode;
+import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.facotr.BoolNode;
+import com.kamijoucen.ruler.ast.facotr.BreakNode;
+import com.kamijoucen.ruler.ast.facotr.ContinueNode;
+import com.kamijoucen.ruler.ast.facotr.DoubleNode;
+import com.kamijoucen.ruler.ast.facotr.IntegerNode;
+import com.kamijoucen.ruler.ast.facotr.NameNode;
+import com.kamijoucen.ruler.ast.facotr.NullNode;
+import com.kamijoucen.ruler.ast.facotr.OutNameNode;
+import com.kamijoucen.ruler.ast.facotr.ReturnNode;
+import com.kamijoucen.ruler.ast.facotr.RsonNode;
+import com.kamijoucen.ruler.ast.facotr.StringNode;
+import com.kamijoucen.ruler.ast.facotr.ThisNode;
+import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
+import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
 import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
@@ -16,9 +50,6 @@ import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.util.SyntaxCheckUtil;
-
-import java.util.*;
 
 public class DefaultParser implements Parser {
 
@@ -28,37 +59,12 @@ public class DefaultParser implements Parser {
 
     private final TokenStream tokenStream;
 
-    private final List<BaseNode> rootStatements = new ArrayList<>();
-
     public DefaultParser(TokenStream tokenStream, RulerConfiguration configuration) {
         this.tokenStream = tokenStream;
         this.configuration = configuration;
         this.parseContext = new ParseContext(this.configuration);
         this.parseContext.setTypeCheckVisitor(this.configuration.getTypeCheckVisitor());
         this.parseContext.setRoot(true);
-    }
-
-    @Override
-    public List<BaseNode> parse() {
-        tokenStream.nextToken();
-        parseImports();
-        parseStatements();
-        return this.rootStatements;
-    }
-
-    private void parseImports() {
-        List<ImportNode> list = new ArrayList<>();
-        while (tokenStream.token().type == TokenType.KEY_IMPORT) {
-            list.add(parseImport());
-        }
-        SyntaxCheckUtil.availableImport(list);
-        this.rootStatements.addAll(list);
-    }
-
-    private void parseStatements() {
-        while (tokenStream.token().type != TokenType.EOF) {
-            this.rootStatements.add(parseStatement());
-        }
     }
 
     @Override

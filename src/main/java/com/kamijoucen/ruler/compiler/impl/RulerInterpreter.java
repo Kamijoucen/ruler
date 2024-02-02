@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.ValueType;
 import com.kamijoucen.ruler.value.convert.ValueConvert;
 
 import java.util.ArrayList;
@@ -62,8 +63,34 @@ public class RulerInterpreter {
         AssertUtil.notNull(firstNode);
         BaseValue value = firstNode.eval(runScope, this.runtimeContext);
 
-        ValueConvert convert = this.configuration.getValueConvertManager().getConverter(value.getType());
+        ValueConvert convert =
+                this.configuration.getValueConvertManager().getConverter(value.getType());
         return CollectionUtil.list(convert.baseToReal(value, configuration));
+    }
+
+    public List<Object> runStatement(Scope runScope) {
+        this.runtimeContext = configuration.createDefaultRuntimeContext(null);
+        List<BaseValue> values = new ArrayList<>();
+        for (BaseNode statement : module.getStatements()) {
+            BaseValue value = statement.eval(runScope, this.runtimeContext);
+            values.add(value);
+        }
+        if (CollectionUtil.isEmpty(values)) {
+            return Collections.emptyList();
+        }
+        List<Object> realValue = new ArrayList<Object>(values.size());
+        for (BaseValue baseValue : values) {
+            // TODO 临时处理函数和闭包的返回值
+            if (baseValue.getType() == ValueType.FUNCTION
+                    || baseValue.getType() == ValueType.CLOSURE) {
+                realValue.add(baseValue);
+            } else {
+                ValueConvert convert = this.configuration.getValueConvertManager()
+                        .getConverter(baseValue.getType());
+                realValue.add(convert.baseToReal(baseValue, configuration));
+            }
+        }
+        return realValue;
     }
 
     public List<Object> runScript(List<RulerParameter> param, Scope runScope) {

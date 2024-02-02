@@ -1,5 +1,7 @@
 package com.kamijoucen.ruler.module;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
@@ -7,9 +9,9 @@ import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import com.kamijoucen.ruler.Ruler;
+import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
+import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -23,14 +25,15 @@ public class ShellRunner {
 
     public ShellRunner(RulerConfiguration configuration) {
         this.configuration = configuration;
-        this.runScope = new Scope("runtime root", true, configuration.getGlobalScope(), null);
+        this.runScope = new Scope("shell root", false, configuration.getGlobalScope(), null);
     }
 
     public void run() {
         System.out.println("Ruler shell start.");
         try {
             Terminal terminal = TerminalBuilder.builder().build();
-            LineReader lineReader = LineReaderBuilder.builder().terminal(terminal).build();
+            LineReader lineReader = LineReaderBuilder.builder().terminal(terminal)
+                    .option(LineReader.Option.BRACKETED_PASTE, false).build();
             while (true) {
                 try {
                     String code = lineReader.readLine("ruler[" + line + "]> ");
@@ -43,6 +46,7 @@ public class ShellRunner {
                 } catch (UserInterruptException | EndOfFileException e) {
                     break;
                 } catch (Exception e) {
+                    // e.printStackTrace();
                     System.out.println("Error: " + e.getMessage());
                 }
             }
@@ -55,7 +59,17 @@ public class ShellRunner {
 
     private RulerResult runScript(String code) {
 
-        return Ruler.compileExpression(code, configuration).run();
+        RulerCompiler compiler = new RulerCompiler(new RulerScript("shell", code), configuration);
+        RulerModule module = compiler.compileStatement();
+
+        RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
+        List<Object> values = interpreter.runStatement(runScope);
+
+        List<RuleResultValue> ruleResultValues = new ArrayList<RuleResultValue>(values.size());
+        for (Object value : values) {
+            ruleResultValues.add(new RuleResultValue(value));
+        }
+        return new RulerResult(ruleResultValues);
     }
 
     private void printResult(RulerResult result) {
@@ -65,11 +79,6 @@ public class ShellRunner {
         }
         System.out.println("< " + result.getResult().stream()
                 .map(RuleResultValue::toFormattedString).collect(Collectors.joining(", ")));
-    }
-
-    public static void main(String[] args) {
-        ShellRunner shell = new ShellRunner(new RulerConfigurationImpl());
-        shell.run();
     }
 
 }
