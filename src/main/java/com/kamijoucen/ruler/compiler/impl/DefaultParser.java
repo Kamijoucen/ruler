@@ -37,6 +37,7 @@ import com.kamijoucen.ruler.ast.facotr.StringNode;
 import com.kamijoucen.ruler.ast.facotr.ThisNode;
 import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
 import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
+import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
@@ -589,8 +590,8 @@ public class DefaultParser implements Parser {
         Token token = tokenStream.token();
 
         if (!parseContext.isInLoop()) {
-            String message =
-                    this.configuration.getMessageManager().continueNotInLoop(token.location);
+            String message = this.configuration.getMessageManager()
+                    .buildMessage(MessageType.CONTINUE_NOT_IN_LOOP, token.location);
             throw new SyntaxException(message);
         }
         tokenStream.nextToken();
@@ -598,12 +599,11 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseBreak() {
-
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
         Token token = tokenStream.token();
-
         if (!parseContext.isInLoop()) {
-            String message = this.configuration.getMessageManager().breakNotInLoop(token.location);
+            String message = this.configuration.getMessageManager()
+                    .buildMessage(MessageType.BREAK_NOT_IN_LOOP, token.location);
             throw new SyntaxException(message);
         }
         tokenStream.nextToken();

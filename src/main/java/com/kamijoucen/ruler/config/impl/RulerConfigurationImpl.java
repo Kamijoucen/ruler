@@ -163,7 +163,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     public void setObjectAccessControlManager(ObjectAccessControlManager objectAccessControlManager) {
         this.objectAccessControlManager = objectAccessControlManager;
     }
-    
+
     @Override
     public MessageManager getMessageManager() {
         return messageManager;
