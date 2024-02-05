@@ -1,3 +1,4 @@
+package com.kamijoucen.ruler.test;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
@@ -282,11 +283,6 @@ public class RulerTest {
     }
 
     // @Test
-    // public void i18n_test() {
-    //     ResourceBundle.getBundle("Messages", Locale.US);// 原文出自【易百教程】，商业转载请联系作者获得授权，非商业请保留原文链接：https://www.yiibai.com/java_i18n/java_i18n_resourcebundle.html#article-start
-    // }
-
-    // @Test
     // public void loop_count_check() {
     //     String script = "var i = 0; while i < 10 { i = i + 1; println(i); }";
 
@@ -438,5 +434,6 @@ public class RulerTest {
         Assert.assertEquals(5, runner.run().first().toInteger());
 
     }
+
 
 }
