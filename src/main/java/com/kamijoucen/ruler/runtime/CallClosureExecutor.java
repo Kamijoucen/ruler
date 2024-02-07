@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
-import com.kamijoucen.ruler.ast.facotr.NameNode;
+import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.common.Constant;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.util.CollectionUtil;

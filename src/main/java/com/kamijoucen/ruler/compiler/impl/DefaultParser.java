@@ -21,22 +21,23 @@ import com.kamijoucen.ruler.ast.expression.InfixDefinitionNode;
 import com.kamijoucen.ruler.ast.expression.RuleStatementNode;
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
 import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
-import com.kamijoucen.ruler.ast.facotr.ArrayNode;
-import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
-import com.kamijoucen.ruler.ast.facotr.BoolNode;
-import com.kamijoucen.ruler.ast.facotr.BreakNode;
-import com.kamijoucen.ruler.ast.facotr.ContinueNode;
-import com.kamijoucen.ruler.ast.facotr.DoubleNode;
-import com.kamijoucen.ruler.ast.facotr.IntegerNode;
-import com.kamijoucen.ruler.ast.facotr.NameNode;
-import com.kamijoucen.ruler.ast.facotr.NullNode;
-import com.kamijoucen.ruler.ast.facotr.OutNameNode;
-import com.kamijoucen.ruler.ast.facotr.ReturnNode;
-import com.kamijoucen.ruler.ast.facotr.RsonNode;
-import com.kamijoucen.ruler.ast.facotr.StringNode;
-import com.kamijoucen.ruler.ast.facotr.ThisNode;
-import com.kamijoucen.ruler.ast.facotr.TypeOfNode;
-import com.kamijoucen.ruler.ast.facotr.UnaryOperationNode;
+import com.kamijoucen.ruler.ast.factor.ArrayNode;
+import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.factor.BoolNode;
+import com.kamijoucen.ruler.ast.factor.BreakNode;
+import com.kamijoucen.ruler.ast.factor.ContinueNode;
+import com.kamijoucen.ruler.ast.factor.DoubleNode;
+import com.kamijoucen.ruler.ast.factor.IntegerNode;
+import com.kamijoucen.ruler.ast.factor.NameNode;
+import com.kamijoucen.ruler.ast.factor.NullNode;
+import com.kamijoucen.ruler.ast.factor.OutNameNode;
+import com.kamijoucen.ruler.ast.factor.ReturnNode;
+import com.kamijoucen.ruler.ast.factor.RsonNode;
+import com.kamijoucen.ruler.ast.factor.StringNode;
+import com.kamijoucen.ruler.ast.factor.ThisNode;
+import com.kamijoucen.ruler.ast.factor.TypeOfNode;
+import com.kamijoucen.ruler.ast.factor.UnaryOperationNode;
+import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
@@ -589,8 +590,8 @@ public class DefaultParser implements Parser {
         Token token = tokenStream.token();
 
         if (!parseContext.isInLoop()) {
-            String message =
-                    this.configuration.getMessageManager().continueNotInLoop(token.location);
+            String message = this.configuration.getMessageManager()
+                    .buildMessage(MessageType.CONTINUE_NOT_IN_LOOP, token.location);
             throw new SyntaxException(message);
         }
         tokenStream.nextToken();
@@ -598,12 +599,11 @@ public class DefaultParser implements Parser {
     }
 
     public BaseNode parseBreak() {
-
         AssertUtil.assertToken(tokenStream, TokenType.KEY_BREAK);
         Token token = tokenStream.token();
-
         if (!parseContext.isInLoop()) {
-            String message = this.configuration.getMessageManager().breakNotInLoop(token.location);
+            String message = this.configuration.getMessageManager()
+                    .buildMessage(MessageType.BREAK_NOT_IN_LOOP, token.location);
             throw new SyntaxException(message);
         }
         tokenStream.nextToken();

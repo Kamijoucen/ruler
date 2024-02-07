@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.eval.expression;
 
 import com.kamijoucen.ruler.ast.expression.BlockNode;
 import com.kamijoucen.ruler.ast.expression.RuleStatementNode;
-import com.kamijoucen.ruler.ast.facotr.StringNode;
+import com.kamijoucen.ruler.ast.factor.StringNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

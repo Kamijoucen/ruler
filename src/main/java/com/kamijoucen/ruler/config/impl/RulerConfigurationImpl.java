@@ -50,7 +50,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private CallClosureExecutor callClosureExecutor = new CallClosureExecutor(this);
 
-    private ObjectAccessControlManager objectAccessControlManager = new ObjectAccessControlManagerImpl();
+    private ObjectAccessControlManager objectAccessControlManager =
+            new ObjectAccessControlManagerImpl();
+
+    private SpiLoaderManager spiLoaderManager = new SpiLoaderManagerImpl();
 
     private MessageManager messageManager = new MessageManagerImpl();
 
@@ -61,6 +64,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private void init() {
         initEngineBehaviorFactory();
         initDefaultFunction();
+        initPlugin();
+    }
+
+    private void initPlugin() {
+        spiLoaderManager.load(this);
     }
 
     private void initEngineBehaviorFactory() {
@@ -86,7 +94,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         CallFunction callFunction = new CallFunction();
 
         this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
-        this.globalScope.putLocal(toBooleanFunction.getName(), new FunctionValue(toBooleanFunction));
+        this.globalScope.putLocal(toBooleanFunction.getName(),
+                new FunctionValue(toBooleanFunction));
         this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
         this.globalScope.putLocal(proxyFunction.getName(), new FunctionValue(proxyFunction));
         this.globalScope.putLocal(callFunction.getName(), new FunctionValue(callFunction));
@@ -160,10 +169,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return this.objectAccessControlManager;
     }
 
-    public void setObjectAccessControlManager(ObjectAccessControlManager objectAccessControlManager) {
+    public void setObjectAccessControlManager(
+            ObjectAccessControlManager objectAccessControlManager) {
         this.objectAccessControlManager = objectAccessControlManager;
     }
-    
+
     @Override
     public MessageManager getMessageManager() {
         return messageManager;
@@ -257,7 +267,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return createRuntimeContextFactory;
     }
 
-    public void setCreateRuntimeContextFactory(CreateRuntimeContextFactory createRuntimeContextFactory) {
+    public void setCreateRuntimeContextFactory(
+            CreateRuntimeContextFactory createRuntimeContextFactory) {
         this.createRuntimeContextFactory = createRuntimeContextFactory;
     }
 

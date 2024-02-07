@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.ast.expression;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;

@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.common.Constant;
+import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.common.State;
 import com.kamijoucen.ruler.compiler.Lexical;
 import com.kamijoucen.ruler.config.RulerConfiguration;
@@ -153,8 +154,8 @@ public class DefaultLexical implements Lexical {
             type = TokenLookUp.symbol(symbol);
         }
         if (type == TokenType.UN_KNOW) {
-            String message = this.configuration.getMessageManager().unknownSymbol(symbol,
-                    new TokenLocation(line, column, fileName));
+            String message = this.configuration.getMessageManager().buildMessage(
+                    MessageType.UNKNOWN_SYMBOL, new TokenLocation(line, column, fileName), symbol);
             throw new SyntaxException(message);
         }
         forward(step);
@@ -173,8 +174,9 @@ public class DefaultLexical implements Lexical {
             appendAndForward();
         }
         if (isOver()) {
-            String message = this.configuration.getMessageManager().notFoundStringEnd(curStringFlag,
-                    new TokenLocation(line, column, fileName));
+            String message = this.configuration.getMessageManager().buildMessage(
+                    MessageType.NOT_FOUND_STRING_END, new TokenLocation(line, column, fileName),
+                    curStringFlag + "");
             throw new SyntaxException(message);
         }
         forward();
@@ -199,8 +201,9 @@ public class DefaultLexical implements Lexical {
                 len++;
             }
             if (len == 0) {
-                String message = this.configuration.getMessageManager().numberFormatError(buffer.toString(),
-                        new TokenLocation(line, column, fileName));
+                String message = this.configuration.getMessageManager().buildMessage(
+                        MessageType.NUMBER_FORMAT_ERROR, new TokenLocation(line, column, fileName),
+                        buffer.toString());
                 throw new SyntaxException(message);
             }
             makeToken(TokenType.DOUBLE);
@@ -223,8 +226,9 @@ public class DefaultLexical implements Lexical {
             forward();
         } else {
             if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
-                String message = configuration.getMessageManager().illegalIdentifier(charAt() + "",
-                        new TokenLocation(line, column, fileName));
+                String message = configuration.getMessageManager().buildMessage(
+                        MessageType.ILLEGAL_IDENTIFIER, new TokenLocation(line, column, fileName),
+                        charAt() + "");
                 throw new SyntaxException(message);
             }
             int len = 0;
@@ -233,8 +237,9 @@ public class DefaultLexical implements Lexical {
                 len++;
             }
             if (len == 0) {
-                String message = configuration.getMessageManager().illegalIdentifier(buffer.toString(),
-                        new TokenLocation(line, column, fileName));
+                String message = configuration.getMessageManager().buildMessage(
+                        MessageType.ILLEGAL_IDENTIFIER, new TokenLocation(line, column, fileName),
+                        buffer.toString());
                 throw new SyntaxException(message);
             }
         }
@@ -262,7 +267,8 @@ public class DefaultLexical implements Lexical {
     }
 
     private void makeToken(TokenType type) {
-        currentToken = new Token(type, buffer.toString(), new TokenLocation(line, column, fileName));
+        currentToken =
+                new Token(type, buffer.toString(), new TokenLocation(line, column, fileName));
         buffer.delete(0, buffer.length());
     }
 

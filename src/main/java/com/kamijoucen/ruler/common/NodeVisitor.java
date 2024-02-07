@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.common;
 
 import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.ast.factor.*;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;

@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.typecheck;
 
-import com.kamijoucen.ruler.ast.facotr.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

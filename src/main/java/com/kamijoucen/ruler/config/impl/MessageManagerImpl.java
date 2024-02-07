@@ -1,53 +1,37 @@
 package com.kamijoucen.ruler.config.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.config.MessageManager;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
 
 public class MessageManagerImpl implements MessageManager {
 
-    @Override
-    public String buildMessage(String msg, TokenLocation location, Scope currentScope) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'buildMessage'");
-    }
+    private Map<MessageType, String> messageMap = new HashMap<>();
 
-    @Override
-    public String unknownSymbol(String symbol, TokenLocation location) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'unknownSymbol'");
-    }
-
-    @Override
-    public String notFoundStringEnd(char flag, TokenLocation location) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'notFoundStringEnd'");
-    }
-
-    @Override
-    public String numberFormatError(String number, TokenLocation location) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'numberFormatError'");
-    }
-
-    @Override
-    public String illegalIdentifier(String identifier, TokenLocation location) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'illegalIdentifier'");
-    }
-
-    @Override
-    public String breakNotInLoop(TokenLocation location) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'breakNotInLoop'");
-    }
-
-    @Override
-    public String continueNotInLoop(TokenLocation location) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'continueNotInLoop'");
+    public MessageManagerImpl() {
+        messageMap.put(MessageType.UNKNOWN_SYMBOL, "Unknown symbol '%s'");
+        messageMap.put(MessageType.NOT_FOUND_STRING_END, "Not found string end");
+        messageMap.put(MessageType.NUMBER_FORMAT_ERROR, "Number format error '%s'");
+        messageMap.put(MessageType.ILLEGAL_IDENTIFIER, "Illegal identifier '%s'");
+        messageMap.put(MessageType.BREAK_NOT_IN_LOOP, "Break not in loop");
+        messageMap.put(MessageType.CONTINUE_NOT_IN_LOOP, "Continue not in loop");
+        messageMap.put(MessageType.VARIABLE_NOT_DEFINED, "Variable not defined '%s'");
     }
 
 
-    
+    @Override
+    public String buildMessage(MessageType type, TokenLocation location, String... args) {
+        String message = messageMap.get(type);
+        if (message == null) {
+            return "Unknown message type";
+        }
+        return String.format(message, (Object[]) args) + " at " + buildLocation(location);
+    }
+
+    private String buildLocation(TokenLocation location) {
+        return location.line + ":" + location.column;
+    }
+
 }
