@@ -1,18 +1,21 @@
-package com.kamijoucen.ruler.ast.expression;
+package com.kamijoucen.ruler.ast.factor;
 
+import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
-import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
-import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class IndexNode extends BinaryOperationNode {
+import java.util.Map;
 
-    public IndexNode(BaseNode lhs, BaseNode rhs, BinaryOperation operation, TokenLocation location) {
-        super(TokenType.INDEX, TokenType.INDEX.name(), lhs, rhs, operation, location);
+public class RsonNode extends AbstractBaseNode {
+
+    private Map<String, BaseNode> properties;
+
+    public RsonNode(Map<String, BaseNode> properties, TokenLocation location) {
+        super(location);
+        this.properties = properties;
     }
 
     @Override
@@ -24,4 +27,13 @@ public class IndexNode extends BinaryOperationNode {
     public BaseValue typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
+
+    public Map<String, BaseNode> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<String, BaseNode> properties) {
+        this.properties = properties;
+    }
+
 }

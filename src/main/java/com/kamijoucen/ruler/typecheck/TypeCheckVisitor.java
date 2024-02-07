@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.typecheck;
 
 import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.facotr.*;
+import com.kamijoucen.ruler.ast.factor.*;
 import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;

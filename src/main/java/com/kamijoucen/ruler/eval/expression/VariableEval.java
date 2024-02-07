@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.eval.expression;
 
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
-import com.kamijoucen.ruler.ast.facotr.NameNode;
+import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;

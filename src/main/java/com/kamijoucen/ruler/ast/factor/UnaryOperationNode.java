@@ -1,22 +1,25 @@
-package com.kamijoucen.ruler.ast.expression;
+package com.kamijoucen.ruler.ast.factor;
 
 import com.kamijoucen.ruler.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.factor.NameNode;
+import com.kamijoucen.ruler.operation.BinaryOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.TokenLocation;
+import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.value.BaseValue;
 
-public class DefaultParamValNode extends AbstractBaseNode {
+public class UnaryOperationNode extends AbstractBaseNode {
 
-    private final NameNode name;
+    private final TokenType op;
     private final BaseNode exp;
+    private final BinaryOperation operation;
 
-    public DefaultParamValNode(NameNode name, BaseNode exp, TokenLocation location) {
+    public UnaryOperationNode(TokenType op, BaseNode exp, BinaryOperation operation, TokenLocation location) {
         super(location);
-        this.name = name;
+        this.op = op;
         this.exp = exp;
+        this.operation = operation;
     }
 
     @Override
@@ -29,13 +32,15 @@ public class DefaultParamValNode extends AbstractBaseNode {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
-    public NameNode getName() {
-        return name;
+    public TokenType getOp() {
+        return op;
     }
-
 
     public BaseNode getExp() {
         return exp;
     }
 
+    public BinaryOperation getOperation() {
+        return operation;
+    }
 }

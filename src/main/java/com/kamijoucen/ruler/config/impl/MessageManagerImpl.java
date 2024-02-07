@@ -17,6 +17,7 @@ public class MessageManagerImpl implements MessageManager {
         messageMap.put(MessageType.ILLEGAL_IDENTIFIER, "Illegal identifier '%s'");
         messageMap.put(MessageType.BREAK_NOT_IN_LOOP, "Break not in loop");
         messageMap.put(MessageType.CONTINUE_NOT_IN_LOOP, "Continue not in loop");
+        messageMap.put(MessageType.VARIABLE_NOT_DEFINED, "Variable not defined '%s'");
     }
 
 
