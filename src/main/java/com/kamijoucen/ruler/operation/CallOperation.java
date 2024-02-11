@@ -20,11 +20,10 @@ public class CallOperation implements BinaryOperation {
         BaseValue self = context.getCurrentSelfValue();
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            Object[] funcParam = Arrays.copyOfRange(params, 0, params.length);
             switch (callFunc.getType()) {
                 case FUNCTION:
                     RulerFunction function = ((FunctionValue) callFunc).getValue();
-                    return (BaseValue) function.call(context, scope, self, funcParam);
+                    return (BaseValue) function.call(context, scope, self, (Object[]) params);
                 case CLOSURE:
                     ClosureValue closureFunction = ((ClosureValue) callFunc);
                     return context.getConfiguration().getCallClosureExecutor().call(self,
@@ -32,7 +31,7 @@ public class CallOperation implements BinaryOperation {
                 default: {
                     Object printObj = callFunc;
                     if (lhs instanceof DotNode) {
-                        printObj = ((NameNode)((DotNode) lhs).getRhs()).name.name;
+                        printObj = ((NameNode) ((DotNode) lhs).getRhs()).name.name;
                     }
                     // TODO 优化错误信息
                     throw new IllegalArgumentException(printObj + " not is a function!");
