@@ -39,6 +39,7 @@ public class TokenLookUp {
         SYMBOL.put("\n", TokenType.KEY_ENTER);
         SYMBOL.put("===", TokenType.STRICT_EQ);
         SYMBOL.put("!==", TokenType.STRICT_NE);
+        SYMBOL.put("#", TokenType.HASH);
 
         KEY_WORDS.put("return", TokenType.KEY_RETURN);
         KEY_WORDS.put("if", TokenType.KEY_IF);
@@ -59,6 +60,7 @@ public class TokenLookUp {
         KEY_WORDS.put("in", TokenType.KEY_IN);
         KEY_WORDS.put("rule", TokenType.KEY_RULE);
         KEY_WORDS.put("infix", TokenType.KEY_INFIX);
+        KEY_WORDS.put("match", TokenType.KEY_MATCH);
     }
 
     public static TokenType symbol(String str) {

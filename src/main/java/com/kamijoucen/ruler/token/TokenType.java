@@ -28,9 +28,8 @@ public enum TokenType {
     OR,             // ||
     STRICT_EQ,      // ===
     STRICT_NE,      // !==
-
+    HASH,           // #
     ARROW,          // ->
-
     NOT,            // !
     ADD,            // +
     STRING_ADD,     // ++

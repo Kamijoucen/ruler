@@ -45,6 +45,7 @@ public class DefaultLexical implements Lexical {
     @Override
     public Token nextToken() {
 
+        // 本次扫描是否匹配到 Token
         boolean match = false;
 
         if (isOver()) {
@@ -170,6 +171,21 @@ public class DefaultLexical implements Lexical {
             if (charAt() == '\\') {
                 forward();
                 appendAndForward();
+            }
+            if (isOver()) {
+                String message = this.configuration.getMessageManager().buildMessage(
+                        MessageType.NOT_FOUND_STRING_END, new TokenLocation(line, column, fileName),
+                        curStringFlag + "");
+                throw new SyntaxException(message);
+            }
+            // 处理字符串内的占位符
+            if (charAt() == '#' && peekChar() == '{') {
+                forward();
+                forward();
+                makeToken(TokenType.STRING);
+                // TODO 这里将state设置为 string inner expression, 下次扫描时处理字符串模板
+                this.state = State.STRING_INNER_EXPRESSION;
+                return;
             }
             appendAndForward();
         }
@@ -327,11 +343,7 @@ public class DefaultLexical implements Lexical {
     }
 
     private char peekChar() {
-        if (offset + 1 < content.length()) {
-            return charAt(1);
-        } else {
-            return Constant.EOF;
-        }
+        return peekChar(1);
     }
 
     private char peekChar(int step) {

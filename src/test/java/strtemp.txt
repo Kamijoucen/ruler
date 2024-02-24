@@ -1,0 +1,7 @@
+var a = "
+select * from #{$param.table_name} limit #{$param.limit}
+";
+
+var b = "
+1 + 2 = #{1+2}
+";
