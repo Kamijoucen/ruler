@@ -21,6 +21,7 @@ public class BaseTest {
     public void init() {
         configuration = new RulerConfigurationImpl();
         configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.setGlobalFunction(new FuncParamLengthTestFunction());
     }
 
     public RulerRunner getExpressionRunner(String text) {
@@ -267,6 +268,16 @@ public class BaseTest {
 
         RulerResult result = runner.run();
         Assert.assertEquals(101, result.first().toInteger());
+    }
+
+    // ruler func param length test
+    @Test
+    public void funcParamLengthTest() {
+        String script = "var a = FuncParamLengthTestFunction(1, 2, 3, 4, 5); return a;";
+        RulerRunner runner = getScriptRunner(script);
+
+        RulerResult result = runner.run();
+        Assert.assertEquals(5, result.first().toInteger());
     }
 
 }

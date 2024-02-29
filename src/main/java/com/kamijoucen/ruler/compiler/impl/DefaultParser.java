@@ -452,6 +452,24 @@ public class DefaultParser implements Parser {
         // eat fun
         AssertUtil.assertToken(tokenStream, TokenType.KEY_FUN);
         tokenStream.nextToken();
+
+        boolean isStaticCapture = false;
+        List<BaseNode> capVarList = new ArrayList<>();
+        if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
+            tokenStream.nextToken();
+            isStaticCapture = true;
+            if (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
+                capVarList.add(parseIdentifier());
+            }
+            while (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
+                AssertUtil.assertToken(tokenStream, TokenType.COMMA);
+                tokenStream.nextToken();
+                capVarList.add(parseIdentifier());
+            }
+            AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
+            tokenStream.nextToken();
+        }
+
         String name = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER) {
             name = tokenStream.token().name;
@@ -499,10 +517,10 @@ public class DefaultParser implements Parser {
 
             BaseNode returnNode = new ReturnNode(CollectionUtil.list(exp), exp.getLocation());
             BlockNode blockNode = new BlockNode(CollectionUtil.list(returnNode), exp.getLocation());
-            return new ClosureDefineNode(name, param, blockNode, funToken.location);
+            return new ClosureDefineNode(name, param, blockNode, isStaticCapture, capVarList,funToken.location);
         } else {
             BaseNode block = parseBlock();
-            return new ClosureDefineNode(name, param, block, funToken.location);
+            return new ClosureDefineNode(name, param, block, isStaticCapture, capVarList, funToken.location);
         }
     }
 

@@ -14,12 +14,17 @@ public class ClosureDefineNode extends AbstractBaseNode {
     private String name;
     private List<BaseNode> param;
     private BaseNode block;
+    private boolean isStaticCapture = false;
+    private List<BaseNode> staticCaptureVar;
 
-    public ClosureDefineNode(String name, List<BaseNode> param, BaseNode block, TokenLocation location) {
+    public ClosureDefineNode(String name, List<BaseNode> param, BaseNode block,
+            boolean isStaticCapture, List<BaseNode> staticCaptureVar, TokenLocation location) {
         super(location);
         this.name = name;
         this.param = param;
         this.block = block;
+        this.isStaticCapture = isStaticCapture;
+        this.staticCaptureVar = staticCaptureVar;
     }
 
     @Override
@@ -55,4 +60,21 @@ public class ClosureDefineNode extends AbstractBaseNode {
     public void setBlock(BaseNode block) {
         this.block = block;
     }
+
+    public boolean isStaticCapture() {
+        return isStaticCapture;
+    }
+
+    public void setStaticCapture(boolean isStaticCapture) {
+        this.isStaticCapture = isStaticCapture;
+    }
+
+    public List<BaseNode> getStaticCaptureVar() {
+        return staticCaptureVar;
+    }
+
+    public void setStaticCaptureVar(List<BaseNode> staticCaptureVar) {
+        this.staticCaptureVar = staticCaptureVar;
+    }
+
 }
