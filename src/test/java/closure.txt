@@ -1,0 +1,9 @@
+
+var a = 1;
+
+// 当前闭包仅捕获a
+var f = fun[a](n) -> a + n;
+
+fun[a] t(n) {
+    return a + n;
+}

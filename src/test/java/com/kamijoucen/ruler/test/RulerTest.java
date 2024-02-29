@@ -435,5 +435,13 @@ public class RulerTest {
 
     }
 
+    // static cap test
+    @Test
+    public void testStaticCap() {
+        String str = "var a = 1; var f = fun[a]() { println(a); }; var b = 2; f();";
+        RulerRunner runner = Ruler.compileScript(str, configuration);
+        runner.run();
+    }
+
 
 }

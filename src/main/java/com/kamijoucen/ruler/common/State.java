@@ -18,6 +18,4 @@ public enum State {
 
     NONE,
 
-    STRING_INNER_EXPRESSION,
-
 }
