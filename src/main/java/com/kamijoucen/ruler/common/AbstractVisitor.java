@@ -192,7 +192,7 @@ public abstract class AbstractVisitor implements NodeVisitor {
 
     @Override
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
-        AssertUtil.todo(null);
+        AssertUtil.TODO(null);
         return null;
     }
 

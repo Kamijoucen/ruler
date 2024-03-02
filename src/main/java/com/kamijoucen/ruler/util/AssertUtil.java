@@ -14,7 +14,7 @@ public class AssertUtil {
         }
     }
 
-    public static NoImplException todo(String str) {
+    public static NoImplException TODO(String str) {
         throw new NoImplException(str == null ? "还未实现" : str);
     }
 

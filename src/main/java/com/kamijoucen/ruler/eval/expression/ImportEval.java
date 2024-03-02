@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.Map;
 
 public class ImportEval implements BaseEval<ImportNode> {
+
     @Override
     public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
         String path = node.getPath();
@@ -32,7 +33,6 @@ public class ImportEval implements BaseEval<ImportNode> {
         RulerModule importModule = importCache.getImportModule(path);
         if (importModule == null) {
             String text = null;
-
             if (node instanceof ImportScriptNode) {
                 ImportScriptNode scriptNode = (ImportScriptNode) node;
                 text = scriptNode.getScript();
