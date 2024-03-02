@@ -9,8 +9,12 @@ import org.junit.Test;
 
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.module.RulerRunner;
 import com.kamijoucen.ruler.parameter.RulerResult;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 
 public class BaseTest {
@@ -104,12 +108,8 @@ public class BaseTest {
 
     @Test
     public void anonymousFuncTest() {
-        String script = "var f = fun(name) -> \"hello \" ++ name;\n" +
-                "\n" +
-                "var r = f(\"world!\");\n" +
-                "println(r);\n" +
-                "\n" +
-                "return r;";
+        String script = "var f = fun(name) -> \"hello \" ++ name;\n" + "\n"
+                + "var r = f(\"world!\");\n" + "println(r);\n" + "\n" + "return r;";
         RulerRunner runner = getScriptRunner(script);
         RulerResult result = runner.run();
 
@@ -155,7 +155,8 @@ public class BaseTest {
     // 嵌套对象赋值测试
     @Test
     public void objectAssignTest2() {
-        String script = "var a = {name: 'lisicen', age: 18, obj: {name: 'lisicen2'}}; a.obj.name = 'lisicen3'; return a.obj.name;";
+        String script =
+                "var a = {name: 'lisicen', age: 18, obj: {name: 'lisicen2'}}; a.obj.name = 'lisicen3'; return a.obj.name;";
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
@@ -180,7 +181,8 @@ public class BaseTest {
     // 使用proxy为数组拦截length方法
     @Test
     public void arrayLengthTest() {
-        String script = "var a = [1, 2, 3]; a = Proxy(a, {get: fun(self, name) { return self.length() + 1; }});  return a.length;";
+        String script =
+                "var a = [1, 2, 3]; a = Proxy(a, {get: fun(self, name) { return self.length() + 1; }});  return a.length;";
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
@@ -291,6 +293,31 @@ public class BaseTest {
 
         RulerResult result = runner.run();
         Assert.assertEquals(3, result.first().toInteger());
+    }
+
+    @Test
+    public void moduleMultiFunTest() {
+
+        configuration.putGlobalFunction(new FuncParamLengthTestFunction(), "testmod");
+        configuration.putGlobalFunction(new RulerFunction() {
+            @Override
+            public String getName() {
+                return "f2";
+            }
+            @Override
+            public Object call(RuntimeContext context, Scope currentScope, BaseValue self,
+                    Object... param) {
+                return 100;
+            }
+
+        }, "testmod");
+
+        String script =
+                "return testmod.FuncParamLengthTestFunction(1, 2, 3) + testmod.f2();";
+        RulerRunner runner = getScriptRunner(script);
+
+        RulerResult result = runner.run();
+        Assert.assertEquals(103, result.first().toInteger());
     }
 
 }
