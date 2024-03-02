@@ -25,10 +25,10 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
-        configuration.setGlobalImportModule("/ruler/std/util.txt", "util");
-        configuration.setGlobalImportModule("/ruler/std/collections.txt", "listUtil");
-        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
-        configuration.setGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
+        configuration.putGlobalImportModule("/ruler/std/util.txt", "util");
+        configuration.putGlobalImportModule("/ruler/std/collections.txt", "listUtil");
+        configuration.putGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.putGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
         configuration.setMaxLoopNumber(5);
     }
 
@@ -211,7 +211,7 @@ public class RulerTest {
     @Test
     public void custom_function() {
 
-        configuration.setGlobalFunction(new RulerFunction() {
+        configuration.putGlobalFunction(new RulerFunction() {
             @Override
             public String getName() {
                 return "哈哈哈哈";

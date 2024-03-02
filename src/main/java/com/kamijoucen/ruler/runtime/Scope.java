@@ -63,6 +63,10 @@ public class Scope {
         valueSpace.put(name, value);
     }
 
+    public void remove(String name) {
+        valueSpace.remove(name);
+    }
+
     public boolean isCallScope() {
         return isCallScope;
     }

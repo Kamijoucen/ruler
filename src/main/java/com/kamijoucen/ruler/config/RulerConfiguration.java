@@ -16,13 +16,17 @@ public interface RulerConfiguration {
 
     Scope getGlobalScope();
 
-    void setGlobalFunction(RulerFunction function);
+    void putGlobalFunction(RulerFunction function);
 
     void removeGlobalFunction(String functionName);
 
-    void setGlobalImportModule(String path, String alias);
+    void putGlobalFunction(RulerFunction function, String moduleName);
 
-    void setGlobalImportScriptModule(String alias, String script);
+    void removeGlobalFunction(String functionName, String moduleName);
+
+    void putGlobalImportModule(String path, String alias);
+
+    void putGlobalImportScriptModule(String alias, String script);
 
     List<ImportNode> getGlobalImportModules();
 

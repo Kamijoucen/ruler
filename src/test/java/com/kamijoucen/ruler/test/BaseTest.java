@@ -20,8 +20,8 @@ public class BaseTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.setGlobalImportModule("/ruler/std/global.txt", "op");
-        configuration.setGlobalFunction(new FuncParamLengthTestFunction());
+        configuration.putGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.putGlobalFunction(new FuncParamLengthTestFunction());
     }
 
     public RulerRunner getExpressionRunner(String text) {
@@ -278,6 +278,19 @@ public class BaseTest {
 
         RulerResult result = runner.run();
         Assert.assertEquals(5, result.first().toInteger());
+    }
+
+    // module fun test
+    @Test
+    public void moduleFunTest() {
+
+        configuration.putGlobalFunction(new FuncParamLengthTestFunction(), "testmod");
+
+        String script = "return testmod.FuncParamLengthTestFunction(1, 2, 3);";
+        RulerRunner runner = getScriptRunner(script);
+
+        RulerResult result = runner.run();
+        Assert.assertEquals(3, result.first().toInteger());
     }
 
 }

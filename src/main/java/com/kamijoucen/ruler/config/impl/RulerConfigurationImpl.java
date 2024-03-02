@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.*;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
+import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -13,13 +14,14 @@ import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
-
+import com.kamijoucen.ruler.value.ModuleValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
+    // TODO global scope会存在数据竞争问题，需要特殊处理
     private Scope globalScope = new Scope("root", false, null, null);
 
     private final List<ImportNode> globalImport = new ArrayList<>();
@@ -78,12 +80,12 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     private void initDefaultFunction() {
-        setGlobalFunction(new PrintFunction());
-        setGlobalFunction(new MakeItPossibleFunction());
-        setGlobalFunction(new CharAtFunction());
-        setGlobalFunction(new DatetimeFunction());
-        setGlobalFunction(new TimestampFunction());
-        setGlobalFunction(new PanicFunction());
+        putGlobalFunction(new PrintFunction());
+        putGlobalFunction(new MakeItPossibleFunction());
+        putGlobalFunction(new CharAtFunction());
+        putGlobalFunction(new DatetimeFunction());
+        putGlobalFunction(new TimestampFunction());
+        putGlobalFunction(new PanicFunction());
 
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
@@ -107,24 +109,24 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public void setGlobalFunction(RulerFunction function) {
+    public void putGlobalFunction(RulerFunction function) {
         FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this));
         this.globalScope.putLocal(funValue.getValue().getName(), funValue);
     }
 
     @Override
     public void removeGlobalFunction(String functionName) {
-        AssertUtil.todo(null);
+        AssertUtil.TODO(null);
     }
 
     @Override
-    public void setGlobalImportModule(String path, String alias) {
+    public void putGlobalImportModule(String path, String alias) {
         // todo import infix
         this.globalImport.add(new ImportNode(path, alias, false, null));
     }
 
     @Override
-    public void setGlobalImportScriptModule(String script, String alias) {
+    public void putGlobalImportScriptModule(String script, String alias) {
         // todo import infix
         this.globalImport.add(new ImportScriptNode(script, alias, false, null));
     }
@@ -237,6 +239,29 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public CallClosureExecutor getCallClosureExecutor() {
         return callClosureExecutor;
+    }
+
+    @Override
+    public void putGlobalFunction(RulerFunction function, String moduleName) {
+        // TODO 可能会出现类型转换问题
+        ModuleValue moduleValue = (ModuleValue) this.globalScope.find(moduleName);
+        if (moduleValue == null) {
+            ModuleValue module =
+                    new ModuleValue(new Scope("module:" + moduleName, false, null, null));
+            moduleValue = module;
+            this.globalScope.putLocal(moduleName, module);
+        }
+        moduleValue.getModuleScope().putLocal(function.getName(),
+                new FunctionValue(new ValueConvertFunctionProxy(function, this)));
+    }
+
+    @Override
+    public void removeGlobalFunction(String functionName, String moduleName) {
+        ModuleValue moduleValue = (ModuleValue) this.globalScope.find(moduleName);
+        if (moduleValue == null) {
+            return;
+        }
+        moduleValue.getModuleScope().remove(functionName);
     }
 
     public void setValueConvertManager(ValueConvertManager valueConvertManager) {
