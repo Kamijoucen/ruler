@@ -33,7 +33,9 @@ public class ShellRunner {
         try {
             Terminal terminal = TerminalBuilder.builder().build();
             LineReader lineReader = LineReaderBuilder.builder().terminal(terminal)
-                    .option(LineReader.Option.BRACKETED_PASTE, false).build();
+                    .option(LineReader.Option.BRACKETED_PASTE, false)
+                    .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
+                    .build();
             while (true) {
                 try {
                     String code = lineReader.readLine("ruler[" + line + "]> ");
