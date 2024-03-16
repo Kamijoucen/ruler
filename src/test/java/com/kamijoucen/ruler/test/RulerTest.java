@@ -313,15 +313,6 @@ public class RulerTest {
     }
 
     @Test
-    public void rule_key_test() {
-        String script = IOUtil.read("D:\\dev\\code\\ruler\\ruler\\src\\test\\java\\rule_key_test.txt");
-        RulerRunner run = Ruler.compileScript(script, configuration);
-
-        RulerResult result = run.run();
-        System.out.println(result);
-    }
-
-    @Test
     public void fun_args_test() {
         String script = "var a = fun() { println(_args_); }; a(1, [1, 2], 1.1);";
 
@@ -385,24 +376,6 @@ public class RulerTest {
     public void testIf() {
         String script = "if true {} i = i + 1;";
         RulerRunner runner = Ruler.compileScript(script, configuration);
-    }
-
-    @Test
-    public void infixTest() {
-        String script = IOUtil.read("D:\\dev\\code\\ruler-github\\ruler\\src\\test\\java\\infixtest1.txt");
-        RulerRunner run = Ruler.compileScript(script, configuration);
-
-        RulerResult result = run.run();
-        System.out.println(result);
-    }
-
-    @Test
-    public void infixImportTest() {
-
-        String script = IOUtil.read("D:\\dev\\code\\ruler-github\\ruler\\src\\test\\java\\infixtest2.txt");
-        RulerRunner run = Ruler.compileScript(script, configuration);
-
-        RulerResult result = run.run();
     }
 
     // @Test
