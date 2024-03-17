@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.*;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
-import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -30,7 +29,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private NodeVisitor evalVisitor = new EvalVisitor();
 
-    private ImportCache importCache = new ImportCache();
+    private ImportCacheManager importCache = new ImportCacheManager();
 
     private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
 
@@ -212,7 +211,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public ImportCache getImportCache() {
+    public ImportCacheManager getImportCache() {
         return importCache;
     }
 
@@ -280,7 +279,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.evalVisitor = evalVisitor;
     }
 
-    public void setImportCache(ImportCache importCache) {
+    public void setImportCache(ImportCacheManager importCache) {
         this.importCache = importCache;
     }
 

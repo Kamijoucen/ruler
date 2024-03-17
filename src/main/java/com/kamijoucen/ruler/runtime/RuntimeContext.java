@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.runtime;
 
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.config.impl.ImportCache;
+import com.kamijoucen.ruler.config.impl.ImportCacheManager;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
@@ -20,7 +20,7 @@ public class RuntimeContext {
     private Map<String, ClosureValue> infixOperationSpace;
     private NodeVisitor nodeVisitor;
     private NodeVisitor typeCheckVisitor;
-    private ImportCache importCache;
+    private ImportCacheManager importCache;
     private StackDepthCheckOperation stackDepthCheckOperation;
     private BaseValue currentSelfValue;
 
@@ -32,7 +32,7 @@ public class RuntimeContext {
 
     public RuntimeContext(NodeVisitor nodeVisitor,
                           NodeVisitor typeCheckVisitor,
-                          ImportCache importCache,
+                          ImportCacheManager importCache,
                           StackDepthCheckOperation stackDepthCheckOperation,
                           RulerConfiguration configuration) {
         this.outSpace = new HashMap<>();
@@ -84,7 +84,7 @@ public class RuntimeContext {
         return typeCheckVisitor;
     }
 
-    public ImportCache getImportCache() {
+    public ImportCacheManager getImportCache() {
         return importCache;
     }
 
@@ -127,7 +127,7 @@ public class RuntimeContext {
         this.typeCheckVisitor = typeCheckVisitor;
     }
 
-    public void setImportCache(ImportCache importCache) {
+    public void setImportCache(ImportCacheManager importCache) {
         this.importCache = importCache;
     }
 

@@ -31,13 +31,12 @@ public class MapRsonConvert implements ValueConvert {
     @Override
     public Object baseToReal(BaseValue value, RulerConfiguration configuration) {
         RsonValue rsonValue = (RsonValue) value;
-        Map<String, Object> map = new HashMap<String, Object>(
+        Map<String, Object> map = new HashMap<>(
                 (int) (Math.ceil(rsonValue.getFields().size() / 0.75) + 1));
         for (Map.Entry<String, BaseValue> entry : rsonValue.getFields().entrySet()) {
             ValueConvert convert = configuration.getValueConvertManager().getConverter(entry.getValue().getType());
             map.put(entry.getKey(), convert.baseToReal(entry.getValue(), configuration));
         }
-
         return map;
     }
 }

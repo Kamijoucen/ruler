@@ -15,5 +15,4 @@ public class SpiLoaderManagerImpl implements SpiLoaderManager {
         }
     }
 
-
 }

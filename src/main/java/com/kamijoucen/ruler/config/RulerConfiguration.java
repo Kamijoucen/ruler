@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.config;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.config.impl.ImportCache;
+import com.kamijoucen.ruler.config.impl.ImportCacheManager;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -32,7 +32,7 @@ public interface RulerConfiguration {
 
     NodeVisitor getTypeCheckVisitor();
 
-    ImportCache getImportCache();
+    ImportCacheManager getImportCache();
 
     BinaryOperationFactory getBinaryOperationFactory();
 
