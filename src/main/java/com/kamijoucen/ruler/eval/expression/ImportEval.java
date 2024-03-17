@@ -32,7 +32,7 @@ public class ImportEval implements BaseEval<ImportNode> {
         ImportCache importCache = context.getImportCache();
         RulerModule importModule = importCache.getImportModule(path);
         if (importModule == null) {
-            String text = null;
+            String text;
             if (node instanceof ImportScriptNode) {
                 ImportScriptNode scriptNode = (ImportScriptNode) node;
                 text = scriptNode.getScript();
@@ -53,7 +53,7 @@ public class ImportEval implements BaseEval<ImportNode> {
         // run
         RulerInterpreter interpreter = new RulerInterpreter(importModule, context.getConfiguration());
         interpreter.setHasImportGlobalModule(false);
-        interpreter.runScript(Collections.<RulerParameter>emptyList(), runScope);
+        interpreter.runScript(Collections.emptyList(), runScope);
 
         // include infix
         if (node.isHasImportInfix()) {

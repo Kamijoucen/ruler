@@ -11,8 +11,12 @@ import java.io.Reader;
 import java.util.UUID;
 
 import com.kamijoucen.ruler.value.ValueType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IOUtil {
+
+    private static final Logger logger = LoggerFactory.getLogger(IOUtil.class);
 
     public final static boolean[] pathFlags = new boolean[256];
     public final static boolean[] firstIdentifierFlags = new boolean[256];
@@ -81,7 +85,7 @@ public class IOUtil {
             Reader reader = new BufferedReader(new FileReader(file));
             return read(reader);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.error("file not found: {}", file);
         }
         return "";
     }
@@ -94,18 +98,18 @@ public class IOUtil {
         StringBuilder sb = new StringBuilder();
         try {
             char[] buf = new char[2048];
-            int len = 0;
+            int len;
             while ((len = reader.read(buf)) != -1) {
                 sb.append(buf, 0, len);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("read error", e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error("close reader error", e);
                 }
             }
         }
@@ -116,7 +120,7 @@ public class IOUtil {
         if (str == null) {
             return true;
         }
-        return "".equals(str.trim());
+        return str.trim().isEmpty();
     }
 
     public static boolean isNotBlank(String str) {
@@ -124,7 +128,7 @@ public class IOUtil {
     }
 
     public static String getVirtualPath(String script, String alias) {
-        return "virtual_path_" + UUID.randomUUID().toString() + "_" + alias.hashCode() + "_" + script.hashCode();
+        return "virtual_path_" + UUID.randomUUID() + "_" + alias.hashCode() + "_" + script.hashCode();
     }
 
     public static boolean isWhitespace(char ch) {
@@ -134,9 +138,5 @@ public class IOUtil {
     public static int getIndex(ValueType type1, ValueType type2) {
         return type1.ordinal() * ValueType.values().length + type2.ordinal();
     }
-
-    // public static boolean isWhitespace(char ch) {
-    // return ch != Constant.ENTER && Character.isWhitespace(ch);
-    // }
 
 }

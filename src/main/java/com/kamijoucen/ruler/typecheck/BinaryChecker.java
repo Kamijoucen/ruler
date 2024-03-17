@@ -69,6 +69,14 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
         if (val1.getType() == ValueType.UN_KNOWN || val2.getType() == ValueType.UN_KNOWN) {
             return UnknownType.INSTANCE;
         }
+        BaseValue typeValue = getBaseValue(op, val1, val2);
+        if (typeValue == null) {
+            return FailureType.INSTANCE;
+        }
+        return typeValue;
+    }
+
+    private static BaseValue getBaseValue(TokenType op, BaseValue val1, BaseValue val2) {
         BaseValue typeValue = null;
         if (op == TokenType.ADD) {
             typeValue = typeAddMap[val1.getType().ordinal()][val2.getType().ordinal()];
@@ -78,9 +86,6 @@ public class BinaryChecker implements BaseEval<BinaryOperationNode> {
             typeValue = typeBaseMap[val1.getType().ordinal()][val2.getType().ordinal()];
         } else if (op == TokenType.LT || op == TokenType.GT || op == TokenType.LE || op == TokenType.GE) {
             typeValue = typeBaseMap[val1.getType().ordinal()][val2.getType().ordinal()];
-        }
-        if (typeValue == null) {
-            return FailureType.INSTANCE;
         }
         return typeValue;
     }

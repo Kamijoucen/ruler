@@ -29,7 +29,7 @@ public class RulerRunner implements Serializable {
     }
 
     public RulerResult run(List<RulerParameter> param, RulerConfiguration configuration) {
-        List<Object> values = null;
+        List<Object> values;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         if (isScript) {
             values = interpreter.runScript(param,

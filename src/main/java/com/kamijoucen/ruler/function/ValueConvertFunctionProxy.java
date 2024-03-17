@@ -46,7 +46,7 @@ public class ValueConvertFunctionProxy implements RulerFunction {
     }
 
     private Object convert(Object param) {
-        BaseValue baseValue = null;
+        BaseValue baseValue;
         if (param instanceof BaseValue) {
             baseValue = (BaseValue) param;
         } else {

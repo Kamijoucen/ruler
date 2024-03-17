@@ -64,8 +64,6 @@ public class RulerCompiler {
 
     private RulerModule compileModule(RulerScript script) {
 
-        final List<BaseNode> rootStatements = new ArrayList<>();
-
         RulerModule module = new RulerModule(script.getFileName());
         DefaultLexical lexical =
                 new DefaultLexical(script.getContent(), module.getFullName(), configuration);
@@ -79,7 +77,8 @@ public class RulerCompiler {
             list.add(parser.parseImport());
         }
         SyntaxCheckUtil.availableImport(list);
-        rootStatements.addAll(list);
+
+        List<BaseNode> rootStatements = new ArrayList<>(list);
         // parse statements
         while (tokenStream.token().type != TokenType.EOF) {
             rootStatements.add(parser.parseStatement());

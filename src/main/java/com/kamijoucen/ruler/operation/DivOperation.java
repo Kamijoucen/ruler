@@ -23,7 +23,7 @@ public class DivOperation implements BinaryOperation {
 
         operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.INTEGER)] =
                 (l, r) -> new DoubleValue(
-                        ((IntegerValue) l).getValue() / ((IntegerValue) r).getValue());
+                        (double) ((IntegerValue) l).getValue() / ((IntegerValue) r).getValue());
 
         operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (l,
                 r) -> new DoubleValue(((IntegerValue) l).getValue() / ((DoubleValue) r).getValue());

@@ -5,14 +5,14 @@ import java.util.*;
 public class CollectionUtil {
 
     public static boolean isEmpty(Map<?, ?> map) {
-        return map == null || map.size() == 0;
+        return map == null || map.isEmpty();
     }
 
     public static boolean isEmpty(Collection<?> collection) {
         if (collection == null) {
             return true;
         }
-        return collection.size() == 0;
+        return collection.isEmpty();
     }
 
     public static boolean isNotEmpty(Collection<?> collection) {

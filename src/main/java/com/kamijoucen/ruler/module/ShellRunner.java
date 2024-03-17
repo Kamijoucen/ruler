@@ -16,8 +16,12 @@ import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ShellRunner {
+
+    private static final Logger logger = LoggerFactory.getLogger(ShellRunner.class);
 
     private final RulerConfiguration configuration;
     private final Scope runScope;
@@ -48,12 +52,11 @@ public class ShellRunner {
                 } catch (UserInterruptException | EndOfFileException e) {
                     break;
                 } catch (Exception e) {
-                    // e.printStackTrace();
-                    System.out.println("Error: " + e.getMessage());
+                    logger.error("Error occurred while running shell.", e);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error occurred while running shell.", e);
         }
         System.out.println();
         System.out.println("Ruler shell end.");

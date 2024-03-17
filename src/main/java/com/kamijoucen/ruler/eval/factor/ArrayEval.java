@@ -15,10 +15,10 @@ public class ArrayEval implements BaseEval<ArrayNode> {
     @Override
     public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> nodes = node.getValues();
-        if (nodes.size() == 0) {
-            return new ArrayValue(new ArrayList<BaseValue>());
+        if (nodes.isEmpty()) {
+            return new ArrayValue(new ArrayList<>());
         }
-        List<BaseValue> values = new ArrayList<BaseValue>(nodes.size());
+        List<BaseValue> values = new ArrayList<>(nodes.size());
         for (BaseNode tempNode : nodes) {
             values.add(tempNode.eval(scope, context));
         }

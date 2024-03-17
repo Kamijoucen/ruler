@@ -178,15 +178,6 @@ public class DefaultLexical implements Lexical {
                         curStringFlag + "");
                 throw new SyntaxException(message);
             }
-            // // 处理字符串内的占位符
-            // if (charAt() == '#' && peekChar() == '{') {
-            //     forward();
-            //     forward();
-            //     makeToken(TokenType.STRING);
-            //     // TODO 这里将state设置为 string inner expression, 下次扫描时处理字符串模板
-            //     this.state = State.STRING_INNER_EXPRESSION;
-            //     return;
-            // }
             appendAndForward();
         }
         if (isOver()) {
