@@ -119,7 +119,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public void putGlobalImportModule(String path, String alias) {
+    public void putGlobalImportPathModule(String path, String alias) {
         // todo import infix
         this.globalImport.add(new ImportNode(path, alias, false, null));
     }

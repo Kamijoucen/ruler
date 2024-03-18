@@ -24,7 +24,7 @@ public class BaseTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.putGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.putGlobalImportPathModule("/ruler/std/global.txt", "op");
         configuration.putGlobalFunction(new FuncParamLengthTestFunction());
     }
 

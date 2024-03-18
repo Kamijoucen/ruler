@@ -8,7 +8,6 @@ import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 
@@ -25,9 +24,9 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
-        configuration.putGlobalImportModule("/ruler/std/util.txt", "util");
-        configuration.putGlobalImportModule("/ruler/std/collections.txt", "listUtil");
-        configuration.putGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.putGlobalImportPathModule("/ruler/std/util.txt", "util");
+        configuration.putGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
+        configuration.putGlobalImportPathModule("/ruler/std/global.txt", "op");
         configuration.putGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
         configuration.setMaxLoopNumber(5);
     }

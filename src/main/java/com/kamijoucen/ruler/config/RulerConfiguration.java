@@ -24,7 +24,7 @@ public interface RulerConfiguration {
 
     void removeGlobalFunction(String functionName, String moduleName);
 
-    void putGlobalImportModule(String path, String alias);
+    void putGlobalImportPathModule(String path, String alias);
 
     void putGlobalImportScriptModule(String alias, String script);
 

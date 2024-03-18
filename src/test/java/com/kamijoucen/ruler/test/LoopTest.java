@@ -16,7 +16,7 @@ public class LoopTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.putGlobalImportModule("/ruler/std/global.txt", "op");
+        configuration.putGlobalImportPathModule("/ruler/std/global.txt", "op");
     }
 
     // break测试

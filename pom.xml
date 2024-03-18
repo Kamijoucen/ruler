@@ -98,6 +98,10 @@
 <!--                        <artifactId>java18</artifactId>-->
 <!--                        <version>1.0</version>-->
 <!--                    </signature>-->
+<!--                    <ignores>-->
+<!--                        <ignore>org.jline.terminal.impl.ffm.CLibrary</ignore>-->
+<!--                    </ignores>-->
+<!--                    <ignoreDependencies>true</ignoreDependencies>-->
 <!--                </configuration>-->
 <!--                <executions>-->
 <!--                    <execution>-->
@@ -106,6 +110,12 @@
 <!--                        <goals>-->
 <!--                            <goal>check</goal>-->
 <!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <ignores>-->
+<!--                                <ignore>org.jline.terminal.impl.ffm.CLibrary</ignore>-->
+<!--                            </ignores>-->
+<!--                            <ignoreDependencies>true</ignoreDependencies>-->
+<!--                        </configuration>-->
 <!--                    </execution>-->
 <!--                </executions>-->
 <!--            </plugin>-->
@@ -129,13 +139,8 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/ruler/std/*.txt</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>META-INF/**</include>
+                    <include>/ruler/**</include>
+                    <include>/META-INF/**</include>
                 </includes>
             </resource>
         </resources>

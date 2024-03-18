@@ -33,9 +33,16 @@ public class IndexOperation implements BinaryOperation {
             StringValue string = (StringValue) idx;
             return context.getConfiguration().getObjectAccessControlManager().accessObject(rson,
                     string.getValue(), context);
+        } else if (lVal.getType() == ValueType.STRING && idx.getType() == ValueType.INTEGER) {
+            StringValue str = (StringValue) lVal;
+            IntegerValue index = (IntegerValue) idx;
+            if (index.getValue() >= str.getValue().length()) {
+                throw new IndexOutOfBoundsException("String index out of bounds");
+            }
+            return new StringValue(String.valueOf(str.getValue().charAt((int) index.getValue())));
         } else {
-            throw SyntaxException
-                    .withSyntax("Index operations can only be used for arrays and RSON.");
+            // TODO message fmt
+            throw new SyntaxException("Index operation not supported");
         }
     }
 
