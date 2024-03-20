@@ -31,6 +31,9 @@ public class ImportEval implements BaseEval<ImportNode> {
         ImportCacheManager importCache = context.getImportCache();
         RulerModule importModule = importCache.getImportModule(path);
         if (importModule == null) {
+
+            // TODO refactor
+
             String text;
             if (node instanceof ImportScriptNode) {
                 ImportScriptNode scriptNode = (ImportScriptNode) node;

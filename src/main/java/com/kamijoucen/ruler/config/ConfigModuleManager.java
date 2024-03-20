@@ -8,6 +8,6 @@ public interface ConfigModuleManager {
 
     void removeModule(String path);
 
-    void registerModule(ConfigModule module, boolean overrideAlias);
+    void registerModule(ConfigModule module);
 
 }

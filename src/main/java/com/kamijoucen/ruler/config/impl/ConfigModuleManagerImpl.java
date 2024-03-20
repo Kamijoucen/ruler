@@ -2,65 +2,30 @@ package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.config.ConfigModuleManager;
 import com.kamijoucen.ruler.config.option.ConfigModule;
+import com.kamijoucen.ruler.util.IOUtil;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ConfigModuleManagerImpl implements ConfigModuleManager {
 
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
-
-    private final Map<String, ConfigModule> modules = new HashMap<>();
-
-    private final Set<String> aliasSet = new HashSet<>();
+    private final Map<String, ConfigModule> modules = new ConcurrentHashMap<>();
 
     @Override
     public ConfigModule findModule(String path) {
-        lock.readLock().lock();
-        try {
-            return modules.get(path);
-        } finally {
-            lock.readLock().unlock();
-        }
+        return modules.get(path);
     }
 
     @Override
     public void removeModule(String path) {
-        lock.writeLock().lock();
-        try {
-            ConfigModule module = modules.remove(path);
-            if (module != null && module.getAlias() != null) {
-                aliasSet.remove(module.getAlias());
-            }
-        } finally {
-            lock.writeLock().unlock();
-        }
+        modules.remove(path);
     }
 
     @Override
-    public void registerModule(ConfigModule module, boolean overrideAlias) {
-        lock.writeLock().lock();
-        try {
-            if (overrideAlias) {
-                modules.put(module.getUri(), module);
-                if (module.getAlias() != null) {
-                    aliasSet.add(module.getAlias());
-                }
-            } else {
-                if (module.getAlias() != null && aliasSet.contains(module.getAlias())) {
-                    throw new IllegalArgumentException("alias " + module.getAlias() + " already exists");
-                }
-                modules.put(module.getUri(), module);
-                if (module.getAlias() != null) {
-                    aliasSet.add(module.getAlias());
-                }
-            }
-        } finally {
-            lock.writeLock().unlock();
+    public void registerModule(ConfigModule module) {
+        if (IOUtil.isBlank(module.getUri())) {
+            throw new IllegalArgumentException("module uri can not be blank");
         }
+        modules.put(module.getUri(), module);
     }
 }
