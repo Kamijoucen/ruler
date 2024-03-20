@@ -16,17 +16,13 @@ public interface RulerConfiguration {
 
     Scope getGlobalScope();
 
-    void putGlobalFunction(RulerFunction function);
+    void registerGlobalFunction(RulerFunction function);
 
     void removeGlobalFunction(String functionName);
 
-    void putGlobalFunction(RulerFunction function, String moduleName);
+    void registerGlobalImportPathModule(String path, String alias);
 
-    void removeGlobalFunction(String functionName, String moduleName);
-
-    void putGlobalImportPathModule(String path, String alias);
-
-    void putGlobalImportScriptModule(String alias, String script);
+    void registerGlobalImportScriptModule(String script, String alias);
 
     List<ImportNode> getGlobalImportModules();
 
@@ -61,5 +57,7 @@ public interface RulerConfiguration {
     ObjectAccessControlManager getObjectAccessControlManager();
 
     MessageManager getMessageManager();
+
+    ConfigModuleManager getConfigModuleManager();
 
 }

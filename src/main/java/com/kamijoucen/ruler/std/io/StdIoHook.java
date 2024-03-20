@@ -9,8 +9,8 @@ public class StdIoHook implements ConfigurationHook {
 
     @Override
     public void hook(RulerConfiguration configuration) {
-        configuration.putGlobalFunction(new DeleteFile(), STD_IO);
-        configuration.putGlobalFunction(new WriteNewText(), STD_IO);
-        configuration.putGlobalFunction(new ReadAllText(), STD_IO);
+//        configuration.registerGlobalFunction(new DeleteFile(), STD_IO);
+//        configuration.registerGlobalFunction(new WriteNewText(), STD_IO);
+//        configuration.registerGlobalFunction(new ReadAllText(), STD_IO);
     }
 }

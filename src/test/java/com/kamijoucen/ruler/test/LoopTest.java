@@ -4,7 +4,6 @@ import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.module.RulerRunner;
 import com.kamijoucen.ruler.parameter.RulerResult;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +15,7 @@ public class LoopTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.putGlobalImportPathModule("/ruler/std/global.txt", "op");
+        configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
     }
 
     // break测试

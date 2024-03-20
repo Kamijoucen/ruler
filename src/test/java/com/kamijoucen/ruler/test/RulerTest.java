@@ -1,21 +1,24 @@
 package com.kamijoucen.ruler.test;
+
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.module.RulerRunner;
-import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RulerParameter;
+import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RulerTest {
 
@@ -24,10 +27,10 @@ public class RulerTest {
     @Before
     public void begin() {
         configuration = new RulerConfigurationImpl();
-        configuration.putGlobalImportPathModule("/ruler/std/util.txt", "util");
-        configuration.putGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
-        configuration.putGlobalImportPathModule("/ruler/std/global.txt", "op");
-        configuration.putGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
+        configuration.registerGlobalImportPathModule("/ruler/std/util.txt", "util");
+        configuration.registerGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
+        configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
+        configuration.registerGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");
         configuration.setMaxLoopNumber(5);
     }
 
@@ -210,7 +213,7 @@ public class RulerTest {
     @Test
     public void custom_function() {
 
-        configuration.putGlobalFunction(new RulerFunction() {
+        configuration.registerGlobalFunction(new RulerFunction() {
             @Override
             public String getName() {
                 return "哈哈哈哈";
