@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ImportCache {
+public class ImportCacheManager {
 
     private final Map<String, RulerModule> cache = new ConcurrentHashMap<String, RulerModule>();
 

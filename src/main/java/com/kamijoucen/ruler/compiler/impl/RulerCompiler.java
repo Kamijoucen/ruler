@@ -56,15 +56,17 @@ public class RulerCompiler {
         Parser parser = new DefaultParser(tokenStream, configuration);
         List<BaseNode> statements = new ArrayList<>();
         while (tokenStream.token().type != TokenType.EOF) {
-            statements.add(parser.parseStatement());
+            if (tokenStream.token().type == TokenType.KEY_IMPORT) {
+                statements.add(parser.parseImport());
+            } else {
+                statements.add(parser.parseStatement());
+            }
         }
         module.setStatements(statements);
         return module;
     }
 
     private RulerModule compileModule(RulerScript script) {
-
-        final List<BaseNode> rootStatements = new ArrayList<>();
 
         RulerModule module = new RulerModule(script.getFileName());
         DefaultLexical lexical =
@@ -79,7 +81,8 @@ public class RulerCompiler {
             list.add(parser.parseImport());
         }
         SyntaxCheckUtil.availableImport(list);
-        rootStatements.addAll(list);
+
+        List<BaseNode> rootStatements = new ArrayList<>(list);
         // parse statements
         while (tokenStream.token().type != TokenType.EOF) {
             rootStatements.add(parser.parseStatement());

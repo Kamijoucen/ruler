@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.AssignNode;
 import com.kamijoucen.ruler.ast.expression.BlockNode;
@@ -99,7 +100,6 @@ public class DefaultParser implements Parser {
                     "import statement without alias and infix is not allowed",
                     importToken.location);
         }
-
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
         return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix,
@@ -118,7 +118,7 @@ public class DefaultParser implements Parser {
         if (isRoot) {
             parseContext.setRoot(false);
         }
-        BaseNode statement = null;
+        BaseNode statement;
         boolean isNeedSemicolon = true;
         switch (token.type) {
             case KEY_RETURN:
@@ -215,6 +215,7 @@ public class DefaultParser implements Parser {
             Token nextToken = tokenStream.token();
             int nextTokenProc = OperationDefine.findPrecedence(nextToken.type);
             if (curTokenProc < nextTokenProc) {
+
                 rhs = parseBinaryNode(curTokenProc + 1, rhs);
                 Objects.requireNonNull(rhs);
             }
@@ -236,7 +237,7 @@ public class DefaultParser implements Parser {
 
     public BaseNode parsePrimaryExpression() {
         Token token = tokenStream.token();
-        BaseNode node = null;
+        BaseNode node;
         switch (token.type) {
             case IDENTIFIER:
             case OUT_IDENTIFIER:
@@ -286,6 +287,7 @@ public class DefaultParser implements Parser {
                 node = parseForEachStatement();
                 break;
             case KEY_WHILE:
+
                 node = parseWhileStatement();
                 break;
             default:
@@ -340,7 +342,7 @@ public class DefaultParser implements Parser {
 
     public BaseNode parseIdentifier() {
         Token token = tokenStream.token();
-        BaseNode nameNode = null;
+        BaseNode nameNode;
         if (token.type == TokenType.IDENTIFIER) {
             nameNode = new NameNode(token, token.location);
         } else if (token.type == TokenType.OUT_IDENTIFIER) {
@@ -419,7 +421,7 @@ public class DefaultParser implements Parser {
         tokenStream.nextToken();
 
         BaseNode condition = parseExpression();
-        BaseNode thenBlock = null;
+        BaseNode thenBlock;
 
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             thenBlock = parseBlock();
@@ -517,10 +519,12 @@ public class DefaultParser implements Parser {
 
             BaseNode returnNode = new ReturnNode(CollectionUtil.list(exp), exp.getLocation());
             BlockNode blockNode = new BlockNode(CollectionUtil.list(returnNode), exp.getLocation());
-            return new ClosureDefineNode(name, param, blockNode, isStaticCapture, capVarList,funToken.location);
+            return new ClosureDefineNode(name, param, blockNode, isStaticCapture, capVarList,
+                    funToken.location);
         } else {
             BaseNode block = parseBlock();
-            return new ClosureDefineNode(name, param, block, isStaticCapture, capVarList, funToken.location);
+            return new ClosureDefineNode(name, param, block, isStaticCapture, capVarList,
+                    funToken.location);
         }
     }
 
@@ -536,14 +540,8 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.KEY_IN);
         tokenStream.nextToken();
         BaseNode arrayExp = parseExpression();
-        // TODO type check
-        // BaseValue typeCheckValue = arrayExp.typeCheck(null, runtimeContext);
-        // if (typeCheckValue.getType() != UnknownType.INSTANCE.getType()
-        // && typeCheckValue.getType() != ArrayType.INSTANCE.getType()) {
-        // throw SyntaxException.withSyntax("The value of the expression must be an
-        // array!");
-        // }
-        BaseNode blockNode = null;
+
+        BaseNode blockNode;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             blockNode = parseBlock();
         } else if (tokenStream.token().type == TokenType.COLON) {

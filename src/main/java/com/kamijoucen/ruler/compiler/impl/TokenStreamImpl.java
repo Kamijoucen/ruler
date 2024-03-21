@@ -21,7 +21,7 @@ public class TokenStreamImpl implements TokenStream {
     }
 
     public void scan() {
-        Token token = null;
+        Token token;
         while ((token = lexical.nextToken()).type != TokenType.EOF) {
             this.tokens.add(token);
         }

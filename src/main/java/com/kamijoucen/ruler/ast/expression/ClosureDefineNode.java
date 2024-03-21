@@ -14,7 +14,7 @@ public class ClosureDefineNode extends AbstractBaseNode {
     private String name;
     private List<BaseNode> param;
     private BaseNode block;
-    private boolean isStaticCapture = false;
+    private boolean isStaticCapture;
     private List<BaseNode> staticCaptureVar;
 
     public ClosureDefineNode(String name, List<BaseNode> param, BaseNode block,

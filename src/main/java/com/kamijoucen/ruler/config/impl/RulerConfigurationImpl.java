@@ -1,20 +1,19 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
-import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.*;
+import com.kamijoucen.ruler.config.option.ConfigModule;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
-import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
-import com.kamijoucen.ruler.util.AssertUtil;
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
-import com.kamijoucen.ruler.value.ModuleValue;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private NodeVisitor evalVisitor = new EvalVisitor();
 
-    private ImportCache importCache = new ImportCache();
+    private ImportCacheManager importCache = new ImportCacheManager();
 
     private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
 
@@ -59,6 +58,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private MessageManager messageManager = new MessageManagerImpl();
 
+    private ConfigModuleManager configModuleManager = new ConfigModuleManagerImpl();
+
     public RulerConfigurationImpl() {
         init();
     }
@@ -80,12 +81,12 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     private void initDefaultFunction() {
-        putGlobalFunction(new PrintFunction());
-        putGlobalFunction(new MakeItPossibleFunction());
-        putGlobalFunction(new CharAtFunction());
-        putGlobalFunction(new DatetimeFunction());
-        putGlobalFunction(new TimestampFunction());
-        putGlobalFunction(new PanicFunction());
+        registerGlobalFunction(new PrintFunction());
+        registerGlobalFunction(new MakeItPossibleFunction());
+        registerGlobalFunction(new CharAtFunction());
+        registerGlobalFunction(new DatetimeFunction());
+        registerGlobalFunction(new TimestampFunction());
+        registerGlobalFunction(new PanicFunction());
 
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();
@@ -109,31 +110,32 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public void putGlobalFunction(RulerFunction function) {
+    public void registerGlobalFunction(RulerFunction function) {
         FunctionValue funValue = new FunctionValue(new ValueConvertFunctionProxy(function, this));
         this.globalScope.putLocal(funValue.getValue().getName(), funValue);
     }
 
     @Override
     public void removeGlobalFunction(String functionName) {
-        AssertUtil.TODO(null);
+        this.globalScope.remove(functionName);
     }
 
     @Override
-    public void putGlobalImportModule(String path, String alias) {
-        // todo import infix
+    public void registerGlobalImportPathModule(String path, String alias) {
         this.globalImport.add(new ImportNode(path, alias, false, null));
     }
 
     @Override
-    public void putGlobalImportScriptModule(String script, String alias) {
-        // todo import infix
-        this.globalImport.add(new ImportScriptNode(script, alias, false, null));
+    public void registerGlobalImportScriptModule(String script, String alias) {
+        String virtualPath = IOUtil.getVirtualPath(script, alias);
+
+        this.globalImport.add(new ImportNode(virtualPath, alias, false, null));
+        this.getConfigModuleManager().registerModule(ConfigModule.createScriptModule(virtualPath, script));
     }
 
     @Override
     public List<ImportNode> getGlobalImportModules() {
-        return new ArrayList<ImportNode>(globalImport);
+        return new ArrayList<>(globalImport);
     }
 
     @Override
@@ -181,6 +183,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return messageManager;
     }
 
+    @Override
+    public ConfigModuleManager getConfigModuleManager() {
+        return configModuleManager;
+    }
+
     public void setMessageManager(MessageManager messageManager) {
         this.messageManager = messageManager;
     }
@@ -212,7 +219,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public ImportCache getImportCache() {
+    public ImportCacheManager getImportCache() {
         return importCache;
     }
 
@@ -241,29 +248,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         return callClosureExecutor;
     }
 
-    @Override
-    public void putGlobalFunction(RulerFunction function, String moduleName) {
-        // TODO 可能会出现类型转换问题
-        ModuleValue moduleValue = (ModuleValue) this.globalScope.find(moduleName);
-        if (moduleValue == null) {
-            ModuleValue module =
-                    new ModuleValue(new Scope("module:" + moduleName, false, null, null));
-            moduleValue = module;
-            this.globalScope.putLocal(moduleName, module);
-        }
-        moduleValue.getModuleScope().putLocal(function.getName(),
-                new FunctionValue(new ValueConvertFunctionProxy(function, this)));
-    }
-
-    @Override
-    public void removeGlobalFunction(String functionName, String moduleName) {
-        ModuleValue moduleValue = (ModuleValue) this.globalScope.find(moduleName);
-        if (moduleValue == null) {
-            return;
-        }
-        moduleValue.getModuleScope().remove(functionName);
-    }
-
     public void setValueConvertManager(ValueConvertManager valueConvertManager) {
         this.valueConvertManager = valueConvertManager;
     }
@@ -280,7 +264,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.evalVisitor = evalVisitor;
     }
 
-    public void setImportCache(ImportCache importCache) {
+    public void setImportCache(ImportCacheManager importCache) {
         this.importCache = importCache;
     }
 

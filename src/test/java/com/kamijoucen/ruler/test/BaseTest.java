@@ -1,21 +1,16 @@
 package com.kamijoucen.ruler.test;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import com.kamijoucen.ruler.Ruler;
+import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.module.RulerRunner;
+import com.kamijoucen.ruler.parameter.RuleResultValue;
+import com.kamijoucen.ruler.parameter.RulerResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.function.RulerFunction;
-import com.kamijoucen.ruler.module.RulerRunner;
-import com.kamijoucen.ruler.parameter.RulerResult;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.parameter.RuleResultValue;
+import java.util.HashMap;
+import java.util.Map;
 
 public class BaseTest {
 
@@ -24,8 +19,8 @@ public class BaseTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.putGlobalImportModule("/ruler/std/global.txt", "op");
-        configuration.putGlobalFunction(new FuncParamLengthTestFunction());
+        configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
+        configuration.registerGlobalFunction(new FuncParamLengthTestFunction());
     }
 
     public RulerRunner getExpressionRunner(String text) {
@@ -47,19 +42,19 @@ public class BaseTest {
 
         Assert.assertEquals(1, run.size());
         RuleResultValue value = run.getResult().get(0);
-        Assert.assertEquals(true, value.toBoolean());
+        Assert.assertTrue(value.toBoolean());
 
         param.put("target", "99");
         run = runner.run(param);
         Assert.assertEquals(1, run.size());
         value = run.getResult().get(0);
-        Assert.assertEquals(true, value.toBoolean());
+        Assert.assertTrue(value.toBoolean());
 
         param.put("target", "null");
         run = runner.run(param);
         Assert.assertEquals(1, run.size());
         value = run.getResult().get(0);
-        Assert.assertEquals(false, value.toBoolean());
+        Assert.assertFalse(value.toBoolean());
     }
 
     @Test
@@ -196,7 +191,7 @@ public class BaseTest {
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
-        Assert.assertEquals(true, result.first().toBoolean());
+        Assert.assertTrue(result.first().toBoolean());
     }
 
     // 全等于测试2
@@ -206,7 +201,7 @@ public class BaseTest {
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
-        Assert.assertEquals(true, result.first().toBoolean());
+        Assert.assertTrue(result.first().toBoolean());
     }
 
     // 全等于测试3
@@ -216,7 +211,7 @@ public class BaseTest {
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
-        Assert.assertEquals(false, result.first().toBoolean());
+        Assert.assertFalse(result.first().toBoolean());
     }
 
     // 等于测试
@@ -226,7 +221,7 @@ public class BaseTest {
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
-        Assert.assertEquals(true, result.first().toBoolean());
+        Assert.assertTrue(result.first().toBoolean());
     }
 
     // 等于测试2
@@ -236,7 +231,7 @@ public class BaseTest {
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
-        Assert.assertEquals(true, result.first().toBoolean());
+        Assert.assertTrue(result.first().toBoolean());
     }
 
     // 等于测试3
@@ -246,7 +241,7 @@ public class BaseTest {
         RulerRunner runner = getScriptRunner(script);
 
         RulerResult result = runner.run();
-        Assert.assertEquals(true, result.first().toBoolean());
+        Assert.assertTrue(result.first().toBoolean());
     }
 
     // if 表达式测试
@@ -258,7 +253,7 @@ public class BaseTest {
         Map<String, Object> map = new HashMap<>();
         map.put("var", 9);
 
-        RulerResult result = runner.run();
+        RulerResult result = runner.run(map);
         Assert.assertEquals(5, result.first().toInteger());
     }
 
@@ -280,44 +275,6 @@ public class BaseTest {
 
         RulerResult result = runner.run();
         Assert.assertEquals(5, result.first().toInteger());
-    }
-
-    // module fun test
-    @Test
-    public void moduleFunTest() {
-
-        configuration.putGlobalFunction(new FuncParamLengthTestFunction(), "testmod");
-
-        String script = "return testmod.FuncParamLengthTestFunction(1, 2, 3);";
-        RulerRunner runner = getScriptRunner(script);
-
-        RulerResult result = runner.run();
-        Assert.assertEquals(3, result.first().toInteger());
-    }
-
-    @Test
-    public void moduleMultiFunTest() {
-
-        configuration.putGlobalFunction(new FuncParamLengthTestFunction(), "testmod");
-        configuration.putGlobalFunction(new RulerFunction() {
-            @Override
-            public String getName() {
-                return "f2";
-            }
-            @Override
-            public Object call(RuntimeContext context, Scope currentScope, BaseValue self,
-                    Object... param) {
-                return 100;
-            }
-
-        }, "testmod");
-
-        String script =
-                "return testmod.FuncParamLengthTestFunction(1, 2, 3) + testmod.f2();";
-        RulerRunner runner = getScriptRunner(script);
-
-        RulerResult result = runner.run();
-        Assert.assertEquals(103, result.first().toInteger());
     }
 
 }

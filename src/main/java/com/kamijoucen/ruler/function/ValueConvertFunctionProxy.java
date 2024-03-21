@@ -46,12 +46,10 @@ public class ValueConvertFunctionProxy implements RulerFunction {
     }
 
     private Object convert(Object param) {
-        BaseValue baseValue = null;
-        if (param instanceof BaseValue) {
-            baseValue = (BaseValue) param;
-        } else {
+        if (!(param instanceof BaseValue)) {
             throw SyntaxException.withSyntax("错误的类型");
         }
+        BaseValue baseValue = (BaseValue) param;
         ValueConvert convert = configuration.getValueConvertManager().getConverter(baseValue.getType());
         return convert.baseToReal(baseValue, configuration);
     }

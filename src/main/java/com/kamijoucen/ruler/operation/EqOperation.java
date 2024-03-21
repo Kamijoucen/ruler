@@ -59,9 +59,7 @@ public class EqOperation implements BinaryOperation {
             return BoolValue.get(val1.getValue().equals(val2.getValue()));
         };
 
-        operations[IOUtil.getIndex(ValueType.NULL, ValueType.NULL)] = (l, r) -> {
-            return BoolValue.get(true);
-        };
+        operations[IOUtil.getIndex(ValueType.NULL, ValueType.NULL)] = (l, r) -> BoolValue.get(true);
     }
 
     private void initNonStrictOp() {

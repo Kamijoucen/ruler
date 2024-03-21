@@ -18,7 +18,7 @@ public class ArrayConvert implements ValueConvert {
 
     @Override
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
-        List<Object> realArr = null;
+        List<Object> realArr;
         if (value instanceof Collection) {
             realArr = new ArrayList<Object>((Collection<?>) value);
         } else {

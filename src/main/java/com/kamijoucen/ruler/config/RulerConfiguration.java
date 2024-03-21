@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.config;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.config.impl.ImportCache;
+import com.kamijoucen.ruler.config.impl.ImportCacheManager;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -16,23 +16,19 @@ public interface RulerConfiguration {
 
     Scope getGlobalScope();
 
-    void putGlobalFunction(RulerFunction function);
+    void registerGlobalFunction(RulerFunction function);
 
     void removeGlobalFunction(String functionName);
 
-    void putGlobalFunction(RulerFunction function, String moduleName);
+    void registerGlobalImportPathModule(String path, String alias);
 
-    void removeGlobalFunction(String functionName, String moduleName);
-
-    void putGlobalImportModule(String path, String alias);
-
-    void putGlobalImportScriptModule(String alias, String script);
+    void registerGlobalImportScriptModule(String script, String alias);
 
     List<ImportNode> getGlobalImportModules();
 
     NodeVisitor getTypeCheckVisitor();
 
-    ImportCache getImportCache();
+    ImportCacheManager getImportCache();
 
     BinaryOperationFactory getBinaryOperationFactory();
 
@@ -61,5 +57,7 @@ public interface RulerConfiguration {
     ObjectAccessControlManager getObjectAccessControlManager();
 
     MessageManager getMessageManager();
+
+    ConfigModuleManager getConfigModuleManager();
 
 }
