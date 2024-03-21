@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.AssignNode;
 import com.kamijoucen.ruler.ast.expression.BlockNode;
@@ -99,7 +100,6 @@ public class DefaultParser implements Parser {
                     "import statement without alias and infix is not allowed",
                     importToken.location);
         }
-
         AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
         tokenStream.nextToken();
         return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix,
@@ -519,10 +519,12 @@ public class DefaultParser implements Parser {
 
             BaseNode returnNode = new ReturnNode(CollectionUtil.list(exp), exp.getLocation());
             BlockNode blockNode = new BlockNode(CollectionUtil.list(returnNode), exp.getLocation());
-            return new ClosureDefineNode(name, param, blockNode, isStaticCapture, capVarList,funToken.location);
+            return new ClosureDefineNode(name, param, blockNode, isStaticCapture, capVarList,
+                    funToken.location);
         } else {
             BaseNode block = parseBlock();
-            return new ClosureDefineNode(name, param, block, isStaticCapture, capVarList, funToken.location);
+            return new ClosureDefineNode(name, param, block, isStaticCapture, capVarList,
+                    funToken.location);
         }
     }
 

@@ -1,6 +1,10 @@
 package com.kamijoucen.ruler.std.io;
 
+import java.util.ArrayList;
+import java.util.List;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.config.option.ConfigModule;
+import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.plugin.spi.ConfigurationHook;
 
 public class StdIoHook implements ConfigurationHook {
@@ -9,8 +13,10 @@ public class StdIoHook implements ConfigurationHook {
 
     @Override
     public void hook(RulerConfiguration configuration) {
-//        configuration.registerGlobalFunction(new DeleteFile(), STD_IO);
-//        configuration.registerGlobalFunction(new WriteNewText(), STD_IO);
-//        configuration.registerGlobalFunction(new ReadAllText(), STD_IO);
+        List<RulerFunction> functions = new ArrayList<>();
+        functions.add(new DeleteFile());
+        functions.add(new WriteNewText());
+        functions.add(new ReadAllText());
+        configuration.getConfigModuleManager().registerModule(ConfigModule.createFunctionModule(STD_IO, functions));
     }
 }

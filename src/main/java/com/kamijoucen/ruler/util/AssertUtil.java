@@ -8,6 +8,12 @@ import com.kamijoucen.ruler.token.TokenType;
 
 public class AssertUtil {
 
+    public static void notNull(Object obj, String message) {
+        if (obj == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
     public static void notNull(Object obj) {
         if (obj == null) {
             throw new IllegalArgumentException();

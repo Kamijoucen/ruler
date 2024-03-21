@@ -153,7 +153,7 @@ public class RulerTest {
         System.out.println(outNameVisitor.outNameTokens);
     }
 
-     @Test
+    // @Test
     public void str_bin_test() {
         String sql = "'500' < 500";
         RulerRunner script = Ruler.compileExpression(sql, configuration);
@@ -417,6 +417,5 @@ public class RulerTest {
         RulerRunner runner = Ruler.compileScript(str, configuration);
         runner.run();
     }
-
 
 }

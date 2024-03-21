@@ -1,15 +1,16 @@
 package com.kamijoucen.ruler.config.impl;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
-import com.kamijoucen.ruler.ast.expression.ImportScriptNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.*;
+import com.kamijoucen.ruler.config.option.ConfigModule;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.*;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 
@@ -126,7 +127,10 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public void registerGlobalImportScriptModule(String script, String alias) {
-        this.globalImport.add(new ImportScriptNode(script, alias, false, null));
+        String virtualPath = IOUtil.getVirtualPath(script, alias);
+
+        this.globalImport.add(new ImportNode(virtualPath, alias, false, null));
+        this.getConfigModuleManager().registerModule(ConfigModule.createScriptModule(virtualPath, script));
     }
 
     @Override

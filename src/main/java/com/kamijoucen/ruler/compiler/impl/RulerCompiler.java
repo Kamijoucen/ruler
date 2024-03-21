@@ -56,7 +56,11 @@ public class RulerCompiler {
         Parser parser = new DefaultParser(tokenStream, configuration);
         List<BaseNode> statements = new ArrayList<>();
         while (tokenStream.token().type != TokenType.EOF) {
-            statements.add(parser.parseStatement());
+            if (tokenStream.token().type == TokenType.KEY_IMPORT) {
+                statements.add(parser.parseImport());
+            } else {
+                statements.add(parser.parseStatement());
+            }
         }
         module.setStatements(statements);
         return module;

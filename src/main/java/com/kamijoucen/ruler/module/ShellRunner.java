@@ -53,10 +53,12 @@ public class ShellRunner {
                     break;
                 } catch (Exception e) {
                     logger.error("Error occurred while running shell.", e);
+                    System.out.println(e.getMessage());
                 }
             }
         } catch (Exception e) {
             logger.error("Error occurred while running shell.", e);
+            System.out.println(e.getMessage());
         }
         System.out.println();
         System.out.println("Ruler shell end.");

@@ -23,8 +23,8 @@ import java.util.Map;
 public class RulerInterpreter {
 
     private final RulerModule module;
-    private transient RulerConfiguration configuration;
-    private Boolean hasImportGlobalModule = true;
+    private final transient RulerConfiguration configuration;
+    private boolean hasImportGlobalModule = true;
 
     private RuntimeContext runtimeContext;
 
@@ -78,7 +78,7 @@ public class RulerInterpreter {
         if (CollectionUtil.isEmpty(values)) {
             return Collections.emptyList();
         }
-        List<Object> realValue = new ArrayList<Object>(values.size());
+        List<Object> realValue = new ArrayList<>(values.size());
         for (BaseValue baseValue : values) {
             // TODO 临时处理函数和闭包的返回值
             if (baseValue.getType() == ValueType.FUNCTION
@@ -98,7 +98,7 @@ public class RulerInterpreter {
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         this.runtimeContext = configuration.createDefaultRuntimeContext(values);
 
-        List<BaseNode> allNode = new ArrayList<BaseNode>(
+        List<BaseNode> allNode = new ArrayList<>(
                 module.getStatements().size() + configuration.getGlobalImportModules().size());
         if (hasImportGlobalModule) {
             allNode.addAll(configuration.getGlobalImportModules());
@@ -119,7 +119,7 @@ public class RulerInterpreter {
         if (CollectionUtil.isEmpty(returnValue)) {
             return Collections.emptyList();
         }
-        List<Object> realValue = new ArrayList<Object>(returnValue.size());
+        List<Object> realValue = new ArrayList<>(returnValue.size());
         for (BaseValue baseValue : returnValue) {
             ValueConvert convert = this.configuration.getValueConvertManager().getConverter(baseValue.getType());
             realValue.add(convert.baseToReal(baseValue, configuration));
@@ -131,7 +131,7 @@ public class RulerInterpreter {
         return hasImportGlobalModule;
     }
 
-    public void setHasImportGlobalModule(Boolean hasImportGlobalModule) {
+    public void setHasImportGlobalModule(boolean hasImportGlobalModule) {
         this.hasImportGlobalModule = hasImportGlobalModule;
     }
 

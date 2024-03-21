@@ -55,6 +55,7 @@ public class LtOperation implements BinaryOperation {
         if (operation != null) {
             return operation.apply(lValue, rValue);
         } else {
+            // TODO 这里 params 是空，左右值是lsh和rhs
             throw SyntaxException.withSyntax(
                     "Unsupported operation for these types: " + Arrays.toString(params));
         }
