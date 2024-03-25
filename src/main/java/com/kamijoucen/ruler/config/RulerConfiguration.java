@@ -20,8 +20,10 @@ public interface RulerConfiguration {
 
     void removeGlobalFunction(String functionName);
 
+    @Deprecated
     void registerGlobalImportPathModule(String path, String alias);
 
+    @Deprecated
     void registerGlobalImportScriptModule(String script, String alias);
 
     List<ImportNode> getGlobalImportModules();
