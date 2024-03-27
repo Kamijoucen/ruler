@@ -11,6 +11,7 @@ import com.kamijoucen.ruler.value.NullValue;
 import java.util.List;
 
 public class BlockEval implements BaseEval<BlockNode> {
+
     @Override
     public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
         Scope blockScope = new Scope("block", false, scope, null);
