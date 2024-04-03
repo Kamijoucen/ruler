@@ -25,7 +25,7 @@ public class ParamTypePreProcessImpl implements ParamTypePreProcess {
         if (CollectionUtil.isEmpty(param)) {
             return Collections.emptyList();
         }
-        List<RulerParameter> list = new ArrayList<RulerParameter>(param.size());
+        List<RulerParameter> list = new ArrayList<>(param.size());
         for (Map.Entry<String, Object> entry : param.entrySet()) {
             list.add(processOne(entry));
         }

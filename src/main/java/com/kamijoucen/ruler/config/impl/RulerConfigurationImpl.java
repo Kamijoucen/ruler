@@ -60,6 +60,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private ConfigModuleManager configModuleManager = new ConfigModuleManagerImpl();
 
+    private CustomImportLoadManager customImportLoadManager = new CustomImportLoadManagerImpl();
+
     public RulerConfigurationImpl() {
         init();
     }
@@ -129,7 +131,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     public void registerGlobalImportScriptModule(String script, String alias) {
         String virtualPath = IOUtil.getVirtualPath(script, alias);
 
-        this.getConfigModuleManager().registerModule(ConfigModule.createScriptModule(virtualPath, script));
+        this.getConfigModuleManager()
+                .registerModule(ConfigModule.createScriptModule(virtualPath, script));
         this.globalImport.add(new ImportNode(virtualPath, alias, false, null));
     }
 
@@ -186,6 +189,15 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ConfigModuleManager getConfigModuleManager() {
         return configModuleManager;
+    }
+
+    @Override
+    public CustomImportLoadManager getCustomImportLoadManager() {
+        return this.customImportLoadManager;
+    }
+
+    public void setCustomImportLoadManager(CustomImportLoadManager customImportLoadManager) {
+        this.customImportLoadManager = customImportLoadManager;
     }
 
     public void setMessageManager(MessageManager messageManager) {
