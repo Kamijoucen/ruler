@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.parameter;
 
+import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 
@@ -23,10 +24,12 @@ public class RuleResultValue {
             return "null";
         }
         if (value instanceof FunctionValue) {
-            return "function: " + ((FunctionValue) value).getValue().getName();
+            return "function: fun " + ((FunctionValue) value).getValue().getName() + "(...)";
         }
         if (value instanceof ClosureValue) {
-            return "closure: " + value.hashCode();
+            String funName = ((ClosureValue) value).getName();
+            return "function: fun " + (IOUtil.isBlank(funName) ? value.hashCode() : funName)
+                    + "(...)";
         }
         return value.toString();
     }
