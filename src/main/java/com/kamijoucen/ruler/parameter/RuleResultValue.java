@@ -26,7 +26,7 @@ public class RuleResultValue {
             return "function: " + ((FunctionValue) value).getValue().getName();
         }
         if (value instanceof ClosureValue) {
-            return "closure: " + value.toString();
+            return "closure: " + value.hashCode();
         }
         return value.toString();
     }
