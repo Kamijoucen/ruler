@@ -129,8 +129,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     public void registerGlobalImportScriptModule(String script, String alias) {
         String virtualPath = IOUtil.getVirtualPath(script, alias);
 
-        this.globalImport.add(new ImportNode(virtualPath, alias, false, null));
         this.getConfigModuleManager().registerModule(ConfigModule.createScriptModule(virtualPath, script));
+        this.globalImport.add(new ImportNode(virtualPath, alias, false, null));
     }
 
     @Override

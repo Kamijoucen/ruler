@@ -51,15 +51,7 @@ public class ImportEval implements BaseEval<ImportNode> {
                 if (module.isScriptModule()) {
                     text = module.getScript();
                 } else if (module.isFunctionModule()) {
-                    List<BaseNode> funcDefNodes = module.getFunctions().stream().map(fun -> {
-                        NameNode nameNode = new NameNode(
-                                new Token(TokenType.IDENTIFIER, fun.getName(), null), null);
-                        VirtualNode funNode = new VirtualNode(new FunctionValue(
-                                new ValueConvertFunctionProxy(fun, context.getConfiguration())));
-                        return new VariableDefineNode(nameNode, funNode, null);
-                    }).collect(Collectors.toList());
-                    importModule = new RulerModule(module.getUri());
-                    importModule.setStatements(funcDefNodes);
+                    importModule = createImportFunctionModule(module, context);
                 } else {
                     text = loadScript(path);
                 }
@@ -67,7 +59,7 @@ public class ImportEval implements BaseEval<ImportNode> {
             if (IOUtil.isNotBlank(text)) {
                 importModule = compilerScript(text, path, context);
             }
-            AssertUtil.notNull(importModule, "module `" + path + "` not found");
+            AssertUtil.notNull(importModule, "module '" + path + "' not found");
             importCache.putImportModule(path, importModule);
         }
         Scope runScope = new Scope("runtime file", false,
@@ -98,6 +90,19 @@ public class ImportEval implements BaseEval<ImportNode> {
     public RulerModule compilerScript(String text, String fileName, RuntimeContext context) {
         RulerScript script = new RulerScript(fileName, text);
         return new RulerCompiler(script, context.getConfiguration()).compileScript();
+    }
+
+    private RulerModule createImportFunctionModule(ConfigModule module, RuntimeContext context) {
+        List<BaseNode> funcDefNodes = module.getFunctions().stream().map(fun -> {
+            NameNode nameNode = new NameNode(
+                    new Token(TokenType.IDENTIFIER, fun.getName(), null), null);
+            VirtualNode funNode = new VirtualNode(new FunctionValue(
+                    new ValueConvertFunctionProxy(fun, context.getConfiguration())));
+            return new VariableDefineNode(nameNode, funNode, null);
+        }).collect(Collectors.toList());
+        RulerModule importModule = new RulerModule(module.getUri());
+        importModule.setStatements(funcDefNodes);
+        return importModule;
     }
 
     private String loadScript(String path) {

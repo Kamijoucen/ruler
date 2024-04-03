@@ -50,5 +50,4 @@ public class ConfigModule {
     public boolean isScriptModule() {
         return script != null;
     }
-
 }
