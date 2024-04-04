@@ -1,6 +1,9 @@
 package com.kamijoucen.ruler.eval.expression;
 
-import com.kamijoucen.ruler.Ruler;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
@@ -27,11 +30,6 @@ import com.kamijoucen.ruler.value.FunctionValue;
 import com.kamijoucen.ruler.value.ModuleValue;
 import com.kamijoucen.ruler.value.NullValue;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 public class ImportEval implements BaseEval<ImportNode> {
 
     @Override
@@ -41,25 +39,7 @@ public class ImportEval implements BaseEval<ImportNode> {
         ImportCacheManager importCache = context.getImportCache();
         RulerModule importModule = importCache.getImportModule(path);
         if (importModule == null) {
-            ConfigModule module =
-                    context.getConfiguration().getConfigModuleManager().findModule(path);
-            String text = null;
-            // 目前只会有路径导入的情况 module 可能为空
-            if (module == null) {
-                text = loadScript(path);
-            } else {
-                if (module.isScriptModule()) {
-                    text = module.getScript();
-                } else if (module.isFunctionModule()) {
-                    importModule = createImportFunctionModule(module, context);
-                } else {
-                    text = loadScript(path);
-                }
-            }
-            if (IOUtil.isNotBlank(text)) {
-                importModule = compilerScript(text, path, context);
-            }
-            AssertUtil.notNull(importModule, "module '" + path + "' not found");
+            importModule = loadImportModule(path, context);
             importCache.putImportModule(path, importModule);
         }
         Scope runScope = new Scope("runtime file", false,
@@ -87,15 +67,38 @@ public class ImportEval implements BaseEval<ImportNode> {
         return NullValue.INSTANCE;
     }
 
-    public RulerModule compilerScript(String text, String fileName, RuntimeContext context) {
+    private RulerModule loadImportModule(String path, RuntimeContext context) {
+        ConfigModule module = context.getConfiguration().getConfigModuleManager().findModule(path);
+        RulerModule importModule = null;
+        String text = null;
+        // 目前只会有路径导入的情况 module 可能为空
+        if (module == null) {
+            text = loadScript(path, context);
+        } else {
+            if (module.isScriptModule()) {
+                text = module.getScript();
+            } else if (module.isFunctionModule()) {
+                importModule = createImportFunctionModule(module, context);
+            } else {
+                text = loadScript(path, context);
+            }
+        }
+        if (IOUtil.isNotBlank(text)) {
+            importModule = compilerScript(text, path, context);
+        }
+        AssertUtil.notNull(importModule, "module '" + path + "' not found");
+        return importModule;
+    }
+
+    private RulerModule compilerScript(String text, String fileName, RuntimeContext context) {
         RulerScript script = new RulerScript(fileName, text);
         return new RulerCompiler(script, context.getConfiguration()).compileScript();
     }
 
     private RulerModule createImportFunctionModule(ConfigModule module, RuntimeContext context) {
         List<BaseNode> funcDefNodes = module.getFunctions().stream().map(fun -> {
-            NameNode nameNode = new NameNode(
-                    new Token(TokenType.IDENTIFIER, fun.getName(), null), null);
+            NameNode nameNode =
+                    new NameNode(new Token(TokenType.IDENTIFIER, fun.getName(), null), null);
             VirtualNode funNode = new VirtualNode(new FunctionValue(
                     new ValueConvertFunctionProxy(fun, context.getConfiguration())));
             return new VariableDefineNode(nameNode, funNode, null);
@@ -105,18 +108,14 @@ public class ImportEval implements BaseEval<ImportNode> {
         return importModule;
     }
 
-    private String loadScript(String path) {
-        if (isStdImport(path)) {
-            return IOUtil.read(Ruler.class.getResourceAsStream(path));
-        } else {
-            return IOUtil.read(path);
+    private String loadScript(String path, RuntimeContext context) {
+        if (context.getConfiguration().getCustomImportLoadManager().customCount() > 0) {
+            String text = context.getConfiguration().getCustomImportLoadManager().load(path);
+            if (IOUtil.isNotBlank(text)) {
+                return text;
+            }
         }
-    }
-
-    private boolean isStdImport(String path) {
-        AssertUtil.notNull(path);
-        // todo 大小写处理
-        return path.startsWith("ruler/") || path.startsWith("/ruler/");
+        return IOUtil.read(path);
     }
 
 }

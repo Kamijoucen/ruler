@@ -29,7 +29,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
                 }
             }
         }
-        ClosureValue closureValue = new ClosureValue(capScope, param, node.getBlock());
+        ClosureValue closureValue = new ClosureValue(node.getName(), capScope, param, node.getBlock());
         if (funName != null) {
             scope.defineLocal(funName, closureValue);
         }

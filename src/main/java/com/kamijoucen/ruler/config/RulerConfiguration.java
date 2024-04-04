@@ -60,4 +60,6 @@ public interface RulerConfiguration {
 
     ConfigModuleManager getConfigModuleManager();
 
+    CustomImportLoadManager getCustomImportLoadManager();
+
 }

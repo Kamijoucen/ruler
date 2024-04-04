@@ -45,7 +45,7 @@ public class BinaryOperationFactoryImpl implements BinaryOperationFactory {
     }
 
     @Override
-    public void putOperation(String type, BinaryOperation operation) {
+    public void registerOperation(String type, BinaryOperation operation) {
         this.operationMap.put(type, operation);
     }
 }
