@@ -1,11 +1,40 @@
 package com.kamijoucen.ruler.config.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.config.*;
+import com.kamijoucen.ruler.config.BinaryOperationFactory;
+import com.kamijoucen.ruler.config.ConfigModuleManager;
+import com.kamijoucen.ruler.config.CreateRuntimeContextFactory;
+import com.kamijoucen.ruler.config.CustomImportLoadManager;
+import com.kamijoucen.ruler.config.IntegerNumberCache;
+import com.kamijoucen.ruler.config.MessageManager;
+import com.kamijoucen.ruler.config.ObjectAccessControlManager;
+import com.kamijoucen.ruler.config.ParamTypePreProcess;
+import com.kamijoucen.ruler.config.RClassManager;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.config.RuntimeBehaviorFactory;
+import com.kamijoucen.ruler.config.SpiLoaderManager;
+import com.kamijoucen.ruler.config.ValueConvertManager;
 import com.kamijoucen.ruler.config.option.ConfigModule;
+import com.kamijoucen.ruler.config.option.CustomImportLoad;
+import com.kamijoucen.ruler.config.option.StdImportLoadImpl;
 import com.kamijoucen.ruler.eval.EvalVisitor;
-import com.kamijoucen.ruler.function.*;
+import com.kamijoucen.ruler.function.CallFunction;
+import com.kamijoucen.ruler.function.CharAtFunction;
+import com.kamijoucen.ruler.function.DatetimeFunction;
+import com.kamijoucen.ruler.function.MakeItPossibleFunction;
+import com.kamijoucen.ruler.function.PanicFunction;
+import com.kamijoucen.ruler.function.PrintFunction;
+import com.kamijoucen.ruler.function.ProxyFunction;
+import com.kamijoucen.ruler.function.ReturnConvertFunctionProxy;
+import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.function.TimestampFunction;
+import com.kamijoucen.ruler.function.ToBooleanFunction;
+import com.kamijoucen.ruler.function.ToNumberFunction;
+import com.kamijoucen.ruler.function.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -13,10 +42,6 @@ import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
@@ -69,7 +94,13 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private void init() {
         initEngineBehaviorFactory();
         initDefaultFunction();
+        initStdLoad();
         initPlugin();
+    }
+
+    private void initStdLoad() {
+        CustomImportLoad stdLoad = new StdImportLoadImpl();
+        this.getCustomImportLoadManager().registerCustomImportLoad(stdLoad);
     }
 
     private void initPlugin() {

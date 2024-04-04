@@ -1,6 +1,9 @@
 package com.kamijoucen.ruler.eval.expression;
 
-import com.kamijoucen.ruler.Ruler;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
@@ -26,11 +29,6 @@ import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 import com.kamijoucen.ruler.value.ModuleValue;
 import com.kamijoucen.ruler.value.NullValue;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class ImportEval implements BaseEval<ImportNode> {
 
@@ -117,17 +115,7 @@ public class ImportEval implements BaseEval<ImportNode> {
                 return text;
             }
         }
-        if (isStdImport(path)) {
-            return IOUtil.read(Ruler.class.getResourceAsStream(path));
-        } else {
-            return IOUtil.read(path);
-        }
-    }
-
-    private boolean isStdImport(String path) {
-        AssertUtil.notNull(path);
-        // todo 大小写处理
-        return path.startsWith("ruler/") || path.startsWith("/ruler/");
+        return IOUtil.read(path);
     }
 
 }
