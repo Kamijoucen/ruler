@@ -17,6 +17,8 @@ public class StdIoHook implements ConfigurationHook {
         functions.add(new DeleteFile());
         functions.add(new WriteNewText());
         functions.add(new ReadAllText());
-        configuration.getConfigModuleManager().registerModule(ConfigModule.createFunctionModule(STD_IO, functions));
+        functions.add(new PrintFileList());
+        configuration.getConfigModuleManager()
+                .registerModule(ConfigModule.createFunctionModule(STD_IO, functions));
     }
 }
