@@ -6,8 +6,8 @@
 *.iml
 out
 gen
-.vscode
-**/.*
+.vscode/settings.json
+.VSCodeCounter
 target
 **.jar
 lib
