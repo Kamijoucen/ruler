@@ -45,15 +45,14 @@ public class ImportEval implements BaseEval<ImportNode> {
         Scope runScope = new Scope("runtime file", false,
                 new Scope("file", false, context.getGlobalScope(), null), null);
         // run
+        RuntimeContext otherContext = context.getConfiguration().createDefaultRuntimeContext(null);
         RulerInterpreter interpreter =
                 new RulerInterpreter(importModule, context.getConfiguration());
         interpreter.setHasImportGlobalModule(false);
-        interpreter.runScript(Collections.emptyList(), runScope);
-
+        interpreter.runScript(runScope, otherContext);
         // include infix
         if (node.isHasImportInfix()) {
-            Map<String, ClosureValue> infixOperationSpace =
-                    interpreter.getRuntimeContext().getInfixOperationSpace();
+            Map<String, ClosureValue> infixOperationSpace = otherContext.getInfixOperationSpace();
             if (!CollectionUtil.isEmpty(infixOperationSpace)) {
                 for (Map.Entry<String, ClosureValue> entry : infixOperationSpace.entrySet()) {
                     if (context.getInfixOperation(entry.getKey()) == null) {

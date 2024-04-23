@@ -14,6 +14,7 @@ import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
 import org.slf4j.Logger;
@@ -25,11 +26,13 @@ public class ShellRunner {
 
     private final RulerConfiguration configuration;
     private final Scope runScope;
+    private final RuntimeContext runtimeContext;
     private int line = 0;
 
     public ShellRunner(RulerConfiguration configuration) {
         this.configuration = configuration;
         this.runScope = new Scope("shell root", false, configuration.getGlobalScope(), null);
+        this.runtimeContext = configuration.createDefaultRuntimeContext(null);
     }
 
     public void run() {
@@ -70,7 +73,7 @@ public class ShellRunner {
         RulerModule module = compiler.compileStatement();
 
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        List<Object> values = interpreter.runStatement(runScope);
+        List<Object> values = interpreter.runStatement(runScope, this.runtimeContext);
 
         List<RuleResultValue> ruleResultValues = new ArrayList<RuleResultValue>(values.size());
         for (Object value : values) {

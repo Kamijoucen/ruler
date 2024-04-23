@@ -136,43 +136,6 @@ public class RulerTest {
     }
 
     @Test
-    public void expression_test() {
-
-        String sql = "(fun(i){return i >= 10;})(1)";
-
-        RulerRunner script = Ruler.compileExpression(sql, configuration);
-
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("level", 500);
-        RulerResult result = script.run(param);
-
-        System.out.println(result.first().toBoolean());
-
-        OutNameVisitor outNameVisitor = new OutNameVisitor();
-        RuntimeContext context = script.customRun(outNameVisitor);
-        System.out.println(outNameVisitor.outNameTokens);
-    }
-
-    // @Test
-    public void str_bin_test() {
-        String sql = "'500' < 500";
-        RulerRunner script = Ruler.compileExpression(sql, configuration);
-        RulerResult result = script.run();
-        System.out.println(result.first().toBoolean());
-    }
-
-    // @Test
-    public void out_name_find_test() {
-        String sql = "$level < 500";
-        RulerRunner script = Ruler.compileExpression(sql, configuration);
-        RulerResult result = script.run();
-        System.out.println(result.first().toBoolean());
-
-        RuntimeContext context = script.customRun(new OutNameVisitor());
-        System.out.println(context);
-    }
-
-    @Test
     public void null_input_test() {
 
         String script = "$name == '12'";
@@ -184,7 +147,6 @@ public class RulerTest {
         RulerResult result = runner.run(args);
 
         System.out.println(result.first().toBoolean());
-
     }
 
     @Test
@@ -196,7 +158,6 @@ public class RulerTest {
         RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
-
     }
 
     @Test
@@ -207,7 +168,6 @@ public class RulerTest {
         RulerRunner run = Ruler.compileScript(script, configuration);
 
         run.run();
-
     }
 
     @Test
