@@ -1,8 +1,10 @@
 package com.kamijoucen.ruler.eval.expression;
 
+import java.util.List;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.QuadConsumer;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -13,9 +15,16 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.NullValue;
 import com.kamijoucen.ruler.value.ValueType;
 
-import java.util.List;
-
 public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
+
+    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> checkLoopNumberEval =
+            (operation, node, scope, context) -> {
+                operation.accept(node, scope, context);
+            };
+
+    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> blankEval =
+            (operation, node, scope, context) -> {
+            };
 
     @Override
     public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
@@ -27,17 +36,22 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         Token loopName = node.getLoopName();
         BaseNode block = node.getBlock();
 
-        LoopCountCheckOperation loopCountCheckOperation = context.getConfiguration()
-                .getRuntimeBehaviorFactory().createLoopCountCheckOperation();
+        LoopCountCheckOperation loopCountCheckOperation = null;
+        QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check = null;
+        if (context.getConfiguration().getMaxLoopNumber() > 0) {
+            loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
+                    .createLoopCountCheckOperation();
+            check = checkLoopNumberEval;
+        } else {
+            check = blankEval;
+        }
 
         Scope forScope = new Scope("for each scope", false, scope, null);
 
         BaseValue lastValue = NullValue.INSTANCE;
         for (BaseValue baseValue : arrayValues) {
-            loopCountCheckOperation.accept(node, scope, context);
-
+            check.accept(loopCountCheckOperation, block, forScope, context);
             forScope.putLocal(loopName.name, baseValue);
-
             lastValue = block.eval(forScope, context);
             if (context.isReturnFlag()) {
                 break;
