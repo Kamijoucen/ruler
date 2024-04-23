@@ -1,20 +1,16 @@
 package com.kamijoucen.ruler.module;
 
-import com.kamijoucen.ruler.common.NodeVisitor;
-import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
-import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.parameter.RulerResult;
-import com.kamijoucen.ruler.parameter.RuleResultValue;
-import com.kamijoucen.ruler.parameter.RulerParameter;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.util.AssertUtil;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.parameter.RuleResultValue;
+import com.kamijoucen.ruler.parameter.RulerParameter;
+import com.kamijoucen.ruler.parameter.RulerResult;
+import com.kamijoucen.ruler.runtime.Scope;
 
 public class RulerRunner implements Serializable {
 
@@ -60,17 +56,6 @@ public class RulerRunner implements Serializable {
         }
         List<RulerParameter> parameter = configuration.getParamTypePreProcess().process(param);
         return run(parameter);
-    }
-
-    // ------------------------------------------------------------------------------------------------------------------
-    public RuntimeContext customRun(NodeVisitor visitor, RulerConfiguration configuration) {
-        AssertUtil.notNull(visitor);
-        RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        return interpreter.runCustomVisitor(visitor, new Scope("runtime root", true, configuration.getGlobalScope(), null));
-    }
-
-    public RuntimeContext customRun(NodeVisitor visitor) {
-        return customRun(visitor, configuration);
     }
 
     public RulerConfiguration getConfiguration() {

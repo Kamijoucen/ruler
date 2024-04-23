@@ -3,6 +3,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "No args main",
+            "request": "launch",
+            "mainClass": "com.kamijoucen.ruler.Main",
+            "projectName": "ruler",
+        },
+        {
+            "type": "java",
             "name": "Main",
             "request": "launch",
             "mainClass": "com.kamijoucen.ruler.Main",
