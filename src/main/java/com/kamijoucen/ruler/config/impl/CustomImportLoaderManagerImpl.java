@@ -43,6 +43,9 @@ public class CustomImportLoaderManagerImpl implements CustomImportLoaderManager 
     public void registerCustomImportLoader(CustomImportLoader customImportLoad) {
         AssertUtil.notNull(customImportLoad);
         ImportMatchOrder option = customImportLoad.getClass().getAnnotation(ImportMatchOrder.class);
+        if (option == null) {
+            option = CustomImportLoader.class.getAnnotation(ImportMatchOrder.class);
+        }
         lock.writeLock().lock();
         try {
             loaders.add(new SortLoader(customImportLoad, option.order()));
