@@ -3,7 +3,8 @@ package com.kamijoucen.ruler.config.option;
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.util.IOUtil;
 
-public class StdImportLoadImpl implements CustomImportLoad {
+@ImportMatchOrder(order = Integer.MAX_VALUE)
+public class StdImportLoader implements CustomImportLoader {
 
     @Override
     public String load(String path) {

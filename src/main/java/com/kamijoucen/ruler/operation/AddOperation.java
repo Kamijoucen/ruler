@@ -18,26 +18,26 @@ public class AddOperation implements BinaryOperation {
             new BiFunction[ValueType.values().length * ValueType.values().length];
 
     static {
-        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.INTEGER)] = (ctx, tuple) -> {
+        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.INTEGER)] = (ctx, tuple) -> {
             IntegerValue val1 = (IntegerValue) tuple.v1;
             IntegerValue val2 = (IntegerValue) tuple.v2;
             return ctx.getConfiguration().getIntegerNumberCache()
                     .getValue(val1.getValue() + val2.getValue());
         };
 
-        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (ctx, tuple) -> {
+        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (ctx, tuple) -> {
             IntegerValue val1 = (IntegerValue) tuple.v1;
             DoubleValue val2 = (DoubleValue) tuple.v2;
             return new DoubleValue(val1.getValue() + val2.getValue());
         };
 
-        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (ctx, tuple) -> {
+        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (ctx, tuple) -> {
             DoubleValue val1 = (DoubleValue) tuple.v1;
             IntegerValue val2 = (IntegerValue) tuple.v2;
             return new DoubleValue(val1.getValue() + val2.getValue());
         };
 
-        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (ctx, tuple) -> {
+        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (ctx, tuple) -> {
             DoubleValue val1 = (DoubleValue) tuple.v1;
             DoubleValue val2 = (DoubleValue) tuple.v2;
             return new DoubleValue(val1.getValue() + val2.getValue());
@@ -50,7 +50,7 @@ public class AddOperation implements BinaryOperation {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
         BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation =
-                operations[IOUtil.getIndex(lValue.getType(), rValue.getType())];
+                operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {
             return operation.apply(context, new Tuple2<BaseValue, BaseValue>(lValue, rValue));
         } else {

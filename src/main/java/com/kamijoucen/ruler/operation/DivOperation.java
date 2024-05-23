@@ -21,17 +21,17 @@ public class DivOperation implements BinaryOperation {
 
     static {
 
-        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.INTEGER)] =
+        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.INTEGER)] =
                 (l, r) -> new DoubleValue(
                         (double) ((IntegerValue) l).getValue() / ((IntegerValue) r).getValue());
 
-        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (l,
+        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (l,
                 r) -> new DoubleValue(((IntegerValue) l).getValue() / ((DoubleValue) r).getValue());
 
-        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (l,
+        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (l,
                 r) -> new DoubleValue(((DoubleValue) l).getValue() / ((IntegerValue) r).getValue());
 
-        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (l,
+        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (l,
                 r) -> new DoubleValue(((DoubleValue) l).getValue() / ((DoubleValue) r).getValue());
     }
 
@@ -41,7 +41,7 @@ public class DivOperation implements BinaryOperation {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
         BiFunction<BaseValue, BaseValue, BaseValue> operation =
-                operations[IOUtil.getIndex(lValue.getType(), rValue.getType())];
+                operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {
             return operation.apply(lValue, rValue);
         } else {
