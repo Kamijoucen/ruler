@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.test;
+package com.kamijoucen.ruler.test.option;
 
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.RuntimeContext;

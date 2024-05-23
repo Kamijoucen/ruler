@@ -21,20 +21,20 @@ public class SubOperation implements BinaryOperation {
 
     static {
 
-        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.INTEGER)] = (ctx, tuple) -> {
+        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.INTEGER)] = (ctx, tuple) -> {
             return ctx.getConfiguration().getIntegerNumberCache().getValue(
                     ((IntegerValue) tuple.v1).getValue() - ((IntegerValue) tuple.v2).getValue());
         };
 
-        operations[IOUtil.getIndex(ValueType.INTEGER, ValueType.DOUBLE)] =
+        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.DOUBLE)] =
                 (ctx, tuple) -> new DoubleValue(
                         ((IntegerValue) tuple.v1).getValue() - ((DoubleValue) tuple.v2).getValue());
 
-        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.INTEGER)] =
+        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.INTEGER)] =
                 (ctx, tuple) -> new DoubleValue(
                         ((DoubleValue) tuple.v1).getValue() - ((IntegerValue) tuple.v2).getValue());
 
-        operations[IOUtil.getIndex(ValueType.DOUBLE, ValueType.DOUBLE)] =
+        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.DOUBLE)] =
                 (ctx, tuple) -> new DoubleValue(
                         ((DoubleValue) tuple.v1).getValue() - ((DoubleValue) tuple.v2).getValue());
 
@@ -46,7 +46,7 @@ public class SubOperation implements BinaryOperation {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
         BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation =
-                operations[IOUtil.getIndex(lValue.getType(), rValue.getType())];
+                operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {
             return operation.apply(context, new Tuple2<BaseValue, BaseValue>(lValue, rValue));
         } else {

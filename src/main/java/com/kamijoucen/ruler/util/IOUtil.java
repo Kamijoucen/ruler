@@ -104,12 +104,14 @@ public class IOUtil {
             }
         } catch (IOException e) {
             logger.error("read error", e);
+            throw new RuntimeException(e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
                     logger.error("close reader error", e);
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -135,7 +137,7 @@ public class IOUtil {
         return Character.isWhitespace(ch);
     }
 
-    public static int getIndex(ValueType type1, ValueType type2) {
+    public static int getTypeIndex(ValueType type1, ValueType type2) {
         return type1.ordinal() * ValueType.values().length + type2.ordinal();
     }
 

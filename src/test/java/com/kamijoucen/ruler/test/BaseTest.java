@@ -1,16 +1,20 @@
 package com.kamijoucen.ruler.test;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import com.kamijoucen.ruler.Ruler;
+import com.kamijoucen.ruler.config.impl.CustomImportLoaderManagerImpl;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.module.RulerRunner;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.parameter.RulerResult;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.kamijoucen.ruler.test.option.FuncParamLengthTestFunction;
+import com.kamijoucen.ruler.test.option.TestImportLoader1;
+import com.kamijoucen.ruler.test.option.TestImportLoader2;
+import com.kamijoucen.ruler.test.option.TestImportLoader3;
 
 public class BaseTest {
 
@@ -275,6 +279,36 @@ public class BaseTest {
 
         RulerResult result = runner.run();
         Assert.assertEquals(5, result.first().toInteger());
+    }
+
+
+    // import loader sort test
+    @Test
+    public void importLoaderSortTest() {
+        CustomImportLoaderManagerImpl loaderManager = new CustomImportLoaderManagerImpl() {
+            @Override
+            public String load(String path) {
+
+                for (int i = 0; i < super.loaders.size(); i++) {
+                    if (i == 0) {
+                        // 3 的优先级最高，数字最大，因此会排第一
+                        Assert.assertEquals("3", super.loaders.get(i).getLoader().load(null));
+                    } else if (i == 1) {
+                        Assert.assertEquals("2", super.loaders.get(i).getLoader().load(null));
+                    } else if (i == 2) {
+                        Assert.assertEquals("1", super.loaders.get(i).getLoader().load(null));
+                    }
+                }
+                return null;
+            }
+
+        };
+
+        loaderManager.registerCustomImportLoader(new TestImportLoader1());
+        loaderManager.registerCustomImportLoader(new TestImportLoader2());
+        loaderManager.registerCustomImportLoader(new TestImportLoader3());
+
+        loaderManager.load(null);
     }
 
 }

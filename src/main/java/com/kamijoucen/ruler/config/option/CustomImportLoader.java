@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.config.option;
 
-public interface CustomImportLoad {
+@ImportMatchOrder
+public interface CustomImportLoader {
 
     boolean match(String path);
 

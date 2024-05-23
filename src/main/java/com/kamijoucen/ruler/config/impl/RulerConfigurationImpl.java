@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.config.BinaryOperationFactory;
 import com.kamijoucen.ruler.config.ConfigModuleManager;
 import com.kamijoucen.ruler.config.CreateRuntimeContextFactory;
-import com.kamijoucen.ruler.config.CustomImportLoadManager;
+import com.kamijoucen.ruler.config.CustomImportLoaderManager;
 import com.kamijoucen.ruler.config.IntegerNumberCache;
 import com.kamijoucen.ruler.config.MessageManager;
 import com.kamijoucen.ruler.config.ObjectAccessControlManager;
@@ -19,8 +19,8 @@ import com.kamijoucen.ruler.config.RuntimeBehaviorFactory;
 import com.kamijoucen.ruler.config.SpiLoaderManager;
 import com.kamijoucen.ruler.config.ValueConvertManager;
 import com.kamijoucen.ruler.config.option.ConfigModule;
-import com.kamijoucen.ruler.config.option.CustomImportLoad;
-import com.kamijoucen.ruler.config.option.StdImportLoadImpl;
+import com.kamijoucen.ruler.config.option.CustomImportLoader;
+import com.kamijoucen.ruler.config.option.StdImportLoader;
 import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.function.CallFunction;
 import com.kamijoucen.ruler.function.CharAtFunction;
@@ -85,7 +85,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private ConfigModuleManager configModuleManager = new ConfigModuleManagerImpl();
 
-    private CustomImportLoadManager customImportLoadManager = new CustomImportLoadManagerImpl();
+    private CustomImportLoaderManager customImportLoadManager = new CustomImportLoaderManagerImpl();
 
     public RulerConfigurationImpl() {
         init();
@@ -99,8 +99,8 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     private void initStdLoad() {
-        CustomImportLoad stdLoad = new StdImportLoadImpl();
-        this.getCustomImportLoadManager().registerCustomImportLoad(stdLoad);
+        CustomImportLoader stdLoad = new StdImportLoader();
+        this.getCustomImportLoadManager().registerCustomImportLoader(stdLoad);
     }
 
     private void initPlugin() {
@@ -223,11 +223,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public CustomImportLoadManager getCustomImportLoadManager() {
+    public CustomImportLoaderManager getCustomImportLoadManager() {
         return this.customImportLoadManager;
     }
 
-    public void setCustomImportLoadManager(CustomImportLoadManager customImportLoadManager) {
+    public void setCustomImportLoadManager(CustomImportLoaderManager customImportLoadManager) {
         this.customImportLoadManager = customImportLoadManager;
     }
 
