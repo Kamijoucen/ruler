@@ -12,7 +12,7 @@ import java.util.List;
 
 public class OutNameVisitor extends AbstractVisitor {
 
-    public final List<Token> outNameTokens = new ArrayList<Token>();
+    public final List<Token> outNameTokens = new ArrayList<>();
 
     @Override
     public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {

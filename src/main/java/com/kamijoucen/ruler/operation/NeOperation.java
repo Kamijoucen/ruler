@@ -1,16 +1,12 @@
 package com.kamijoucen.ruler.operation;
 
-import java.util.function.BiFunction;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.BoolValue;
-import com.kamijoucen.ruler.value.DoubleValue;
-import com.kamijoucen.ruler.value.IntegerValue;
-import com.kamijoucen.ruler.value.StringValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
+
+import java.util.function.BiFunction;
 
 public class NeOperation implements BinaryOperation {
 
@@ -63,9 +59,7 @@ public class NeOperation implements BinaryOperation {
             return BoolValue.get(!val1.getValue().equals(val2.getValue()));
         };
 
-        operations[IOUtil.getTypeIndex(ValueType.NULL, ValueType.NULL)] = (l, r) -> {
-            return BoolValue.get(false);
-        };
+        operations[IOUtil.getTypeIndex(ValueType.NULL, ValueType.NULL)] = (l, r) -> BoolValue.get(false);
     }
 
     private void initNonStrictOp() {

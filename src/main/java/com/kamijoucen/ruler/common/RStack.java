@@ -8,7 +8,7 @@ public class RStack<T> {
     private final Deque<T> queue;
 
     public RStack() {
-        queue = new ArrayDeque<T>();
+        queue = new ArrayDeque<>();
     }
 
     public int size() {

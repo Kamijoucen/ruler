@@ -4,9 +4,9 @@ import com.kamijoucen.ruler.value.ValueType;
 
 public class RulerParameter {
 
-    private ValueType type;
-    private String name;
-    private Object value;
+    private final ValueType type;
+    private final String name;
+    private final Object value;
 
     public RulerParameter(ValueType type, String name, Object value) {
         this.type = type;

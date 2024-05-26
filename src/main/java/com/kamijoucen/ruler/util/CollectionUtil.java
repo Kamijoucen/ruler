@@ -43,9 +43,9 @@ public class CollectionUtil {
     @SafeVarargs
     public static <T> List<T> list(T... values) {
         if (values == null || values.length == 0) {
-            return new ArrayList<T>();
+            return new ArrayList<>();
         }
-        return new ArrayList<T>(Arrays.asList(values));
+        return new ArrayList<>(Arrays.asList(values));
     }
 
 }

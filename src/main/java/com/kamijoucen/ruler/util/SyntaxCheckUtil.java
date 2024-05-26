@@ -42,7 +42,7 @@ public class SyntaxCheckUtil {
     }
 
     public static void availableImport(List<ImportNode> imports) {
-        Set<String> aliasSet = new HashSet<String>();
+        Set<String> aliasSet = new HashSet<>();
         for (ImportNode node : imports) {
             int oldAliasSize = aliasSet.size();
             aliasSet.add(node.getAlias());

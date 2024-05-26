@@ -1,10 +1,5 @@
 package com.kamijoucen.ruler.module;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
@@ -12,10 +7,16 @@ import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.runtime.Scope;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 public class RulerRunner implements Serializable {
 
-    private RulerModule module;
-    private boolean isScript;
+    private final RulerModule module;
+    private final boolean isScript;
     private transient RulerConfiguration configuration;
 
     public RulerRunner(RulerModule module, boolean isScript, RulerConfiguration configuration) {
@@ -35,7 +36,7 @@ public class RulerRunner implements Serializable {
                     new Scope("runtime root", true, configuration.getGlobalScope(), null));
         }
 
-        List<RuleResultValue> ruleResultValues = new ArrayList<RuleResultValue>(values.size());
+        List<RuleResultValue> ruleResultValues = new ArrayList<>(values.size());
         for (Object value : values) {
             ruleResultValues.add(new RuleResultValue(value));
         }
