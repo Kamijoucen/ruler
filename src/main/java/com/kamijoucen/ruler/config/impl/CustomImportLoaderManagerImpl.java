@@ -66,16 +66,6 @@ public class CustomImportLoaderManagerImpl implements CustomImportLoaderManager 
         }
     }
 
-    @Override
-    public int customCount() {
-        lock.readLock().lock();
-        try {
-            return loaders.size();
-        } finally {
-            lock.readLock().unlock();
-        }
-    }
-
     public static class SortLoader implements Comparable<SortLoader> {
 
         private final CustomImportLoader loader;

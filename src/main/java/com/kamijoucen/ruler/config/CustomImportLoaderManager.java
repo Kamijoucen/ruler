@@ -10,6 +10,4 @@ public interface CustomImportLoaderManager {
 
     String load(String path);
 
-    int customCount();
-
 }

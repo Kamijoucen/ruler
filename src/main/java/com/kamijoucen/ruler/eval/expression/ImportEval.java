@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.eval.expression;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
@@ -107,11 +107,9 @@ public class ImportEval implements BaseEval<ImportNode> {
     }
 
     private String loadScript(String path, RuntimeContext context) {
-        if (context.getConfiguration().getCustomImportLoadManager().customCount() > 0) {
-            String text = context.getConfiguration().getCustomImportLoadManager().load(path);
-            if (IOUtil.isNotBlank(text)) {
-                return text;
-            }
+        String text = context.getConfiguration().getCustomImportLoadManager().load(path);
+        if (!Objects.isNull(text)) {
+            return text;
         }
         return IOUtil.read(path);
     }
