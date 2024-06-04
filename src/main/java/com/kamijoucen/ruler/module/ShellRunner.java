@@ -1,24 +1,25 @@
 package com.kamijoucen.ruler.module;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
+import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.parameter.RuleResultValue;
+import com.kamijoucen.ruler.parameter.RulerResult;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
+import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.util.IOUtil;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.UserInterruptException;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
-import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
-import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
-import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.parameter.RulerResult;
-import com.kamijoucen.ruler.parameter.RuleResultValue;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.util.IOUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShellRunner {
 
@@ -75,7 +76,7 @@ public class ShellRunner {
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         List<Object> values = interpreter.runStatement(runScope, this.runtimeContext);
 
-        List<RuleResultValue> ruleResultValues = new ArrayList<RuleResultValue>(values.size());
+        List<RuleResultValue> ruleResultValues = new ArrayList<>(values.size());
         for (Object value : values) {
             ruleResultValues.add(new RuleResultValue(value));
         }

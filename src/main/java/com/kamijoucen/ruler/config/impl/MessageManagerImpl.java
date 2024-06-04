@@ -1,14 +1,15 @@
 package com.kamijoucen.ruler.config.impl;
 
-import java.util.HashMap;
-import java.util.Map;
 import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.config.MessageManager;
 import com.kamijoucen.ruler.token.TokenLocation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MessageManagerImpl implements MessageManager {
 
-    private Map<MessageType, String> messageMap = new HashMap<>();
+    private final Map<MessageType, String> messageMap = new HashMap<>();
 
     public MessageManagerImpl() {
         messageMap.put(MessageType.UNKNOWN_SYMBOL, "Unknown symbol '%s'");

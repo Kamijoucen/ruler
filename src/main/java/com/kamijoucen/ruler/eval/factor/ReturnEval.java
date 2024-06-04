@@ -16,7 +16,7 @@ public class ReturnEval implements BaseEval<ReturnNode> {
     @Override
     public BaseValue eval(ReturnNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> param = node.getParam();
-        List<BaseValue> values = new ArrayList<BaseValue>(param.size());
+        List<BaseValue> values = new ArrayList<>(param.size());
         for (BaseNode baseNode : param) {
             values.add(baseNode.eval(scope, context));
         }

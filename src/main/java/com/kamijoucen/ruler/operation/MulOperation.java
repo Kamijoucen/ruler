@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.operation;
 
-import java.util.Arrays;
-import java.util.function.BiFunction;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -12,6 +10,9 @@ import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
 import com.kamijoucen.ruler.value.IntegerValue;
 import com.kamijoucen.ruler.value.ValueType;
+
+import java.util.Arrays;
+import java.util.function.BiFunction;
 
 public class MulOperation implements BinaryOperation {
 
@@ -47,7 +48,7 @@ public class MulOperation implements BinaryOperation {
         BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation =
                 operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {
-            return operation.apply(context, new Tuple2<BaseValue, BaseValue>(lValue, rValue));
+            return operation.apply(context, new Tuple2<>(lValue, rValue));
         } else {
             throw SyntaxException.withSyntax(
                     "Unsupported operation for these types: " + Arrays.toString(params));

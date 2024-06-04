@@ -25,7 +25,7 @@ public class DefaultLexical implements Lexical {
     private final StringBuilder buffer;
     private boolean isEnd;
     private char curStringFlag;
-    private String fileName;
+    private final String fileName;
 
     public DefaultLexical(String content, String fileName, RulerConfiguration configuration) {
         this.offset = 0;
@@ -130,11 +130,10 @@ public class DefaultLexical implements Lexical {
     public void scanComment() {
 
         forward();
-        forward();
 
-        while (isNotOver() && charAt() != '\n') {
+        do {
             forward();
-        }
+        } while (isNotOver() && charAt() != '\n');
 
     }
 
@@ -192,10 +191,9 @@ public class DefaultLexical implements Lexical {
 
     @Override
     public void scanNumber() {
-        appendAndForward();
-        while (isNotOver() && Character.isDigit(charAt())) {
+        do {
             appendAndForward();
-        }
+        } while (isNotOver() && Character.isDigit(charAt()));
         if (isOver() || charAt() != '.') {
             makeToken(TokenType.INTEGER);
             return;
@@ -255,10 +253,9 @@ public class DefaultLexical implements Lexical {
 
     @Override
     public void scanIdentifier() {
-        appendAndForward();
-        while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
+        do {
             appendAndForward();
-        }
+        } while (isNotOver() && IOUtil.isIdentifierChar(charAt()));
         TokenType tokenType = TokenLookUp.keyWords(buffer.toString());
         if (tokenType != TokenType.UN_KNOW) {
             makeToken(tokenType);

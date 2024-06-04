@@ -43,6 +43,9 @@ public class CustomImportLoaderManagerImpl implements CustomImportLoaderManager 
     public void registerCustomImportLoader(CustomImportLoader customImportLoad) {
         AssertUtil.notNull(customImportLoad);
         ImportMatchOrder option = customImportLoad.getClass().getAnnotation(ImportMatchOrder.class);
+        if (option == null) {
+            option = CustomImportLoader.class.getAnnotation(ImportMatchOrder.class);
+        }
         lock.writeLock().lock();
         try {
             loaders.add(new SortLoader(customImportLoad, option.order()));
@@ -60,16 +63,6 @@ public class CustomImportLoaderManagerImpl implements CustomImportLoaderManager 
             loaders.removeIf(loader -> loader.loader.equals(customImportLoader));
         } finally {
             lock.writeLock().unlock();
-        }
-    }
-
-    @Override
-    public int customCount() {
-        lock.readLock().lock();
-        try {
-            return loaders.size();
-        } finally {
-            lock.readLock().unlock();
         }
     }
 

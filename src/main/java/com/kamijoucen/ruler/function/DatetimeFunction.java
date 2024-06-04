@@ -33,8 +33,7 @@ public class DatetimeFunction implements RulerFunction {
         SimpleDateFormat format = new SimpleDateFormat(pattern);
         try {
             return format.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (ParseException ignored) {
         }
         return null;
     }

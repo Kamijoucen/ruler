@@ -1,18 +1,11 @@
 package com.kamijoucen.ruler.util;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.UUID;
-
 import com.kamijoucen.ruler.value.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
+import java.util.UUID;
 
 public class IOUtil {
 
@@ -111,7 +104,6 @@ public class IOUtil {
                     reader.close();
                 } catch (IOException e) {
                     logger.error("close reader error", e);
-                    throw new RuntimeException(e);
                 }
             }
         }

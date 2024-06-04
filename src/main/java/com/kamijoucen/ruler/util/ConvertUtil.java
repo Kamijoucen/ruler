@@ -52,7 +52,7 @@ public class ConvertUtil {
         if (CollectionUtil.isEmpty(params)) {
             return Collections.emptyMap();
         }
-        Map<String, BaseValue> values = new HashMap<String, BaseValue>();
+        Map<String, BaseValue> values = new HashMap<>();
         for (RulerParameter param : params) {
             ValueConvert convert = configuration.getValueConvertManager().getConverter(param.getType());
             if (convert == null) {

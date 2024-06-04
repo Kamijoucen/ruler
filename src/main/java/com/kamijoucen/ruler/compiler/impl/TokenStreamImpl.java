@@ -12,7 +12,7 @@ public class TokenStreamImpl implements TokenStream {
 
     private final Lexical lexical;
 
-    private final List<Token> tokens = new ArrayList<Token>();
+    private final List<Token> tokens = new ArrayList<>();
 
     private int offset = -1;
 

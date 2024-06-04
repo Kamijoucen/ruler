@@ -10,13 +10,14 @@ import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class RulerCompiler {
 
-    private RulerConfiguration configuration;
-    private RulerScript mainScript;
+    private final RulerConfiguration configuration;
+    private final RulerScript mainScript;
 
     public RulerCompiler(RulerScript mainScript, RulerConfiguration configuration) {
         this.mainScript = mainScript;

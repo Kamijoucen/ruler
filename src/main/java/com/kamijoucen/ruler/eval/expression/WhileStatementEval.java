@@ -14,9 +14,7 @@ import com.kamijoucen.ruler.value.NullValue;
 public class WhileStatementEval implements BaseEval<WhileStatementNode> {
 
     private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> checkLoopNumberEval =
-            (operation, node, scope, context) -> {
-                operation.accept(node, scope, context);
-            };
+            LoopCountCheckOperation::accept;
 
     private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> blankEval =
             (operation, node, scope, context) -> {
@@ -27,7 +25,7 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
     public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
         BaseNode block = node.getBlock();
         LoopCountCheckOperation loopCountCheckOperation = null;
-        QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check = null;
+        QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;
         if (context.getConfiguration().getMaxLoopNumber() > 0) {
             loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
                     .createLoopCountCheckOperation();

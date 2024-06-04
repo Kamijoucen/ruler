@@ -6,7 +6,10 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
-import com.kamijoucen.ruler.value.*;
+import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.DoubleValue;
+import com.kamijoucen.ruler.value.IntegerValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.Arrays;
 import java.util.function.BiFunction;
@@ -52,7 +55,7 @@ public class AddOperation implements BinaryOperation {
         BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation =
                 operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {
-            return operation.apply(context, new Tuple2<BaseValue, BaseValue>(lValue, rValue));
+            return operation.apply(context, new Tuple2<>(lValue, rValue));
         } else {
             throw SyntaxException.withSyntax("The value is not supported for the 'add' operation:"
                     + Arrays.toString(params));

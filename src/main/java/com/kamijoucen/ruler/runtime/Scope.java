@@ -18,7 +18,7 @@ public class Scope {
     public Scope(String stackName, boolean isCallScope, Scope parentScope, TokenLocation callLocation) {
         this.stackName = stackName;
         this.parentScope = parentScope;
-        this.valueSpace = new HashMap<String, BaseValue>();
+        this.valueSpace = new HashMap<>();
         this.isCallScope = isCallScope;
         this.callLocation = callLocation;
     }

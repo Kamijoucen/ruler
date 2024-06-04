@@ -17,11 +17,11 @@ public class RuntimeContext {
 
     private final RulerConfiguration configuration;
     private Map<String, BaseValue> outSpace;
-    private Map<String, ClosureValue> infixOperationSpace;
+    private final Map<String, ClosureValue> infixOperationSpace;
     private NodeVisitor nodeVisitor;
     private NodeVisitor typeCheckVisitor;
     private ImportCacheManager importCache;
-    private StackDepthCheckOperation stackDepthCheckOperation;
+    private final StackDepthCheckOperation stackDepthCheckOperation;
     private BaseValue currentSelfValue;
 
     private boolean breakFlag = false;

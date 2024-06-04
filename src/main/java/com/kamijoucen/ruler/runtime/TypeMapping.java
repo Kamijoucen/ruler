@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class TypeMapping {
 
-    private static final Map<ValueType, String> mapping = new HashMap<ValueType, String>();
+    private static final Map<ValueType, String> mapping = new HashMap<>();
 
     static {
         mapping.put(ValueType.FUNCTION, "function");
