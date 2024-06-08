@@ -191,9 +191,11 @@ public class DefaultLexical implements Lexical {
 
     @Override
     public void scanNumber() {
+
         do {
             appendAndForward();
         } while (isNotOver() && Character.isDigit(charAt()));
+
         if (isOver() || charAt() != '.') {
             makeToken(TokenType.INTEGER);
             return;
