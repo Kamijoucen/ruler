@@ -66,8 +66,12 @@ public class DefaultLexical implements Lexical {
             } else if (Character.isDigit(ch)) {
                 state = State.NUMBER;
             } else if (ch == '"' || ch == '\'') {
-                curStringFlag = ch;
-                state = State.STRING;
+                if (ch == '\"' && peekChar() == '\"' && peekChar(2) == '\"') {
+                    state = State.STRING_BLOCK;
+                } else {
+                    curStringFlag = ch;
+                    state = State.STRING;
+                }
             } else if (ch == '/' && peekChar() == '/') {
                 state = State.COMMENT;
             } else if (ch == '`') {
@@ -95,6 +99,9 @@ public class DefaultLexical implements Lexical {
                     break;
                 case STRING:
                     scanString();
+                    break;
+                case STRING_BLOCK:
+                    scanStringBlock();
                     break;
                 case SYMBOL:
                     scanSymbol();
@@ -161,6 +168,22 @@ public class DefaultLexical implements Lexical {
         forward(step);
         append(symbol);
         makeToken(type);
+    }
+
+    @Override
+    public void scanStringBlock() {
+        forward(3);
+        while (isNotOver() && !(charAt() == '\"' && peekChar() == '\"' && peekChar(2) == '\"')) {
+            appendAndForward();
+        }
+        if (isOver()) {
+            String message = this.configuration.getMessageManager().buildMessage(
+                    MessageType.NOT_FOUND_STRING_END, new TokenLocation(line, column, fileName),
+                    "\"\"\"");
+            throw new SyntaxException(message);
+        }
+        forward(3);
+        makeToken(TokenType.STRING);
     }
 
     @Override

@@ -12,6 +12,8 @@ public enum State {
 
     STRING,
 
+    STRING_BLOCK,
+
     SYMBOL,
 
     COMMENT,

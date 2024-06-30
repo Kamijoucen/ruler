@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.Ruler;
 import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.eval.OutNameVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.module.RulerRunner;
 import com.kamijoucen.ruler.parameter.RulerParameter;
