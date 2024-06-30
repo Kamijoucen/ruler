@@ -8,4 +8,5 @@ public enum MessageType {
     BREAK_NOT_IN_LOOP,
     CONTINUE_NOT_IN_LOOP,
     VARIABLE_NOT_DEFINED,
+    UNKNOWN_EXPRESSION_START,
 }

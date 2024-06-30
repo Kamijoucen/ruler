@@ -36,6 +36,7 @@ public class ObjectRClassManagerImpl implements RClassManager {
 
     private RClass createStringClass() {
         RClass baseRClass = createBaseRClass();
+        addFunToRClass(new LengthFunction(), baseRClass);
         return baseRClass;
     }
 

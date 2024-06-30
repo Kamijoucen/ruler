@@ -188,7 +188,6 @@ public class BaseTest {
         Assert.assertEquals(4, result.first().toInteger());
     }
 
-    // 全等于测试
     @Test
     public void strictEqTest() {
         String script = "var a = 1; var b = 1; return a === b;";
@@ -198,7 +197,6 @@ public class BaseTest {
         Assert.assertTrue(result.first().toBoolean());
     }
 
-    // 全等于测试2
     @Test
     public void strictEqTest2() {
         String script = "var a = 1; var b = 1.0; return a === b;";
@@ -208,7 +206,6 @@ public class BaseTest {
         Assert.assertTrue(result.first().toBoolean());
     }
 
-    // 全等于测试3
     @Test
     public void strictEqTest3() {
         String script = "var a = 1; var b = '1'; return a === b;";
@@ -218,7 +215,6 @@ public class BaseTest {
         Assert.assertFalse(result.first().toBoolean());
     }
 
-    // 等于测试
     @Test
     public void eqTest() {
         String script = "var a = 1; var b = 1; return a == b;";
@@ -228,7 +224,6 @@ public class BaseTest {
         Assert.assertTrue(result.first().toBoolean());
     }
 
-    // 等于测试2
     @Test
     public void eqTest2() {
         String script = "var a = 1; var b = 1.0; return a == b;";
@@ -238,7 +233,6 @@ public class BaseTest {
         Assert.assertTrue(result.first().toBoolean());
     }
 
-    // 等于测试3
     @Test
     public void eqTest3() {
         String script = "var a = 1; var b = '1'; return a == b;";
@@ -248,7 +242,6 @@ public class BaseTest {
         Assert.assertTrue(result.first().toBoolean());
     }
 
-    // if 表达式测试
     @Test
     public void ifExpressionTest3() {
         String script = "var a = $`var`; var b = if a === 1: 1; else { 3; 2; 5; } ; return b;";
@@ -261,7 +254,6 @@ public class BaseTest {
         Assert.assertEquals(5, result.first().toInteger());
     }
 
-    // Call函数测试
     @Test
     public void callFunctionTest() {
         String script = "fun Test(n) { return n + 1; } var a = Call('Test')(100); return a;";
@@ -271,7 +263,6 @@ public class BaseTest {
         Assert.assertEquals(101, result.first().toInteger());
     }
 
-    // ruler func param length test
     @Test
     public void funcParamLengthTest() {
         String script = "var a = FuncParamLengthTestFunction(1, 2, 3, 4, 5); return a;";
@@ -282,7 +273,6 @@ public class BaseTest {
     }
 
 
-    // import loader sort test
     @Test
     public void importLoaderSortTest() {
         CustomImportLoaderManagerImpl loaderManager = new CustomImportLoaderManagerImpl() {
@@ -303,12 +293,26 @@ public class BaseTest {
             }
 
         };
-
         loaderManager.registerCustomImportLoader(new TestImportLoader1());
         loaderManager.registerCustomImportLoader(new TestImportLoader2());
         loaderManager.registerCustomImportLoader(new TestImportLoader3());
-
         loaderManager.load(null);
+    }
+
+    @Test
+    public void stringBlockTest() {
+        String script = "var a = \"\"\"hello\n\"world\"\n\"\"\"; return a;";
+        RulerRunner runner = getScriptRunner(script);
+        RulerResult result = runner.run();
+        Assert.assertEquals("hello\n\"world\"\n", result.first().toString());
+    }
+
+    @Test
+    public void stringBlockTest2() {
+        String script = "var a = \"\"\"hello\n\"world\"\n\"\"\"; return a.length();";
+        RulerRunner runner = getScriptRunner(script);
+        RulerResult result = runner.run();
+        Assert.assertEquals(14, result.first().toInteger());
     }
 
 }

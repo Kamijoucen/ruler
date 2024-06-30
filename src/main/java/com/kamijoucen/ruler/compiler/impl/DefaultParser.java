@@ -135,7 +135,9 @@ public class DefaultParser implements Parser {
             parseContext.setRoot(true);
         }
         if (statement == null) {
-            throw SyntaxException.withSyntax("error statement");
+            String message = configuration.getMessageManager()
+                    .buildMessage(MessageType.UNKNOWN_EXPRESSION_START, token.location, token.name);
+            throw new SyntaxException(message);
         }
         return statement;
     }
@@ -254,11 +256,13 @@ public class DefaultParser implements Parser {
                 node = parseForEachStatement();
                 break;
             case KEY_WHILE:
-
                 node = parseWhileStatement();
                 break;
-            default:
-                throw SyntaxException.withSyntax("unkown token:" + token);
+            default: {
+                String message = configuration.getMessageManager().buildMessage(
+                        MessageType.UNKNOWN_EXPRESSION_START, token.location, token.name);
+                throw new SyntaxException(message);
+            }
         }
         while (tokenStream.token().type == TokenType.DOT
                 || tokenStream.token().type == TokenType.LEFT_PAREN
@@ -315,7 +319,9 @@ public class DefaultParser implements Parser {
         } else if (token.type == TokenType.OUT_IDENTIFIER) {
             nameNode = new OutNameNode(token, token.location);
         } else {
-            throw SyntaxException.withSyntax("error identifier: " + token);
+            String message = configuration.getMessageManager()
+                    .buildMessage(MessageType.ILLEGAL_IDENTIFIER, token.location, token.name);
+            throw new SyntaxException(message);
         }
         tokenStream.nextToken();
         return nameNode;

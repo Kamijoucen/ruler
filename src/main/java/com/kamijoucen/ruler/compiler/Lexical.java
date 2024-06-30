@@ -14,6 +14,8 @@ public interface Lexical {
 
     void scanString();
 
+    void scanStringBlock();
+
     void scanNumber();
 
     void scanOutIdentifier();

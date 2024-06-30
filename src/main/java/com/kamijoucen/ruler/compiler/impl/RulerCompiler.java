@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.compiler.impl;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -40,7 +41,10 @@ public class RulerCompiler {
         DefaultParser parser = new DefaultParser(tokenStream, configuration);
         BaseNode expression = parser.parseExpression();
         if (tokenStream.token().type != TokenType.EOF) {
-            throw SyntaxException.withSyntax("错误的表达式结构：" + tokenStream.token());
+            String message =
+                    configuration.getMessageManager().buildMessage(MessageType.ILLEGAL_IDENTIFIER,
+                            tokenStream.token().location, tokenStream.token().name);
+            throw new SyntaxException(message);
         }
         module.setStatements(CollectionUtil.list(expression));
         return module;
