@@ -23,15 +23,19 @@ public class ObjectRClassManagerImpl implements RClassManager {
         RCLASS_MAP.put(ValueType.STRING, createStringClass());
         RCLASS_MAP.put(ValueType.ARRAY, createArrayClass());
         RCLASS_MAP.put(ValueType.INTEGER, createIntegerClass());
+        RCLASS_MAP.put(ValueType.RSON, createRsonClass());
     }
 
     private RClass createBaseRClass() {
         RClass rClass = new RClassValue();
-
         addFunToRClass(new ToStringFunction(), rClass);
         addFunToRClass(new PrintSelfFunction(), rClass);
-
         return rClass;
+    }
+
+    private RClass createRsonClass() {
+        RClass baseRClass = createBaseRClass();
+        return baseRClass;
     }
 
     private RClass createStringClass() {
