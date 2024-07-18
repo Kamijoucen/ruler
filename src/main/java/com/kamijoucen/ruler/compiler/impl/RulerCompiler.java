@@ -5,9 +5,11 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.eval.SemanticAnalysisVisitor;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
+import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.SyntaxCheckUtil;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RulerCompiler {
-
+ 
     private final RulerConfiguration configuration;
     private final RulerScript mainScript;
 
@@ -26,8 +28,40 @@ public class RulerCompiler {
     }
 
     public RulerModule compileScript() {
-        RulerModule mainModule = compileModule(mainScript);
-        return mainModule;
+        RulerModule module = new RulerModule(mainScript.getFileName());
+        DefaultLexical lexical =
+                new DefaultLexical(mainScript.getContent(), module.getFullName(), configuration);
+        TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
+        tokenStream.scan();
+        tokenStream.nextToken();
+
+        SemanticAnalysisVisitor visitor = new SemanticAnalysisVisitor();
+
+        visitor.getSymbolTable().push();
+        try {
+            Parser parser = new DefaultParser(tokenStream, configuration);
+            List<ImportNode> list = new ArrayList<>();
+            while (tokenStream.token().type == TokenType.KEY_IMPORT) {
+                list.add(parser.parseImport());
+            }
+            SyntaxCheckUtil.availableImport(list);
+
+            List<BaseNode> rootStatements = new ArrayList<>(list);
+            // parse statements
+            while (tokenStream.token().type != TokenType.EOF) {
+                rootStatements.add(parser.parseStatement());
+            }
+            module.setStatements(rootStatements);
+
+            RuntimeContext checkContext = new RuntimeContext(configuration, module, );
+            rootStatements.stream().forEach(statement -> {
+                statement.eval(null, null);
+            });
+
+        } finally {
+            visitor.getSymbolTable().pop();
+        }
+        return module;
     }
 
     public RulerModule compileExpression() {
@@ -68,31 +102,6 @@ public class RulerCompiler {
             }
         }
         module.setStatements(statements);
-        return module;
-    }
-
-    private RulerModule compileModule(RulerScript script) {
-
-        RulerModule module = new RulerModule(script.getFileName());
-        DefaultLexical lexical =
-                new DefaultLexical(script.getContent(), module.getFullName(), configuration);
-        TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
-        tokenStream.scan();
-        tokenStream.nextToken();
-        Parser parser = new DefaultParser(tokenStream, configuration);
-        // parse import
-        List<ImportNode> list = new ArrayList<>();
-        while (tokenStream.token().type == TokenType.KEY_IMPORT) {
-            list.add(parser.parseImport());
-        }
-        SyntaxCheckUtil.availableImport(list);
-
-        List<BaseNode> rootStatements = new ArrayList<>(list);
-        // parse statements
-        while (tokenStream.token().type != TokenType.EOF) {
-            rootStatements.add(parser.parseStatement());
-        }
-        module.setStatements(rootStatements);
         return module;
     }
 

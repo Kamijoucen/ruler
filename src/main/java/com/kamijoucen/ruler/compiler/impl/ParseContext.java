@@ -13,6 +13,7 @@ public class ParseContext {
 
     private boolean inLoop;
 
+
     public ParseContext(RulerConfiguration configuration) {
         this.configuration = configuration;
     }

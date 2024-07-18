@@ -49,6 +49,7 @@ public enum TokenType {
     KEY_ELSE,       // else
     KEY_FUN,        // fun
     KEY_VAR,        // var
+    KEY_CONST,      // const
     KEY_NULL,       // null
     KEY_THIS,       // this
     KEY_IMPORT,     // import

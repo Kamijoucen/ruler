@@ -38,7 +38,6 @@ import com.kamijoucen.ruler.function.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
@@ -49,8 +48,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private Scope globalScope = new Scope("root", false, null, null);
 
     private final List<ImportNode> globalImport = new ArrayList<>();
-
-    private NodeVisitor typeCheckVisitor = new TypeCheckVisitor();
 
     private NodeVisitor evalVisitor = new EvalVisitor();
 

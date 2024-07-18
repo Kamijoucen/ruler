@@ -1,8 +1,42 @@
 package com.kamijoucen.ruler.compiler.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.factor.*;
+import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.BlockNode;
+import com.kamijoucen.ruler.ast.expression.CallNode;
+import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
+import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
+import com.kamijoucen.ruler.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
+import com.kamijoucen.ruler.ast.expression.InfixDefinitionNode;
+import com.kamijoucen.ruler.ast.expression.RuleStatementNode;
+import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.factor.ArrayNode;
+import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.factor.BoolNode;
+import com.kamijoucen.ruler.ast.factor.BreakNode;
+import com.kamijoucen.ruler.ast.factor.ContinueNode;
+import com.kamijoucen.ruler.ast.factor.DoubleNode;
+import com.kamijoucen.ruler.ast.factor.IntegerNode;
+import com.kamijoucen.ruler.ast.factor.NameNode;
+import com.kamijoucen.ruler.ast.factor.NullNode;
+import com.kamijoucen.ruler.ast.factor.OutNameNode;
+import com.kamijoucen.ruler.ast.factor.ReturnNode;
+import com.kamijoucen.ruler.ast.factor.RsonNode;
+import com.kamijoucen.ruler.ast.factor.StringNode;
+import com.kamijoucen.ruler.ast.factor.ThisNode;
+import com.kamijoucen.ruler.ast.factor.TypeOfNode;
+import com.kamijoucen.ruler.ast.factor.UnaryOperationNode;
 import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
@@ -17,8 +51,6 @@ import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.IOUtil;
-
-import java.util.*;
 
 public class DefaultParser implements Parser {
 
@@ -353,7 +385,7 @@ public class DefaultParser implements Parser {
         BaseNode condition = parseExpression();
         BaseNode blockAST;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockAST = parseBlock();
+            blockAST =  parseBlock();
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();
@@ -719,6 +751,30 @@ public class DefaultParser implements Parser {
             throw SyntaxException.withSyntax("infix function name is blank!", infixToken);
         }
         return new InfixDefinitionNode(functionNode, infixToken.location);
+    }
+
+    public BaseNode parseConstDefine() {
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_CONST);
+        tokenStream.nextToken();
+
+        AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
+
+        BaseNode nameNode = parseIdentifier();
+
+        AssertUtil.assertToken(tokenStream, TokenType.ASSIGN);
+
+        BaseNode expNode = parseExpression();
+
+        return null;
+    }
+
+    public BaseNode parseMatchNode() {
+        AssertUtil.assertToken(tokenStream, TokenType.KEY_MATCH);
+        tokenStream.nextToken();
+
+        BaseNode matchExp = parseExpression();
+
+        return null;
     }
 
 }

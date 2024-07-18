@@ -42,6 +42,10 @@ public class EvalVisitor extends AbstractVisitor {
     private static final InfixDefinitionEval infixDefinitionEval = new InfixDefinitionEval();
     private static final DefaultParamValEval defaultParamValEval = new DefaultParamValEval();
 
+
+    
+
+
     @Override
     public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
         return nameEval.eval(node, scope, context);

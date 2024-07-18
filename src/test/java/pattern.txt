@@ -4,3 +4,11 @@ var a = $num;
 switch a
 case typeof 'array' -> a push 1;
 default -> null;
+
+
+type User {
+    Name,
+    Age: 15,  
+}
+
+var a : User;
