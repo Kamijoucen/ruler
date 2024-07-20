@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -11,7 +12,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class DotEval implements BaseEval<DotNode> {
 
     @Override
-    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
         BaseValue prevValue = node.getLhs().eval(scope, context);
         context.setCurrentSelfValue(prevValue);
 

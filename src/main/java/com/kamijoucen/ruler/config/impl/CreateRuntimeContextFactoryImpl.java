@@ -20,7 +20,6 @@ public class CreateRuntimeContextFactoryImpl implements CreateRuntimeContextFact
     public RuntimeContext create(Map<String, BaseValue> outSpace) {
         RuntimeContext runtimeContext = new RuntimeContext(
                 configuration.getEvalVisitor(),
-                configuration.getTypeCheckVisitor(),
                 configuration.getImportCache(),
                 configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation(),
                 configuration);

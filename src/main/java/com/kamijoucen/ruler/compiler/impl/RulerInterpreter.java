@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.compiler.impl;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.eval.SemanticAnalysisVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;

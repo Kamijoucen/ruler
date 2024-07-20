@@ -26,8 +26,6 @@ public interface RulerConfiguration {
 
     List<ImportNode> getGlobalImportModules();
 
-    NodeVisitor getTypeCheckVisitor();
-
     ImportCacheManager getImportCache();
 
     BinaryOperationFactory getBinaryOperationFactory();

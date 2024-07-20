@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.eval.expression;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.common.QuadConsumer;
 import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -22,7 +23,7 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
 
 
     @Override
-    public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
         BaseNode block = node.getBlock();
         LoopCountCheckOperation loopCountCheckOperation = null;
         QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;

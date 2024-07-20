@@ -10,6 +10,7 @@ import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.ast.factor.VirtualNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
 import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
 import com.kamijoucen.ruler.config.impl.ImportCacheManager;
@@ -33,7 +34,7 @@ import com.kamijoucen.ruler.value.NullValue;
 public class ImportEval implements BaseEval<ImportNode> {
 
     @Override
-    public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
         String path = node.getPath();
 
         ImportCacheManager importCache = context.getImportCache();

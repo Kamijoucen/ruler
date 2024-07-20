@@ -45,7 +45,6 @@ public class DefaultLexical implements Lexical {
     @Override
     public Token nextToken() {
 
-        // 本次扫描是否匹配到 Token
         boolean match = false;
 
         if (isOver()) {

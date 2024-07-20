@@ -64,7 +64,6 @@ public class DefaultParser implements Parser {
         this.tokenStream = tokenStream;
         this.configuration = configuration;
         this.parseContext = new ParseContext(this.configuration);
-        this.parseContext.setTypeCheckVisitor(this.configuration.getTypeCheckVisitor());
         this.parseContext.setRoot(true);
     }
 
@@ -385,7 +384,7 @@ public class DefaultParser implements Parser {
         BaseNode condition = parseExpression();
         BaseNode blockAST;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockAST =  parseBlock();
+            blockAST = parseBlock();
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = parseStatement();

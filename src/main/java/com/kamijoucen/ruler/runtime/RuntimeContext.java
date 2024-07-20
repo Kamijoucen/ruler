@@ -19,7 +19,6 @@ public class RuntimeContext {
     private Map<String, BaseValue> outSpace;
     private final Map<String, ClosureValue> infixOperationSpace;
     private NodeVisitor nodeVisitor;
-    private NodeVisitor typeCheckVisitor;
     private ImportCacheManager importCache;
     private final StackDepthCheckOperation stackDepthCheckOperation;
     private BaseValue currentSelfValue;
@@ -30,15 +29,11 @@ public class RuntimeContext {
 
     private List<BaseValue> returnSpace;
 
-    public RuntimeContext(NodeVisitor nodeVisitor,
-                          NodeVisitor typeCheckVisitor,
-                          ImportCacheManager importCache,
-                          StackDepthCheckOperation stackDepthCheckOperation,
-                          RulerConfiguration configuration) {
+    public RuntimeContext(NodeVisitor nodeVisitor, ImportCacheManager importCache,
+            StackDepthCheckOperation stackDepthCheckOperation, RulerConfiguration configuration) {
         this.outSpace = new HashMap<>();
         this.infixOperationSpace = new HashMap<>();
         this.nodeVisitor = nodeVisitor;
-        this.typeCheckVisitor = typeCheckVisitor;
         this.importCache = importCache;
         this.stackDepthCheckOperation = stackDepthCheckOperation;
         this.configuration = configuration;
@@ -80,10 +75,6 @@ public class RuntimeContext {
         return nodeVisitor;
     }
 
-    public NodeVisitor getTypeCheckVisitor() {
-        return typeCheckVisitor;
-    }
-
     public ImportCacheManager getImportCache() {
         return importCache;
     }
@@ -121,10 +112,6 @@ public class RuntimeContext {
 
     public void setNodeVisitor(NodeVisitor nodeVisitor) {
         this.nodeVisitor = nodeVisitor;
-    }
-
-    public void setTypeCheckVisitor(NodeVisitor typeCheckVisitor) {
-        this.typeCheckVisitor = typeCheckVisitor;
     }
 
     public void setImportCache(ImportCacheManager importCache) {

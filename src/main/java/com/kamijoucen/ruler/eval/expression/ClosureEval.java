@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.CollectionUtil;
@@ -15,7 +16,7 @@ import java.util.List;
 public class ClosureEval implements BaseEval<ClosureDefineNode> {
 
     @Override
-    public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
         List<BaseNode> param = node.getParam();
         String funName = node.getName();
 
@@ -24,7 +25,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
             capScope = new Scope(null, false, context.getConfiguration().getGlobalScope(), null);
             if (CollectionUtil.isNotEmpty(node.getStaticCaptureVar())) {
                 for (BaseNode capNode : node.getStaticCaptureVar()) {
-                    BaseValue capValue = capNode.eval(scope, context);
+                    BaseValue capValue = capNode.eval(visitor);
                     capScope.putLocal(((NameNode) capNode).name.name, capValue);
                 }
             }

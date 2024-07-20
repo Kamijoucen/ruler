@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -15,7 +16,7 @@ import com.kamijoucen.ruler.value.*;
 public class AssignEval implements BaseEval<AssignNode> {
 
     @Override
-    public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
         BaseNode lhs = node.getLhs();
         if (lhs instanceof NameNode) {
             return evalVariableNode(node, scope, context, (NameNode) lhs);

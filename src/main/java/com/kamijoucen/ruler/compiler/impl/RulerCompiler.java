@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RulerCompiler {
- 
+
     private final RulerConfiguration configuration;
     private final RulerScript mainScript;
 
@@ -77,7 +77,7 @@ public class RulerCompiler {
         if (tokenStream.token().type != TokenType.EOF) {
             String message =
                     configuration.getMessageManager().buildMessage(MessageType.ILLEGAL_IDENTIFIER,
-                            tokenStream.token().location, tokenStream.token().name);
+                        tokenStream.token().location, tokenStream.token().name);
             throw new SyntaxException(message);
         }
         module.setStatements(CollectionUtil.list(expression));

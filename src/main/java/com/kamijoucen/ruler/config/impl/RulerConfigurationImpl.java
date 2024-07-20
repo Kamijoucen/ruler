@@ -170,11 +170,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public NodeVisitor getTypeCheckVisitor() {
-        return typeCheckVisitor;
-    }
-
-    @Override
     public NodeVisitor getEvalVisitor() {
         return evalVisitor;
     }
@@ -294,10 +289,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     public void setGlobalScope(Scope globalScope) {
         this.globalScope = globalScope;
-    }
-
-    public void setTypeCheckVisitor(NodeVisitor typeCheckVisitor) {
-        this.typeCheckVisitor = typeCheckVisitor;
     }
 
     public void setEvalVisitor(NodeVisitor evalVisitor) {

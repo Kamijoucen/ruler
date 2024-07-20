@@ -22,17 +22,17 @@ public class SemanticAnalysisVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(BlockNode node) {
         symbolTable.push();
         try {
-            return super.eval(node, scope, context);
+            return super.eval(node);
         } finally {
             symbolTable.pop();
         }
     }
 
     @Override
-    public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
+    public BaseValue eval(VariableDefineNode node) {
         NameNode lhs = (NameNode) node.getLhs();
         if (symbolTable.findCurrentScope(lhs.name.name) != null) {
             String message = context.getConfiguration().getMessageManager()
@@ -40,12 +40,12 @@ public class SemanticAnalysisVisitor extends AbstractVisitor {
             throw new SyntaxException(message);
         }
         this.symbolTable.define(new Symbol(lhs.name, false, null));
-        return super.eval(node, scope, context);
+        return super.eval(node);
     }
 
     @Override
-    public BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
-        return super.eval(node, scope, context);
+    public BaseValue eval(DefaultParamValNode node) {
+        return super.eval(node);
     }
 
     public SymbolTable getSymbolTable() {

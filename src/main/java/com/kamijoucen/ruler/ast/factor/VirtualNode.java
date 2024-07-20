@@ -1,8 +1,7 @@
 package com.kamijoucen.ruler.ast.factor;
 
 import com.kamijoucen.ruler.ast.BaseNode;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
@@ -14,15 +13,9 @@ public class VirtualNode implements BaseNode {
         this.baseValue = baseValue;
     }
 
-
     @Override
-    public BaseValue eval(Scope scope, RuntimeContext context) {
-        return baseValue;
-    }
-
-    @Override
-    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
-        throw new UnsupportedOperationException();
+    public BaseValue eval(NodeVisitor visitor) {
+        return visitor.eval(this);
     }
 
     @Override

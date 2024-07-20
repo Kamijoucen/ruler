@@ -1,10 +1,68 @@
 package com.kamijoucen.ruler.eval;
 
-import com.kamijoucen.ruler.ast.expression.*;
-import com.kamijoucen.ruler.ast.factor.*;
+import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.BlockNode;
+import com.kamijoucen.ruler.ast.expression.CallNode;
+import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
+import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
+import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
+import com.kamijoucen.ruler.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
+import com.kamijoucen.ruler.ast.expression.InfixDefinitionNode;
+import com.kamijoucen.ruler.ast.expression.RuleStatementNode;
+import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.ast.expression.WhileStatementNode;
+import com.kamijoucen.ruler.ast.factor.ArrayNode;
+import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
+import com.kamijoucen.ruler.ast.factor.BoolNode;
+import com.kamijoucen.ruler.ast.factor.BreakNode;
+import com.kamijoucen.ruler.ast.factor.ContinueNode;
+import com.kamijoucen.ruler.ast.factor.DoubleNode;
+import com.kamijoucen.ruler.ast.factor.IntegerNode;
+import com.kamijoucen.ruler.ast.factor.NameNode;
+import com.kamijoucen.ruler.ast.factor.NullNode;
+import com.kamijoucen.ruler.ast.factor.OutNameNode;
+import com.kamijoucen.ruler.ast.factor.ReturnNode;
+import com.kamijoucen.ruler.ast.factor.RsonNode;
+import com.kamijoucen.ruler.ast.factor.StringNode;
+import com.kamijoucen.ruler.ast.factor.ThisNode;
+import com.kamijoucen.ruler.ast.factor.TypeOfNode;
+import com.kamijoucen.ruler.ast.factor.UnaryOperationNode;
 import com.kamijoucen.ruler.common.AbstractVisitor;
-import com.kamijoucen.ruler.eval.expression.*;
-import com.kamijoucen.ruler.eval.factor.*;
+import com.kamijoucen.ruler.common.RStack;
+import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.eval.expression.AssignEval;
+import com.kamijoucen.ruler.eval.expression.BlockEval;
+import com.kamijoucen.ruler.eval.expression.CallEval;
+import com.kamijoucen.ruler.eval.expression.ClosureEval;
+import com.kamijoucen.ruler.eval.expression.DefaultParamValEval;
+import com.kamijoucen.ruler.eval.expression.DotEval;
+import com.kamijoucen.ruler.eval.expression.ForEachStatementEval;
+import com.kamijoucen.ruler.eval.expression.IfStatementEval;
+import com.kamijoucen.ruler.eval.expression.ImportEval;
+import com.kamijoucen.ruler.eval.expression.IndexEval;
+import com.kamijoucen.ruler.eval.expression.InfixDefinitionEval;
+import com.kamijoucen.ruler.eval.expression.RuleStatementEval;
+import com.kamijoucen.ruler.eval.expression.VariableEval;
+import com.kamijoucen.ruler.eval.expression.WhileStatementEval;
+import com.kamijoucen.ruler.eval.factor.ArrayEval;
+import com.kamijoucen.ruler.eval.factor.BinaryOperationEval;
+import com.kamijoucen.ruler.eval.factor.BooleanEval;
+import com.kamijoucen.ruler.eval.factor.BreakEval;
+import com.kamijoucen.ruler.eval.factor.ContinueEval;
+import com.kamijoucen.ruler.eval.factor.DoubleEval;
+import com.kamijoucen.ruler.eval.factor.IntegerEval;
+import com.kamijoucen.ruler.eval.factor.NameEval;
+import com.kamijoucen.ruler.eval.factor.NullEval;
+import com.kamijoucen.ruler.eval.factor.OutNameEval;
+import com.kamijoucen.ruler.eval.factor.ReturnEval;
+import com.kamijoucen.ruler.eval.factor.RsonEval;
+import com.kamijoucen.ruler.eval.factor.StringEval;
+import com.kamijoucen.ruler.eval.factor.ThisEval;
+import com.kamijoucen.ruler.eval.factor.TypeOfEval;
+import com.kamijoucen.ruler.eval.factor.UnaryOperationEval;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -42,157 +100,170 @@ public class EvalVisitor extends AbstractVisitor {
     private static final InfixDefinitionEval infixDefinitionEval = new InfixDefinitionEval();
     private static final DefaultParamValEval defaultParamValEval = new DefaultParamValEval();
 
+    private final RulerConfiguration configuration;
 
-    
+    private final RuntimeContext context;
 
+    private final RStack<Scope> scope = new RStack<>();
 
-    @Override
-    public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
-        return nameEval.eval(node, scope, context);
+    public EvalVisitor(RulerConfiguration configuration) {
+        this.configuration = configuration;
+        this.context = this.configuration.createDefaultRuntimeContext(null);
     }
 
     @Override
-    public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {
-        return outNameEval.eval(node, scope, context);
+    public BaseValue eval(NameNode node) {
+        return nameEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(IntegerNode node, Scope scope, RuntimeContext context) {
-        return integerEval.eval(node, scope, context);
+    public BaseValue eval(OutNameNode node) {
+        return outNameEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(DoubleNode node, Scope scope, RuntimeContext context) {
-        return doubleEval.eval(node, scope, context);
+    public BaseValue eval(IntegerNode node) {
+        return integerEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(BoolNode node, Scope scope, RuntimeContext context) {
-        return booleanEval.eval(node, scope, context);
+    public BaseValue eval(DoubleNode node) {
+        return doubleEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(StringNode node, Scope scope, RuntimeContext context) {
-        return stringEval.eval(node, scope, context);
+    public BaseValue eval(BoolNode node) {
+        return booleanEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        return binaryOperationEval.eval(node, scope, context);
+    public BaseValue eval(StringNode node) {
+        return stringEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
-        return unaryOperationEval.eval(node, scope, context);
+    public BaseValue eval(BinaryOperationNode node) {
+        return binaryOperationEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
-        return arrayEval.eval(node, scope, context);
+    public BaseValue eval(UnaryOperationNode node) {
+        return unaryOperationEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(NullNode node, Scope scope, RuntimeContext context) {
-        return nullEval.eval(node, scope, context);
+    public BaseValue eval(ArrayNode node) {
+        return arrayEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
-        return rsonEval.eval(node, scope, context);
+    public BaseValue eval(NullNode node) {
+        return nullEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        return thisEval.eval(node, scope, context);
+    public BaseValue eval(RsonNode node) {
+        return rsonEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
-        return typeOfEval.eval(node, scope, context);
+    public BaseValue eval(ThisNode node) {
+        return thisEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
-        return blockEval.eval(node, scope, context);
+    public BaseValue eval(TypeOfNode node) {
+        return typeOfEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
-        return ifStatementEval.eval(node, scope, context);
+    public BaseValue eval(BlockNode node) {
+        Scope blockScope = new Scope("block", false, scope, null);
+        scope.push(blockScope);
+        try {
+            return blockEval.eval(node, scope.peek(), context, this);
+        } finally {
+            scope.pop();
+        }
     }
 
     @Override
-    public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
-        return assignEval.eval(node, scope, context);
+    public BaseValue eval(IfStatementNode node) {
+        return ifStatementEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
-        return whileStatementEval.eval(node, scope, context);
+    public BaseValue eval(AssignNode node) {
+        return assignEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
-        return forEachStatementEval.eval(node, scope, context);
+    public BaseValue eval(WhileStatementNode node) {
+        return whileStatementEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(BreakNode node, Scope scope, RuntimeContext context) {
-        return breakEval.eval(node, scope, context);
+    public BaseValue eval(ForEachStatementNode node) {
+        return forEachStatementEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context) {
-        return continueEval.eval(node, scope, context);
+    public BaseValue eval(BreakNode node) {
+        return breakEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
-        return callEval.eval(node, scope, context);
+    public BaseValue eval(ContinueNode node) {
+        return continueEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
-        return indexEval.eval(node, scope, context);
+    public BaseValue eval(CallNode node) {
+        return callEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
-        return dotEval.eval(node, scope, context);
+    public BaseValue eval(IndexNode node) {
+        return indexEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
-        return closureEval.eval(node, scope, context);
+    public BaseValue eval(DotNode node) {
+        return dotEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ReturnNode node, Scope scope, RuntimeContext context) {
-        return returnEval.eval(node, scope, context);
+    public BaseValue eval(ClosureDefineNode node) {
+        return closureEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
-        return varDefineEval.eval(node, scope, context);
+    public BaseValue eval(ReturnNode node) {
+        return returnEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
-        return importEval.eval(node, scope, context);
+    public BaseValue eval(VariableDefineNode node) {
+        return varDefineEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
-        return ruleStatementEval.eval(node, scope, context);
+    public BaseValue eval(ImportNode node) {
+        return importEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
-        return infixDefinitionEval.eval(node, scope, context);
+    public BaseValue eval(RuleStatementNode node) {
+        return ruleStatementEval.eval(node, scope.peek(), context, this);
     }
 
     @Override
-    public BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
-        return defaultParamValEval.eval(node, scope, context);
+    public BaseValue eval(InfixDefinitionNode node) {
+        return infixDefinitionEval.eval(node, scope.peek(), context, this);
+    }
+
+    @Override
+    public BaseValue eval(DefaultParamValNode node) {
+        return defaultParamValEval.eval(node, scope.peek(), context, this);
     }
 }
