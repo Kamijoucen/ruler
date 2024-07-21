@@ -3,8 +3,8 @@ package com.kamijoucen.ruler.operation;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
@@ -41,8 +41,8 @@ public class MulOperation implements BinaryOperation {
     }
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
-            BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context,
+                            BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
         BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation =

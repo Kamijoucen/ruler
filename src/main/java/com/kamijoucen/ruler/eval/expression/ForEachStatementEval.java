@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.common.QuadConsumer;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -19,16 +20,16 @@ import java.util.List;
 
 public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
 
-    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> checkLoopNumberEval =
+    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Environment, RuntimeContext> checkLoopNumberEval =
             LoopCountCheckOperation::accept;
 
-    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> blankEval =
+    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Environment, RuntimeContext> blankEval =
             (operation, node, scope, context) -> {
             };
 
     @Override
-    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
-        BaseValue listValue = node.getList().eval(scope, context);
+    public BaseValue eval(ForEachStatementNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+        BaseValue listValue = node.getList().eval(visitor);
         if (listValue.getType() != ValueType.ARRAY) {
             throw SyntaxException.withSyntax("The value of the expression must be an array!");
         }
@@ -37,7 +38,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         BaseNode block = node.getBlock();
 
         LoopCountCheckOperation loopCountCheckOperation = null;
-        QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;
+        QuadConsumer<LoopCountCheckOperation, BaseNode, Environment, RuntimeContext> check;
         if (context.getConfiguration().getMaxLoopNumber() > 0) {
             loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
                     .createLoopCountCheckOperation();
@@ -47,6 +48,8 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         }
 
         Scope forScope = new Scope("for each scope", false, scope, null);
+        // ENV
+        env.push();
 
         BaseValue lastValue = NullValue.INSTANCE;
         for (BaseValue baseValue : arrayValues) {

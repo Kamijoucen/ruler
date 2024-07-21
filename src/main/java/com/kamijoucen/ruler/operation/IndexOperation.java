@@ -2,20 +2,15 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.exception.SyntaxException;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.value.ArrayValue;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.IntegerValue;
-import com.kamijoucen.ruler.value.RsonValue;
-import com.kamijoucen.ruler.value.StringValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
 
 public class IndexOperation implements BinaryOperation {
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
-            BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context,
+                            BaseValue... params) {
 
         BaseValue lVal = lhs.eval(scope, context);
         BaseValue idx = rhs.eval(scope, context);

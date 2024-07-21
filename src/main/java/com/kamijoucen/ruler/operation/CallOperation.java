@@ -1,21 +1,22 @@
 package com.kamijoucen.ruler.operation;
 
-import java.util.Arrays;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.FunctionValue;
 
+import java.util.Arrays;
+
 public class CallOperation implements BinaryOperation {
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
-            BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context,
+                            BaseValue... params) {
         BaseValue callFunc = lhs.eval(scope, context);
         BaseValue self = context.getCurrentSelfValue();
         context.getStackDepthCheckOperation().addDepth(context);

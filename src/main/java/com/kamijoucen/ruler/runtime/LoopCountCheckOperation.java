@@ -6,7 +6,7 @@ public class LoopCountCheckOperation {
 
     private int count = 0;
 
-    public void accept(BaseNode node, Scope scope, RuntimeContext context) {
+    public void accept(BaseNode node, Environment env, RuntimeContext context) {
         if (context.getConfiguration().getMaxLoopNumber() <= 0) {
             return;
         }

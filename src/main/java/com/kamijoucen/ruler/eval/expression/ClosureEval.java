@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.common.NodeVisitor;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.util.CollectionUtil;
@@ -16,7 +17,7 @@ import java.util.List;
 public class ClosureEval implements BaseEval<ClosureDefineNode> {
 
     @Override
-    public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context, NodeVisitor visitor) {
+    public BaseValue eval(ClosureDefineNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
         List<BaseNode> param = node.getParam();
         String funName = node.getName();
 

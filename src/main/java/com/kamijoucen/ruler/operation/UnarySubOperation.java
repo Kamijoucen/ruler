@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.DoubleValue;
 import com.kamijoucen.ruler.value.IntegerValue;
@@ -25,7 +25,7 @@ public class UnarySubOperation implements BinaryOperation {
     }
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context, BaseValue... params) {
         BaseValue value = params[0];
         Function<BaseValue, BaseValue> operation = operations.get(value.getType());
         if (operation != null) {
