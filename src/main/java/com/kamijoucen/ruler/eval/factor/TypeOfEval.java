@@ -14,7 +14,7 @@ import com.kamijoucen.ruler.value.StringValue;
 public class TypeOfEval implements BaseEval<TypeOfNode> {
     @Override
     public BaseValue eval(TypeOfNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
-        BaseValue value = node.getExp().eval(scope, context);
+        BaseValue value = node.getExp().eval(visitor);
         String type = TypeMapping.find(value.getType());
         if (IOUtil.isBlank(type)) {
             throw SyntaxException.withSyntax("typeof unsupported expression", node.getLocation());

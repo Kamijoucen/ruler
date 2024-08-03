@@ -18,6 +18,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
 
     @Override
     public BaseValue eval(ClosureDefineNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+
         List<BaseNode> param = node.getParam();
         String funName = node.getName();
 
@@ -33,7 +34,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
         }
         ClosureValue closureValue = new ClosureValue(node.getName(), capScope, param, node.getBlock());
         if (funName != null) {
-            scope.defineLocal(funName, closureValue);
+            scope.define(funName, closureValue);
         }
         return closureValue;
     }

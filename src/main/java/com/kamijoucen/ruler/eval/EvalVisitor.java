@@ -101,10 +101,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final DefaultParamValEval defaultParamValEval = new DefaultParamValEval();
 
     private final RulerConfiguration configuration;
-
     private final RuntimeContext context;
-
-    private final RStack<Scope> scope = new RStack<>();
 
     public EvalVisitor(RulerConfiguration configuration) {
         this.configuration = configuration;

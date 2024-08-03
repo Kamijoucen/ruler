@@ -10,7 +10,7 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class UnaryOperationEval implements BaseEval<UnaryOperationNode> {
     @Override
     public BaseValue eval(UnaryOperationNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
-        BaseValue value = node.getExp().eval(scope, context);
-        return node.getOperation().invoke(null, null, scope, context, value);
+        BaseValue value = node.getExp().eval(visitor);
+        return node.getOperation().invoke(null, null, env, context, value);
     }
 }

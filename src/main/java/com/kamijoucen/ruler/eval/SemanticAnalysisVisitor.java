@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.eval;
 
 import com.kamijoucen.ruler.ast.expression.BlockNode;
+import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
@@ -40,6 +41,13 @@ public class SemanticAnalysisVisitor extends AbstractVisitor {
             throw new SyntaxException(message);
         }
         this.symbolTable.define(new Symbol(lhs.name, false, null));
+        return super.eval(node);
+    }
+
+    @Override
+    public BaseValue eval(ClosureDefineNode node) {
+        // TODO 静态粉丝阶段要分析出闭包中所有引用外部变量，运行时将这些值拷贝到闭包中
+        // TODO 闭包中不允许修改外部变量
         return super.eval(node);
     }
 

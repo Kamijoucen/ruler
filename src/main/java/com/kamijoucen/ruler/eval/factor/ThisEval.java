@@ -12,7 +12,7 @@ import com.kamijoucen.ruler.value.NullValue;
 public class ThisEval implements BaseEval<ThisNode> {
     @Override
     public BaseValue eval(ThisNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
-        BaseValue baseValue = scope.find(Constant.THIS_ARG);
+        BaseValue baseValue = env.find(Constant.THIS_ARG);
         if (baseValue == null) {
             return NullValue.INSTANCE;
         }

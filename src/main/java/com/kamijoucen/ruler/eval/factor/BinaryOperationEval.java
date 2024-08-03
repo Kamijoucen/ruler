@@ -24,8 +24,8 @@ public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
             if (fun == null) {
                 throw SyntaxException.withSyntax("Custom infix not found: '" + node.getOpName() + "'");
             }
-            return operation.invoke(node.getLhs(), node.getRhs(), scope, context, fun);
+            return operation.invoke(node.getLhs(), node.getRhs(), env, context, fun);
         }
-        return operation.invoke(node.getLhs(), node.getRhs(), scope, context);
+        return operation.invoke(node.getLhs(), node.getRhs(), env, context);
     }
 }

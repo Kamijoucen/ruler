@@ -47,15 +47,13 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             check = blankEval;
         }
 
-        Scope forScope = new Scope("for each scope", false, scope, null);
-        // ENV
-        env.push();
-
+        env.push("foreach");
         BaseValue lastValue = NullValue.INSTANCE;
         for (BaseValue baseValue : arrayValues) {
-            check.accept(loopCountCheckOperation, block, forScope, context);
-            forScope.putLocal(loopName.name, baseValue);
-            lastValue = block.eval(forScope, context);
+            check.accept(loopCountCheckOperation, block, env, context);
+            // TODO forScope.putLocal(loopName.name, baseValue);
+            env.defineLocal(loopName.name, baseValue);
+            lastValue = block.eval(visitor);
             if (context.isReturnFlag()) {
                 break;
             } else if (context.isBreakFlag()) {

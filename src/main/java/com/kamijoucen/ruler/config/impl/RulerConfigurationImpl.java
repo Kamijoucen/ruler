@@ -113,10 +113,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private void initDefaultFunction() {
         registerGlobalFunction(new PrintFunction());
         registerGlobalFunction(new MakeItPossibleFunction());
-        registerGlobalFunction(new CharAtFunction());
-        registerGlobalFunction(new DatetimeFunction());
-        registerGlobalFunction(new TimestampFunction());
-        registerGlobalFunction(new PanicFunction());
 
         RulerFunction toNumberFunction = new ToNumberFunction();
         RulerFunction toBooleanFunction = new ToBooleanFunction();

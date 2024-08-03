@@ -12,7 +12,7 @@ public class DefaultParamValEval implements BaseEval<DefaultParamValNode> {
     @Override
     public BaseValue eval(DefaultParamValNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
         String paramName = node.getName().name.name;
-        BaseValue defValue = node.getExp().eval(scope, context);
+        BaseValue defValue = node.getExp().eval(visitor);
         scope.putLocal(paramName, defValue);
         return null;
     }

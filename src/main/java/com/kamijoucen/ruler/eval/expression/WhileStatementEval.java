@@ -8,7 +8,6 @@ import com.kamijoucen.ruler.common.QuadConsumer;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.NullValue;
@@ -24,10 +23,11 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
 
 
     @Override
-    public BaseValue eval(WhileStatementNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+    public BaseValue eval(WhileStatementNode node, Environment env, RuntimeContext context,
+            NodeVisitor visitor) {
         BaseNode block = node.getBlock();
         LoopCountCheckOperation loopCountCheckOperation = null;
-        QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;
+        QuadConsumer<LoopCountCheckOperation, BaseNode, Environment, RuntimeContext> check;
         if (context.getConfiguration().getMaxLoopNumber() > 0) {
             loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
                     .createLoopCountCheckOperation();
@@ -36,9 +36,9 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
             check = blankEval;
         }
         BaseValue lastValue = NullValue.INSTANCE;
-        while (((BoolValue) node.getCondition().eval(scope, context)).getValue()) {
-            check.accept(loopCountCheckOperation, node, scope, context);
-            lastValue = block.eval(scope, context);
+        while (((BoolValue) node.getCondition().eval(visitor)).getValue()) {
+            check.accept(loopCountCheckOperation, node, env, context);
+            lastValue = block.eval(visitor);
             if (context.isReturnFlag()) {
                 break;
             } else if (context.isBreakFlag()) {

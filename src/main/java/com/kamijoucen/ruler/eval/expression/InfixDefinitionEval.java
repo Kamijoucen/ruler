@@ -14,7 +14,7 @@ public class InfixDefinitionEval implements BaseEval<InfixDefinitionNode> {
     @Override
     public BaseValue eval(InfixDefinitionNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
         String functionName = node.getFunction().getName();
-        BaseValue functionValue = node.getFunction().eval(scope, context);
+        BaseValue functionValue = node.getFunction().eval(visitor);
         context.addInfixOperation(functionName, (ClosureValue) functionValue);
         return NullValue.INSTANCE;
     }

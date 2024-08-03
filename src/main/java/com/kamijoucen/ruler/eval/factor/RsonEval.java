@@ -20,7 +20,7 @@ public class RsonEval implements BaseEval<RsonNode> {
         Map<String, BaseValue> fields = new HashMap<>();
         for (Map.Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
             String name = entry.getKey();
-            BaseValue value = entry.getValue().eval(scope, context);
+            BaseValue value = entry.getValue().eval(visitor);
             fields.put(name, value);
         }
         return new RsonValue(fields);

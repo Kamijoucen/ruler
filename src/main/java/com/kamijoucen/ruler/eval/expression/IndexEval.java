@@ -10,6 +10,6 @@ import com.kamijoucen.ruler.value.BaseValue;
 public class IndexEval implements BaseEval<IndexNode> {
     @Override
     public BaseValue eval(IndexNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
-        return node.getOperation().invoke(node.getLhs(), node.getRhs(), scope, context);
+        return node.getOperation().invoke(node.getLhs(), node.getRhs(), env, context);
     }
 }

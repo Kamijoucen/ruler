@@ -18,16 +18,18 @@ import java.util.List;
 public class RuleStatementEval implements BaseEval<RuleStatementNode> {
 
     @Override
-    public BaseValue eval(RuleStatementNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+    public BaseValue eval(RuleStatementNode node, Environment env, RuntimeContext context,
+            NodeVisitor visitor) {
         StringNode alias = node.getAlias();
-        Scope ruleScope = new Scope(alias.getValue(), false, scope, null);
-
-        BlockNode block = node.getBlock();
-        block.eval(ruleScope, context);
-
+        // Scope ruleScope = new Scope(alias.getValue(), false, scope, null);
+        env.push(alias.getValue());
+        try {
+            node.getBlock().eval(visitor);
+        } finally {
+            env.pop();
+        }
         List<BaseValue> returnValues = context.getReturnSpace();
         context.clearReturnSpace();
-
         if (CollectionUtil.isNotEmpty(returnValues)) {
             context.addReturnSpace(new SubRuleValue(alias.getValue(), returnValues));
         }

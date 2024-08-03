@@ -21,7 +21,7 @@ public class ArrayEval implements BaseEval<ArrayNode> {
         }
         List<BaseValue> values = new ArrayList<>(nodes.size());
         for (BaseNode tempNode : nodes) {
-            values.add(tempNode.eval(scope, context));
+            values.add(tempNode.eval(visitor));
         }
         return new ArrayValue(values);
     }

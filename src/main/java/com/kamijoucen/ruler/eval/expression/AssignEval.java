@@ -11,47 +11,56 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.TokenType;
-import com.kamijoucen.ruler.value.*;
+import com.kamijoucen.ruler.value.ArrayValue;
+import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.IntegerValue;
+import com.kamijoucen.ruler.value.NullValue;
+import com.kamijoucen.ruler.value.RsonValue;
+import com.kamijoucen.ruler.value.StringValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class AssignEval implements BaseEval<AssignNode> {
 
     @Override
-    public BaseValue eval(AssignNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+    public BaseValue eval(AssignNode node, Environment env, RuntimeContext context,
+            NodeVisitor visitor) {
         BaseNode lhs = node.getLhs();
         if (lhs instanceof NameNode) {
-            return evalVariableNode(node, env, context, (NameNode) lhs);
+            return evalVariableNode(node, env, context, (NameNode) lhs, visitor);
         } else if (lhs instanceof BinaryOperationNode) {
-            return evalBinaryOperationNode(node, env, context, (BinaryOperationNode) lhs);
+            return evalBinaryOperationNode(node, env, context, (BinaryOperationNode) lhs, visitor);
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
     // this is test text
-    private BaseValue evalVariableNode(AssignNode node, Environment env, RuntimeContext context, NameNode variableNode) {
-        BaseValue value = node.getRhs() == null ? NullValue.INSTANCE : node.getRhs().eval(env, context);
-        scope.update(variableNode.name.name, value);
+    private BaseValue evalVariableNode(AssignNode node, Environment env, RuntimeContext context,
+            NameNode variableNode, NodeVisitor visitor) {
+        BaseValue value = node.getRhs() == null ? NullValue.INSTANCE : node.getRhs().eval(visitor);
+        env.update(variableNode.name.name, value);
+        // scope.update(variableNode.name.name, value);
         return value;
     }
 
-    private BaseValue evalBinaryOperationNode(AssignNode node, Environment env, RuntimeContext context,
-            BinaryOperationNode binaryNode) {
-        BaseValue preValue = binaryNode.getLhs().eval(scope, context);
+    private BaseValue evalBinaryOperationNode(AssignNode node, Environment env,
+            RuntimeContext context, BinaryOperationNode binaryNode, NodeVisitor visitor) {
+        BaseValue preValue = binaryNode.getLhs().eval(visitor);
 
         if (binaryNode.getOp() == TokenType.INDEX) {
-            return evalIndexOperation(node, scope, context, binaryNode, preValue);
+            return evalIndexOperation(node, env, context, binaryNode, preValue, visitor);
         } else if (binaryNode.getOp() == TokenType.DOT) {
-            return evalDotOperation(node, scope, context, preValue);
+            return evalDotOperation(node, env, context, preValue, visitor);
         } else {
             throw new UnsupportedOperationException();
         }
     }
 
     private BaseValue evalIndexOperation(AssignNode node, Environment env, RuntimeContext context,
-            BinaryOperationNode binaryNode, BaseValue preValue) {
-        BaseValue indexValue = binaryNode.getRhs().eval(scope, context);
+            BinaryOperationNode binaryNode, BaseValue preValue, NodeVisitor visitor) {
+        BaseValue indexValue = binaryNode.getRhs().eval(visitor);
 
-        BaseValue value = node.getRhs().eval(scope, context);
+        BaseValue value = node.getRhs().eval(visitor);
 
         if (preValue.getType() == ValueType.ARRAY) {
             checkType(indexValue, ValueType.INTEGER, "Array index must be an integer");
@@ -68,13 +77,15 @@ public class AssignEval implements BaseEval<AssignNode> {
         return value;
     }
 
-    private BaseValue evalDotOperation(AssignNode node, Environment env, RuntimeContext context, BaseValue preValue) {
+    private BaseValue evalDotOperation(AssignNode node, Environment env, RuntimeContext context,
+            BaseValue preValue, NodeVisitor visitor) {
         if (preValue.getType() != ValueType.RSON) {
             throw SyntaxException.withSyntax(preValue.getType() + " is not indexable");
         }
         String fieldKey = ((NameNode) ((DotNode) node.getLhs()).getRhs()).name.name;
-        BaseValue value = node.getRhs().eval(scope, context);
-        context.getConfiguration().getObjectAccessControlManager().modifyObject(preValue, fieldKey, value, context);
+        BaseValue value = node.getRhs().eval(visitor);
+        context.getConfiguration().getObjectAccessControlManager().modifyObject(preValue, fieldKey,
+                value, context);
         return value;
     }
 

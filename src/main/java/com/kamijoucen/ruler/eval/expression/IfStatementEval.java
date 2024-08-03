@@ -15,19 +15,22 @@ import com.kamijoucen.ruler.value.ValueType;
 public class IfStatementEval implements BaseEval<IfStatementNode> {
 
     @Override
-    public BaseValue eval(IfStatementNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
-        BaseValue conditionValue = node.getCondition().eval(scope, context);
+    public BaseValue eval(IfStatementNode node, Environment env, RuntimeContext context,
+            NodeVisitor visitor) {
+
+        BaseValue conditionValue = node.getCondition().eval(visitor);
         if (conditionValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("The condition of the if statement must be a boolean type!");
+            throw SyntaxException
+                    .withSyntax("The condition of the if statement must be a boolean type!");
         }
         BoolValue boolValue = (BoolValue) conditionValue;
         if (boolValue.getValue()) {
             BaseNode thenBlock = node.getThenBlock();
-            return thenBlock.eval(scope, context);
+            return thenBlock.eval(visitor);
         } else {
             BaseNode elseBlock = node.getElseBlock();
             if (elseBlock != null) {
-                return elseBlock.eval(scope, context);
+                return elseBlock.eval(visitor);
             }
         }
         return NullValue.INSTANCE;

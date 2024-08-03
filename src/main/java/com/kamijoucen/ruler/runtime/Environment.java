@@ -15,23 +15,24 @@ public class Environment {
     public Environment(Scope globalScope) {
         this.globalScope = globalScope;
         this.scopeStack = new RStack<>();
+        this.scopeStack.push(this.globalScope);
     }
 
     public void pop() {
         scopeStack.pop();
     }
 
-    public void push(Scope scope) {
-        scopeStack.push(scope);
+    public void push(String stackName) {
+        scopeStack.push(new Scope(stackName, null));
     }
 
     public void defineLocal(String name, BaseValue value) {
         Scope currentScope = currentScope();
-        if (currentScope.getByLocal(name) != null) {
+        if (currentScope.find(name) != null) {
             // TODO 静态检查，无需运行时检查
             throw SyntaxException.withSyntax("变量已定义：" + name);
         }
-        currentScope.defineLocal(name, value);
+        currentScope.define(name, value);
     }
 
     public BaseValue find(String name) {
@@ -39,12 +40,24 @@ public class Environment {
         Iterator<Scope> iterator = scopeStack.iterator();
         while (iterator.hasNext()) {
             Scope scope = iterator.next();
-            value = scope.getByLocal(name);
+            value = scope.find(name);
             if (value != null) {
                 break;
             }
         }
         return value;
+    }
+
+    // update
+    public void update(String name, BaseValue value) {
+        Iterator<Scope> iterator = scopeStack.iterator();
+        while (iterator.hasNext()) {
+            Scope scope = iterator.next();
+            if (scope.find(name) != null) {
+                scope.update(name, value);
+                return;
+            }
+        }
     }
 
     private Scope currentScope() {

@@ -13,7 +13,7 @@ public class NameEval implements BaseEval<NameNode> {
 
     @Override
     public BaseValue eval(NameNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
-        BaseValue baseValue = scope.find(node.name.name);
+        BaseValue baseValue = env.find(node.name.name);
         if (baseValue == null) {
             String message = context.getConfiguration().getMessageManager().buildMessage(
                     MessageType.VARIABLE_NOT_DEFINED, node.name.location, node.name.name);

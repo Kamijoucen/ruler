@@ -7,6 +7,9 @@ import com.kamijoucen.ruler.common.RStack;
 
 public class SymbolTable {
 
+    /**
+     * TODO 符号表一维数组即可，parse过程中，为所有符号分配一个自增id作为索引
+     */
     private final RStack<Map<String, Symbol>> symbolStack = new RStack<>();
 
     public void push() {
