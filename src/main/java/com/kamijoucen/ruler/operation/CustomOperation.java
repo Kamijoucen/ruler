@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.factor.VirtualNode;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.token.TokenType;
@@ -22,14 +23,16 @@ public class CustomOperation implements BinaryOperation {
     }
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context, BaseValue... params) {
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context,
+            NodeVisitor visitor, BaseValue... params) {
         init(context);
 
-        BaseValue lValue = lhs.eval(scope, context);
-        BaseValue rValue = rhs.eval(scope, context);
+        BaseValue lValue = lhs.eval(visitor);
+        BaseValue rValue = rhs.eval(visitor);
 
         VirtualNode virtualNode = new VirtualNode(params[0]);
-        BaseValue returnValue = callOperation.invoke(virtualNode, null, scope, context, lValue, rValue);
+        BaseValue returnValue =
+                callOperation.invoke(virtualNode, null, env, context, visitor, lValue, rValue);
         context.setReturnFlag(false);
         context.clearReturnSpace();
         return returnValue;

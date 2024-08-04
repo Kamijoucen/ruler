@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.common.Tuple2;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.Environment;
@@ -48,7 +49,7 @@ public class AddOperation implements BinaryOperation {
     }
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context,
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context, NodeVisitor visitor,
                             BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);

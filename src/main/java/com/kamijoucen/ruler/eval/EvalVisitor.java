@@ -63,6 +63,7 @@ import com.kamijoucen.ruler.eval.factor.StringEval;
 import com.kamijoucen.ruler.eval.factor.ThisEval;
 import com.kamijoucen.ruler.eval.factor.TypeOfEval;
 import com.kamijoucen.ruler.eval.factor.UnaryOperationEval;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -102,165 +103,161 @@ public class EvalVisitor extends AbstractVisitor {
 
     private final RulerConfiguration configuration;
     private final RuntimeContext context;
+    private final Environment environment;
 
     public EvalVisitor(RulerConfiguration configuration) {
         this.configuration = configuration;
         this.context = this.configuration.createDefaultRuntimeContext(null);
+        this.environment = new Environment(configuration.getGlobalScope());
     }
 
     @Override
     public BaseValue eval(NameNode node) {
-        return nameEval.eval(node, scope.peek(), context, this);
+        return nameEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(OutNameNode node) {
-        return outNameEval.eval(node, scope.peek(), context, this);
+        return outNameEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(IntegerNode node) {
-        return integerEval.eval(node, scope.peek(), context, this);
+        return integerEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(DoubleNode node) {
-        return doubleEval.eval(node, scope.peek(), context, this);
+        return doubleEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(BoolNode node) {
-        return booleanEval.eval(node, scope.peek(), context, this);
+        return booleanEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(StringNode node) {
-        return stringEval.eval(node, scope.peek(), context, this);
+        return stringEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(BinaryOperationNode node) {
-        return binaryOperationEval.eval(node, scope.peek(), context, this);
+        return binaryOperationEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(UnaryOperationNode node) {
-        return unaryOperationEval.eval(node, scope.peek(), context, this);
+        return unaryOperationEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ArrayNode node) {
-        return arrayEval.eval(node, scope.peek(), context, this);
+        return arrayEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(NullNode node) {
-        return nullEval.eval(node, scope.peek(), context, this);
+        return nullEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(RsonNode node) {
-        return rsonEval.eval(node, scope.peek(), context, this);
+        return rsonEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ThisNode node) {
-        return thisEval.eval(node, scope.peek(), context, this);
+        return thisEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(TypeOfNode node) {
-        return typeOfEval.eval(node, scope.peek(), context, this);
+        return typeOfEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(BlockNode node) {
-        Scope blockScope = new Scope("block", false, scope, null);
-        scope.push(blockScope);
-        try {
-            return blockEval.eval(node, scope.peek(), context, this);
-        } finally {
-            scope.pop();
-        }
+        return blockEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(IfStatementNode node) {
-        return ifStatementEval.eval(node, scope.peek(), context, this);
+        return ifStatementEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(AssignNode node) {
-        return assignEval.eval(node, scope.peek(), context, this);
+        return assignEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(WhileStatementNode node) {
-        return whileStatementEval.eval(node, scope.peek(), context, this);
+        return whileStatementEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ForEachStatementNode node) {
-        return forEachStatementEval.eval(node, scope.peek(), context, this);
+        return forEachStatementEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(BreakNode node) {
-        return breakEval.eval(node, scope.peek(), context, this);
+        return breakEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ContinueNode node) {
-        return continueEval.eval(node, scope.peek(), context, this);
+        return continueEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(CallNode node) {
-        return callEval.eval(node, scope.peek(), context, this);
+        return callEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(IndexNode node) {
-        return indexEval.eval(node, scope.peek(), context, this);
+        return indexEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(DotNode node) {
-        return dotEval.eval(node, scope.peek(), context, this);
+        return dotEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ClosureDefineNode node) {
-        return closureEval.eval(node, scope.peek(), context, this);
+        return closureEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ReturnNode node) {
-        return returnEval.eval(node, scope.peek(), context, this);
+        return returnEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(VariableDefineNode node) {
-        return varDefineEval.eval(node, scope.peek(), context, this);
+        return varDefineEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(ImportNode node) {
-        return importEval.eval(node, scope.peek(), context, this);
+        return importEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(RuleStatementNode node) {
-        return ruleStatementEval.eval(node, scope.peek(), context, this);
+        return ruleStatementEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(InfixDefinitionNode node) {
-        return infixDefinitionEval.eval(node, scope.peek(), context, this);
+        return infixDefinitionEval.eval(node, environment, context, this);
     }
 
     @Override
     public BaseValue eval(DefaultParamValNode node) {
-        return defaultParamValEval.eval(node, scope.peek(), context, this);
+        return defaultParamValEval.eval(node, environment, context, this);
     }
 }

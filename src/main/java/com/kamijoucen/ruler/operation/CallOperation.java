@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.operation;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
+import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
@@ -15,9 +16,9 @@ import java.util.Arrays;
 public class CallOperation implements BinaryOperation {
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context,
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context, NodeVisitor visitor,
                             BaseValue... params) {
-        BaseValue callFunc = lhs.eval(scope, context);
+        BaseValue callFunc = lhs.eval(visitor);
         BaseValue self = context.getCurrentSelfValue();
         context.getStackDepthCheckOperation().addDepth(context);
         try {
