@@ -26,11 +26,11 @@ public class CallOperation implements BinaryOperation {
             switch (callFunc.getType()) {
                 case FUNCTION:
                     RulerFunction function = ((FunctionValue) callFunc).getValue();
-                    return (BaseValue) function.call(context, scope, self, (Object[]) funcParam);
+                    return (BaseValue) function.call(context, env, self, (Object[]) funcParam);
                 case CLOSURE:
                     ClosureValue closureFunction = ((ClosureValue) callFunc);
                     return context.getConfiguration().getCallClosureExecutor().call(self,
-                            closureFunction, scope, context, funcParam);
+                            closureFunction, env, context, funcParam);
                 default: {
                     Object printObj = callFunc;
                     if (lhs instanceof DotNode) {

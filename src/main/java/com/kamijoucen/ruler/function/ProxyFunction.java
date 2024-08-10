@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.function;
 
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ProxyValue;
 import com.kamijoucen.ruler.value.RsonValue;
@@ -15,7 +15,7 @@ public class ProxyFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Environment env, BaseValue self, Object... param) {
         if (param == null || param.length == 0) {
             throw new IllegalArgumentException("the args of Proxy function is null");
         }

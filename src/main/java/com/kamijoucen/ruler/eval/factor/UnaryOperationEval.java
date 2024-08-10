@@ -11,6 +11,6 @@ public class UnaryOperationEval implements BaseEval<UnaryOperationNode> {
     @Override
     public BaseValue eval(UnaryOperationNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
         BaseValue value = node.getExp().eval(visitor);
-        return node.getOperation().invoke(null, null, env, context, value);
+        return node.getOperation().invoke(null, null, env, context, visitor, value);
     }
 }

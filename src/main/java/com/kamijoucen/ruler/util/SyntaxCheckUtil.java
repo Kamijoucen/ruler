@@ -1,11 +1,7 @@
 package com.kamijoucen.ruler.util;
 
 import com.kamijoucen.ruler.ast.expression.ImportNode;
-import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
-import com.kamijoucen.ruler.compiler.impl.ParseContext;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.HashSet;
@@ -31,13 +27,6 @@ public class SyntaxCheckUtil {
                     throw SyntaxException.withSyntax("Illegal character");
                 }
             }
-        }
-    }
-
-    public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
-        BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
-        if (typeVal.getType() == ValueType.FAILURE) {
-            throw SyntaxException.withSyntax("表达式类型错误：" + node.toString());
         }
     }
 

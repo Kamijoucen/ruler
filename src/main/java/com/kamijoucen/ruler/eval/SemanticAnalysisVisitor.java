@@ -11,15 +11,17 @@ import com.kamijoucen.ruler.compiler.symbol.Symbol;
 import com.kamijoucen.ruler.compiler.symbol.SymbolTable;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class SemanticAnalysisVisitor extends AbstractVisitor {
 
+    private final RuntimeContext context;
+
     private final SymbolTable symbolTable;
 
-    public SemanticAnalysisVisitor() {
+    public SemanticAnalysisVisitor(RuntimeContext context) {
         this.symbolTable = new SymbolTable();
+        this.context = context;
     }
 
     @Override

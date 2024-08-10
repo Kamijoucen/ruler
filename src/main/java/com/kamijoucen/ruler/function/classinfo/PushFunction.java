@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.function.classinfo;
 
 import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.ArrayValue;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
@@ -15,7 +15,7 @@ public class PushFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Environment env, BaseValue self, Object... param) {
         if (self.getType() != ValueType.ARRAY) {
             throw new IllegalArgumentException("push function can only be called by array");
         }

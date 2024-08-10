@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.function.RulerFunction;
 import com.kamijoucen.ruler.module.RulerRunner;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.parameter.RulerResult;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
@@ -179,7 +180,7 @@ public class RulerTest {
             }
 
             @Override
-            public Object call(RuntimeContext context, Scope scope, BaseValue self, Object... param) {
+            public Object call(RuntimeContext context, Environment env, BaseValue self, Object... param) {
                 return "我们gg啦！！！";
             }
         });

@@ -51,8 +51,8 @@ public class AddOperation implements BinaryOperation {
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Environment env, RuntimeContext context, NodeVisitor visitor,
                             BaseValue... params) {
-        BaseValue lValue = lhs.eval(scope, context);
-        BaseValue rValue = rhs.eval(scope, context);
+        BaseValue lValue = lhs.eval(visitor);
+        BaseValue rValue = rhs.eval(visitor);
         BiFunction<RuntimeContext, Tuple2<BaseValue, BaseValue>, BaseValue> operation =
                 operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
         if (operation != null) {

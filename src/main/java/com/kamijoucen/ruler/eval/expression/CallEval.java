@@ -13,13 +13,15 @@ import java.util.List;
 public class CallEval implements BaseEval<CallNode> {
 
     @Override
-    public BaseValue eval(CallNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+    public BaseValue eval(CallNode node, Environment env, RuntimeContext context,
+            NodeVisitor visitor) {
         List<BaseNode> callParams = node.getParams();
         BaseValue[] invokeParams = new BaseValue[callParams.size()];
         for (int i = 0; i < callParams.size(); i++) {
             invokeParams[i] = callParams.get(i).eval(visitor);
         }
-        BaseValue returnValue = node.getOperation().invoke(node.getLhs(), null, env, context, invokeParams);
+        BaseValue returnValue = node.getOperation().invoke(node.getLhs(), null, env, context,
+                visitor, invokeParams);
         context.setReturnFlag(false);
         context.clearReturnSpace();
         return returnValue;

@@ -4,8 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class PrintFileList implements RulerFunction {
@@ -16,7 +16,7 @@ public class PrintFileList implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Environment env, BaseValue self, Object... param) {
         if (param == null || param.length == 0) {
             return null;
         }

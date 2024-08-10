@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.function;
 
+import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.BoolValue;
 import com.kamijoucen.ruler.value.ValueType;
@@ -14,7 +14,7 @@ public class ToBooleanFunction implements RulerFunction {
     }
 
     @Override
-    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
+    public Object call(RuntimeContext context, Environment env, BaseValue self, Object... param) {
         if (param == null || param.length == 0) {
             return null;
         }
@@ -25,8 +25,10 @@ public class ToBooleanFunction implements RulerFunction {
         String strVal = baseValue.toString();
         if (strVal.equalsIgnoreCase("true") || strVal.equalsIgnoreCase("false")) {
             return BoolValue.get(strVal.equalsIgnoreCase("true"));
+        } else {
+            throw new IllegalArgumentException(
+                    "ToBoolean function can not convert " + baseValue + " to boolean");
         }
-        throw new IllegalArgumentException("ToBoolean function can not convert " + baseValue + " to boolean");
     }
 
 }

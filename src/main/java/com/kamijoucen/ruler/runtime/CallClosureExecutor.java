@@ -22,7 +22,7 @@ public class CallClosureExecutor {
         this.configuration = configuration;
     }
 
-    public BaseValue call(BaseValue self, ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
+    public BaseValue call(BaseValue self, ClosureValue closure, Environment env, RuntimeContext context, BaseValue... params) {
         // TODO
         Scope callScope = new Scope("closure", false, closure.getDefineScope(), null);
         if (self != null) {

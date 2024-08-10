@@ -14,7 +14,8 @@ import com.kamijoucen.ruler.value.ClosureValue;
 public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
 
     @Override
-    public BaseValue eval(BinaryOperationNode node, Environment env, RuntimeContext context, NodeVisitor visitor) {
+    public BaseValue eval(BinaryOperationNode node, Environment env, RuntimeContext context,
+            NodeVisitor visitor) {
         BinaryOperation operation = node.getOperation();
         if (operation == null) {
             throw new RuntimeException("Operation not supported: " + node.getOpName());
@@ -22,10 +23,11 @@ public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
         if (operation instanceof CustomOperation) {
             ClosureValue fun = context.getInfixOperation(node.getOpName());
             if (fun == null) {
-                throw SyntaxException.withSyntax("Custom infix not found: '" + node.getOpName() + "'");
+                throw SyntaxException
+                        .withSyntax("Custom infix not found: '" + node.getOpName() + "'");
             }
-            return operation.invoke(node.getLhs(), node.getRhs(), env, context, fun);
+            return operation.invoke(node.getLhs(), node.getRhs(), env, context, visitor, fun);
         }
-        return operation.invoke(node.getLhs(), node.getRhs(), env, context);
+        return operation.invoke(node.getLhs(), node.getRhs(), env, context, visitor);
     }
 }
