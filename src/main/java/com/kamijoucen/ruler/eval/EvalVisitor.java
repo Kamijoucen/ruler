@@ -65,7 +65,6 @@ import com.kamijoucen.ruler.eval.factor.TypeOfEval;
 import com.kamijoucen.ruler.eval.factor.UnaryOperationEval;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class EvalVisitor extends AbstractVisitor {
@@ -101,13 +100,13 @@ public class EvalVisitor extends AbstractVisitor {
     private static final InfixDefinitionEval infixDefinitionEval = new InfixDefinitionEval();
     private static final DefaultParamValEval defaultParamValEval = new DefaultParamValEval();
 
-    private final RulerConfiguration configuration;
-    private final RuntimeContext context;
-    private final Environment environment;
+    public final RulerConfiguration configuration;
+    public final RuntimeContext context;
+    public final Environment environment;
 
-    public EvalVisitor(RulerConfiguration configuration) {
+    public EvalVisitor(RuntimeContext runtimeContext, RulerConfiguration configuration) {
         this.configuration = configuration;
-        this.context = this.configuration.createDefaultRuntimeContext(null);
+        this.context = runtimeContext;
         this.environment = new Environment(configuration.getGlobalScope());
     }
 

@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.util.IOUtil;
 import org.jline.reader.EndOfFileException;
 import org.jline.reader.LineReader;
@@ -26,13 +26,11 @@ public class ShellRunner {
     private static final Logger logger = LoggerFactory.getLogger(ShellRunner.class);
 
     private final RulerConfiguration configuration;
-    private final Scope runScope;
     private final RuntimeContext runtimeContext;
     private int line = 0;
 
     public ShellRunner(RulerConfiguration configuration) {
         this.configuration = configuration;
-        this.runScope = new Scope("shell root", false, configuration.getGlobalScope(), null);
         this.runtimeContext = configuration.createDefaultRuntimeContext(null);
     }
 
@@ -42,8 +40,7 @@ public class ShellRunner {
             Terminal terminal = TerminalBuilder.builder().build();
             LineReader lineReader = LineReaderBuilder.builder().terminal(terminal)
                     .option(LineReader.Option.BRACKETED_PASTE, false)
-                    .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true)
-                    .build();
+                    .option(LineReader.Option.DISABLE_EVENT_EXPANSION, true).build();
             while (true) {
                 try {
                     String code = lineReader.readLine("ruler[" + line + "]> ");
@@ -74,7 +71,7 @@ public class ShellRunner {
         RulerModule module = compiler.compileStatement();
 
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        List<Object> values = interpreter.runStatement(runScope, this.runtimeContext);
+        List<Object> values = interpreter.runStatement(this.runtimeContext);
 
         List<RuleResultValue> ruleResultValues = new ArrayList<>(values.size());
         for (Object value : values) {

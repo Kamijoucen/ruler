@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.parameter.RulerResult;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ValueType;
 import org.junit.Assert;

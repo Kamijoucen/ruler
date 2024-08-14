@@ -1,9 +1,8 @@
 package com.kamijoucen.ruler.value;
 
+import java.util.List;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.runtime.Scope;
-
-import java.util.List;
 
 public class ClosureValue extends AbstractValue {
 

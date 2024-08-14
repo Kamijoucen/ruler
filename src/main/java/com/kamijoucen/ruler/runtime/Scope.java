@@ -1,49 +1,17 @@
 package com.kamijoucen.ruler.runtime;
 
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.token.TokenLocation;
 import com.kamijoucen.ruler.value.BaseValue;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface Scope {
 
-public class Scope {
+    String getName();
 
-    private final String stackName;
-    private final Map<String, BaseValue> valueSpace;
-    private final TokenLocation callLocation;
+    BaseValue find(String name);
 
-    public Scope(String stackName, TokenLocation callLocation) {
-        this.stackName = stackName;
-        this.valueSpace = new HashMap<>();
-        this.callLocation = callLocation;
-    }
+    void update(String name, BaseValue value);
 
-    public String getStackName() {
-        return stackName;
-    }
+    void define(String name, BaseValue value);
 
-    public BaseValue find(String name) {
-        return valueSpace.get(name);
-    }
+    void remove(String name);
 
-    public void update(String name, BaseValue value) {
-        valueSpace.put(name, value);
-    }
-
-    public void define(String name, BaseValue value) {
-        if (valueSpace.get(name) != null) {
-            // TODO
-            throw SyntaxException.withSyntax("变量已定义：" + name);
-        }
-        valueSpace.put(name, value);
-    }
-
-    public void remove(String name) {
-        valueSpace.remove(name);
-    }
-
-    public TokenLocation getCallLocation() {
-        return callLocation;
-    }
 }

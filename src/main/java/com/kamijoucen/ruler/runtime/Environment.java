@@ -23,7 +23,7 @@ public class Environment {
     }
 
     public void push(String stackName) {
-        scopeStack.push(new Scope(stackName, null));
+        scopeStack.push(new DefaultScope(stackName, null));
     }
 
     public void defineLocal(String name, BaseValue value) {

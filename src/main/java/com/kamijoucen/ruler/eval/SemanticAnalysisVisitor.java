@@ -9,19 +9,18 @@ import com.kamijoucen.ruler.common.AbstractVisitor;
 import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.compiler.symbol.Symbol;
 import com.kamijoucen.ruler.compiler.symbol.SymbolTable;
+import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.value.BaseValue;
 
 public class SemanticAnalysisVisitor extends AbstractVisitor {
 
-    private final RuntimeContext context;
-
+    private final RulerConfiguration configuration;
     private final SymbolTable symbolTable;
 
-    public SemanticAnalysisVisitor(RuntimeContext context) {
+    public SemanticAnalysisVisitor(RulerConfiguration configuration) {
         this.symbolTable = new SymbolTable();
-        this.context = context;
+        this.configuration = configuration;
     }
 
     @Override
@@ -38,7 +37,7 @@ public class SemanticAnalysisVisitor extends AbstractVisitor {
     public BaseValue eval(VariableDefineNode node) {
         NameNode lhs = (NameNode) node.getLhs();
         if (symbolTable.findCurrentScope(lhs.name.name) != null) {
-            String message = context.getConfiguration().getMessageManager()
+            String message = configuration.getMessageManager()
                     .buildMessage(MessageType.VARIABLE_REDEFINED, lhs.getLocation(), lhs.name.name);
             throw new SyntaxException(message);
         }

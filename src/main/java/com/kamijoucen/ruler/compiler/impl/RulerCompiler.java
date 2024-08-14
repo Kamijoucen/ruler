@@ -35,7 +35,7 @@ public class RulerCompiler {
         tokenStream.scan();
         tokenStream.nextToken();
 
-        SemanticAnalysisVisitor visitor = new SemanticAnalysisVisitor();
+        SemanticAnalysisVisitor visitor = new SemanticAnalysisVisitor(this.configuration);
 
         visitor.getSymbolTable().push();
         try {
@@ -53,11 +53,8 @@ public class RulerCompiler {
             }
             module.setStatements(rootStatements);
 
-            RuntimeContext checkContext = new RuntimeContext(configuration, module, );
-            rootStatements.stream().forEach(statement -> {
-                statement.eval(null, null);
-            });
-
+            // semantic analysis
+            rootStatements.stream().forEach(statement -> statement.eval(visitor));
         } finally {
             visitor.getSymbolTable().pop();
         }
@@ -77,7 +74,7 @@ public class RulerCompiler {
         if (tokenStream.token().type != TokenType.EOF) {
             String message =
                     configuration.getMessageManager().buildMessage(MessageType.ILLEGAL_IDENTIFIER,
-                        tokenStream.token().location, tokenStream.token().name);
+                            tokenStream.token().location, tokenStream.token().name);
             throw new SyntaxException(message);
         }
         module.setStatements(CollectionUtil.list(expression));

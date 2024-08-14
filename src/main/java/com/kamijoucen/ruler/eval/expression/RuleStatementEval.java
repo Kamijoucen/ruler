@@ -7,7 +7,7 @@ import com.kamijoucen.ruler.common.BaseEval;
 import com.kamijoucen.ruler.common.NodeVisitor;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.NullValue;

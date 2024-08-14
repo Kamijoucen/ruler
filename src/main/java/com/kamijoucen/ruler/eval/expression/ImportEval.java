@@ -18,6 +18,7 @@ import com.kamijoucen.ruler.config.option.ConfigModule;
 import com.kamijoucen.ruler.function.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.runtime.Environment;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
@@ -45,8 +46,8 @@ public class ImportEval implements BaseEval<ImportNode> {
             importModule = loadImportModule(path, context);
             importCache.putImportModule(path, importModule);
         }
-        Scope runScope = new Scope("runtime file", false,
-                new Scope("file", false, context.getGlobalScope(), null), null);
+        Scope runScope = new DefaultScope("runtime file", false,
+                new DefaultScope("file", false, context.getGlobalScope(), null), null);
         // run
         RuntimeContext otherContext = context.getConfiguration().createDefaultRuntimeContext(null);
         RulerInterpreter interpreter =

@@ -37,7 +37,7 @@ import com.kamijoucen.ruler.function.ToNumberFunction;
 import com.kamijoucen.ruler.function.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.runtime.CallClosureExecutor;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.util.IOUtil;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.FunctionValue;
@@ -45,7 +45,7 @@ import com.kamijoucen.ruler.value.FunctionValue;
 public class RulerConfigurationImpl implements RulerConfiguration {
 
     // TODO global scope会存在数据竞争问题，需要特殊处理
-    private Scope globalScope = new Scope("root", false, null, null);
+    private DefaultScope globalScope = new DefaultScope("root", false, null, null);
 
     private final List<ImportNode> globalImport = new ArrayList<>();
 
@@ -131,7 +131,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public Scope getGlobalScope() {
+    public DefaultScope getGlobalScope() {
         return globalScope;
     }
 
@@ -283,7 +283,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.valueConvertManager = valueConvertManager;
     }
 
-    public void setGlobalScope(Scope globalScope) {
+    public void setGlobalScope(DefaultScope globalScope) {
         this.globalScope = globalScope;
     }
 

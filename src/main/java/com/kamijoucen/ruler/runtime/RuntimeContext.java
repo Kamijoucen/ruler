@@ -79,7 +79,7 @@ public class RuntimeContext {
         return importCache;
     }
 
-    public Scope getGlobalScope() {
+    public DefaultScope getGlobalScope() {
         return configuration.getGlobalScope();
     }
 

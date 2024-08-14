@@ -23,8 +23,8 @@ public class CallClosureExecutor {
     }
 
     public BaseValue call(BaseValue self, ClosureValue closure, Environment env, RuntimeContext context, BaseValue... params) {
-        // TODO
-        Scope callScope = new Scope("closure", false, closure.getDefineScope(), null);
+        // TODO 不在捕获整个定义时的上下文，仅拷贝闭包内引用的变量到新的上下文
+        DefaultScope callScope = new DefaultScope("closure", false, closure.getDefineScope(), null);
         if (self != null) {
             callScope.putLocal(Constant.THIS_ARG, self);
         }

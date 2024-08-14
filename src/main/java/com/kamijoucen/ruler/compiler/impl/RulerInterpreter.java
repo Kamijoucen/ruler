@@ -3,11 +3,12 @@ package com.kamijoucen.ruler.compiler.impl;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.eval.EvalVisitor;
 import com.kamijoucen.ruler.eval.SemanticAnalysisVisitor;
 import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
+import com.kamijoucen.ruler.runtime.DefaultScope;
 import com.kamijoucen.ruler.util.AssertUtil;
 import com.kamijoucen.ruler.util.CollectionUtil;
 import com.kamijoucen.ruler.util.ConvertUtil;
@@ -31,31 +32,36 @@ public class RulerInterpreter {
         this.configuration = configuration;
     }
 
-    public List<Object> runExpression(List<RulerParameter> param, Scope runScope) {
+    public List<Object> runExpression(List<RulerParameter> param) {
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         RuntimeContext runtimeContext = configuration.createDefaultRuntimeContext(values);
+
+        EvalVisitor visitor = new EvalVisitor(runtimeContext, configuration);
         if (hasImportGlobalModule) {
             List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
             if (CollectionUtil.isNotEmpty(globalImportModules)) {
                 for (ImportNode node : globalImportModules) {
-                    node.eval(runScope, runtimeContext);
+                    node.eval(visitor);
                 }
             }
         }
         BaseNode firstNode = CollectionUtil.first(module.getStatements());
         // 执行表达式
         AssertUtil.notNull(firstNode);
-        BaseValue value = firstNode.eval(runScope, runtimeContext);
+        BaseValue value = firstNode.eval(visitor);
 
         ValueConvert convert =
                 this.configuration.getValueConvertManager().getConverter(value.getType());
         return CollectionUtil.list(convert.baseToReal(value, configuration));
     }
 
-    public List<Object> runStatement(Scope runScope, RuntimeContext runtimeContext) {
+    public List<Object> runStatement(RuntimeContext runtimeContext) {
+
+        EvalVisitor visitor = new EvalVisitor(runtimeContext, configuration);
+
         List<BaseValue> values = new ArrayList<>();
         for (BaseNode statement : module.getStatements()) {
-            BaseValue value = statement.eval(runScope, runtimeContext);
+            BaseValue value = statement.eval(visitor);
             values.add(value);
         }
         if (CollectionUtil.isEmpty(values)) {
@@ -76,7 +82,7 @@ public class RulerInterpreter {
         return realValue;
     }
 
-    public List<Object> runScript(Scope runScope, RuntimeContext runtimeContext) {
+    public List<Object> runScript(RuntimeContext runtimeContext) {
         List<BaseNode> allNode = new ArrayList<>(
                 module.getStatements().size() + configuration.getGlobalImportModules().size());
         if (hasImportGlobalModule) {
@@ -84,8 +90,10 @@ public class RulerInterpreter {
         }
         allNode.addAll(module.getStatements());
 
+        EvalVisitor visitor = new EvalVisitor(runtimeContext, configuration);
+
         for (BaseNode statement : allNode) {
-            statement.eval(runScope, runtimeContext);
+            statement.eval(visitor);
             if (runtimeContext.isReturnFlag()) {
                 break;
             }
@@ -106,10 +114,10 @@ public class RulerInterpreter {
         return realValue;
     }
 
-    public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
+    public List<Object> runScript(List<RulerParameter> param) {
         Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
         RuntimeContext runtimeContext = configuration.createDefaultRuntimeContext(values);
-        return this.runScript(runScope, runtimeContext);
+        return this.runScript(runtimeContext);
     }
 
     public Boolean getHasImportGlobalModule() {

@@ -5,7 +5,6 @@ import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.parameter.RuleResultValue;
 import com.kamijoucen.ruler.parameter.RulerParameter;
 import com.kamijoucen.ruler.parameter.RulerResult;
-import com.kamijoucen.ruler.runtime.Scope;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,13 +28,10 @@ public class RulerRunner implements Serializable {
         List<Object> values;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         if (isScript) {
-            values = interpreter.runScript(param,
-                    new Scope("runtime root", true, configuration.getGlobalScope(), null));
+            values = interpreter.runScript(param);
         } else {
-            values = interpreter.runExpression(param,
-                    new Scope("runtime root", true, configuration.getGlobalScope(), null));
+            values = interpreter.runExpression(param);
         }
-
         List<RuleResultValue> ruleResultValues = new ArrayList<>(values.size());
         for (Object value : values) {
             ruleResultValues.add(new RuleResultValue(value));
