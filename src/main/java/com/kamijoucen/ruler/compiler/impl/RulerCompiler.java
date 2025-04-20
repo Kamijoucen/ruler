@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.compiler.Parser;
+import com.kamijoucen.ruler.compiler.parser.AtomParserManager;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.module.RulerModule;
@@ -38,7 +39,7 @@ public class RulerCompiler {
         tokenStream.scan();
         tokenStream.nextToken();
         // 语法分析器
-        DefaultParser parser = new DefaultParser(tokenStream, configuration);
+        Parser parser = new AtomParserManager(tokenStream, configuration);
         BaseNode expression = parser.parseExpression();
         if (tokenStream.token().type != TokenType.EOF) {
             String message =
@@ -58,7 +59,7 @@ public class RulerCompiler {
         tokenStream.scan();
         tokenStream.nextToken();
 
-        Parser parser = new DefaultParser(tokenStream, configuration);
+        Parser parser = new AtomParserManager(tokenStream, configuration);
         List<BaseNode> statements = new ArrayList<>();
         while (tokenStream.token().type != TokenType.EOF) {
             if (tokenStream.token().type == TokenType.KEY_IMPORT) {
@@ -79,7 +80,7 @@ public class RulerCompiler {
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
         tokenStream.nextToken();
-        Parser parser = new DefaultParser(tokenStream, configuration);
+        Parser parser = new AtomParserManager(tokenStream, configuration);
         // parse import
         List<ImportNode> list = new ArrayList<>();
         while (tokenStream.token().type == TokenType.KEY_IMPORT) {

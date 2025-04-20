@@ -1,0 +1,5 @@
+
+
+// int float string double
+
+var x: int = 12;

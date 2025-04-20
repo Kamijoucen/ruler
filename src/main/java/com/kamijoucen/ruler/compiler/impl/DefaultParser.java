@@ -20,6 +20,7 @@ import com.kamijoucen.ruler.util.IOUtil;
 
 import java.util.*;
 
+@Deprecated
 public class DefaultParser implements Parser {
 
     private final RulerConfiguration configuration;
