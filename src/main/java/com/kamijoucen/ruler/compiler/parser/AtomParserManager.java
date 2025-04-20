@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.ast.expression.AssignNode;
+import com.kamijoucen.ruler.ast.expression.CallNode;
+import com.kamijoucen.ruler.ast.expression.DotNode;
 import com.kamijoucen.ruler.ast.expression.ImportNode;
+import com.kamijoucen.ruler.ast.expression.IndexNode;
 import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.ast.factor.OutNameNode;
@@ -13,7 +17,28 @@ import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.impl.ParseContext;
-import com.kamijoucen.ruler.compiler.parser.impl.*;
+import com.kamijoucen.ruler.compiler.parser.impl.ArrayParser;
+import com.kamijoucen.ruler.compiler.parser.impl.BlockParser;
+import com.kamijoucen.ruler.compiler.parser.impl.BoolParser;
+import com.kamijoucen.ruler.compiler.parser.impl.BreakParser;
+import com.kamijoucen.ruler.compiler.parser.impl.ContinueParser;
+import com.kamijoucen.ruler.compiler.parser.impl.ForEachParser;
+import com.kamijoucen.ruler.compiler.parser.impl.FunParser;
+import com.kamijoucen.ruler.compiler.parser.impl.IdentifierParser;
+import com.kamijoucen.ruler.compiler.parser.impl.IfParser;
+import com.kamijoucen.ruler.compiler.parser.impl.InfixParser;
+import com.kamijoucen.ruler.compiler.parser.impl.NullParser;
+import com.kamijoucen.ruler.compiler.parser.impl.NumberParser;
+import com.kamijoucen.ruler.compiler.parser.impl.ParenParser;
+import com.kamijoucen.ruler.compiler.parser.impl.ReturnParser;
+import com.kamijoucen.ruler.compiler.parser.impl.RsonParser;
+import com.kamijoucen.ruler.compiler.parser.impl.RuleParser;
+import com.kamijoucen.ruler.compiler.parser.impl.StringParser;
+import com.kamijoucen.ruler.compiler.parser.impl.ThisParser;
+import com.kamijoucen.ruler.compiler.parser.impl.TypeOfParser;
+import com.kamijoucen.ruler.compiler.parser.impl.UnaryExpressionParser;
+import com.kamijoucen.ruler.compiler.parser.impl.VarParser;
+import com.kamijoucen.ruler.compiler.parser.impl.WhileParser;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.operation.BinaryOperation;
@@ -212,12 +237,12 @@ public class AtomParserManager implements Parser {
             }
 
             if (curOpToken.type == TokenType.ASSIGN) {
-                if (!(lhs instanceof com.kamijoucen.ruler.ast.expression.IndexNode) &&
+                if (!(lhs instanceof IndexNode) &&
                     !(lhs instanceof NameNode) &&
-                    !(lhs instanceof com.kamijoucen.ruler.ast.expression.DotNode)) {
+                    !(lhs instanceof DotNode)) {
                     throw SyntaxException.withSyntax("非法的赋值操作", curOpToken);
                 }
-                lhs = new com.kamijoucen.ruler.ast.expression.AssignNode(lhs, rhs, null, lhs.getLocation());
+                lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
             } else {
                 BinaryOperation operation = this.configuration.getBinaryOperationFactory()
                         .findOperation(curOpToken.type.name());
@@ -281,7 +306,7 @@ public class AtomParserManager implements Parser {
 
                 BinaryOperation callOperation = configuration.getBinaryOperationFactory()
                         .findOperation(TokenType.CALL.name());
-                node = new com.kamijoucen.ruler.ast.expression.CallNode(node, null, params, callOperation, node.getLocation());
+                node = new CallNode(node, null, params, callOperation, node.getLocation());
             } else if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
                 // 数组索引
                 tokenStream.nextToken();
@@ -294,7 +319,7 @@ public class AtomParserManager implements Parser {
 
                 BinaryOperation indexOperation = configuration.getBinaryOperationFactory()
                         .findOperation(TokenType.INDEX.name());
-                node = new com.kamijoucen.ruler.ast.expression.IndexNode(node, indexNode, indexOperation, node.getLocation());
+                node = new IndexNode(node, indexNode, indexOperation, node.getLocation());
             } else {
                 // 对象属性访问
                 tokenStream.nextToken();
@@ -305,7 +330,7 @@ public class AtomParserManager implements Parser {
 
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory()
                         .findOperation(TokenType.DOT.name());
-                node = new com.kamijoucen.ruler.ast.expression.DotNode(node, nameNode, dotOperation, node.getLocation());
+                node = new DotNode(node, nameNode, dotOperation, node.getLocation());
             }
         }
         return node;
