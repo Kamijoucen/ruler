@@ -1,8 +1,10 @@
 package com.kamijoucen.ruler.compiler.parser.impl;
 
+import java.util.Collections;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.BlockNode;
 import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
+import com.kamijoucen.ruler.compiler.Parsers;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.parser.AtomParser;
 import com.kamijoucen.ruler.compiler.parser.AtomParserManager;
@@ -10,8 +12,6 @@ import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
-
-import java.util.Collections;
 
 /**
  * foreach语句解析器
@@ -48,7 +48,7 @@ public class ForEachParser implements AtomParser {
         // 解析循环体
         BaseNode blockNode;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockNode = BlockParser.parseBlock(manager);
+            blockNode = Parsers.BLOCK_PARSER.parse(manager);
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = manager.parseStatement();

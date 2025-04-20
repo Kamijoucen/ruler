@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.compiler.parser.impl;
 
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.compiler.Parsers;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.parser.AtomParser;
 import com.kamijoucen.ruler.compiler.parser.AtomParserManager;
@@ -32,7 +33,7 @@ public class VarParser implements AtomParser {
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
 
         // 解析变量名
-        BaseNode nameNode = parseIdentifier(manager);
+        BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
         Objects.requireNonNull(nameNode);
 
         // 检查是否有赋值
@@ -46,9 +47,4 @@ public class VarParser implements AtomParser {
         }
     }
 
-    private BaseNode parseIdentifier(AtomParserManager manager) {
-        // 委托给通用的标识符解析器
-        // 这里可以考虑创建一个标识符解析器，或者将这个逻辑放在工具类中
-        return manager.parseIdentifier();
-    }
 }

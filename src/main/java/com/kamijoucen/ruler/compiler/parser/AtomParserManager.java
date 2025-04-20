@@ -11,33 +11,19 @@ import com.kamijoucen.ruler.ast.expression.ImportNode;
 import com.kamijoucen.ruler.ast.expression.IndexNode;
 import com.kamijoucen.ruler.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
-import com.kamijoucen.ruler.ast.factor.OutNameNode;
 import com.kamijoucen.ruler.common.MessageType;
 import com.kamijoucen.ruler.common.OperationDefine;
 import com.kamijoucen.ruler.compiler.Parser;
+import com.kamijoucen.ruler.compiler.Parsers;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.impl.ParseContext;
-import com.kamijoucen.ruler.compiler.parser.impl.ArrayParser;
 import com.kamijoucen.ruler.compiler.parser.impl.BlockParser;
-import com.kamijoucen.ruler.compiler.parser.impl.BoolParser;
-import com.kamijoucen.ruler.compiler.parser.impl.BreakParser;
-import com.kamijoucen.ruler.compiler.parser.impl.ContinueParser;
 import com.kamijoucen.ruler.compiler.parser.impl.ForEachParser;
 import com.kamijoucen.ruler.compiler.parser.impl.FunParser;
 import com.kamijoucen.ruler.compiler.parser.impl.IdentifierParser;
 import com.kamijoucen.ruler.compiler.parser.impl.IfParser;
 import com.kamijoucen.ruler.compiler.parser.impl.InfixParser;
-import com.kamijoucen.ruler.compiler.parser.impl.NullParser;
-import com.kamijoucen.ruler.compiler.parser.impl.NumberParser;
-import com.kamijoucen.ruler.compiler.parser.impl.ParenParser;
-import com.kamijoucen.ruler.compiler.parser.impl.ReturnParser;
-import com.kamijoucen.ruler.compiler.parser.impl.RsonParser;
 import com.kamijoucen.ruler.compiler.parser.impl.RuleParser;
-import com.kamijoucen.ruler.compiler.parser.impl.StringParser;
-import com.kamijoucen.ruler.compiler.parser.impl.ThisParser;
-import com.kamijoucen.ruler.compiler.parser.impl.TypeOfParser;
-import com.kamijoucen.ruler.compiler.parser.impl.UnaryExpressionParser;
-import com.kamijoucen.ruler.compiler.parser.impl.VarParser;
 import com.kamijoucen.ruler.compiler.parser.impl.WhileParser;
 import com.kamijoucen.ruler.config.RulerConfiguration;
 import com.kamijoucen.ruler.exception.SyntaxException;
@@ -53,6 +39,7 @@ public class AtomParserManager implements Parser {
     private final TokenStream tokenStream;
     private final ParseContext parseContext;
     private final RulerConfiguration configuration;
+    private final IdentifierParser identifierParser = Parsers.IDENTIFIER_PARSER;
 
     public AtomParserManager(TokenStream tokenStream, RulerConfiguration configuration) {
         this.tokenStream = tokenStream;
@@ -67,43 +54,38 @@ public class AtomParserManager implements Parser {
 
     private void registerParsers() {
         // 注册语句级别解析器
-        statementParsers.add(new VarParser());
-        statementParsers.add(new ReturnParser());
-        statementParsers.add(new BreakParser());
-        statementParsers.add(new ContinueParser());
-        statementParsers.add(new RuleParser());
-        statementParsers.add(new InfixParser());
-        statementParsers.add(new BlockParser());
+        statementParsers.add(Parsers.VAR_PARSER);
+        statementParsers.add(Parsers.RETURN_PARSER);
+        statementParsers.add(Parsers.BREAK_PARSER);
+        statementParsers.add(Parsers.CONTINUE_PARSER);
+        statementParsers.add(Parsers.RULE_PARSER);
+        statementParsers.add(Parsers.INFIX_PARSER);
+        statementParsers.add(Parsers.BLOCK_PARSER);
 
         // 以下解析器既是语句解析器，也是表达式解析器
-        IfParser ifParser = new IfParser();
-        WhileParser whileParser = new WhileParser();
-        ForEachParser forEachParser = new ForEachParser();
-        FunParser funParser = new FunParser();
-
-        statementParsers.add(ifParser);
-        statementParsers.add(whileParser);
-        statementParsers.add(forEachParser);
-        statementParsers.add(funParser);
+        statementParsers.add(Parsers.IF_PARSER);
+        statementParsers.add(Parsers.WHILE_PARSER);
+        statementParsers.add(Parsers.FOR_EACH_PARSER);
+        statementParsers.add(Parsers.FUN_PARSER);
 
         // 表达式级别解析器
-        expressionParsers.add(new IdentifierParser());
-        expressionParsers.add(new BoolParser());
-        expressionParsers.add(new ParenParser());
-        expressionParsers.add(new UnaryExpressionParser());
-        expressionParsers.add(new NumberParser());
-        expressionParsers.add(new StringParser());
-        expressionParsers.add(new NullParser());
-        expressionParsers.add(new ArrayParser());
-        expressionParsers.add(new RsonParser());
-        expressionParsers.add(new TypeOfParser());
-        expressionParsers.add(new ThisParser());
+        expressionParsers.add(Parsers.IDENTIFIER_PARSER);
+        expressionParsers.add(Parsers.BOOL_PARSER);
+        expressionParsers.add(Parsers.PAREN_PARSER);
+        expressionParsers.add(Parsers.UNARY_EXPRESSION_PARSER);
+        expressionParsers.add(Parsers.NUMBER_PARSER);
+        expressionParsers.add(Parsers.STRING_PARSER);
+        expressionParsers.add(Parsers.NULL_PARSER);
+        expressionParsers.add(Parsers.ARRAY_PARSER);
+        expressionParsers.add(Parsers.RSON_PARSER);
+        expressionParsers.add(Parsers.TYPE_OF_PARSER);
+        expressionParsers.add(Parsers.THIS_PARSER);
 
         // 这些既是语句也可以是表达式的解析器也需要添加到表达式解析器列表中
-        expressionParsers.add(ifParser);
-        expressionParsers.add(whileParser);
-        expressionParsers.add(forEachParser);
-        expressionParsers.add(funParser);
+        expressionParsers.add(Parsers.IF_PARSER);
+        expressionParsers.add(Parsers.WHILE_PARSER);
+        expressionParsers.add(Parsers.FOR_EACH_PARSER);
+        expressionParsers.add(Parsers.FUN_PARSER);
     }
 
     @Override
@@ -162,7 +144,7 @@ public class AtomParserManager implements Parser {
         boolean isNeedSemicolon = true;
 
         for (AtomParser parser : statementParsers) {
-            if (parser.support(tokenStream)) {  // 使用整个tokenStream代替单个token
+            if (parser.support(tokenStream)) { // 使用整个tokenStream代替单个token
                 statement = parser.parse(this);
                 // 根据具体解析器类型确定是否需要分号
                 isNeedSemicolon = needSemicolon(parser);
@@ -170,7 +152,6 @@ public class AtomParserManager implements Parser {
             }
         }
 
-        // 如果没有找到适合的语句解析器，则尝试作为表达式解析
         if (statement == null) {
             statement = parseExpression();
         }
@@ -195,14 +176,10 @@ public class AtomParserManager implements Parser {
 
     // 判断特定解析器是否需要分号
     private boolean needSemicolon(AtomParser parser) {
-        // 结构化语句不需要分号，如if、while、for、fun，后续可以通过更优雅的方式确定
-        return !(parser instanceof IfParser ||
-                parser instanceof WhileParser ||
-                parser instanceof ForEachParser ||
-                parser instanceof FunParser ||
-                parser instanceof RuleParser ||
-                parser instanceof InfixParser ||
-                parser instanceof BlockParser);
+        return !(parser instanceof IfParser || parser instanceof WhileParser
+                || parser instanceof ForEachParser || parser instanceof FunParser
+                || parser instanceof RuleParser || parser instanceof InfixParser
+                || parser instanceof BlockParser);
     }
 
     @Override
@@ -237,9 +214,8 @@ public class AtomParserManager implements Parser {
             }
 
             if (curOpToken.type == TokenType.ASSIGN) {
-                if (!(lhs instanceof IndexNode) &&
-                    !(lhs instanceof NameNode) &&
-                    !(lhs instanceof DotNode)) {
+                if (!(lhs instanceof IndexNode) && !(lhs instanceof NameNode)
+                        && !(lhs instanceof DotNode)) {
                     throw SyntaxException.withSyntax("非法的赋值操作", curOpToken);
                 }
                 lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
@@ -247,34 +223,17 @@ public class AtomParserManager implements Parser {
                 BinaryOperation operation = this.configuration.getBinaryOperationFactory()
                         .findOperation(curOpToken.type.name());
                 Objects.requireNonNull(operation);
-                lhs = new BinaryOperationNode(
-                        curOpToken.type, curOpToken.name, lhs, rhs, operation, lhs.getLocation());
+                lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name, lhs, rhs, operation,
+                        lhs.getLocation());
             }
         }
-    }
-
-    // 为原子解析器提供的辅助方法
-    public BaseNode parseIdentifier() {
-        Token token = tokenStream.token();
-        BaseNode nameNode;
-        if (token.type == TokenType.IDENTIFIER) {
-            nameNode = new NameNode(token, token.location);
-        } else if (token.type == TokenType.OUT_IDENTIFIER) {
-            nameNode = new OutNameNode(token, token.location);
-        } else {
-            String message = configuration.getMessageManager()
-                    .buildMessage(MessageType.ILLEGAL_IDENTIFIER, token.location, token.name);
-            throw new SyntaxException(message);
-        }
-        tokenStream.nextToken();
-        return nameNode;
     }
 
     public BaseNode parsePrimaryExpression() {
         BaseNode node = null;
         // 使用表达式解析器解析基本表达式
         for (AtomParser parser : expressionParsers) {
-            if (parser.support(tokenStream)) {  // 使用整个tokenStream代替单个token
+            if (parser.support(tokenStream)) { // 使用整个tokenStream代替单个token
                 node = parser.parse(this);
                 break;
             }
@@ -326,7 +285,7 @@ public class AtomParserManager implements Parser {
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
                 // only identifiers are supported for dot call
-                BaseNode nameNode = parseIdentifier();
+                BaseNode nameNode = identifierParser.parse(this);
 
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory()
                         .findOperation(TokenType.DOT.name());

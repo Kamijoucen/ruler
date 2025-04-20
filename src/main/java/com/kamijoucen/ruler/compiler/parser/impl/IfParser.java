@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.compiler.parser.impl;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.BlockNode;
 import com.kamijoucen.ruler.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.compiler.Parsers;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.parser.AtomParser;
 import com.kamijoucen.ruler.compiler.parser.AtomParserManager;
@@ -37,7 +38,7 @@ public class IfParser implements AtomParser {
         BaseNode thenBlock;
 
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            thenBlock = BlockParser.parseBlock(manager);
+            thenBlock = Parsers.BLOCK_PARSER.parse(manager);
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
             BaseNode statement = manager.parseStatement();
@@ -50,7 +51,7 @@ public class IfParser implements AtomParser {
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
             Token token = tokenStream.nextToken();
             if (token.type == TokenType.LEFT_BRACE) {
-                elseBlock = BlockParser.parseBlock(manager);
+                elseBlock = Parsers.BLOCK_PARSER.parse(manager);
             } else if (token.type == TokenType.KEY_IF) {
                 // 支持else if的情况
                 elseBlock = parse(manager);

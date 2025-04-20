@@ -24,13 +24,6 @@ public class BlockParser implements AtomParser {
 
     @Override
     public BaseNode parse(AtomParserManager manager) {
-        return parseBlock(manager);
-    }
-
-    /**
-     * 解析代码块的静态方法，方便其他解析器调用
-     */
-    public static BlockNode parseBlock(AtomParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token lToken = tokenStream.token();
         AssertUtil.assertToken(lToken, TokenType.LEFT_BRACE);

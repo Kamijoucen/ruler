@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.ast.expression.DefaultParamValNode;
 import com.kamijoucen.ruler.ast.factor.NameNode;
 import com.kamijoucen.ruler.ast.factor.ReturnNode;
+import com.kamijoucen.ruler.compiler.Parsers;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.parser.AtomParser;
 import com.kamijoucen.ruler.compiler.parser.AtomParserManager;
@@ -38,16 +39,17 @@ public class FunParser implements AtomParser {
         // 解析静态捕获变量
         boolean isStaticCapture = false;
         List<BaseNode> capVarList = new ArrayList<>();
+
         if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
             tokenStream.nextToken();
             isStaticCapture = true;
             if (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
-                capVarList.add(manager.parseIdentifier());
+                capVarList.add(Parsers.IDENTIFIER_PARSER.parse(manager));
             }
             while (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
                 AssertUtil.assertToken(tokenStream, TokenType.COMMA);
                 tokenStream.nextToken();
-                capVarList.add(manager.parseIdentifier());
+                capVarList.add(Parsers.IDENTIFIER_PARSER.parse(manager));
             }
             AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
             tokenStream.nextToken();
@@ -66,7 +68,7 @@ public class FunParser implements AtomParser {
         List<BaseNode> param = new ArrayList<>();
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-            BaseNode nameNode = manager.parseIdentifier();
+            BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
                 DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode,
@@ -82,7 +84,7 @@ public class FunParser implements AtomParser {
             tokenStream.nextToken();
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
 
-            BaseNode nameNode = manager.parseIdentifier();
+            BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
                 DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode,
@@ -110,7 +112,7 @@ public class FunParser implements AtomParser {
             block = blockNode;
         } else {
             // 代码块形式
-            block = BlockParser.parseBlock(manager);
+            block = Parsers.BLOCK_PARSER.parse(manager);
         }
 
         return new ClosureDefineNode(name, param, block, isStaticCapture, capVarList, funToken.location);

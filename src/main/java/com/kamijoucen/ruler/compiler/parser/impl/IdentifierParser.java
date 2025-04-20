@@ -18,12 +18,24 @@ public class IdentifierParser implements AtomParser {
 
     @Override
     public boolean support(TokenStream tokenStream) {
-        return tokenStream.token().type == TokenType.IDENTIFIER ||
-               tokenStream.token().type == TokenType.OUT_IDENTIFIER;
+        return tokenStream.token().type == TokenType.IDENTIFIER
+                || tokenStream.token().type == TokenType.OUT_IDENTIFIER;
     }
 
     @Override
     public BaseNode parse(AtomParserManager manager) {
-        return manager.parseIdentifier();
+        Token token = manager.getTokenStream().token();
+        BaseNode nameNode;
+        if (token.type == TokenType.IDENTIFIER) {
+            nameNode = new NameNode(token, token.location);
+        } else if (token.type == TokenType.OUT_IDENTIFIER) {
+            nameNode = new OutNameNode(token, token.location);
+        } else {
+            String message = manager.getConfiguration().getMessageManager()
+                    .buildMessage(MessageType.ILLEGAL_IDENTIFIER, token.location, token.name);
+            throw new SyntaxException(message);
+        }
+        manager.getTokenStream().nextToken();
+        return nameNode;
     }
 }
