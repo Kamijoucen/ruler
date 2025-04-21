@@ -62,6 +62,13 @@ public enum TokenType {
 
     KEY_MATCH,      // match
 
+    // Type
+    KEY_INT,        // int
+    KEY_FLOAT,      // float
+    KEY_STRING,     // string
+    KEY_BOOL,       // bool
+    KEY_ANY,        // any
+
     EOF,
 
     UN_KNOW,

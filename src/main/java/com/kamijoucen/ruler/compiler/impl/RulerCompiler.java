@@ -11,10 +11,11 @@ import com.kamijoucen.ruler.module.RulerModule;
 import com.kamijoucen.ruler.module.RulerScript;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.CollectionUtil;
-import com.kamijoucen.ruler.util.SyntaxCheckUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RulerCompiler {
 
@@ -86,7 +87,7 @@ public class RulerCompiler {
         while (tokenStream.token().type == TokenType.KEY_IMPORT) {
             list.add(parser.parseImport());
         }
-        SyntaxCheckUtil.availableImport(list);
+        this.availableImport(list);
 
         List<BaseNode> rootStatements = new ArrayList<>(list);
         // parse statements
@@ -95,6 +96,17 @@ public class RulerCompiler {
         }
         module.setStatements(rootStatements);
         return module;
+    }
+
+    private  void availableImport(List<ImportNode> imports) {
+        Set<String> aliasSet = new HashSet<>();
+        for (ImportNode node : imports) {
+            int oldAliasSize = aliasSet.size();
+            aliasSet.add(node.getAlias());
+            if (aliasSet.size() == oldAliasSize) {
+                throw SyntaxException.withSyntax("别名重复:" + node.getAlias());
+            }
+        }
     }
 
 }
