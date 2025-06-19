@@ -1,38 +1,42 @@
 package com.kamijoucen.ruler.operation;
 
 import com.kamijoucen.ruler.ast.BaseNode;
+import com.kamijoucen.ruler.exception.TypeException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.value.BaseValue;
-import com.kamijoucen.ruler.value.DoubleValue;
-import com.kamijoucen.ruler.value.IntegerValue;
-import com.kamijoucen.ruler.value.ValueType;
+import com.kamijoucen.ruler.value.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
-
+/**
+ * 一元减法操作（负号）
+ * 支持整数和浮点数的取负操作
+ *
+ * @author Kamijoucen
+ */
 public class UnarySubOperation implements BinaryOperation {
-
-    private static final Map<ValueType, Function<BaseValue, BaseValue>> operations = new HashMap<>();
-
-    static {
-        operations.put(ValueType.INTEGER,
-                val -> new IntegerValue(-((IntegerValue) val).getValue()));
-        operations.put(ValueType.DOUBLE,
-                val -> new DoubleValue(-((DoubleValue) val).getValue()));
-    }
 
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue value = params[0];
-        Function<BaseValue, BaseValue> operation = operations.get(value.getType());
-        if (operation != null) {
-            return operation.apply(value);
-        } else {
-            throw new RuntimeException(
-                    "Negation operation is not supported for this value: " + Arrays.toString(params));
+
+        switch (value.getType()) {
+            case INTEGER:
+                IntegerValue intValue = (IntegerValue) value;
+                long negValue = -intValue.getValue();
+
+                // 检查溢出
+                if (intValue.getValue() == Long.MIN_VALUE) {
+                    // Long.MIN_VALUE的负数会溢出，转换为double
+                    return new DoubleValue(-((double) intValue.getValue()));
+                }
+
+                return context.getConfiguration().getIntegerNumberCache().getValue(negValue);
+
+            case DOUBLE:
+                DoubleValue doubleValue = (DoubleValue) value;
+                return new DoubleValue(-doubleValue.getValue());
+
+            default:
+                throw TypeException.unsupportedOperation("-", value.getType(), null);
         }
     }
 }

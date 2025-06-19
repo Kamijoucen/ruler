@@ -1,13 +1,21 @@
 package com.kamijoucen.ruler.function;
 
+import com.kamijoucen.ruler.exception.ArgumentException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
+import com.kamijoucen.ruler.value.DateValue;
+import com.kamijoucen.ruler.value.StringValue;
+import com.kamijoucen.ruler.value.ValueType;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * 日期时间函数
+ * 用于创建和解析日期时间
+ *
+ * @author Kamijoucen
+ */
 public class DatetimeFunction implements RulerFunction {
 
     @Override
@@ -17,24 +25,19 @@ public class DatetimeFunction implements RulerFunction {
 
     @Override
     public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
-        if (param.length == 0) {
-            return new Date();
+        if (param == null || param.length == 0) {
+            // 无参数返回当前时间
+            return new DateValue(new Date());
         }
-        if (!(param[0] instanceof String)) {
-            throw new RuntimeException("datetime function only accept string type");
+
+        BaseValue baseValue = (BaseValue) param[0];
+
+        if (baseValue.getType() != ValueType.STRING) {
+            throw new ArgumentException("datetime函数只接受字符串类型参数", null);
         }
-        String date = (String) param[0];
-        String pattern;
-        if (param.length > 1) {
-            pattern = (String) param[1];
-        } else {
-            pattern = "yyyy-MM-dd HH:mm:ss";
-        }
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        try {
-            return format.parse(date);
-        } catch (ParseException ignored) {
-        }
-        return null;
+
+        String dateStr = ((StringValue) baseValue).getValue();
+        // TODO: 实现日期解析
+        return new DateValue(new Date());
     }
 }

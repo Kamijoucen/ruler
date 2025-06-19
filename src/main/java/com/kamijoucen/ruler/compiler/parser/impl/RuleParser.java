@@ -8,12 +8,16 @@ import com.kamijoucen.ruler.compiler.Parsers;
 import com.kamijoucen.ruler.compiler.TokenStream;
 import com.kamijoucen.ruler.compiler.parser.AtomParser;
 import com.kamijoucen.ruler.compiler.parser.AtomParserManager;
+import com.kamijoucen.ruler.exception.SyntaxException;
 import com.kamijoucen.ruler.token.Token;
 import com.kamijoucen.ruler.token.TokenType;
 import com.kamijoucen.ruler.util.AssertUtil;
 
 /**
  * rule语句解析器
+ * 解析rule关键字定义的规则块
+ *
+ * @author Kamijoucen
  */
 public class RuleParser implements AtomParser {
 
@@ -38,7 +42,7 @@ public class RuleParser implements AtomParser {
         // 解析规则代码块
         BaseNode blockNode = Parsers.BLOCK_PARSER.parse(manager);
         if (!(blockNode instanceof BlockNode)) {
-            throw new RuntimeException("解析rule语句时出错：rule后应该跟随代码块");
+            throw new SyntaxException("解析rule语句时出错：rule后应该跟随代码块", ruleToken.location);
         }
 
         return new RuleStatementNode(

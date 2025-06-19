@@ -21,7 +21,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
 
         Scope capScope = scope;
         if (node.isStaticCapture()) {
-            capScope = new Scope(null, false, context.getConfiguration().getGlobalScope(), null);
+            capScope = new Scope("closure static capture", false, context.getConfiguration().getGlobalScope(), null);
             if (CollectionUtil.isNotEmpty(node.getStaticCaptureVar())) {
                 for (BaseNode capNode : node.getStaticCaptureVar()) {
                     BaseValue capValue = capNode.eval(scope, context);

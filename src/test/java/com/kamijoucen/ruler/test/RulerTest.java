@@ -377,4 +377,12 @@ public class RulerTest {
         runner.run();
     }
 
+    @Test
+    public void varNotFoundTest() {
+        String str = "println(a);";
+        RulerRunner runner = Ruler.compileScript(str, configuration);
+        runner.run();
+    }
+
+
 }

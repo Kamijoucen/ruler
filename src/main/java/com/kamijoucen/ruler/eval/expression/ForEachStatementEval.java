@@ -3,9 +3,7 @@ package com.kamijoucen.ruler.eval.expression;
 import com.kamijoucen.ruler.ast.BaseNode;
 import com.kamijoucen.ruler.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.common.BaseEval;
-import com.kamijoucen.ruler.common.QuadConsumer;
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.runtime.LoopCountCheckOperation;
+import com.kamijoucen.ruler.exception.TypeException;
 import com.kamijoucen.ruler.runtime.RuntimeContext;
 import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.token.Token;
@@ -16,42 +14,46 @@ import com.kamijoucen.ruler.value.ValueType;
 
 import java.util.List;
 
+/**
+ * foreach循环语句求值器
+ *
+ * @author Kamijoucen
+ */
 public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
 
-    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> checkLoopNumberEval =
-            LoopCountCheckOperation::accept;
-
-    private final QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> blankEval =
-            (operation, node, scope, context) -> {
-            };
-
-    @Override
+        @Override
     public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
-        BaseValue listValue = node.getList().eval(scope, context);
-        if (listValue.getType() != ValueType.ARRAY) {
-            throw SyntaxException.withSyntax("The value of the expression must be an array!");
+        // 计算被迭代的表达式
+        BaseValue iterableValue = node.getList().eval(scope, context);
+
+        // 类型检查
+        if (iterableValue.getType() != ValueType.ARRAY) {
+            throw TypeException.typeMismatch(ValueType.ARRAY, iterableValue.getType(),
+                    node.getList().getLocation());
         }
-        List<BaseValue> arrayValues = ((ArrayValue) listValue).getValues();
-        Token loopName = node.getLoopName();
+
+        ArrayValue array = (ArrayValue) iterableValue;
+        List<BaseValue> values = array.getValues();
         BaseNode block = node.getBlock();
 
-        LoopCountCheckOperation loopCountCheckOperation = null;
-        QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;
-        if (context.getConfiguration().getMaxLoopNumber() > 0) {
-            loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
-                    .createLoopCountCheckOperation();
-            check = checkLoopNumberEval;
-        } else {
-            check = blankEval;
-        }
+        // 创建循环作用域
+        Scope loopScope = new Scope("foreach", false, scope, node.getLocation());
 
-        Scope forScope = new Scope("for each scope", false, scope, null);
+        // 定义循环变量
+        Token loopName = node.getLoopName();
+        loopScope.defineLocal(loopName.name, NullValue.INSTANCE);
 
         BaseValue lastValue = NullValue.INSTANCE;
-        for (BaseValue baseValue : arrayValues) {
-            check.accept(loopCountCheckOperation, block, forScope, context);
-            forScope.putLocal(loopName.name, baseValue);
-            lastValue = block.eval(forScope, context);
+
+        // 遍历数组
+        for (BaseValue value : values) {
+            // 更新循环变量的值
+            loopScope.update(loopName.name, value);
+
+            // 执行循环体
+            lastValue = block.eval(loopScope, context);
+
+            // 处理控制流
             if (context.isReturnFlag()) {
                 break;
             } else if (context.isBreakFlag()) {
@@ -59,9 +61,10 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
                 break;
             } else if (context.isContinueFlag()) {
                 context.setContinueFlag(false);
-                continue;
+                // continue会自动进入下一次循环
             }
         }
+
         return lastValue;
     }
 }
