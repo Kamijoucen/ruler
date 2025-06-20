@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class RsonValue extends AbstractValue {
 
-    private Map<String, BaseValue> fields;
+    private final Map<String, BaseValue> fields;
 
     public RsonValue() {
         this(new HashMap<>());

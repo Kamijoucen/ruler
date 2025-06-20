@@ -20,11 +20,11 @@ public class ArrayConvert implements ValueConvert {
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
         List<Object> realArr;
         if (value instanceof Collection) {
-            realArr = new ArrayList<Object>((Collection<?>) value);
+            realArr = new ArrayList<>((Collection<?>) value);
         } else {
             realArr = Arrays.asList((Object[]) value);
         }
-        List<BaseValue> list = new ArrayList<BaseValue>(realArr.size());
+        List<BaseValue> list = new ArrayList<>(realArr.size());
         for (Object obj : realArr) {
             ValueConvert convert = configuration.getValueConvertManager().getConverter(obj);
             BaseValue baseValue = convert.realToBase(obj, configuration);
@@ -37,7 +37,7 @@ public class ArrayConvert implements ValueConvert {
     public Object baseToReal(BaseValue value, RulerConfiguration configuration) {
         ArrayValue arrayValue = (ArrayValue) value;
         List<BaseValue> values = arrayValue.getValues();
-        List<Object> objs = new ArrayList<Object>(values.size());
+        List<Object> objs = new ArrayList<>(values.size());
         for (BaseValue val : values) {
             ValueConvert convert = configuration.getValueConvertManager().getConverter(val.getType());
             Object obj = convert.baseToReal(val, configuration);

@@ -6,7 +6,7 @@ import java.util.Date;
 public class DateValue extends AbstractValue {
 
     private Date value;
-    private Calendar calendar;
+    private final Calendar calendar;
 
     public DateValue(Date value) {
         this.value = value;

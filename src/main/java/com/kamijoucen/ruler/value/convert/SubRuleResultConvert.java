@@ -29,7 +29,7 @@ public class SubRuleResultConvert implements ValueConvert {
         if (CollectionUtil.isEmpty(subRuleValue.getValues())) {
             return new SubRuleResultValue(subRuleValue.getRuleName(), Collections.emptyList());
         }
-        List<Object> realValue = new ArrayList<Object>(subRuleValue.getValues().size());
+        List<Object> realValue = new ArrayList<>(subRuleValue.getValues().size());
         for (BaseValue val : subRuleValue.getValues()) {
             ValueConvert convert = configuration.getValueConvertManager().getConverter(val.getType());
             realValue.add(convert.baseToReal(val, configuration));

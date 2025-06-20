@@ -12,9 +12,9 @@ import java.util.Map;
  */
 public class ProxyValue extends RsonValue {
 
-    private BaseValue value;
+    private final BaseValue value;
 
-    private RsonValue configValue;
+    private final RsonValue configValue;
 
     public ProxyValue(BaseValue value, RsonValue configValue) {
         super(null);

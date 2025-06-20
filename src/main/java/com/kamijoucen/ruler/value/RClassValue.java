@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RClassValue extends AbstractValue implements RClass {
 
-    private final Map<String, BaseValue> properties = new ConcurrentHashMap<String, BaseValue>();
+    private final Map<String, BaseValue> properties = new ConcurrentHashMap<>();
 
     @Override
     public Map<String, BaseValue> getProperties() {

@@ -39,7 +39,6 @@ public class AtomParserManager implements Parser {
     private final TokenStream tokenStream;
     private final ParseContext parseContext;
     private final RulerConfiguration configuration;
-    private final IdentifierParser identifierParser = Parsers.IDENTIFIER_PARSER;
 
     public AtomParserManager(TokenStream tokenStream, RulerConfiguration configuration) {
         this.tokenStream = tokenStream;
@@ -285,7 +284,7 @@ public class AtomParserManager implements Parser {
                 Token dotNameNode = tokenStream.token();
                 AssertUtil.assertToken(dotNameNode, TokenType.IDENTIFIER);
                 // only identifiers are supported for dot call
-                BaseNode nameNode = identifierParser.parse(this);
+                BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(this);
 
                 BinaryOperation dotOperation = configuration.getBinaryOperationFactory()
                         .findOperation(TokenType.DOT.name());

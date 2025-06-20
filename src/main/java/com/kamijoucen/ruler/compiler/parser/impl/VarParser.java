@@ -31,10 +31,12 @@ public class VarParser implements AtomParser {
         AssertUtil.assertToken(varToken, TokenType.KEY_VAR);
         tokenStream.nextToken();
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
-
         // 解析变量名
         BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
         Objects.requireNonNull(nameNode);
+
+        // 解析type annotation
+        // AssertUtil.assertToken(tokenStream, TokenType.COLON);
 
         // 检查是否有赋值
         if (tokenStream.token().type == TokenType.ASSIGN) {
