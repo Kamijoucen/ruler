@@ -63,7 +63,8 @@ public class StringParser implements AtomParser {
             if (ch == '\\' && i + 1 < len) {
                 char next = text.charAt(i + 1);
                 if (next == '{' || next == '\\') {
-                    // \{ 变成字面量 { ，\\ 变成字面量 \n                    literal.append(next);
+                    // \{ 变成字面量 { ，\\ 变成字面量 \
+                    literal.append(next);
                     i += 2;
                     continue;
                 } else {

@@ -183,4 +183,28 @@ public class StringInterpolationTest {
         RulerResult result = getScriptRunner(script).run();
         Assert.assertEquals("a{b{c", result.first().toString());
     }
+
+    // 以下测试覆盖"字符串里同时存在插值和转义"的场景 —— 无插值时的转义由 StringEval 处理，
+    // 有插值时由 parseInterpolation 处理，必须分别覆盖
+
+    @Test
+    public void escapedBrace_withInterpolation() {
+        String script = "return \"price is \\{10} and {1+1}\";";
+        RulerResult result = getScriptRunner(script).run();
+        Assert.assertEquals("price is {10} and 2", result.first().toString());
+    }
+
+    @Test
+    public void escapedBackslash_withInterpolation() {
+        String script = "return \"path is \\\\home and {1+1}\";";
+        RulerResult result = getScriptRunner(script).run();
+        Assert.assertEquals("path is \\home and 2", result.first().toString());
+    }
+
+    @Test
+    public void multipleEscapes_withInterpolation() {
+        String script = "return \"a\\{b\\{c and {1+1}\";";
+        RulerResult result = getScriptRunner(script).run();
+        Assert.assertEquals("a{b{c and 2", result.first().toString());
+    }
 }
