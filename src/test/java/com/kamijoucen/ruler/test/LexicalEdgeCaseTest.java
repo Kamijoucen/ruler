@@ -34,10 +34,9 @@ public class LexicalEdgeCaseTest {
 
     @Test
     public void testEscapedNewLineActualBehavior() {
-        // The current lexer does not translate \n into a newline;
-        // it consumes the backslash and next char literally, then also consumes the following char.
+        // Escape sequences are preserved in the buffer and unknown escapes are kept literally.
         RulerResult r = compileScript("return \"a\\nb\";").run();
-        Assert.assertEquals("anb", r.first().toString());
+        Assert.assertEquals("a\\nb", r.first().toString());
     }
 
     @Test

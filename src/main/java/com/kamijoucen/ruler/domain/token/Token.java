@@ -8,10 +8,17 @@ public class Token {
 
     public final TokenLocation location;
 
+    public final char stringFlag;
+
     public Token(TokenType type, String name, TokenLocation location) {
+        this(type, name, location, '\0');
+    }
+
+    public Token(TokenType type, String name, TokenLocation location, char stringFlag) {
         this.type = type;
         this.name = name;
         this.location = location;
+        this.stringFlag = stringFlag;
     }
 
     @Override

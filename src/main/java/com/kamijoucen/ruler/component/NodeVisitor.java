@@ -20,6 +20,8 @@ public interface NodeVisitor {
 
     BaseValue eval(StringNode node, Scope scope, RuntimeContext context);
 
+    BaseValue eval(StringInterpolationNode node, Scope scope, RuntimeContext context);
+
     BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context);
 
     BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context);

@@ -45,6 +45,17 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
+    public BaseValue eval(StringInterpolationNode node, Scope scope, RuntimeContext context) {
+        if (CollectionUtil.isEmpty(node.getParts())) {
+            return null;
+        }
+        for (BaseNode part : node.getParts()) {
+            part.eval(scope, context);
+        }
+        return null;
+    }
+
+    @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         node.getLhs().eval(scope, context);
         node.getRhs().eval(scope, context);

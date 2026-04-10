@@ -16,6 +16,7 @@ public class EvalVisitor extends AbstractVisitor {
     private static final DoubleEval doubleEval = new DoubleEval();
     private static final BooleanEval booleanEval = new BooleanEval();
     private static final StringEval stringEval = new StringEval();
+    private static final StringInterpolationEval stringInterpolationEval = new StringInterpolationEval();
     private static final BinaryOperationEval binaryOperationEval = new BinaryOperationEval();
     private static final UnaryOperationEval unaryOperationEval = new UnaryOperationEval();
     private static final ArrayEval arrayEval = new ArrayEval();
@@ -68,6 +69,11 @@ public class EvalVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(StringNode node, Scope scope, RuntimeContext context) {
         return stringEval.eval(node, scope, context);
+    }
+
+    @Override
+    public BaseValue eval(StringInterpolationNode node, Scope scope, RuntimeContext context) {
+        return stringInterpolationEval.eval(node, scope, context);
     }
 
     @Override

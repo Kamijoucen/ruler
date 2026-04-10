@@ -178,7 +178,7 @@ public class DefaultLexical implements Lexical {
                     new TokenLocation(line, column, fileName));
         }
         forward(3);
-        makeToken(TokenType.STRING);
+        makeToken(TokenType.STRING, '"');
     }
 
     @Override
@@ -186,8 +186,11 @@ public class DefaultLexical implements Lexical {
         forward();
         while (isNotOver() && charAt() != curStringFlag) {
             if (charAt() == '\\') {
-                forward();
-                appendAndForward();
+                appendAndForward(); // append backslash
+                if (isNotOver()) {
+                    appendAndForward(); // append escaped char
+                }
+                continue;
             }
             if (isOver()) {
                 throw new SyntaxException("unterminated string literal",
@@ -200,7 +203,7 @@ public class DefaultLexical implements Lexical {
                     new TokenLocation(line, column, fileName));
         }
         forward();
-        makeToken(TokenType.STRING);
+        makeToken(TokenType.STRING, curStringFlag);
     }
 
     @Override
@@ -283,6 +286,12 @@ public class DefaultLexical implements Lexical {
     private void makeToken(TokenType type) {
         currentToken =
                 new Token(type, buffer.toString(), new TokenLocation(line, column, fileName));
+        buffer.delete(0, buffer.length());
+    }
+
+    private void makeToken(TokenType type, char stringFlag) {
+        currentToken =
+                new Token(type, buffer.toString(), new TokenLocation(line, column, fileName), stringFlag);
         buffer.delete(0, buffer.length());
     }
 

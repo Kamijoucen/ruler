@@ -42,6 +42,11 @@ public class TypeCheckVisitor extends AbstractVisitor {
     }
 
     @Override
+    public BaseValue eval(StringInterpolationNode node, Scope scope, RuntimeContext context) {
+        return StringType.INSTANCE;
+    }
+
+    @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         return binaryChecker.eval(node, scope, context);
     }
