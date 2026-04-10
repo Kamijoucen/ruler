@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.exception.PanicException;
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.module.RulerRunner;
+import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.domain.exception.PanicException;
+import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.service.RulerRunner;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -94,7 +94,7 @@ public class ErrorAndLimitTest {
     @Test
     public void testDivByZeroIsInfinity() {
         RulerConfigurationImpl cfg = new RulerConfigurationImpl();
-        com.kamijoucen.ruler.parameter.RulerResult r = Ruler.compileExpression("1 / 0", cfg).run();
+        com.kamijoucen.ruler.domain.parameter.RulerResult r = Ruler.compileExpression("1 / 0", cfg).run();
         Assert.assertTrue(Double.isInfinite(r.first().toDouble()));
     }
 }

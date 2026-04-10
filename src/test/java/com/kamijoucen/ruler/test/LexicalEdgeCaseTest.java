@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.compiler.impl.DefaultLexical;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.module.RulerRunner;
-import com.kamijoucen.ruler.parameter.RulerResult;
-import com.kamijoucen.ruler.token.Token;
-import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.component.DefaultLexical;
+import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.domain.parameter.RulerResult;
+import com.kamijoucen.ruler.domain.token.Token;
+import com.kamijoucen.ruler.domain.token.TokenType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

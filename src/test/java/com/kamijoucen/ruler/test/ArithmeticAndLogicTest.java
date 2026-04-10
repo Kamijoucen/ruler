@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.exception.SyntaxException;
-import com.kamijoucen.ruler.module.RulerRunner;
-import com.kamijoucen.ruler.parameter.RulerResult;
+import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -10,9 +10,9 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import com.kamijoucen.ruler.Ruler;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.module.RulerRunner;
+import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.service.RulerRunner;
 
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.AverageTime, Mode.Throughput})

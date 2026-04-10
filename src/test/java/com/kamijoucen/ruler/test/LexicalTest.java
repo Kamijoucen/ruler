@@ -4,11 +4,11 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.kamijoucen.ruler.compiler.impl.DefaultLexical;
-import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.token.Token;
-import com.kamijoucen.ruler.token.TokenType;
+import com.kamijoucen.ruler.component.DefaultLexical;
+import com.kamijoucen.ruler.application.RulerConfiguration;
+import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.domain.token.Token;
+import com.kamijoucen.ruler.domain.token.TokenType;
 
 public class LexicalTest {
 

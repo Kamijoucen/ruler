@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.compiler.impl.RulerCompiler;
-import com.kamijoucen.ruler.compiler.impl.RulerInterpreter;
-import com.kamijoucen.ruler.config.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.module.RulerScript;
-import com.kamijoucen.ruler.runtime.RuntimeContext;
-import com.kamijoucen.ruler.runtime.Scope;
-import com.kamijoucen.ruler.value.ClosureValue;
+import com.kamijoucen.ruler.component.RulerCompiler;
+import com.kamijoucen.ruler.component.RulerInterpreter;
+import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
+import com.kamijoucen.ruler.domain.module.RulerScript;
+import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
+import com.kamijoucen.ruler.domain.runtime.Scope;
+import com.kamijoucen.ruler.domain.value.ClosureValue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class ReplAndStatementTest {
 
     private List<Object> runStatement(String code) {
         RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", code), configuration);
-        com.kamijoucen.ruler.module.RulerModule module = compiler.compileStatement();
+        com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileStatement();
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         interpreter.setHasImportGlobalModule(false);
         return interpreter.runStatement(runScope, runtimeContext);
@@ -90,7 +90,7 @@ public class ReplAndStatementTest {
     @Test
     public void testMultiStatementInOneCompile() {
         RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", "var a = 1; var b = 2; a + b;"), configuration);
-        com.kamijoucen.ruler.module.RulerModule module = compiler.compileStatement();
+        com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileStatement();
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
         interpreter.setHasImportGlobalModule(false);
         List<Object> result = interpreter.runStatement(runScope, runtimeContext);

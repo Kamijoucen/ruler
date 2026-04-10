@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.plugin.spi;
 
-import com.kamijoucen.ruler.config.RulerConfiguration;
+import com.kamijoucen.ruler.application.RulerConfiguration;
 
 public interface ConfigurationHook {
 

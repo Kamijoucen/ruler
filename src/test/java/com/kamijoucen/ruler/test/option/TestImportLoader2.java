@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.test.option;
 
-import com.kamijoucen.ruler.config.option.CustomImportLoader;
-import com.kamijoucen.ruler.config.option.ImportMatchOrder;
+import com.kamijoucen.ruler.component.option.CustomImportLoader;
+import com.kamijoucen.ruler.component.option.ImportMatchOrder;
 
 @ImportMatchOrder(order = 102)
 public class TestImportLoader2 implements CustomImportLoader {

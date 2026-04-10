@@ -2,9 +2,9 @@ package com.kamijoucen.ruler.std.io;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.kamijoucen.ruler.config.RulerConfiguration;
-import com.kamijoucen.ruler.config.option.ConfigModule;
-import com.kamijoucen.ruler.function.RulerFunction;
+import com.kamijoucen.ruler.application.RulerConfiguration;
+import com.kamijoucen.ruler.domain.ConfigModule;
+import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.plugin.spi.ConfigurationHook;
 
 public class StdIoHook implements ConfigurationHook {

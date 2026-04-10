@@ -1,0 +1,49 @@
+package com.kamijoucen.ruler.logic.parser;
+
+import com.kamijoucen.ruler.domain.ast.BaseNode;
+import com.kamijoucen.ruler.domain.ast.expression.BlockNode;
+import com.kamijoucen.ruler.domain.ast.expression.RuleStatementNode;
+import com.kamijoucen.ruler.domain.ast.factor.StringNode;
+import com.kamijoucen.ruler.component.Parsers;
+import com.kamijoucen.ruler.component.TokenStream;
+import com.kamijoucen.ruler.component.AtomParser;
+import com.kamijoucen.ruler.component.AtomParserManager;
+import com.kamijoucen.ruler.domain.token.Token;
+import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.logic.util.AssertUtil;
+
+/**
+ * rule语句解析器
+ */
+public class RuleParser implements AtomParser {
+
+    @Override
+    public boolean support(TokenStream tokenStream) {
+        return tokenStream.token().type == TokenType.KEY_RULE;
+    }
+
+    @Override
+    public BaseNode parse(AtomParserManager manager) {
+        TokenStream tokenStream = manager.getTokenStream();
+        Token ruleToken = tokenStream.token();
+
+        AssertUtil.assertToken(ruleToken, TokenType.KEY_RULE);
+        tokenStream.nextToken();
+
+        // 解析规则名称
+        AssertUtil.assertToken(tokenStream, TokenType.STRING);
+        Token nameToken = tokenStream.token();
+        tokenStream.nextToken();
+
+        // 解析规则代码块
+        BaseNode blockNode = Parsers.BLOCK_PARSER.parse(manager);
+        if (!(blockNode instanceof BlockNode)) {
+            throw new RuntimeException("解析rule语句时出错：rule后应该跟随代码块");
+        }
+
+        return new RuleStatementNode(
+                new StringNode(nameToken.name, nameToken.location),
+                (BlockNode) blockNode,
+                ruleToken.location);
+    }
+}
