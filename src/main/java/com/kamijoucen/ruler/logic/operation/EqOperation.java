@@ -1,108 +1,16 @@
 package com.kamijoucen.ruler.logic.operation;
 
-import java.util.function.BiFunction;
-
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.logic.util.IOUtil;
 import com.kamijoucen.ruler.domain.value.*;
 
 public class EqOperation implements BinaryOperation {
 
-    @SuppressWarnings("unchecked")
-    private final BiFunction<BaseValue, BaseValue, BaseValue>[] operations =
-            new BiFunction[ValueType.values().length * ValueType.values().length];
+    private final boolean strict;
 
     public EqOperation(boolean strict) {
-        initStrictOp();
-        if (!strict) {
-            initNonStrictOp();
-        }
-    }
-
-    private void initStrictOp() {
-
-        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.INTEGER)] = (l, r) -> {
-            IntegerValue val1 = (IntegerValue) l;
-            IntegerValue val2 = (IntegerValue) r;
-            return BoolValue.get(val1.getValue() == val2.getValue());
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (l, r) -> {
-            IntegerValue val1 = (IntegerValue) l;
-            DoubleValue val2 = (DoubleValue) r;
-            return BoolValue.get(val1.getValue() == val2.getValue());
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (l, r) -> {
-            DoubleValue val1 = (DoubleValue) l;
-            IntegerValue val2 = (IntegerValue) r;
-            return BoolValue.get(val1.getValue() == val2.getValue());
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (l, r) -> {
-            DoubleValue val1 = (DoubleValue) l;
-            DoubleValue val2 = (DoubleValue) r;
-            return BoolValue.get(val1.getValue() == val2.getValue());
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.BOOL, ValueType.BOOL)] = (l, r) -> {
-            BoolValue val1 = (BoolValue) l;
-            BoolValue val2 = (BoolValue) r;
-            return BoolValue.get(val1.getValue() == val2.getValue());
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.STRING, ValueType.STRING)] = (l, r) -> {
-            StringValue val1 = (StringValue) l;
-            StringValue val2 = (StringValue) r;
-            return BoolValue.get(val1.getValue().equals(val2.getValue()));
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.NULL, ValueType.NULL)] = (l, r) -> BoolValue.get(true);
-    }
-
-    private void initNonStrictOp() {
-
-        operations[IOUtil.getTypeIndex(ValueType.STRING, ValueType.INTEGER)] = (l, r) -> {
-            try {
-                IntegerValue val2 = (IntegerValue) l;
-                long val1 = Long.parseLong(r.toString());
-                return BoolValue.get(val1 == val2.getValue());
-            } catch (NumberFormatException e) {
-                return BoolValue.get(false);
-            }
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.STRING)] = (l, r) -> {
-            try {
-                long val1 = Long.parseLong(l.toString());
-                StringValue val2 = (StringValue) r;
-                return BoolValue.get(val1 == Long.parseLong(val2.getValue()));
-            } catch (NumberFormatException e) {
-                return BoolValue.get(false);
-            }
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.STRING, ValueType.DOUBLE)] = (l, r) -> {
-            try {
-                DoubleValue val2 = (DoubleValue) l;
-                double val1 = Double.parseDouble(r.toString());
-                return BoolValue.get(val1 == val2.getValue());
-            } catch (NumberFormatException e) {
-                return BoolValue.get(false);
-            }
-        };
-
-        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.STRING)] = (l, r) -> {
-            try {
-                double val1 = Double.parseDouble(l.toString());
-                StringValue val2 = (StringValue) r;
-                return BoolValue.get(val1 == Double.parseDouble(val2.getValue()));
-            } catch (NumberFormatException e) {
-                return BoolValue.get(false);
-            }
-        };
+        this.strict = strict;
     }
 
     @Override
@@ -110,18 +18,68 @@ public class EqOperation implements BinaryOperation {
             BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
+        return BoolValue.get(equal(lValue, rValue));
+    }
 
-        BiFunction<BaseValue, BaseValue, BaseValue> operation = operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
-        if (operation != null) {
-            return operation.apply(lValue, rValue);
-        } else {
-            if (lValue.getType() == ValueType.NULL || rValue.getType() == ValueType.NULL) {
-                return BoolValue.get(false);
-            }
-            if (lValue.getType() != rValue.getType()) {
-                return BoolValue.get(false);
-            }
-            return BoolValue.get(lValue.toString().equals(rValue.toString()));
+    private boolean equal(BaseValue l, BaseValue r) {
+        ValueType lt = l.getType();
+        ValueType rt = r.getType();
+
+        if (isNumber(lt) && isNumber(rt)) {
+            double lv = lt == ValueType.INTEGER
+                    ? ((IntegerValue) l).getValue()
+                    : ((DoubleValue) l).getValue();
+            double rv = rt == ValueType.INTEGER
+                    ? ((IntegerValue) r).getValue()
+                    : ((DoubleValue) r).getValue();
+            return lv == rv;
         }
+
+        if (lt == ValueType.BOOL && rt == ValueType.BOOL) {
+            return ((BoolValue) l).getValue() == ((BoolValue) r).getValue();
+        }
+
+        if (lt == ValueType.STRING && rt == ValueType.STRING) {
+            return ((StringValue) l).getValue().equals(((StringValue) r).getValue());
+        }
+
+        if (lt == ValueType.NULL && rt == ValueType.NULL) {
+            return true;
+        }
+
+        if (!strict) {
+            if (lt == ValueType.STRING && isNumber(rt)) {
+                try {
+                    double rv = rt == ValueType.INTEGER
+                            ? ((IntegerValue) r).getValue()
+                            : ((DoubleValue) r).getValue();
+                    return Double.parseDouble(l.toString()) == rv;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+            if (isNumber(lt) && rt == ValueType.STRING) {
+                try {
+                    double lv = lt == ValueType.INTEGER
+                            ? ((IntegerValue) l).getValue()
+                            : ((DoubleValue) l).getValue();
+                    return lv == Double.parseDouble(r.toString());
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+        }
+
+        if (lt == ValueType.NULL || rt == ValueType.NULL) {
+            return false;
+        }
+        if (lt != rt) {
+            return false;
+        }
+        return l.toString().equals(r.toString());
+    }
+
+    private boolean isNumber(ValueType type) {
+        return type == ValueType.INTEGER || type == ValueType.DOUBLE;
     }
 }

@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.logic.util;
 
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.value.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,10 +127,6 @@ public class IOUtil {
 
     public static boolean isWhitespace(char ch) {
         return Character.isWhitespace(ch);
-    }
-
-    public static int getTypeIndex(ValueType type1, ValueType type2) {
-        return type1.ordinal() * ValueType.values().length + type2.ordinal();
     }
 
 }

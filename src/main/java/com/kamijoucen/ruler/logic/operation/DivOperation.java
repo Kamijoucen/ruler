@@ -1,51 +1,23 @@
 package com.kamijoucen.ruler.logic.operation;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.logic.util.IOUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
-import com.kamijoucen.ruler.domain.value.IntegerValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
 
-import java.util.function.BiFunction;
+public class DivOperation extends AbstractArithmeticOperation {
 
-public class DivOperation implements BinaryOperation {
-
-    @SuppressWarnings("unchecked")
-    private static final BiFunction<BaseValue, BaseValue, BaseValue>[] operations =
-            new BiFunction[ValueType.values().length * ValueType.values().length];
-
-    static {
-
-        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.INTEGER)] =
-                (l, r) -> new DoubleValue(
-                        (double) ((IntegerValue) l).getValue() / ((IntegerValue) r).getValue());
-
-        operations[IOUtil.getTypeIndex(ValueType.INTEGER, ValueType.DOUBLE)] = (l,
-                r) -> new DoubleValue(((IntegerValue) l).getValue() / ((DoubleValue) r).getValue());
-
-        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.INTEGER)] = (l,
-                r) -> new DoubleValue(((DoubleValue) l).getValue() / ((IntegerValue) r).getValue());
-
-        operations[IOUtil.getTypeIndex(ValueType.DOUBLE, ValueType.DOUBLE)] = (l,
-                r) -> new DoubleValue(((DoubleValue) l).getValue() / ((DoubleValue) r).getValue());
+    @Override
+    protected BaseValue computeLong(long l, long r, RuntimeContext context) {
+        return new DoubleValue((double) l / r);
     }
 
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
-            BaseValue... params) {
-        BaseValue lValue = lhs.eval(scope, context);
-        BaseValue rValue = rhs.eval(scope, context);
-        BiFunction<BaseValue, BaseValue, BaseValue> operation =
-                operations[IOUtil.getTypeIndex(lValue.getType(), rValue.getType())];
-        if (operation != null) {
-            return operation.apply(lValue, rValue);
-        } else {
-            throw new IllegalOperationException(
-                    "'div' operation not supported for: " + lValue.getType() + " and " + rValue.getType());
-        }
+    protected BaseValue computeDouble(double l, double r, RuntimeContext context) {
+        return new DoubleValue(l / r);
+    }
+
+    @Override
+    protected String operationName() {
+        return "'div'";
     }
 }
