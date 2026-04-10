@@ -67,11 +67,6 @@ public class TypeCheckVisitor extends AbstractVisitor {
     }
 
     @Override
-    public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        return UnknownType.INSTANCE;
-    }
-
-    @Override
     public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
         return StringType.INSTANCE;
     }

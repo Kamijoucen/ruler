@@ -28,6 +28,8 @@ public enum ValueType {
 
     DATE,
 
-    RULE_RESULT
+    RULE_RESULT,
+
+    METHOD
 
 }

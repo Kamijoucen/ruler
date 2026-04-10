@@ -213,9 +213,6 @@ public class DefaultParser implements Parser {
             case OUT_IDENTIFIER:
                 node = parseIdentifier();
                 break;
-            case KEY_THIS:
-                node = parseThis();
-                break;
             case KEY_FALSE:
             case KEY_TRUE:
                 node = parseBool();
@@ -684,13 +681,6 @@ public class DefaultParser implements Parser {
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
         tokenStream.nextToken();
         return new RsonNode(properties, lToken.location);
-    }
-
-    public BaseNode parseThis() {
-        AssertUtil.assertToken(tokenStream, TokenType.KEY_THIS);
-        Token thisToken = tokenStream.token();
-        tokenStream.nextToken();
-        return new ThisNode(thisToken.location);
     }
 
     public BaseNode parseRuleBlock() {

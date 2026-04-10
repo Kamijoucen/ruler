@@ -11,3 +11,8 @@ gen
 target
 **.jar
 lib
+
+# jdtls files
+.settings/
+.project
+.classpath

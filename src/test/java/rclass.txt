@@ -2,38 +2,38 @@
 
 var createRClass = fun() ->
 {
-    ToString: fun() {
-        if typeof(this) == 'string' {
-            return this;
+    ToString: fun(self) {
+        if typeof(self) == 'string' {
+            return self;
         }
-        else if typeof(this) == 'array' {
+        else if typeof(self) == 'array' {
             var str = '';
-            for i in this {
+            for i in self {
                 str += i;
             }
         }
-        else if typeof(this) == '' {
+        else if typeof(self) == '' {
 
         }
     },
 
-    ToString2: match this {
-    | typeof 'string' -> this
+    ToString2: match self {
+    | typeof 'string' -> self
     | typeof 'array'  -> {
         var str = "";
-        for i in this {
+        for i in self {
             str += i;
         }
     }
     }
 };
 
-match this {
-| typeof 'array' -> this.stream().map(fun(it) -> it.ToString()).collect();
+match self {
+| typeof 'array' -> self.stream().map(fun(it) -> it.ToString()).collect();
 | typeof 'array' ->
 }
 
 var r = match (result, succe) {
-| (typeof 'array' && \"%success%", _) -> "ok"
+| (typeof 'array' && "%success%", _) -> "ok"
 | (_, 'error') -> "error"
 }

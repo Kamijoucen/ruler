@@ -102,7 +102,7 @@ public class RulerTest {
     @Test
     public void test_rson_this() {
 
-        String str = "var a = {f: fun(age) { println('------', age); return this.name; }, name: 'ggggggggg11'}; println(a.f(18));";
+        String str = "var a = {f: fun(self, age) { println('------', age); return self.name; }, name: 'ggggggggg11'}; println(a.f(18));";
 
         RulerRunner script = Ruler.compileScript(str, configuration);
 
@@ -375,6 +375,27 @@ public class RulerTest {
         String str = "var a = 1; var f = fun[a]() { println(a); }; var b = 2; f();";
         RulerRunner runner = Ruler.compileScript(str, configuration);
         runner.run();
+    }
+
+    @Test
+    public void test_explicit_self() {
+        String str = "var obj = { name: 'ruler', getName: fun(self) { return self.name; } }; return obj.getName();";
+        RulerRunner runner = Ruler.compileScript(str, configuration);
+        Assert.assertEquals("ruler", runner.run().first().toString());
+    }
+
+    @Test
+    public void test_method_bound_self() {
+        String str = "var obj = { name: 'bound', getName: fun(self, suffix) { return self.name ++ suffix; } }; var m = obj.getName; return m('!');";
+        RulerRunner runner = Ruler.compileScript(str, configuration);
+        Assert.assertEquals("bound!", runner.run().first().toString());
+    }
+
+    @Test
+    public void test_method_no_self_direct_call() {
+        String str = "var f = fun(self, a, b) { return a + b; }; var obj = { add: f }; return obj.add(1, 2);";
+        RulerRunner runner = Ruler.compileScript(str, configuration);
+        Assert.assertEquals(3, runner.run().first().toInteger());
     }
 
 }

@@ -23,7 +23,6 @@ public class BlockEval implements BaseEval<BlockNode> {
                 break;
             }
         }
-        context.setCurrentSelfValue(null);
         return lastVal;
     }
 }

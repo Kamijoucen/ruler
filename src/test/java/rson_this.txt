@@ -1,7 +1,7 @@
 
 var a = {
     name: 'lsc',
-    f: fun() {
-        println(this.name);
+    f: fun(self) {
+        println(self.name);
     }
 };

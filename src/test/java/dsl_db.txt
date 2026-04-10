@@ -24,7 +24,7 @@ var Query = {
 
     tableName: null,
 
-    build: fun() -> this,
+    build: fun(self) -> self,
 
 };
 

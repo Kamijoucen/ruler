@@ -25,7 +25,7 @@ public class ObjectAccessControlManagerImpl implements ObjectAccessControlManage
             BaseValue getCallback = this.accessObject(proxyValue.getConfigValue(), "get", context);
             if (getCallback.getType() == ValueType.CLOSURE) {
                 CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
-                return executor.call(proxyValue.getValue(), ((ClosureValue) getCallback), null,
+                return executor.call(((ClosureValue) getCallback), null,
                         context, proxyValue.getValue(), new StringValue(name));
             }
         }
@@ -52,7 +52,7 @@ public class ObjectAccessControlManagerImpl implements ObjectAccessControlManage
             BaseValue putCallback = this.accessObject(proxyValue.getConfigValue(), "put", context);
             if (putCallback != null && putCallback.getType() == ValueType.CLOSURE) {
                 CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
-                executor.call(proxyValue.getValue(), ((ClosureValue) putCallback), null, context,
+                executor.call(((ClosureValue) putCallback), null, context,
                         proxyValue.getValue(), new StringValue(name), newValue);
                 return;
             } else {

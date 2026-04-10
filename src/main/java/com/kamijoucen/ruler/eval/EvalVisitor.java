@@ -22,7 +22,6 @@ public class EvalVisitor extends AbstractVisitor {
     private static final ArrayEval arrayEval = new ArrayEval();
     private static final NullEval nullEval = new NullEval();
     private static final RsonEval rsonEval = new RsonEval();
-    private static final ThisEval thisEval = new ThisEval();
     private static final TypeOfEval typeOfEval = new TypeOfEval();
     private static final BlockEval blockEval = new BlockEval();
     private static final IfStatementEval ifStatementEval = new IfStatementEval();
@@ -95,11 +94,6 @@ public class EvalVisitor extends AbstractVisitor {
     @Override
     public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
         return rsonEval.eval(node, scope, context);
-    }
-
-    @Override
-    public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        return thisEval.eval(node, scope, context);
     }
 
     @Override

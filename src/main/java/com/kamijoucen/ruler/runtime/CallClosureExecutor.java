@@ -22,12 +22,9 @@ public class CallClosureExecutor {
         this.configuration = configuration;
     }
 
-    public BaseValue call(BaseValue self, ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
+    public BaseValue call(ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
         // TODO
         Scope callScope = new Scope("closure", false, closure.getDefineScope(), null);
-        if (self != null) {
-            callScope.putLocal(Constant.THIS_ARG, self);
-        }
         // put args in scope
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(params)));
 

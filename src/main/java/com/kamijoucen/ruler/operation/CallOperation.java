@@ -10,6 +10,8 @@ import com.kamijoucen.ruler.runtime.Scope;
 import com.kamijoucen.ruler.value.BaseValue;
 import com.kamijoucen.ruler.value.ClosureValue;
 import com.kamijoucen.ruler.value.FunctionValue;
+import com.kamijoucen.ruler.value.MethodValue;
+import com.kamijoucen.ruler.value.ValueType;
 
 public class CallOperation implements BinaryOperation {
 
@@ -17,17 +19,29 @@ public class CallOperation implements BinaryOperation {
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
             BaseValue... params) {
         BaseValue callFunc = lhs.eval(scope, context);
-        BaseValue self = context.getCurrentSelfValue();
+        BaseValue[] funcParam = Arrays.copyOfRange(params, 0, params.length);
+        BaseValue boundSelf = null;
+        if (callFunc.getType() == ValueType.METHOD) {
+            MethodValue method = (MethodValue) callFunc;
+            boundSelf = method.getBoundSelf();
+            callFunc = method.getTarget();
+            // 只有闭包需要把 boundSelf 前置到参数列表；内建函数通过 self 参数接收调用者
+            if (callFunc instanceof ClosureValue) {
+                BaseValue[] newParams = new BaseValue[funcParam.length + 1];
+                newParams[0] = boundSelf;
+                System.arraycopy(funcParam, 0, newParams, 1, funcParam.length);
+                funcParam = newParams;
+            }
+        }
         context.getStackDepthCheckOperation().addDepth(context);
         try {
-            BaseValue[] funcParam = Arrays.copyOfRange(params, 0, params.length);
             switch (callFunc.getType()) {
                 case FUNCTION:
                     RulerFunction function = ((FunctionValue) callFunc).getValue();
-                    return (BaseValue) function.call(context, scope, self, (Object[]) funcParam);
+                    return (BaseValue) function.call(context, scope, boundSelf, (Object[]) funcParam);
                 case CLOSURE:
                     ClosureValue closureFunction = ((ClosureValue) callFunc);
-                    return context.getConfiguration().getCallClosureExecutor().call(self,
+                    return context.getConfiguration().getCallClosureExecutor().call(
                             closureFunction, scope, context, funcParam);
                 default: {
                     Object printObj = callFunc;

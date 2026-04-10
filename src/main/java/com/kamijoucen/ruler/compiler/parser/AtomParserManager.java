@@ -79,7 +79,6 @@ public class AtomParserManager implements Parser {
         expressionParsers.add(Parsers.ARRAY_PARSER);
         expressionParsers.add(Parsers.RSON_PARSER);
         expressionParsers.add(Parsers.TYPE_OF_PARSER);
-        expressionParsers.add(Parsers.THIS_PARSER);
 
         // 这些既是语句也可以是表达式的解析器也需要添加到表达式解析器列表中
         expressionParsers.add(Parsers.IF_PARSER);

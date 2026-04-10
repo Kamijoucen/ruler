@@ -86,11 +86,6 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(ThisNode node, Scope scope, RuntimeContext context) {
-        return null;
-    }
-
-    @Override
     public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
         node.getExp().eval(scope, context);
         return null;

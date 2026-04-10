@@ -17,7 +17,6 @@ import com.kamijoucen.ruler.compiler.parser.impl.ReturnParser;
 import com.kamijoucen.ruler.compiler.parser.impl.RsonParser;
 import com.kamijoucen.ruler.compiler.parser.impl.RuleParser;
 import com.kamijoucen.ruler.compiler.parser.impl.StringParser;
-import com.kamijoucen.ruler.compiler.parser.impl.ThisParser;
 import com.kamijoucen.ruler.compiler.parser.impl.TypeOfParser;
 import com.kamijoucen.ruler.compiler.parser.impl.UnaryExpressionParser;
 import com.kamijoucen.ruler.compiler.parser.impl.VarParser;
@@ -42,7 +41,6 @@ public class Parsers {
     public static final RsonParser RSON_PARSER = new RsonParser();
     public static final RuleParser RULE_PARSER = new RuleParser();
     public static final StringParser STRING_PARSER = new StringParser();
-    public static final ThisParser THIS_PARSER = new ThisParser();
     public static final TypeOfParser TYPE_OF_PARSER = new TypeOfParser();
     public static final UnaryExpressionParser UNARY_EXPRESSION_PARSER = new UnaryExpressionParser();
     public static final VarParser VAR_PARSER = new VarParser();
