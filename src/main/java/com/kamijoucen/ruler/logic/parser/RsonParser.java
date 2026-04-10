@@ -35,7 +35,7 @@ public class RsonParser implements AtomParser {
         if (tokenStream.token().type != TokenType.RIGHT_BRACE) {
             if (tokenStream.token().type != TokenType.IDENTIFIER
                     && tokenStream.token().type != TokenType.STRING) {
-                throw SyntaxException.withSyntax("无效的key", tokenStream.token());
+                throw new SyntaxException("invalid key\t token=" + tokenStream.token());
             }
             Token name = tokenStream.token();
             tokenStream.nextToken();
@@ -54,7 +54,7 @@ public class RsonParser implements AtomParser {
             }
             if (tokenStream.token().type != TokenType.IDENTIFIER
                     && tokenStream.token().type != TokenType.STRING) {
-                throw SyntaxException.withSyntax("无效的key", tokenStream.token());
+                throw new SyntaxException("invalid key\t token=" + tokenStream.token());
             }
             Token name = tokenStream.token();
             tokenStream.nextToken();

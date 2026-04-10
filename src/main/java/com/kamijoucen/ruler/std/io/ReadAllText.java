@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.std.io;
 
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -29,7 +30,7 @@ public class ReadAllText implements RulerFunction {
             byte[] bytes = Files.readAllBytes(Paths.get(path));
             return new String(bytes);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RulerRuntimeException(e.getMessage(), e);
         }
     }
 }

@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.logic.parser;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.domain.ast.factor.OutNameNode;
-import com.kamijoucen.ruler.domain.common.MessageType;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
@@ -31,9 +30,7 @@ public class IdentifierParser implements AtomParser {
         } else if (token.type == TokenType.OUT_IDENTIFIER) {
             nameNode = new OutNameNode(token, token.location);
         } else {
-            String message = manager.getConfiguration().getMessageManager()
-                    .buildMessage(MessageType.ILLEGAL_IDENTIFIER, token.location, token.name);
-            throw new SyntaxException(message);
+            throw new SyntaxException("illegal identifier '" + token.name + "'", token.location);
         }
         manager.getTokenStream().nextToken();
         return nameNode;

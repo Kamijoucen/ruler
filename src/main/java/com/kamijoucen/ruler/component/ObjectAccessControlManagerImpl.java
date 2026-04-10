@@ -60,7 +60,7 @@ public class ObjectAccessControlManagerImpl implements ObjectAccessControlManage
         }
         if (value.getType() != ValueType.RSON) {
             // 不允许修改对象的元信息
-            throw new UnsupportedOperationException("can not modify object: " + value.getType());
+            throw new UnsupportedOperationException("cannot modify object: " + value.getType());
         }
         ((RsonValue) value).getFields().put(name, newValue);
     }

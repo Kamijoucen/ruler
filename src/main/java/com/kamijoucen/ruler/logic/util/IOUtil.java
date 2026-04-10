@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.logic.util;
 
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +98,7 @@ public class IOUtil {
             }
         } catch (IOException e) {
             logger.error("read error", e);
-            throw new RuntimeException(e);
+            throw new RulerRuntimeException("read error", e);
         } finally {
             if (reader != null) {
                 try {

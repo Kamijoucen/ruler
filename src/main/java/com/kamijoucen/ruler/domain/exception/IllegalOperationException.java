@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.domain.exception;
 
-public class IllegalOperationException extends RuntimeException {
+public class IllegalOperationException extends RulerRuntimeException {
 
-    public IllegalOperationException(String s) {
-        super(s);
+    public IllegalOperationException(String message) {
+        super(message);
     }
 }

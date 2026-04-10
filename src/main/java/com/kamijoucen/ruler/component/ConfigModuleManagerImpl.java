@@ -23,7 +23,7 @@ public class ConfigModuleManagerImpl implements ConfigModuleManager {
     @Override
     public void registerModule(ConfigModule module) {
         if (IOUtil.isBlank(module.getUri())) {
-            throw new IllegalArgumentException("module uri can not be blank");
+            throw new IllegalArgumentException("module uri cannot be blank");
         }
         modules.put(module.getUri(), module);
     }

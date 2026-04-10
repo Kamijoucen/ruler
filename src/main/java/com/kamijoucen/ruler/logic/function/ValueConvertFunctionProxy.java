@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.logic.function;
 
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -47,7 +47,7 @@ public class ValueConvertFunctionProxy implements RulerFunction {
 
     private Object convert(Object param) {
         if (!(param instanceof BaseValue)) {
-            throw SyntaxException.withSyntax("错误的类型");
+            throw new RulerRuntimeException("invalid argument type");
         }
         BaseValue baseValue = (BaseValue) param;
         ValueConvert convert = configuration.getValueConvertManager().getConverter(baseValue.getType());

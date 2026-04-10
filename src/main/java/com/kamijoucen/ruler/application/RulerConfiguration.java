@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.component.RClassManager;
 import com.kamijoucen.ruler.component.IntegerNumberCache;
 import com.kamijoucen.ruler.component.ValueConvertManager;
 import com.kamijoucen.ruler.component.ObjectAccessControlManager;
-import com.kamijoucen.ruler.component.MessageManager;
 import com.kamijoucen.ruler.component.ConfigModuleManager;
 import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 
@@ -66,8 +65,6 @@ public interface RulerConfiguration {
     CallClosureExecutor getCallClosureExecutor();
 
     ObjectAccessControlManager getObjectAccessControlManager();
-
-    MessageManager getMessageManager();
 
     ConfigModuleManager getConfigModuleManager();
 

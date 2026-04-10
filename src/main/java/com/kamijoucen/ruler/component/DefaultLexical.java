@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.domain.common.Constant;
-import com.kamijoucen.ruler.domain.common.MessageType;
 import com.kamijoucen.ruler.domain.common.State;
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
@@ -160,9 +159,8 @@ public class DefaultLexical implements Lexical {
             type = TokenLookUp.symbol(symbol);
         }
         if (type == TokenType.UN_KNOW) {
-            String message = this.configuration.getMessageManager().buildMessage(
-                    MessageType.UNKNOWN_SYMBOL, new TokenLocation(line, column, fileName), symbol);
-            throw new SyntaxException(message);
+            throw new SyntaxException("unknown symbol '" + symbol + "'",
+                    new TokenLocation(line, column, fileName));
         }
         forward(step);
         append(symbol);
@@ -176,10 +174,8 @@ public class DefaultLexical implements Lexical {
             appendAndForward();
         }
         if (isOver()) {
-            String message = this.configuration.getMessageManager().buildMessage(
-                    MessageType.NOT_FOUND_STRING_END, new TokenLocation(line, column, fileName),
-                    "\"\"\"");
-            throw new SyntaxException(message);
+            throw new SyntaxException("unterminated string literal",
+                    new TokenLocation(line, column, fileName));
         }
         forward(3);
         makeToken(TokenType.STRING);
@@ -194,18 +190,14 @@ public class DefaultLexical implements Lexical {
                 appendAndForward();
             }
             if (isOver()) {
-                String message = this.configuration.getMessageManager().buildMessage(
-                        MessageType.NOT_FOUND_STRING_END, new TokenLocation(line, column, fileName),
-                        curStringFlag + "");
-                throw new SyntaxException(message);
+                throw new SyntaxException("unterminated string literal",
+                        new TokenLocation(line, column, fileName));
             }
             appendAndForward();
         }
         if (isOver()) {
-            String message = this.configuration.getMessageManager().buildMessage(
-                    MessageType.NOT_FOUND_STRING_END, new TokenLocation(line, column, fileName),
-                    curStringFlag + "");
-            throw new SyntaxException(message);
+            throw new SyntaxException("unterminated string literal",
+                    new TokenLocation(line, column, fileName));
         }
         forward();
         makeToken(TokenType.STRING);
@@ -230,10 +222,8 @@ public class DefaultLexical implements Lexical {
                 len++;
             }
             if (len == 0) {
-                String message = this.configuration.getMessageManager().buildMessage(
-                        MessageType.NUMBER_FORMAT_ERROR, new TokenLocation(line, column, fileName),
-                        buffer.toString());
-                throw new SyntaxException(message);
+                throw new SyntaxException("invalid number format '" + buffer + "'",
+                        new TokenLocation(line, column, fileName));
             }
             makeToken(TokenType.DOUBLE);
         } else {
@@ -255,10 +245,8 @@ public class DefaultLexical implements Lexical {
             forward();
         } else {
             if (isOver() || !IOUtil.isFirstIdentifierChar(charAt())) {
-                String message = configuration.getMessageManager().buildMessage(
-                        MessageType.ILLEGAL_IDENTIFIER, new TokenLocation(line, column, fileName),
-                        charAt() + "");
-                throw new SyntaxException(message);
+                throw new SyntaxException("illegal identifier '" + charAt() + "'",
+                        new TokenLocation(line, column, fileName));
             }
             int len = 0;
             while (isNotOver() && IOUtil.isIdentifierChar(charAt())) {
@@ -266,10 +254,8 @@ public class DefaultLexical implements Lexical {
                 len++;
             }
             if (len == 0) {
-                String message = configuration.getMessageManager().buildMessage(
-                        MessageType.ILLEGAL_IDENTIFIER, new TokenLocation(line, column, fileName),
-                        buffer.toString());
-                throw new SyntaxException(message);
+                throw new SyntaxException("illegal identifier '" + buffer + "'",
+                        new TokenLocation(line, column, fileName));
             }
         }
         makeToken(TokenType.OUT_IDENTIFIER);

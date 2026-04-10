@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.std.io;
 
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -30,7 +31,7 @@ public class PrintFileList implements RulerFunction {
         try {
             Files.list(path).map(Path::getFileName).forEach(System.out::println);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RulerRuntimeException(e.getMessage(), e);
         }
         return null;
     }

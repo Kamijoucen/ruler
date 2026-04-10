@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.logic.eval.expression;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.IfStatementNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -17,7 +17,7 @@ public class IfStatementEval implements BaseEval<IfStatementNode> {
     public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue conditionValue = node.getCondition().eval(scope, context);
         if (conditionValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("The condition of the if statement must be a boolean type!");
+            throw new RulerRuntimeException("if condition must be boolean");
         }
         BoolValue boolValue = (BoolValue) conditionValue;
         if (boolValue.getValue()) {

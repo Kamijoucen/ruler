@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.domain.runtime;
 
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.token.TokenLocation;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 
@@ -44,13 +44,13 @@ public class Scope {
         } else if (parentScope != null) {
             parentScope.update(name, value);
         } else {
-            throw SyntaxException.withSyntax(name + " 未定义");
+            throw new RulerRuntimeException("variable not defined: " + name);
         }
     }
 
     public void defineLocal(String name, BaseValue value) {
         if (valueSpace.containsKey(name)) {
-            throw SyntaxException.withSyntax("变量已定义：" + name);
+            throw new RulerRuntimeException("variable already defined: " + name);
         }
         putLocal(name, value);
     }

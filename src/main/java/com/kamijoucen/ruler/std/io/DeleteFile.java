@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.std.io;
 
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -27,7 +28,7 @@ public class DeleteFile implements RulerFunction {
         try {
             Files.delete(Paths.get((String) param[0]));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RulerRuntimeException(e.getMessage(), e);
         }
         return null;
     }

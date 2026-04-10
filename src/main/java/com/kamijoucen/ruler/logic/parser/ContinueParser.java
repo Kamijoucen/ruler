@@ -25,7 +25,7 @@ public class ContinueParser implements AtomParser {
         TokenStream tokenStream = manager.getTokenStream();
 
         if (!manager.isInLoop()) {
-            throw SyntaxException.withSyntax("continue语句只能在循环内使用", tokenStream.token());
+            throw new SyntaxException("continue must be inside a loop\t token=" + tokenStream.token());
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.KEY_CONTINUE);

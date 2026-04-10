@@ -52,7 +52,7 @@ public class UnaryExpressionParser implements AtomParser {
                 token.location
             );
         } else {
-            throw SyntaxException.withSyntax("不支持的一元运算符: " + token);
+            throw new SyntaxException("unsupported unary operator: " + token);
         }
     }
 }

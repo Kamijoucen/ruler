@@ -1,4 +1,5 @@
 package com.kamijoucen.ruler.component;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 
 public class StackDepthCheckOperation {
@@ -11,7 +12,7 @@ public class StackDepthCheckOperation {
             return;
         }
         if (context.getConfiguration().getMaxStackDepth() < currentStackDepth) {
-            throw new RuntimeException("Stack depth exceeded! max: " + context.getConfiguration().getMaxStackDepth());
+            throw new RulerRuntimeException("Stack depth exceeded! max: " + context.getConfiguration().getMaxStackDepth());
         }
     }
 

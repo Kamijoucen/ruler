@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.logic.function;
 
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -21,7 +22,7 @@ public class DatetimeFunction implements RulerFunction {
             return new Date();
         }
         if (!(param[0] instanceof String)) {
-            throw new RuntimeException("datetime function only accept string type");
+            throw new RulerRuntimeException("Datetime expects a string");
         }
         String date = (String) param[0];
         String pattern;

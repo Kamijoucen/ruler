@@ -1,9 +1,8 @@
 package com.kamijoucen.ruler.logic.operation;
 
-import java.util.Arrays;
 import java.util.function.BiFunction;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.util.IOUtil;
@@ -55,9 +54,8 @@ public class LtOperation implements BinaryOperation {
         if (operation != null) {
             return operation.apply(lValue, rValue);
         } else {
-            // TODO 这里 params 是空，左右值是lsh和rhs
-            throw SyntaxException.withSyntax(
-                    "Unsupported operation for these types: " + Arrays.toString(params));
+            throw new IllegalOperationException(
+                    "'<' operation not supported for: " + lValue.getType() + " and " + rValue.getType());
         }
     }
 }

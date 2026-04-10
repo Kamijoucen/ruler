@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.std.io;
 
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -30,14 +31,14 @@ public class WriteNewText implements RulerFunction {
             try {
                 Files.createFile(path);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RulerRuntimeException(e.getMessage(), e);
             }
         }
         String content = (String) param[1];
         try {
             Files.write(path, content.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RulerRuntimeException(e.getMessage(), e);
         }
         return null;
     }

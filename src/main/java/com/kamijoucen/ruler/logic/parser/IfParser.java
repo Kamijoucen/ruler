@@ -44,7 +44,7 @@ public class IfParser implements AtomParser {
             BaseNode statement = manager.parseStatement();
             thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
-            throw SyntaxException.withSyntax("if条件表达式后应该跟随'{'或':'", tokenStream.token());
+            throw new SyntaxException("expected '{' or ':' after if condition\t token=" + tokenStream.token());
         }
 
         BaseNode elseBlock = null;

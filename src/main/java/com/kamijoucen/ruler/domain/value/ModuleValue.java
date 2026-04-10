@@ -14,7 +14,7 @@ public class ModuleValue extends RsonValue {
     
     @Override
     public Map<String, BaseValue> getFields() {
-        throw new UnsupportedOperationException("module value can not get fields");
+        throw new UnsupportedOperationException("module value cannot get fields");
     }
 
     public Scope getModuleScope() {

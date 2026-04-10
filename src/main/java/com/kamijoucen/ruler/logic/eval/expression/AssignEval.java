@@ -6,7 +6,8 @@ import com.kamijoucen.ruler.domain.ast.expression.DotNode;
 import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -61,14 +62,14 @@ public class AssignEval implements BaseEval<AssignNode> {
             context.getConfiguration().getObjectAccessControlManager().modifyObject(rsonValue,
                     ((StringValue) indexValue).getValue(), value, context);
         } else {
-            throw SyntaxException.withSyntax(preValue.getType() + " is not indexable");
+            throw new IllegalOperationException(preValue.getType() + " is not indexable");
         }
         return value;
     }
 
     private BaseValue evalDotOperation(AssignNode node, Scope scope, RuntimeContext context, BaseValue preValue) {
         if (preValue.getType() != ValueType.RSON) {
-            throw SyntaxException.withSyntax(preValue.getType() + " is not indexable");
+            throw new IllegalOperationException(preValue.getType() + " is not indexable");
         }
         String fieldKey = ((NameNode) ((DotNode) node.getLhs()).getRhs()).name.name;
         BaseValue value = node.getRhs().eval(scope, context);
@@ -78,7 +79,7 @@ public class AssignEval implements BaseEval<AssignNode> {
 
     private void checkType(BaseValue value, ValueType expectedType, String errorMessage) {
         if (value.getType() != expectedType) {
-            throw SyntaxException.withSyntax(errorMessage);
+            throw new RulerRuntimeException(errorMessage);
         }
     }
 }

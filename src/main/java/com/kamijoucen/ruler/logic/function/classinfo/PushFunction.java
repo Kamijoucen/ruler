@@ -17,7 +17,7 @@ public class PushFunction implements RulerFunction {
     @Override
     public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
         if (self.getType() != ValueType.ARRAY) {
-            throw new IllegalArgumentException("push function can only be called by array");
+            throw new IllegalArgumentException("push can only be called on an array");
         }
         if (param == null || param.length == 0) {
             return null;

@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.component.Parsers;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
+import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
@@ -38,7 +39,7 @@ public class RuleParser implements AtomParser {
         // 解析规则代码块
         BaseNode blockNode = Parsers.BLOCK_PARSER.parse(manager);
         if (!(blockNode instanceof BlockNode)) {
-            throw new RuntimeException("解析rule语句时出错：rule后应该跟随代码块");
+            throw new SyntaxException("expected block after rule");
         }
 
         return new RuleStatementNode(

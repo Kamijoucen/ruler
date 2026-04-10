@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.service.Ruler;
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.service.RulerRunner;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import org.junit.Assert;
@@ -100,12 +100,12 @@ public class ArithmeticAndLogicTest {
         Assert.assertEquals(14L, r.first().toInteger());
     }
 
-    @Test(expected = SyntaxException.class)
+    @Test(expected = IllegalOperationException.class)
     public void testAddStringAndNumberThrows() {
         compileExpression("'a' + 1").run();
     }
 
-    @Test(expected = SyntaxException.class)
+    @Test(expected = IllegalOperationException.class)
     public void testBoolInArithmeticThrows() {
         compileExpression("true + 1").run();
     }
@@ -216,7 +216,7 @@ public class ArithmeticAndLogicTest {
         Assert.assertTrue(compileExpression("!false").run().first().toBoolean());
     }
 
-    @Test(expected = SyntaxException.class)
+    @Test(expected = IllegalOperationException.class)
     public void testNotOnNumberThrows() {
         compileExpression("!1").run();
     }

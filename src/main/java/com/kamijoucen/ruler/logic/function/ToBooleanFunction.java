@@ -26,7 +26,7 @@ public class ToBooleanFunction implements RulerFunction {
         if (strVal.equalsIgnoreCase("true") || strVal.equalsIgnoreCase("false")) {
             return BoolValue.get(strVal.equalsIgnoreCase("true"));
         }
-        throw new IllegalArgumentException("ToBoolean function can not convert " + baseValue + " to boolean");
+        throw new IllegalArgumentException("cannot convert " + baseValue + " to boolean");
     }
 
 }

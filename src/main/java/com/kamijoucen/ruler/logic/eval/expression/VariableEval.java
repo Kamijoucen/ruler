@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.logic.eval.expression;
 import com.kamijoucen.ruler.domain.ast.expression.VariableDefineNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -15,7 +15,7 @@ public class VariableEval implements BaseEval<VariableDefineNode> {
         NameNode lhs = (NameNode) node.getLhs();
         BaseValue defValue = scope.getByLocal(lhs.name.name);
         if (defValue != null) {
-            throw SyntaxException.withSyntax("variable '" + lhs.name.name + "' has been defined", lhs.getLocation());
+            throw new RulerRuntimeException("variable '" + lhs.name.name + "' already defined", lhs.getLocation());
         }
         if (node.getRhs() != null) {
             BaseValue rValue = node.getRhs().eval(scope, context);

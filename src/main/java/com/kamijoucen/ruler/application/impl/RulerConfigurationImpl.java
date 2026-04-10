@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.component.IntegerNumberCacheImpl;
 import com.kamijoucen.ruler.component.ValueConvertManagerImpl;
 import com.kamijoucen.ruler.component.ObjectAccessControlManagerImpl;
 import com.kamijoucen.ruler.component.SpiLoaderManagerImpl;
-import com.kamijoucen.ruler.component.MessageManagerImpl;
 import com.kamijoucen.ruler.component.ConfigModuleManagerImpl;
 import com.kamijoucen.ruler.component.CustomImportLoaderManagerImpl;
 import com.kamijoucen.ruler.component.RuntimeBehaviorFactoryImpl;
@@ -23,7 +22,6 @@ import com.kamijoucen.ruler.component.ConfigModuleManager;
 import com.kamijoucen.ruler.component.CreateRuntimeContextFactory;
 import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 import com.kamijoucen.ruler.component.IntegerNumberCache;
-import com.kamijoucen.ruler.component.MessageManager;
 import com.kamijoucen.ruler.component.ObjectAccessControlManager;
 import com.kamijoucen.ruler.component.ParamTypePreProcess;
 import com.kamijoucen.ruler.component.RClassManager;
@@ -93,8 +91,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
             new ObjectAccessControlManagerImpl();
 
     private SpiLoaderManager spiLoaderManager = new SpiLoaderManagerImpl();
-
-    private MessageManager messageManager = new MessageManagerImpl();
 
     private ConfigModuleManager configModuleManager = new ConfigModuleManagerImpl();
 
@@ -226,11 +222,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public MessageManager getMessageManager() {
-        return messageManager;
-    }
-
-    @Override
     public ConfigModuleManager getConfigModuleManager() {
         return configModuleManager;
     }
@@ -242,10 +233,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     public void setCustomImportLoadManager(CustomImportLoaderManager customImportLoadManager) {
         this.customImportLoadManager = customImportLoadManager;
-    }
-
-    public void setMessageManager(MessageManager messageManager) {
-        this.messageManager = messageManager;
     }
 
     public void setRClassFactory(RClassManager metaInfoFactory) {

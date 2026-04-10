@@ -25,7 +25,7 @@ public class ToNumberFunction implements RulerFunction {
         }
         BaseValue numberValue = ConvertUtil.stringToValue(String.valueOf(baseValue), context);
         if (numberValue == null) {
-            throw new IllegalArgumentException("ToNumber function can not convert " + baseValue + " to number");
+            throw new IllegalArgumentException("cannot convert " + baseValue + " to number");
         }
         return numberValue;
     }

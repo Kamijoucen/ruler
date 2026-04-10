@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.logic.operation;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.util.IOUtil;
@@ -10,7 +10,6 @@ import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 
-import java.util.Arrays;
 import java.util.function.BiFunction;
 
 public class DivOperation implements BinaryOperation {
@@ -45,7 +44,8 @@ public class DivOperation implements BinaryOperation {
         if (operation != null) {
             return operation.apply(lValue, rValue);
         } else {
-            throw SyntaxException.withSyntax("该值不支持做除法:" + Arrays.toString(params));
+            throw new IllegalOperationException(
+                    "'div' operation not supported for: " + lValue.getType() + " and " + rValue.getType());
         }
     }
 }

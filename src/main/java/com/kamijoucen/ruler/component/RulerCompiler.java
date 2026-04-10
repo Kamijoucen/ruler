@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
-import com.kamijoucen.ruler.domain.common.MessageType;
+
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.module.RulerModule;
@@ -40,10 +40,8 @@ public class RulerCompiler {
         Parser parser = new AtomParserManager(tokenStream, configuration);
         BaseNode expression = parser.parseExpression();
         if (tokenStream.token().type != TokenType.EOF) {
-            String message =
-                    configuration.getMessageManager().buildMessage(MessageType.ILLEGAL_IDENTIFIER,
-                            tokenStream.token().location, tokenStream.token().name);
-            throw new SyntaxException(message);
+            throw new SyntaxException("illegal identifier '" + tokenStream.token().name + "'",
+                    tokenStream.token().location);
         }
         module.setStatements(CollectionUtil.list(expression));
         return module;

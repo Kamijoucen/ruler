@@ -42,7 +42,7 @@ public class IndexOperation implements BinaryOperation {
             return new StringValue(String.valueOf(str.getValue().charAt((int) index.getValue())));
         } else {
             // TODO message fmt
-            throw new SyntaxException("Index operation not supported");
+            throw new SyntaxException("index operation not supported");
         }
     }
 

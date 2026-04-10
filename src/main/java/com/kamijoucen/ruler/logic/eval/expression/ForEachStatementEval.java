@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.common.QuadConsumer;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.component.LoopCountCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -29,7 +29,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
     public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue listValue = node.getList().eval(scope, context);
         if (listValue.getType() != ValueType.ARRAY) {
-            throw SyntaxException.withSyntax("The value of the expression must be an array!");
+            throw new RulerRuntimeException("for-each requires an array");
         }
         List<BaseValue> arrayValues = ((ArrayValue) listValue).getValues();
         Token loopName = node.getLoopName();

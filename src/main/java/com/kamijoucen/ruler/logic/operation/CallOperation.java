@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.logic.operation;
 
 import java.util.Arrays;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.ast.expression.DotNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
@@ -49,7 +50,7 @@ public class CallOperation implements BinaryOperation {
                         printObj = ((NameNode) ((DotNode) lhs).getRhs()).name.name;
                     }
                     // TODO 优化错误信息
-                    throw new IllegalArgumentException(printObj + " not is a function!");
+                    throw new RulerRuntimeException(printObj + " is not a function");
                 }
             }
         } finally {

@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.logic.operation;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -14,14 +14,14 @@ public class OrOperation implements BinaryOperation {
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         if (lValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("The '||' operation is not supported for this value: " + lValue);
+            throw new IllegalOperationException("'||' not supported for: " + lValue);
         }
         if (((BoolValue) lValue).getValue()) {
             return BoolValue.get(true);
         }
         BaseValue rValue = rhs.eval(scope, context);
         if (rValue.getType() != ValueType.BOOL) {
-            throw SyntaxException.withSyntax("The '||' operation is not supported for this value: " + rValue);
+            throw new IllegalOperationException("'||' not supported for: " + rValue);
         }
         return rValue;
     }

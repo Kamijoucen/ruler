@@ -20,15 +20,15 @@ public class SyntaxCheckUtil {
 
     public static void importPathCheck(String[] pathParts) {
         if (pathParts == null || pathParts.length == 0) {
-            throw SyntaxException.withSyntax("The import path is empty");
+            throw new SyntaxException("import path is empty");
         }
         for (String part : pathParts) {
             if (IOUtil.isBlank(part)) {
-                throw SyntaxException.withSyntax("Illegal import matches");
+                throw new SyntaxException("invalid import path segment");
             }
             for (char ch : part.toCharArray()) {
                 if (!IOUtil.isAvailablePathChar(ch)) {
-                    throw SyntaxException.withSyntax("Illegal character");
+                    throw new SyntaxException("invalid character in import path");
                 }
             }
         }
@@ -37,7 +37,7 @@ public class SyntaxCheckUtil {
     public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
         BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
         if (typeVal.getType() == ValueType.FAILURE) {
-            throw SyntaxException.withSyntax("表达式类型错误：" + node.toString());
+            throw new SyntaxException("type error: " + node);
         }
     }
 
@@ -47,7 +47,7 @@ public class SyntaxCheckUtil {
             int oldAliasSize = aliasSet.size();
             aliasSet.add(node.getAlias());
             if (aliasSet.size() == oldAliasSize) {
-                throw SyntaxException.withSyntax("别名重复:" + node.getAlias());
+                throw new SyntaxException("duplicate alias: " + node.getAlias());
             }
         }
     }

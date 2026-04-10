@@ -54,7 +54,7 @@ public class ForEachParser implements AtomParser {
             BaseNode statement = manager.parseStatement();
             blockNode = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
-            throw SyntaxException.withSyntax("for循环条件后应该跟随'{'或':'", tokenStream.token());
+            throw new SyntaxException("expected '{' or ':' after for condition\t token=" + tokenStream.token());
         }
 
         // 恢复循环状态

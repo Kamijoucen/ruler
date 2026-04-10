@@ -47,8 +47,7 @@ public class WhileParser implements AtomParser {
             BaseNode statement = manager.parseStatement();
             blockAST = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
-            throw SyntaxException.withSyntax("while condition expression expected ':' or '{'",
-                    tokenStream.token());
+            throw new SyntaxException("expected '{' or ': after while condition\t token=" + tokenStream.token());
         }
 
         // 恢复循环状态

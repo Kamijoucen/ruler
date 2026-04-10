@@ -1,27 +1,14 @@
 package com.kamijoucen.ruler.domain.exception;
 
-import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenLocation;
 
-public class SyntaxException extends RuntimeException {
+public class SyntaxException extends RulerRuntimeException {
 
-    public SyntaxException(String s) {
-        super(s);
+    public SyntaxException(String message) {
+        super(message);
     }
 
-    @Deprecated
-    public static SyntaxException withSyntax(String msg) {
-        return new SyntaxException("syntax error! " + msg);
+    public SyntaxException(String message, TokenLocation location) {
+        super(message, location);
     }
-
-    @Deprecated
-    public static SyntaxException withSyntax(String msg, Token token) {
-        return new SyntaxException("syntax error! " + msg + "\t token=" + token);
-    }
-
-    @Deprecated
-    public static SyntaxException withSyntax(String msg, TokenLocation location) {
-        return new SyntaxException("syntax error! " + msg + "\t location=" + location);
-    }
-
 }

@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.service;
 import java.io.File;
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.application.impl.StartConfig;
-import com.kamijoucen.ruler.service.ShellRunner;
 import com.kamijoucen.ruler.logic.util.IOUtil;
 
 public class Main {

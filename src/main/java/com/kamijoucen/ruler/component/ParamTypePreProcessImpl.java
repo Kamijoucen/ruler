@@ -45,7 +45,7 @@ public class ParamTypePreProcessImpl implements ParamTypePreProcess {
 
         ValueConvert convert = this.rulerConfiguration.getValueConvertManager().getConverter(value);
         if (convert == null) {
-            throw new IllegalArgumentException("不支持的参数：" + value.getClass());
+            throw new IllegalArgumentException("unsupported parameter type: " + value.getClass());
         }
         return new RulerParameter(convert.getType(), entry.getKey(), value);
     }

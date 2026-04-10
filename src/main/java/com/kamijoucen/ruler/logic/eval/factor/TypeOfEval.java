@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.logic.eval.factor;
 
 import com.kamijoucen.ruler.domain.ast.factor.TypeOfNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.component.TypeMapping;
@@ -16,7 +16,7 @@ public class TypeOfEval implements BaseEval<TypeOfNode> {
         BaseValue value = node.getExp().eval(scope, context);
         String type = TypeMapping.find(value.getType());
         if (IOUtil.isBlank(type)) {
-            throw SyntaxException.withSyntax("typeof unsupported expression", node.getLocation());
+            throw new RulerRuntimeException("unsupported expression for typeof", node.getLocation());
         }
         return new StringValue(type);
     }

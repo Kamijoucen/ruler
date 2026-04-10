@@ -35,7 +35,7 @@ public class InfixParser implements AtomParser {
         ClosureDefineNode functionNode = (ClosureDefineNode) new FunParser().parse(manager);
         String infixName = functionNode.getName();
         if (IOUtil.isBlank(infixName)) {
-            throw SyntaxException.withSyntax("infix function name is blank!", infixToken);
+            throw new SyntaxException("infix function name is blank!\t token=" + infixToken);
         }
         return new InfixDefinitionNode(functionNode, infixToken.location);
     }

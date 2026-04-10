@@ -3,6 +3,7 @@ package com.kamijoucen.ruler.logic.eval.expression;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.DotNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -20,7 +21,7 @@ public class DotEval implements BaseEval<DotNode> {
 
         BaseNode nodeName = node.getRhs();
         if (!(nodeName instanceof NameNode)) {
-            throw new IllegalArgumentException();
+            throw new RulerRuntimeException("dot expression rhs must be an identifier");
         }
         String callName = ((NameNode) nodeName).name.name;
         BaseValue callValue = context.getConfiguration().getObjectAccessControlManager().accessObject(prevValue,

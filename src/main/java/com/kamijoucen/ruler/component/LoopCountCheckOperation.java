@@ -1,4 +1,5 @@
 package com.kamijoucen.ruler.component;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 
@@ -13,7 +14,7 @@ public class LoopCountCheckOperation {
             return;
         }
         if (context.getConfiguration().getMaxLoopNumber() < ++count) {
-            throw new RuntimeException("Loop count exceeded! max: " + context.getConfiguration().getMaxLoopNumber()
+            throw new RulerRuntimeException("Loop count exceeded! max: " + context.getConfiguration().getMaxLoopNumber()
                     + "\t" + node.getLocation().toString());
         }
     }

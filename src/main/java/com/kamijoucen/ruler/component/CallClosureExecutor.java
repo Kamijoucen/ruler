@@ -14,6 +14,7 @@ import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.ArrayValue;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.ClosureValue;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.value.NullValue;
 
 public class CallClosureExecutor {
@@ -46,7 +47,7 @@ public class CallClosureExecutor {
                     callScope.putLocal(defParamNode.getName().name.name, params[i]);
                 }
             } else {
-                throw new IllegalArgumentException();
+                throw new RulerRuntimeException("unsupported parameter node type");
             }
         }
         // call function

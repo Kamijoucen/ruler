@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.factor.BreakNode;
-import com.kamijoucen.ruler.domain.common.MessageType;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
@@ -28,11 +27,8 @@ public class BreakParser implements AtomParser {
 
         AssertUtil.assertToken(token, TokenType.KEY_BREAK);
 
-        // 检查是否在循环内
         if (!manager.isInLoop()) {
-            String message = manager.getConfiguration().getMessageManager()
-                    .buildMessage(MessageType.BREAK_NOT_IN_LOOP, token.location);
-            throw new SyntaxException(message);
+            throw new SyntaxException("break must be inside a loop", token.location);
         }
 
         tokenStream.nextToken();

@@ -11,7 +11,6 @@ import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
 import com.kamijoucen.ruler.domain.ast.expression.IndexNode;
 import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
-import com.kamijoucen.ruler.domain.common.MessageType;
 import com.kamijoucen.ruler.domain.common.OperationDefine;
 import com.kamijoucen.ruler.logic.parser.BlockParser;
 import com.kamijoucen.ruler.logic.parser.ForEachParser;
@@ -111,7 +110,7 @@ public class AtomParserManager implements Parser {
 
         // 不允许出现无别名切无中缀标识的导入语句
         if (aliasToken == null && !hasImportInfix) {
-            throw SyntaxException.withSyntax(
+            throw new SyntaxException(
                     "import statement without alias and infix is not allowed",
                     importToken.location);
         }
@@ -161,9 +160,7 @@ public class AtomParserManager implements Parser {
         }
 
         if (statement == null) {
-            String message = configuration.getMessageManager()
-                    .buildMessage(MessageType.UNKNOWN_EXPRESSION_START, token.location, token.name);
-            throw new SyntaxException(message);
+            throw new SyntaxException("unknown expression start '" + token.name + "'", token.location);
         }
 
         return statement;
@@ -182,9 +179,7 @@ public class AtomParserManager implements Parser {
         BaseNode lhs = parsePrimaryExpression();
         if (lhs == null) {
             Token token = tokenStream.token();
-            String message = configuration.getMessageManager()
-                    .buildMessage(MessageType.UNKNOWN_EXPRESSION_START, token.location, token.name);
-            throw new SyntaxException(message);
+            throw new SyntaxException("unknown expression start '" + token.name + "'", token.location);
         }
         return parseBinaryNode(0, lhs);
     }
@@ -211,7 +206,7 @@ public class AtomParserManager implements Parser {
             if (curOpToken.type == TokenType.ASSIGN) {
                 if (!(lhs instanceof IndexNode) && !(lhs instanceof NameNode)
                         && !(lhs instanceof DotNode)) {
-                    throw SyntaxException.withSyntax("非法的赋值操作", curOpToken);
+                    throw new SyntaxException("invalid assignment target\t token=" + curOpToken);
                 }
                 lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
             } else {

@@ -32,7 +32,7 @@ public class NumberParser implements AtomParser {
         } else if (token.type == TokenType.DOUBLE) {
             return new DoubleNode(Double.parseDouble(token.name), token.location);
         } else {
-            throw SyntaxException.withSyntax("需要一个数字", token);
+            throw new SyntaxException("expected a number\t token=" + token);
         }
     }
 }

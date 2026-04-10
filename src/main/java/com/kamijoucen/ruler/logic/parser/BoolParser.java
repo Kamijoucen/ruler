@@ -25,7 +25,7 @@ public class BoolParser implements AtomParser {
         Token token = tokenStream.token();
 
         if (token.type != TokenType.KEY_TRUE && token.type != TokenType.KEY_FALSE) {
-            throw new IllegalStateException("需要boolean值");
+            throw new IllegalStateException("expected boolean value");
         }
 
         boolean value = token.type == TokenType.KEY_TRUE;

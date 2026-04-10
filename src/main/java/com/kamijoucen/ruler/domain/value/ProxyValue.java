@@ -16,7 +16,7 @@ public class ProxyValue extends RsonValue {
 
     @Override
     public Map<String, BaseValue> getFields() {
-        throw new UnsupportedOperationException("proxy value can not get fields");
+        throw new UnsupportedOperationException("proxy value cannot get fields");
     }
 
     public BaseValue getValue() {
