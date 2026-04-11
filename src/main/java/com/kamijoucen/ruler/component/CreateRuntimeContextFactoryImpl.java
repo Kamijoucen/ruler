@@ -2,6 +2,7 @@ package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
+import com.kamijoucen.ruler.domain.runtime.TypeScope;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 
@@ -26,6 +27,7 @@ public class CreateRuntimeContextFactoryImpl implements CreateRuntimeContextFact
         if (!CollectionUtil.isEmpty(outSpace)) {
             runtimeContext.setOutSpace(outSpace);
         }
+        runtimeContext.setTypeScope(new TypeScope(null));
         return runtimeContext;
     }
 }

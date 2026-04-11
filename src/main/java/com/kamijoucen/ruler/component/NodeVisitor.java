@@ -4,68 +4,67 @@ import com.kamijoucen.ruler.domain.ast.expression.*;
 import com.kamijoucen.ruler.domain.ast.factor.*;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
 
-public interface NodeVisitor {
+public interface NodeVisitor<T> {
 
-    BaseValue eval(NameNode node, Scope scope, RuntimeContext context);
+    T eval(NameNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context);
+    T eval(OutNameNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(IntegerNode node, Scope scope, RuntimeContext context);
+    T eval(IntegerNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(DoubleNode node, Scope scope, RuntimeContext context);
+    T eval(DoubleNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(BoolNode node, Scope scope, RuntimeContext context);
+    T eval(BoolNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(StringNode node, Scope scope, RuntimeContext context);
+    T eval(StringNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(StringInterpolationNode node, Scope scope, RuntimeContext context);
+    T eval(StringInterpolationNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context);
+    T eval(BinaryOperationNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context);
+    T eval(UnaryOperationNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context);
+    T eval(ArrayNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(NullNode node, Scope scope, RuntimeContext context);
+    T eval(NullNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(RsonNode node, Scope scope, RuntimeContext context);
+    T eval(RsonNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context);
+    T eval(TypeOfNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(BlockNode node, Scope scope, RuntimeContext context);
+    T eval(BlockNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context);
+    T eval(IfStatementNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(AssignNode node, Scope scope, RuntimeContext context);
+    T eval(AssignNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context);
+    T eval(WhileStatementNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context);
+    T eval(ForEachStatementNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(BreakNode node, Scope scope, RuntimeContext context);
+    T eval(BreakNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context);
+    T eval(ContinueNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(CallNode node, Scope scope, RuntimeContext context);
+    T eval(CallNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(IndexNode node, Scope scope, RuntimeContext context);
+    T eval(IndexNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(DotNode node, Scope scope, RuntimeContext context);
+    T eval(DotNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context);
+    T eval(ClosureDefineNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(ReturnNode node, Scope scope, RuntimeContext context);
+    T eval(ReturnNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context);
+    T eval(VariableDefineNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(ImportNode node, Scope scope, RuntimeContext context);
+    T eval(ImportNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context);
+    T eval(RuleStatementNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context);
+    T eval(InfixDefinitionNode node, Scope scope, RuntimeContext context);
 
-    BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context);
+    T eval(DefaultParamValNode node, Scope scope, RuntimeContext context);
 
 }

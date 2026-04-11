@@ -1,4 +1,5 @@
 package com.kamijoucen.ruler.domain.ast.expression;
+import com.kamijoucen.ruler.domain.type.RulerType;
 
 import com.kamijoucen.ruler.domain.ast.AbstractBaseNode;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
@@ -27,7 +28,7 @@ public class ForEachStatementNode extends AbstractBaseNode {
     }
 
     @Override
-    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
+    public RulerType typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 

@@ -1,93 +1,67 @@
 package com.kamijoucen.ruler.logic.typecheck;
 
 import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
-import com.kamijoucen.ruler.logic.BaseEval;
+import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.domain.type.*;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
 
-public class BinaryChecker implements BaseEval<BinaryOperationNode> {
+public class BinaryChecker {
 
-    private static final BaseValue[][] typeBaseMap;
-    private static final BaseValue[][] typeAddMap;
-    private static final BaseValue[][] typeCompareMap;
+    public RulerType eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
+        RulerType lhs = node.getLhs().typeCheck(scope, context);
+        RulerType rhs = node.getRhs().typeCheck(scope, context);
 
-    static {
-        typeBaseMap = new BaseValue[ValueType.values().length][ValueType.values().length];
-        typeAddMap = new BaseValue[ValueType.values().length][ValueType.values().length];
-        typeCompareMap = new BaseValue[ValueType.values().length][ValueType.values().length];
-
-        initBaseMap();
-        initAddMap();
-        initCompareMap();
-    }
-
-    private static void initCompareMap() {
-        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = BoolType.INSTANCE;
-        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = BoolType.INSTANCE;
-
-        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = BoolType.INSTANCE;
-        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = BoolType.INSTANCE;
-    }
-
-    private static void initBaseMap() {
-        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = IntegerType.INSTANCE;
-        typeBaseMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-
-        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = DoubleType.INSTANCE;
-        typeBaseMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-    }
-
-    private static void initAddMap() {
-        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.INTEGER.ordinal()] = IntegerType.INSTANCE;
-        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.INTEGER.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
-
-        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.INTEGER.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.DOUBLE.ordinal()] = DoubleType.INSTANCE;
-        typeAddMap[ValueType.DOUBLE.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
-
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.STRING.ordinal()] = StringType.INSTANCE;
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.INTEGER.ordinal()] = StringType.INSTANCE;
-        typeAddMap[ValueType.STRING.ordinal()][ValueType.DOUBLE.ordinal()] = StringType.INSTANCE;
-    }
-
-    @Override
-    public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        BaseValue val1 = node.getLhs().typeCheck(scope, context);
-        BaseValue val2 = node.getRhs().typeCheck(scope, context);
-        if (val1.getType() == ValueType.FAILURE || val2.getType() == ValueType.FAILURE) {
-            return FailureType.INSTANCE;
+        if (lhs.getKind() == TypeKind.UNKNOWN || rhs.getKind() == TypeKind.UNKNOWN) {
+            return UnknownType.INSTANCE;
         }
+
         TokenType op = node.getOp();
+        String opName = node.getOpName();
+
         if (op == TokenType.EQ || op == TokenType.NE) {
             return BoolType.INSTANCE;
         }
-        if (val1.getType() == ValueType.UN_KNOWN || val2.getType() == ValueType.UN_KNOWN) {
-            return UnknownType.INSTANCE;
-        }
-        BaseValue typeValue = getBaseValue(op, val1, val2);
-        if (typeValue == null) {
-            return FailureType.INSTANCE;
-        }
-        return typeValue;
-    }
 
-    private static BaseValue getBaseValue(TokenType op, BaseValue val1, BaseValue val2) {
-        BaseValue typeValue = null;
-        if (op == TokenType.ADD) {
-            typeValue = typeAddMap[val1.getType().ordinal()][val2.getType().ordinal()];
-        } else if (op == TokenType.SUB) {
-            typeValue = typeBaseMap[val1.getType().ordinal()][val2.getType().ordinal()];
-        } else if (op == TokenType.MUL || op == TokenType.DIV) {
-            typeValue = typeBaseMap[val1.getType().ordinal()][val2.getType().ordinal()];
-        } else if (op == TokenType.LT || op == TokenType.GT || op == TokenType.LE || op == TokenType.GE) {
-            typeValue = typeBaseMap[val1.getType().ordinal()][val2.getType().ordinal()];
+        switch (op) {
+            case ADD:
+            case SUB:
+            case MUL:
+            case DIV:
+                if (!lhs.isNumeric() || !rhs.isNumeric()) {
+                    throw new SyntaxException(
+                            "operator '" + opName + "' requires numeric types but got "
+                                    + lhs.getKind() + " and " + rhs.getKind(),
+                            node.getLocation());
+                }
+                return (lhs.getKind() == TypeKind.DOUBLE || rhs.getKind() == TypeKind.DOUBLE)
+                        ? DoubleType.INSTANCE : IntegerType.INSTANCE;
+            case STRING_ADD:
+                return StringType.INSTANCE;
+            case LT:
+            case GT:
+            case LE:
+            case GE:
+                if (!lhs.isNumeric() || !rhs.isNumeric()) {
+                    throw new SyntaxException(
+                            "comparison operator '" + opName + "' requires numeric types but got "
+                                    + lhs.getKind() + " and " + rhs.getKind(),
+                            node.getLocation());
+                }
+                return BoolType.INSTANCE;
+            case AND:
+            case OR:
+                if (lhs.getKind() != TypeKind.BOOL || rhs.getKind() != TypeKind.BOOL) {
+                    throw new SyntaxException(
+                            "logical operator '" + opName + "' requires BOOL types but got "
+                                    + lhs.getKind() + " and " + rhs.getKind(),
+                            node.getLocation());
+                }
+                return BoolType.INSTANCE;
+            default:
+                return UnknownType.INSTANCE;
         }
-        return typeValue;
     }
 
 }

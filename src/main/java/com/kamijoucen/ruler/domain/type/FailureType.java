@@ -1,9 +1,6 @@
 package com.kamijoucen.ruler.domain.type;
 
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
-
-public class FailureType implements BaseValue {
+public class FailureType implements RulerType {
 
     public static final FailureType INSTANCE = new FailureType();
 
@@ -11,8 +8,8 @@ public class FailureType implements BaseValue {
     }
 
     @Override
-    public ValueType getType() {
-        return ValueType.FAILURE;
+    public TypeKind getKind() {
+        return TypeKind.FAILURE;
     }
 
 }

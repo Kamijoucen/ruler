@@ -13,39 +13,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class AbstractVisitor implements NodeVisitor {
+public abstract class AbstractVisitor<T> implements NodeVisitor<T> {
     @Override
-    public BaseValue eval(NameNode node, Scope scope, RuntimeContext context) {
+    public T eval(NameNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(OutNameNode node, Scope scope, RuntimeContext context) {
+    public T eval(OutNameNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(IntegerNode node, Scope scope, RuntimeContext context) {
+    public T eval(IntegerNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(DoubleNode node, Scope scope, RuntimeContext context) {
+    public T eval(DoubleNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(BoolNode node, Scope scope, RuntimeContext context) {
+    public T eval(BoolNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(StringNode node, Scope scope, RuntimeContext context) {
+    public T eval(StringNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(StringInterpolationNode node, Scope scope, RuntimeContext context) {
+    public T eval(StringInterpolationNode node, Scope scope, RuntimeContext context) {
         if (CollectionUtil.isEmpty(node.getParts())) {
             return null;
         }
@@ -56,20 +56,20 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
+    public T eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         node.getLhs().eval(scope, context);
         node.getRhs().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
+    public T eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
         node.getExp().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(ArrayNode node, Scope scope, RuntimeContext context) {
+    public T eval(ArrayNode node, Scope scope, RuntimeContext context) {
         if (CollectionUtil.isEmpty(node.getValues())) {
             return null;
         }
@@ -80,12 +80,12 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(NullNode node, Scope scope, RuntimeContext context) {
+    public T eval(NullNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(RsonNode node, Scope scope, RuntimeContext context) {
+    public T eval(RsonNode node, Scope scope, RuntimeContext context) {
         Map<String, BaseNode> properties = node.getProperties();
         if (properties == null) {
             return null;
@@ -97,13 +97,13 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(TypeOfNode node, Scope scope, RuntimeContext context) {
+    public T eval(TypeOfNode node, Scope scope, RuntimeContext context) {
         node.getExp().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(BlockNode node, Scope scope, RuntimeContext context) {
+    public T eval(BlockNode node, Scope scope, RuntimeContext context) {
         List<BaseNode> blocks = node.getBlocks();
         if (CollectionUtil.isEmpty(blocks)) {
             return null;
@@ -115,7 +115,7 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
+    public T eval(IfStatementNode node, Scope scope, RuntimeContext context) {
         node.getCondition().eval(scope, context);
         node.getThenBlock().eval(scope, context);
         node.getElseBlock().eval(scope, context);
@@ -123,52 +123,52 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(AssignNode node, Scope scope, RuntimeContext context) {
+    public T eval(AssignNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
+    public T eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
         node.getCondition().eval(scope, context);
         node.getBlock().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
+    public T eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
         node.getList().eval(scope, context);
         node.getBlock().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(BreakNode node, Scope scope, RuntimeContext context) {
+    public T eval(BreakNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(ContinueNode node, Scope scope, RuntimeContext context) {
+    public T eval(ContinueNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(CallNode node, Scope scope, RuntimeContext context) {
+    public T eval(CallNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(IndexNode node, Scope scope, RuntimeContext context) {
+    public T eval(IndexNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
     @Override
-    public BaseValue eval(DotNode node, Scope scope, RuntimeContext context) {
+    public T eval(DotNode node, Scope scope, RuntimeContext context) {
         return null;
     }
 
 
     @Override
-    public BaseValue eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
+    public T eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
         for (BaseNode baseNode : node.getParam()) {
             baseNode.eval(scope, context);
         }
@@ -177,7 +177,7 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(ReturnNode node, Scope scope, RuntimeContext context) {
+    public T eval(ReturnNode node, Scope scope, RuntimeContext context) {
         for (BaseNode baseNode : node.getParam()) {
             baseNode.eval(scope, context);
         }
@@ -185,7 +185,7 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
+    public T eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
         BaseNode lhs = node.getLhs();
         Objects.requireNonNull(lhs);
         lhs.eval(scope, context);
@@ -197,26 +197,26 @@ public abstract class AbstractVisitor implements NodeVisitor {
     }
 
     @Override
-    public BaseValue eval(ImportNode node, Scope scope, RuntimeContext context) {
+    public T eval(ImportNode node, Scope scope, RuntimeContext context) {
         AssertUtil.TODO(null);
         return null;
     }
 
     @Override
-    public BaseValue eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
+    public T eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
         node.getAlias().eval(scope, context);
         node.getBlock().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
+    public T eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
         node.getFunction().eval(scope, context);
         return null;
     }
 
     @Override
-    public BaseValue eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
+    public T eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
         node.getName().eval(scope, context);
         node.getExp().eval(scope, context);
         return null;

@@ -1,9 +1,6 @@
 package com.kamijoucen.ruler.domain.type;
 
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
-
-public class NullType implements BaseValue {
+public class NullType implements RulerType {
 
     public static final NullType INSTANCE = new NullType();
 
@@ -11,8 +8,8 @@ public class NullType implements BaseValue {
     }
 
     @Override
-    public ValueType getType() {
-        return ValueType.NULL;
+    public TypeKind getKind() {
+        return TypeKind.NULL;
     }
 
 }

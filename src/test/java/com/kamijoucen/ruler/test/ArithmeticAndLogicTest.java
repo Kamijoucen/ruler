@@ -100,12 +100,12 @@ public class ArithmeticAndLogicTest {
         Assert.assertEquals(14L, r.first().toInteger());
     }
 
-    @Test(expected = IllegalOperationException.class)
+    @Test(expected = com.kamijoucen.ruler.domain.exception.SyntaxException.class)
     public void testAddStringAndNumberThrows() {
         compileExpression("'a' + 1").run();
     }
 
-    @Test(expected = IllegalOperationException.class)
+    @Test(expected = com.kamijoucen.ruler.domain.exception.SyntaxException.class)
     public void testBoolInArithmeticThrows() {
         compileExpression("true + 1").run();
     }
@@ -193,7 +193,7 @@ public class ArithmeticAndLogicTest {
 
     @Test
     public void testAndShortCircuit() {
-        RulerResult r = compileScript("var x = 0; false && (x = 1); return x;").run();
+        RulerResult r = compileScript("var f = fun() { return true; }; var x = 0; false && f(); return x;").run();
         Assert.assertEquals(0L, r.first().toInteger());
     }
 
@@ -206,7 +206,7 @@ public class ArithmeticAndLogicTest {
 
     @Test
     public void testOrShortCircuit() {
-        RulerResult r = compileScript("var x = 0; true || (x = 1); return x;").run();
+        RulerResult r = compileScript("var f = fun() { return true; }; var x = 0; true || f(); return x;").run();
         Assert.assertEquals(0L, r.first().toInteger());
     }
 
@@ -216,7 +216,7 @@ public class ArithmeticAndLogicTest {
         Assert.assertTrue(compileExpression("!false").run().first().toBoolean());
     }
 
-    @Test(expected = IllegalOperationException.class)
+    @Test(expected = com.kamijoucen.ruler.domain.exception.SyntaxException.class)
     public void testNotOnNumberThrows() {
         compileExpression("!1").run();
     }

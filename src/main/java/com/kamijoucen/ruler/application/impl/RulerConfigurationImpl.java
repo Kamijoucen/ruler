@@ -50,6 +50,7 @@ import com.kamijoucen.ruler.component.CallClosureExecutor;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.component.TypeCheckVisitor;
+import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.util.IOUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.FunctionValue;
@@ -61,9 +62,9 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private final List<ImportNode> globalImport = new ArrayList<>();
 
-    private NodeVisitor typeCheckVisitor = new TypeCheckVisitor();
+    private NodeVisitor<RulerType> typeCheckVisitor = new TypeCheckVisitor();
 
-    private NodeVisitor evalVisitor = new EvalVisitor();
+    private NodeVisitor<BaseValue> evalVisitor = new EvalVisitor();
 
     private ImportCacheManager importCache = new ImportCacheManager();
 
@@ -182,12 +183,12 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public NodeVisitor getTypeCheckVisitor() {
+    public NodeVisitor<RulerType> getTypeCheckVisitor() {
         return typeCheckVisitor;
     }
 
     @Override
-    public NodeVisitor getEvalVisitor() {
+    public NodeVisitor<BaseValue> getEvalVisitor() {
         return evalVisitor;
     }
 
@@ -299,11 +300,11 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.globalScope = globalScope;
     }
 
-    public void setTypeCheckVisitor(NodeVisitor typeCheckVisitor) {
+    public void setTypeCheckVisitor(NodeVisitor<RulerType> typeCheckVisitor) {
         this.typeCheckVisitor = typeCheckVisitor;
     }
 
-    public void setEvalVisitor(NodeVisitor evalVisitor) {
+    public void setEvalVisitor(NodeVisitor<BaseValue> evalVisitor) {
         this.evalVisitor = evalVisitor;
     }
 

@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 
-public class EvalVisitor extends AbstractVisitor {
+public class EvalVisitor extends AbstractVisitor<BaseValue> {
 
     private static final NameEval nameEval = new NameEval();
     private static final OutNameEval outNameEval = new OutNameEval();

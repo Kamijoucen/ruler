@@ -8,10 +8,14 @@ import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.module.RulerModule;
 import com.kamijoucen.ruler.domain.module.RulerScript;
 import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
+import com.kamijoucen.ruler.domain.type.FailureType;
+import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.logic.util.SyntaxCheckUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class RulerCompiler {
@@ -44,6 +48,7 @@ public class RulerCompiler {
                     tokenStream.token().location);
         }
         module.setStatements(CollectionUtil.list(expression));
+        typeCheckModule(module);
         return module;
     }
 
@@ -65,6 +70,7 @@ public class RulerCompiler {
             }
         }
         module.setStatements(statements);
+        typeCheckModule(module);
         return module;
     }
 
@@ -90,7 +96,15 @@ public class RulerCompiler {
             rootStatements.add(parser.parseStatement());
         }
         module.setStatements(rootStatements);
+        typeCheckModule(module);
         return module;
+    }
+
+    private void typeCheckModule(RulerModule module) {
+        RuntimeContext runtimeContext = configuration.createDefaultRuntimeContext(Collections.emptyMap());
+        for (BaseNode statement : module.getStatements()) {
+            statement.typeCheck(null, runtimeContext);
+        }
     }
 
 }

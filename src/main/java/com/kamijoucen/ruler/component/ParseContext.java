@@ -1,12 +1,13 @@
 package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
+import com.kamijoucen.ruler.domain.type.RulerType;
 
 public class ParseContext {
 
     private final RulerConfiguration configuration;
 
-    private NodeVisitor typeCheckVisitor;
+    private NodeVisitor<RulerType> typeCheckVisitor;
 
     private boolean isRoot;
 
@@ -16,11 +17,11 @@ public class ParseContext {
         this.configuration = configuration;
     }
 
-    public NodeVisitor getTypeCheckVisitor() {
+    public NodeVisitor<RulerType> getTypeCheckVisitor() {
         return typeCheckVisitor;
     }
 
-    public void setTypeCheckVisitor(NodeVisitor typeCheckVisitor) {
+    public void setTypeCheckVisitor(NodeVisitor<RulerType> typeCheckVisitor) {
         this.typeCheckVisitor = typeCheckVisitor;
     }
 

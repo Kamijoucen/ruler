@@ -1,9 +1,6 @@
 package com.kamijoucen.ruler.domain.type;
 
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
-
-public class RsonType implements BaseValue {
+public class RsonType implements RulerType {
 
     public static final RsonType INSTANCE = new RsonType();
 
@@ -11,8 +8,8 @@ public class RsonType implements BaseValue {
     }
 
     @Override
-    public ValueType getType() {
-        return ValueType.RSON;
+    public TypeKind getKind() {
+        return TypeKind.RSON;
     }
 
 }

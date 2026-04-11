@@ -13,6 +13,7 @@ import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
 import com.kamijoucen.ruler.component.NodeVisitor;
 import com.kamijoucen.ruler.component.ImportCacheManager;
+import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.component.CallClosureExecutor;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
@@ -36,13 +37,13 @@ public interface RulerConfiguration {
 
     List<ImportNode> getGlobalImportModules();
 
-    NodeVisitor getTypeCheckVisitor();
+    NodeVisitor<RulerType> getTypeCheckVisitor();
 
     ImportCacheManager getImportCache();
 
     BinaryOperationFactory getBinaryOperationFactory();
 
-    NodeVisitor getEvalVisitor();
+    NodeVisitor<BaseValue> getEvalVisitor();
 
     ParamTypePreProcess getParamTypePreProcess();
 

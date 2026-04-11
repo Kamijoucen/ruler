@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.component.StackDepthCheckOperation;
 import com.kamijoucen.ruler.component.NodeVisitor;
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.component.ImportCacheManager;
+import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.ClosureValue;
@@ -19,8 +20,8 @@ public class RuntimeContext {
     private final RulerConfiguration configuration;
     private Map<String, BaseValue> outSpace;
     private final Map<String, ClosureValue> infixOperationSpace;
-    private NodeVisitor nodeVisitor;
-    private NodeVisitor typeCheckVisitor;
+    private NodeVisitor<BaseValue> nodeVisitor;
+    private NodeVisitor<RulerType> typeCheckVisitor;
     private ImportCacheManager importCache;
     private final StackDepthCheckOperation stackDepthCheckOperation;
 
@@ -29,9 +30,10 @@ public class RuntimeContext {
     private boolean returnFlag = false;
 
     private List<BaseValue> returnSpace;
+    private TypeScope typeScope;
 
-    public RuntimeContext(NodeVisitor nodeVisitor,
-                          NodeVisitor typeCheckVisitor,
+    public RuntimeContext(NodeVisitor<BaseValue> nodeVisitor,
+                          NodeVisitor<RulerType> typeCheckVisitor,
                           ImportCacheManager importCache,
                           StackDepthCheckOperation stackDepthCheckOperation,
                           RulerConfiguration configuration) {
@@ -76,11 +78,11 @@ public class RuntimeContext {
         return outBaseValue;
     }
 
-    public NodeVisitor getNodeVisitor() {
+    public NodeVisitor<BaseValue> getNodeVisitor() {
         return nodeVisitor;
     }
 
-    public NodeVisitor getTypeCheckVisitor() {
+    public NodeVisitor<RulerType> getTypeCheckVisitor() {
         return typeCheckVisitor;
     }
 
@@ -119,11 +121,11 @@ public class RuntimeContext {
         return infixOperationSpace.get(name);
     }
 
-    public void setNodeVisitor(NodeVisitor nodeVisitor) {
+    public void setNodeVisitor(NodeVisitor<BaseValue> nodeVisitor) {
         this.nodeVisitor = nodeVisitor;
     }
 
-    public void setTypeCheckVisitor(NodeVisitor typeCheckVisitor) {
+    public void setTypeCheckVisitor(NodeVisitor<RulerType> typeCheckVisitor) {
         this.typeCheckVisitor = typeCheckVisitor;
     }
 
@@ -153,6 +155,14 @@ public class RuntimeContext {
 
     public void clearReturnSpace() {
         this.returnSpace = null;
+    }
+
+    public TypeScope getTypeScope() {
+        return typeScope;
+    }
+
+    public void setTypeScope(TypeScope typeScope) {
+        this.typeScope = typeScope;
     }
 
 }

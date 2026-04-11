@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutNameVisitor extends AbstractVisitor {
+public class OutNameVisitor extends AbstractVisitor<BaseValue> {
 
     public final List<Token> outNameTokens = new ArrayList<>();
 

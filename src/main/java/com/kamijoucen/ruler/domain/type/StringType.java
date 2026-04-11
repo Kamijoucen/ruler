@@ -1,9 +1,6 @@
 package com.kamijoucen.ruler.domain.type;
 
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
-
-public class StringType implements BaseValue {
+public class StringType implements RulerType {
 
     public static final StringType INSTANCE = new StringType();
 
@@ -11,7 +8,8 @@ public class StringType implements BaseValue {
     }
 
     @Override
-    public ValueType getType() {
-        return ValueType.STRING;
+    public TypeKind getKind() {
+        return TypeKind.STRING;
     }
+
 }

@@ -1,4 +1,5 @@
 package com.kamijoucen.ruler.domain.ast.expression;
+import com.kamijoucen.ruler.domain.type.RulerType;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
@@ -20,7 +21,7 @@ public class VariableDefineNode extends BinaryOperationNode {
     }
 
     @Override
-    public BaseValue typeCheck(Scope scope, RuntimeContext context) {
+    public RulerType typeCheck(Scope scope, RuntimeContext context) {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 

@@ -5,7 +5,8 @@ import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.component.ParseContext;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.value.BaseValue;
+import com.kamijoucen.ruler.domain.type.RulerType;
+import com.kamijoucen.ruler.domain.type.TypeKind;
 import com.kamijoucen.ruler.domain.value.ValueType;
 
 import java.util.HashSet;
@@ -35,8 +36,8 @@ public class SyntaxCheckUtil {
     }
 
     public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
-        BaseValue typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
-        if (typeVal.getType() == ValueType.FAILURE) {
+        RulerType typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
+        if (typeVal.getKind() == TypeKind.FAILURE) {
             throw new SyntaxException("type error: " + node);
         }
     }
