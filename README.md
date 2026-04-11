@@ -1,10 +1,24 @@
 # Ruler
 
-轻量级的可嵌入脚本引擎，能解析表达式也能跑脚本。
+Ruler 是一款轻量级、可嵌入的脚本引擎，适用于 Java 宿主环境。它同时支持表达式求值与脚本执行，提供简洁的动态类型语法、闭包、数组与对象操作、中缀运算符扩展、代理以及规则块等特性。
 
 ![ruler shell](pic/shell.gif)
 
-## 用法示例
+## 核心特性
+
+- **表达式与脚本双模式**：既可以编译单行表达式快速求值，也可以编译完整脚本并执行。
+- **编译期类型检查**：虽然是动态类型语言，但对字面量运算进行编译期静态检查，拦截明显错误的类型组合。
+- **闭包与函数**：支持普通函数、箭头简写、闭包捕获以及中缀运算符自定义。
+- **数组与对象**：内置数组字面量、对象字面量（RSON）、索引访问与属性赋值。
+- **字符串插值**：双引号字符串支持 `{}` 插值，单引号为原义字符串，同时支持多行块字符串。
+- **代理与 self 绑定**：支持 `Proxy` 拦截对象访问，对象方法调用自动绑定 `self`。
+- **规则块（Rule）**：按顺序收集多个规则块的返回值，适合规则引擎场景。
+- **模块导入**：内置标准库，并支持自定义导入加载器，可从文件系统、数据库、网络等来源加载模块。
+- **CLI / REPL**：提供交互式 Shell 与脚本文件执行入口。
+
+## 快速开始
+
+### 表达式求值
 
 ```java
 var cfg = new RulerConfigurationImpl();
@@ -12,7 +26,7 @@ var runner = Ruler.compileExpression("1 + 2 * 3", cfg);
 System.out.println(runner.run().first().toInteger()); // 7
 ```
 
-跑脚本：
+### 脚本执行
 
 ```java
 var script = "var a = 10; var b = 20; return a + b;";
@@ -20,7 +34,9 @@ var runner = Ruler.compileScript(script, cfg);
 System.out.println(runner.run().first().toInteger()); // 30
 ```
 
-传外部参数（脚本里用 `$name` 引用）：
+### 外部参数传入
+
+脚本中通过 `$name` 引用外部参数：
 
 ```java
 var runner = Ruler.compileExpression("$score >= 60", cfg);
@@ -29,7 +45,39 @@ param.put("score", 85);
 boolean pass = runner.run(param).first().toBoolean();
 ```
 
-> `RulerRunner` 编译后可复用，线程安全；`RulerConfiguration` 建议单例。
+> `RulerRunner` 在编译后可复用，且线程安全。`RulerConfiguration` 建议作为进程级单例使用。
+
+## 编译期类型检查
+
+Ruler 是动态类型语言，但在编译阶段会对**字面量与已推导类型**进行静态检查，提前拦截明显非法的运算组合。含未知类型变量的表达式不会报错，以兼顾动态灵活性。
+
+### 检查规则
+
+| 运算符 / 场景 | 允许类型 | 非法示例 |
+|--------------|----------|----------|
+| `+` `-` `*` `/` | 仅数值（`INT`、`DOUBLE`） | `"a" - 1`、`true + 1` |
+| `>` `<` `>=` `<=` | 仅数值间比较 | `"a" > "b"`、`{a:1} > [1,2]` |
+| `&&` `\|\|` | 仅 `BOOL` | `"hello" && true` |
+| 一元 `+` `-` | 仅数值 | `+"abc"`、`-[1,2]` |
+| 一元 `!` | 仅 `BOOL` | `!42` |
+| `==` `!=` | 任意类型 | 不限制 |
+| `++`（字符串拼接） | 任意已知类型 | 不限制 |
+| 含变量且类型未知 | — | `1 + unknownVar`（通过） |
+
+### 报错示例
+
+```ruler
+"hello" - "world"
+// SyntaxException: operator '-' requires numeric types but got STRING and STRING at 1:9
+
+!42
+// SyntaxException: operator '!' requires BOOL but got INT at 1:1
+
+if "notbool" { }
+// SyntaxException: condition of 'if' statement must be BOOL but got STRING at 1:4
+```
+
+该检查在编译器中**强制启用**，无需额外配置。
 
 ## 语法速览
 
@@ -43,12 +91,12 @@ var d = true;
 var e = null;
 ```
 
-运算符：
+支持的运算符：
 - `+` `-` `*` `/` `%`：数值运算
-- `++`：字符串拼接，如 `"a" ++ "b"` 得 `"ab"`
-- `==` `!=` `<>`：非严格比较，字符串和数字会自动转换
-- `===` `!==`：严格比较，`1 === '1'` 为 `false`
-- `typeof(x)`：类型名，如 `"int"` `"string"` `"array"` `"function"`
+- `++`：字符串拼接，例如 `"a" ++ "b"` 得 `"ab"`
+- `==` `!=` `<>`：非严格比较，支持类型隐式转换
+- `===` `!==`：严格比较，例如 `1 === '1'` 为 `false`
+- `typeof(x)`：返回类型名字符串，如 `"int"`、`"string"`、`"array"`、`"function"`
 
 ### 控制流
 
@@ -162,7 +210,7 @@ println(arr.myLength); // 4
 
 ### 对象方法与 self 绑定
 
-方法调用会自动把对象绑定到第一个参数 `self`：
+方法调用会自动将对象绑定到第一个参数 `self`：
 
 ```ruler
 var obj = {
@@ -172,7 +220,7 @@ var obj = {
 println(obj.getName()); // ruler
 
 var fn = obj.getName;
-println(fn());          // ruler，self 仍绑定
+println(fn());          // ruler，self 仍保持绑定
 ```
 
 ### 规则块
@@ -199,7 +247,7 @@ println(op.Add(1, 2, 3));
 println(collections.Contains(1, [1, 2, 3]));
 ```
 
-Java 里注册全局导入：
+Java 端注册全局导入：
 
 ```java
 cfg.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
@@ -214,14 +262,19 @@ java -jar ruler.jar
 # 执行文件
 java -jar ruler.jar -f=script.ruler
 
-# 限制循环次数和栈深
+# 限制循环次数和栈深度
 java -jar ruler.jar -f=script.ruler -maxLoopNumber=100000 -maxStackDepth=500
 ```
 
 ## 扩展与集成
 
-- **自定义导入加载器**：实现 `CustomImportLoader` 接口（`match(path)` + `load(path)`），加 `@ImportMatchOrder` 控制优先级，可从 DB、HTTP 等来源加载模块。
-- **SPI 扩展点**：实现 `ConfigurationHook`，在 `META-INF/services/com.kamijoucen.ruler.plugin.spi.ConfigurationHook` 注册。内置示例 `StdIoHook` 注入了 `io` 模块，提供 `DeleteFile()`、`WriteNewText()`、`ReadAllText()` 等函数。
+### 自定义导入加载器
+
+实现 `CustomImportLoader` 接口（`match(path)` + `load(path)`），并通过 `@ImportMatchOrder` 注解控制优先级。加载来源可以是文件系统、数据库、HTTP 接口等。
+
+### SPI 扩展点
+
+实现 `ConfigurationHook` 接口，在 `META-INF/services/com.kamijoucen.ruler.plugin.spi.ConfigurationHook` 注册。内置示例 `StdIoHook` 注入了 `io` 模块，提供 `DeleteFile()`、`WriteNewText()`、`ReadAllText()` 等函数。
 
 ## 构建
 
@@ -231,7 +284,8 @@ mvn test
 mvn -Dtest=BaseTest#arrayPushTest test
 ```
 
-## 注意
+## 注意事项
 
-- 没有 `try/catch`，脚本异常会直接抛 Java 异常，由宿主捕获。
-- `RulerConfigurationImpl` 持有导入缓存，需要隔离时每次新建实例。
+- 脚本异常会直接以 Java 异常形式抛出，由宿主代码捕获，引擎内部不提供 `try/catch` 机制。
+- `RulerConfigurationImpl` 持有导入缓存，若需要环境隔离，应每次新建实例。
+- 编译期类型检查仅针对已知类型（字面量或已推导变量），动态场景下仍保留运行时的类型容错行为。
