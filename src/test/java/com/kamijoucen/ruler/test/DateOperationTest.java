@@ -17,7 +17,7 @@ public class DateOperationTest {
     @Test
     public void dateEqualityTest() {
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileExpression("$d1 == $d2", configuration);
+        RulerRunner runner = Ruler.compile("$d1 == $d2", configuration);
         Map<String, Object> param = new HashMap<>();
         Date d = new Date(1609459200000L);
         param.put("d1", d);
@@ -29,7 +29,7 @@ public class DateOperationTest {
     @Test
     public void dateStrictEqualityDifferentInstanceTest() {
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileExpression("$d1 === $d2", configuration);
+        RulerRunner runner = Ruler.compile("$d1 === $d2", configuration);
         Map<String, Object> param = new HashMap<>();
         param.put("d1", new Date(1609459200000L));
         param.put("d2", new Date(1609459200000L));
@@ -41,7 +41,7 @@ public class DateOperationTest {
     @Test(expected = IllegalOperationException.class)
     public void dateComparisonThrowsTest() {
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileExpression("$d1 > $d2", configuration);
+        RulerRunner runner = Ruler.compile("$d1 > $d2", configuration);
         Map<String, Object> param = new HashMap<>();
         param.put("d1", new Date(1609459200000L));
         param.put("d2", new Date(1609459200001L));
@@ -52,7 +52,7 @@ public class DateOperationTest {
     public void dateParameterPassingAndReturnTest() {
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
         Date d = new Date(1609459200000L);
-        RulerRunner runner = Ruler.compileExpression("$d", configuration);
+        RulerRunner runner = Ruler.compile("$d", configuration);
         Map<String, Object> param = new HashMap<>();
         param.put("d", d);
         RulerResult result = runner.run(param);

@@ -4,12 +4,10 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.module.RulerModule;
 import com.kamijoucen.ruler.domain.module.RulerScript;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.logic.util.SyntaxCheckUtil;
 
 import java.util.ArrayList;
@@ -29,25 +27,6 @@ public class RulerCompiler {
     public RulerModule compileScript() {
         RulerModule mainModule = compileModule(mainScript);
         return mainModule;
-    }
-
-    public RulerModule compileExpression() {
-        RulerModule module = new RulerModule("runtime expression");
-        DefaultLexical lexical =
-                new DefaultLexical(mainScript.getContent(), module.getFullName(), configuration);
-        TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
-        tokenStream.scan();
-        tokenStream.nextToken();
-        // 语法分析器
-        Parser parser = new AtomParserManager(tokenStream, configuration);
-        BaseNode expression = parser.parseExpression();
-        if (tokenStream.token().type != TokenType.EOF) {
-            throw new SyntaxException("illegal identifier '" + tokenStream.token().name + "'",
-                    tokenStream.token().location);
-        }
-        module.setStatements(CollectionUtil.list(expression));
-        typeCheckModule(module);
-        return module;
     }
 
     public RulerModule compileStatement() {

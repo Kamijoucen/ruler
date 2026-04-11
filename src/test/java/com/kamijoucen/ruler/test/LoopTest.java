@@ -23,7 +23,7 @@ public class LoopTest {
     public void breakTest() {
 
         String script = "var i = 0; var r = while i < 10 { i = i + 1; if (i == 5) { break; } println(i);}; return i;";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(5L, result.first().toInteger());
     }
@@ -33,7 +33,7 @@ public class LoopTest {
     public void continueTest() {
 
         String script = "var i = 0; var r = while i < 10 { i = i + 1; if (i == 5) { return i; } println(i);};";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(5, result.first().toInteger());
     }
@@ -43,7 +43,7 @@ public class LoopTest {
     public void returnTest() {
 
         String script = "var i = 0; var r = while i < 10 { i = i + 1; if (i == 5) { return i; } println(i);}; return i;";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(5L, result.first().toInteger());
     }
@@ -53,7 +53,7 @@ public class LoopTest {
     public void breakNestTest() {
 
         String script = "var i = 0; var r = while i < 10 { i = i + 1; var j = 0; while j < 10 { j = j + 1; if (j == 5) { break; } println(j);}}; return i;";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(10L, result.first().toInteger());
     }
@@ -63,7 +63,7 @@ public class LoopTest {
     public void arrayPushTest() {
 
         String script = "var i = 0; var r = []; while i < 10 { i = i + 1; if (i == 5) { continue; } r.push(i);} return r;";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals("[1, 2, 3, 4, 6, 7, 8, 9, 10]", result.first().toString());
     }

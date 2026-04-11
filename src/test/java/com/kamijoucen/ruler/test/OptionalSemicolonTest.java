@@ -17,38 +17,38 @@ public class OptionalSemicolonTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     @Test
     public void testNewlineReplacesSemicolon() {
         String script = "var a = 1\nvar b = 2\nreturn a + b";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testSemicolonStillWorks() {
         String script = "var a = 1; var b = 2; return a + b;";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test(expected = SyntaxException.class)
     public void testSameLineWithoutSemicolonFails() {
         String script = "var a = 1 var b = 2";
-        compileScript(script).run();
+        compile(script).run();
     }
 
     @Test
     public void testReturnEndsAtNewline() {
         String script = "fun f() {\n  return 1\n  2\n}\nreturn f();";
-        Assert.assertEquals(1L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(1L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testBuiltinOperatorCanSpanLines() {
         String script = "var a = 1 +\n2\nreturn a";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -57,25 +57,25 @@ public class OptionalSemicolonTest {
                 "var arr = [1,2,3]\n" +
                 "arr push 4\n" +
                 "return arr.length();";
-        Assert.assertEquals(4L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(4L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testImportWithoutSemicolon() {
         String script = "import \"/ruler/std/global.txt\" op\nreturn op.Add(1,2,3)";
-        Assert.assertEquals(6L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(6L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testNoSemicolonBeforeRightBrace() {
         String script = "if true {\n  var a = 1\n  var b = 2\n}\nreturn 0";
-        Assert.assertEquals(0L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(0L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testNoSemicolonAtEndOfFile() {
         String script = "var a = 5\nreturn a";
-        Assert.assertEquals(5L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(5L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -91,19 +91,19 @@ public class OptionalSemicolonTest {
                 "    r.push(i)\n" +
                 "}\n" +
                 "return r.length()";
-        Assert.assertEquals(2L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(2L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testAssignmentWithoutSemicolon() {
         String script = "var a = 0\na = 1\na = a + 2\nreturn a";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testExpressionStatementWithoutSemicolon() {
         String script = "var a = 0\nprintln(a)\na = 1\nreturn a";
-        Assert.assertEquals(1L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(1L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -113,25 +113,25 @@ public class OptionalSemicolonTest {
                 "}\n" +
                 "var r = f()\n" +
                 "return r[1]";
-        Assert.assertEquals(2L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(2L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testMultipleBlankLines() {
         String script = "var a = 1\n\n\nvar b = 2\nreturn a + b";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testArrayLiteralAsStatement() {
         String script = "[1,2,3]\nreturn 0";
-        Assert.assertEquals(0L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(0L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testIfAbbreviationThenNewline() {
         String script = "if true: println(0)\nvar a = 1\nreturn a";
-        Assert.assertEquals(1L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(1L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -140,7 +140,7 @@ public class OptionalSemicolonTest {
                 "var a = obj\n" +
                 ".getA()\n" +
                 "return a";
-        Assert.assertEquals(10L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(10L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -151,7 +151,7 @@ public class OptionalSemicolonTest {
                 "  2\n" +
                 ")\n" +
                 "return a";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class OptionalSemicolonTest {
                 "  }\n" +
                 "}\n" +
                 "return i";
-        Assert.assertEquals(3L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(3L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class OptionalSemicolonTest {
                 "var arr = [1,2,3]\n" +
                 "arr push 4 push 5\n" +
                 "return arr.length()";
-        Assert.assertEquals(5L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(5L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -182,19 +182,19 @@ public class OptionalSemicolonTest {
                 "var arr = [1,2,3]\n" +
                 "var x = arr push 4\n" +
                 "return x.length()";
-        Assert.assertEquals(4L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(4L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testReturnBeforeRightBraceWithoutSemicolon() {
         String script = "fun f() { return 1 }\nreturn f()";
-        Assert.assertEquals(1L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(1L, compile(script).run().first().toInteger());
     }
 
     @Test
     public void testImportInfixWithoutSemicolon() {
         String script = "import infix \"/ruler/std/global.txt\" op\nreturn 0";
-        Assert.assertEquals(0L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(0L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -204,7 +204,7 @@ public class OptionalSemicolonTest {
                 "  1\n" +
                 "]\n" +
                 "return a";
-        Assert.assertEquals(20L, compileScript(script).run().first().toInteger());
+        Assert.assertEquals(20L, compile(script).run().first().toInteger());
     }
 
     @Test
@@ -213,6 +213,6 @@ public class OptionalSemicolonTest {
                 "  1\n" +
                 ")\n" +
                 "return t === \"int\"";
-        Assert.assertTrue(compileScript(script).run().first().toBoolean());
+        Assert.assertTrue(compile(script).run().first().toBoolean());
     }
 }

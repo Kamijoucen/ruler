@@ -17,8 +17,8 @@ public class ProxyAndObjectTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     // ---------- proxy get ----------
@@ -26,7 +26,7 @@ public class ProxyAndObjectTest {
     @Test
     public void testProxyGet() {
         String script = "var obj = {a: 1}; var p = Proxy(obj, {get: fun(self, name) { return 99; }}); return p.a;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(99L, r.first().toInteger());
     }
 
@@ -37,7 +37,7 @@ public class ProxyAndObjectTest {
         // The interpreter's proxy/modifyObject does not pass the put callback return value back to AssignEval.
         // We verify the callback was invoked by checking that the underlying object received the assignment.
         String script = "var obj = {a: 1}; var p = Proxy(obj, {put: fun(self, name, val) { self[name] = val; return val; }}); p.a = 5; return obj.a;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(5L, r.first().toInteger());
     }
 
@@ -46,7 +46,7 @@ public class ProxyAndObjectTest {
         // Note: the current implementation does not reflect callback-side multiplication
         // back to the underlying object in this scenario; it records the original value.
         String script = "var obj = {a: 1}; var p = Proxy(obj, {put: fun(self, name, val) { self[name] = val * 2; return val; }}); p.a = 5; return obj.a;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(5L, r.first().toInteger());
     }
 
@@ -55,13 +55,13 @@ public class ProxyAndObjectTest {
     @Test
     public void testStringIndex() {
         String script = "return 'hello'[1];";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals("e", r.first().toString());
     }
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testStringIndexOutOfBounds() {
-        compileScript("return 'ab'[10];").run();
+        compile("return 'ab'[10];").run();
     }
 
     // ---------- empty rson ----------
@@ -69,7 +69,7 @@ public class ProxyAndObjectTest {
     @Test
     public void testEmptyRson() {
         String script = "var o = {}; return typeof(o);";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals("object", r.first().toString());
     }
 
@@ -78,7 +78,7 @@ public class ProxyAndObjectTest {
     @Test
     public void testRsonStringKeyRead() {
         String script = "var o = {\"key with space\": 42}; return o[\"key with space\"];";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(42L, r.first().toInteger());
     }
 
@@ -87,14 +87,14 @@ public class ProxyAndObjectTest {
     @Test
     public void testRsonIndexAssign() {
         String script = "var o = {name: 'old'}; o['name'] = 'new'; return o.name;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals("new", r.first().toString());
     }
 
     @Test
     public void testRsonNestedAssign() {
         String script = "var o = {a: {b: {c: 1}}}; o.a.b.c = 99; return o.a.b.c;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(99L, r.first().toInteger());
     }
 
@@ -102,6 +102,6 @@ public class ProxyAndObjectTest {
 
     @Test(expected = IndexOutOfBoundsException.class)
     public void testArrayIndexOutOfBounds() {
-        compileScript("return [1,2][5];").run();
+        compile("return [1,2][5];").run();
     }
 }

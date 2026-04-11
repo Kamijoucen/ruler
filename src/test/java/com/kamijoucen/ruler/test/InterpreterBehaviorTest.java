@@ -27,11 +27,6 @@ public class InterpreterBehaviorTest {
         configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
     }
 
-    private RulerModule compileExpressionModule(String code) {
-        return new RulerCompiler(new RulerScript("expression", code), configuration)
-                .compileExpression();
-    }
-
     private RulerModule compileScriptModule(String code) {
         return new RulerCompiler(new RulerScript("script", code), configuration)
                 .compileScript();
@@ -55,34 +50,34 @@ public class InterpreterBehaviorTest {
     }
 
     @Test
-    public void runExpressionReturnsClosureWithoutConversion() {
+    public void runScriptSingleExpressionReturnsClosureWithoutConversion() {
         RulerInterpreter interpreter =
-                new RulerInterpreter(compileExpressionModule("fun(x) { return x + 1; }"), configuration);
+                new RulerInterpreter(compileScriptModule("fun(x) { return x + 1; }"), configuration);
         interpreter.setHasImportGlobalModule(false);
 
-        List<Object> result = interpreter.runExpression(Collections.emptyList(), newRuntimeRootScope());
+        List<Object> result = interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
 
         Assert.assertEquals(1, result.size());
         Assert.assertTrue(result.get(0) instanceof ClosureValue);
     }
 
     @Test
-    public void runExpressionImportsGlobalModuleByDefault() {
+    public void runScriptSingleExpressionImportsGlobalModuleByDefault() {
         RulerInterpreter interpreter =
-                new RulerInterpreter(compileExpressionModule("op.Add(1, 2, 3)"), configuration);
+                new RulerInterpreter(compileScriptModule("op.Add(1, 2, 3)"), configuration);
 
-        List<Object> result = interpreter.runExpression(Collections.emptyList(), newRuntimeRootScope());
+        List<Object> result = interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
 
         Assert.assertEquals(Collections.singletonList(6L), result);
     }
 
     @Test(expected = RulerRuntimeException.class)
-    public void runExpressionCanDisableGlobalModuleImport() {
+    public void runScriptSingleExpressionCanDisableGlobalModuleImport() {
         RulerInterpreter interpreter =
-                new RulerInterpreter(compileExpressionModule("op.Add(1, 2)"), configuration);
+                new RulerInterpreter(compileScriptModule("op.Add(1, 2)"), configuration);
         interpreter.setHasImportGlobalModule(false);
 
-        interpreter.runExpression(Collections.emptyList(), newRuntimeRootScope());
+        interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
     }
 
     @Test

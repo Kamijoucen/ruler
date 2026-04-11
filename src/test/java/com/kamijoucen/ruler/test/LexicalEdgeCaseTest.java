@@ -20,28 +20,28 @@ public class LexicalEdgeCaseTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     // ---------- escape sequences ----------
 
     @Test
     public void testEscapedQuote() {
-        RulerResult r = compileScript("return \"a\\\"b\";").run();
+        RulerResult r = compile("return \"a\\\"b\";").run();
         Assert.assertEquals("a\"b", r.first().toString());
     }
 
     @Test
     public void testEscapedNewLineActualBehavior() {
         // Escape sequences are preserved in the buffer and unknown escapes are kept literally.
-        RulerResult r = compileScript("return \"a\\nb\";").run();
+        RulerResult r = compile("return \"a\\nb\";").run();
         Assert.assertEquals("a\\nb", r.first().toString());
     }
 
     @Test
     public void testEscapedBackslash() {
-        RulerResult r = compileScript("return \"a\\\\b\";").run();
+        RulerResult r = compile("return \"a\\\\b\";").run();
         Assert.assertEquals("a\\b", r.first().toString());
     }
 
@@ -50,14 +50,14 @@ public class LexicalEdgeCaseTest {
     @Test
     public void testLineComment() {
         String script = "var a = 1; // this is a comment\nreturn a;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(1L, r.first().toInteger());
     }
 
     @Test
     public void testLineCommentAtEndOfFile() {
         String script = "return 42; // eof comment";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(42L, r.first().toInteger());
     }
 
@@ -65,13 +65,13 @@ public class LexicalEdgeCaseTest {
 
     @Test
     public void testDoubleLiteral() {
-        RulerResult r = compileScript("return 3.14;").run();
+        RulerResult r = compile("return 3.14;").run();
         Assert.assertEquals(3.14, r.first().toDouble(), 0.0001);
     }
 
     @Test
     public void testDoubleLiteralTrailingZero() {
-        RulerResult r = compileScript("return 2.0;").run();
+        RulerResult r = compile("return 2.0;").run();
         Assert.assertEquals(2.0, r.first().toDouble(), 0.0001);
     }
 
@@ -79,13 +79,13 @@ public class LexicalEdgeCaseTest {
 
     @Test
     public void testUnaryMinusExpression() {
-        RulerResult r = compileScript("var a = 5; return -a;").run();
+        RulerResult r = compile("var a = 5; return -a;").run();
         Assert.assertEquals(-5L, r.first().toInteger());
     }
 
     @Test
     public void testUnaryPlusExpression() {
-        RulerResult r = compileScript("var a = -3; return +a;").run();
+        RulerResult r = compile("var a = -3; return +a;").run();
         Assert.assertEquals(-3L, r.first().toInteger());
     }
 

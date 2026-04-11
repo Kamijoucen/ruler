@@ -38,7 +38,7 @@ public class RulerTest {
 
         String str = "var a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
 
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
 
         runner.run();
 
@@ -51,7 +51,7 @@ public class RulerTest {
 
         String str2 = "text = \"hello world!\"; println(text);";
 
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
 
         runner.run();
 
@@ -60,7 +60,7 @@ public class RulerTest {
     @Test
     public void test9() {
         String str2 = "var i = 15; println(i);";
-        RulerRunner runner = Ruler.compileScript(str2, configuration);
+        RulerRunner runner = Ruler.compile(str2, configuration);
 
         runner.run();
 
@@ -71,7 +71,7 @@ public class RulerTest {
 
         String str = "var rson = {name:'name', age:1, doit:fun() { println('gogogogo'); },}; println(rson.name, rson.age, rson.doit());";
 
-        RulerRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compile(str, configuration);
 
         script.run();
 
@@ -84,7 +84,7 @@ public class RulerTest {
 
         String str = "var rson = {f: { ff: fun() {println('go!');} }};";
 
-        RulerRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compile(str, configuration);
 
         System.out.println(script);
 
@@ -94,7 +94,7 @@ public class RulerTest {
     public void test_dot_call2() {
         String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
 
-        RulerRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compile(str, configuration);
 
         script.run();
     }
@@ -104,7 +104,7 @@ public class RulerTest {
 
         String str = "var a = {f: fun(self, age) { println('------', age); return self.name; }, name: 'ggggggggg11'}; println(a.f(18));";
 
-        RulerRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compile(str, configuration);
 
         script.run();
 
@@ -115,7 +115,7 @@ public class RulerTest {
 
         String str = "println(({a:1}).a);";
 
-        RulerRunner script = Ruler.compileScript(str, configuration);
+        RulerRunner script = Ruler.compile(str, configuration);
 
         Map<String, Object> param = new HashMap<String, Object>();
         param.put("a", "lisicen");
@@ -130,7 +130,7 @@ public class RulerTest {
     public void typeof_test() {
         String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
         String sql = "var a = 5; println($a);";
-        RulerRunner script = Ruler.compileScript(sql, configuration);
+        RulerRunner script = Ruler.compile(sql, configuration);
         script.run();
     }
 
@@ -138,7 +138,7 @@ public class RulerTest {
     public void null_input_test() {
 
         String script = "$name == '12'";
-        RulerRunner runner = Ruler.compileExpression(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
 
         Map<String, Object> args = new HashMap<String, Object>();
         args.put("name", 12);
@@ -154,7 +154,7 @@ public class RulerTest {
         String script = "var arr = [[1]];  println(arr[0].length());";
         // String script = "var arr = [[1]]; println(arr[0]?.Length());";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         run.run();
     }
@@ -164,7 +164,7 @@ public class RulerTest {
 
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         run.run();
     }
@@ -186,7 +186,7 @@ public class RulerTest {
 
         String text = "var a = 哈哈哈哈(); println(typeof(哈哈哈哈));";
 
-        RulerRunner run = Ruler.compileScript(text, configuration);
+        RulerRunner run = Ruler.compile(text, configuration);
 
         run.run();
 
@@ -197,7 +197,7 @@ public class RulerTest {
 
         String script = "var arr = [2, 1, 85, 15,3]; println(listUtil.In(825, arr));";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         run.run();
 
@@ -207,7 +207,7 @@ public class RulerTest {
     public void util_test() {
         String script = "import '/ruler/std/util.txt' util; var arr = [2, 1, 85, 15,3]; println(util.NotContainsAnyOne(63, arr, fun(v1, v2) { return v1 == v2; }));";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         run.run();
     }
@@ -215,14 +215,14 @@ public class RulerTest {
     @Test
     public void util_eq_arr_test() {
         String script = "import '/ruler/std/util.txt' util; println(util.EqArrayEveryOne([1,2, 3], [3, 2, 1]));";
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
         run.run();
     }
 
     @Test
     public void util_eq_arr_any() {
         String script = "import '/ruler/std/util.txt' util; println(util.EqArrayAnyOne([11,21, 31], [311, 211, 11]));";
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
         run.run();
     }
 
@@ -231,7 +231,7 @@ public class RulerTest {
 
         String s = "((util.EqArrayAnyOne($_start_user_key, ['125'])) && (util.Eq($var_623a8e5cfe7b9e1b639f2679, 'c8024e9451db4b37b86643c6fb8b8c71')))";
 
-        RulerRunner run = Ruler.compileExpression(s, configuration);
+        RulerRunner run = Ruler.compile(s, configuration);
 
         RulerParameter p = new RulerParameter(ValueType.STRING, "var_623a8e5cfe7b9e1b639f2679",
                 "9b5c863074464179bf98acf53344bf21");
@@ -247,7 +247,7 @@ public class RulerTest {
     // public void loop_count_check() {
     //     String script = "var i = 0; while i < 10 { i = i + 1; println(i); }";
 
-    //     RuleRunner run = Ruler.compileScript(script, configuration);
+    //     RuleRunner run = Ruler.compile(script, configuration);
 
     //     run.run();
     // }
@@ -256,7 +256,7 @@ public class RulerTest {
     public void time_stamp_check() {
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         System.out.println("- " + System.currentTimeMillis());
         run.run();
@@ -267,7 +267,7 @@ public class RulerTest {
     @Test
     public void loop_root_return() {
         String script = "var i = 0; println((fun() {return 'aaa'; })()); while i < 10 { i = i + 1; if i == 5 { return 'lisicen'; } } return 'hehe';";
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         RulerResult result = run.run();
         System.out.println(result);
@@ -277,7 +277,7 @@ public class RulerTest {
     public void fun_args_test() {
         String script = "var a = fun() { println(_args_); }; a(1, [1, 2], 1.1);";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
         RulerResult result = run.run();
     }
 
@@ -285,7 +285,7 @@ public class RulerTest {
     public void global_test() {
         String script = "println(op.Add(1, 2, -3)); println(op.Sub(6, 3, -1));";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
         long v1 = System.currentTimeMillis();
         RulerResult result = run.run();
         long v2 = System.currentTimeMillis();
@@ -302,7 +302,7 @@ public class RulerTest {
 
         String script = "println(ok.Ok());";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
         run.run();
 
     }
@@ -319,7 +319,7 @@ public class RulerTest {
 
         String script = "var f = fun() { println(a); }; var a = 100; f();";
 
-        RulerRunner run = Ruler.compileScript(script, configuration);
+        RulerRunner run = Ruler.compile(script, configuration);
 
         run.run();
 
@@ -329,20 +329,20 @@ public class RulerTest {
     public void testAssign() {
         String script = "for arg in _args_:\n" +
                 "        num = num + ToNumber(arg);";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
 
     }
 
     @Test
     public void testIf() {
         String script = "if true {} i = i + 1;";
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
     }
 
     // @Test
     // public void testb() {
     //     String str = "name.test()[1].num = 15;";
-    //     RuleRunner runner = Ruler.compileScript(str, configuration);
+    //     RuleRunner runner = Ruler.compile(str, configuration);
     //     System.out.println(runner.run());
     // }
 
@@ -351,7 +351,7 @@ public class RulerTest {
 
         String str = "'aaaa'.println()";
 
-        RulerRunner runner = Ruler.compileExpression(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
 
         RulerResult result = runner.run();
         System.out.println(result);
@@ -362,7 +362,7 @@ public class RulerTest {
 
         String str = "var i = 0; while i < 10 { i = i + 1; if i == 5 { break; } } return i;";
 
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
 
 
         Assert.assertEquals(5, runner.run().first().toInteger());
@@ -373,28 +373,28 @@ public class RulerTest {
     @Test
     public void testStaticCap() {
         String str = "var a = 1; var f = fun[a]() { println(a); }; var b = 2; f();";
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
         runner.run();
     }
 
     @Test
     public void test_explicit_self() {
         String str = "var obj = { name: 'ruler', getName: fun(self) { return self.name; } }; return obj.getName();";
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
         Assert.assertEquals("ruler", runner.run().first().toString());
     }
 
     @Test
     public void test_method_bound_self() {
         String str = "var obj = { name: 'bound', getName: fun(self, suffix) { return self.name ++ suffix; } }; var m = obj.getName; return m('!');";
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
         Assert.assertEquals("bound!", runner.run().first().toString());
     }
 
     @Test
     public void test_method_no_self_direct_call() {
         String str = "var f = fun(self, a, b) { return a + b; }; var obj = { add: f }; return obj.add(1, 2);";
-        RulerRunner runner = Ruler.compileScript(str, configuration);
+        RulerRunner runner = Ruler.compile(str, configuration);
         Assert.assertEquals(3, runner.run().first().toInteger());
     }
 

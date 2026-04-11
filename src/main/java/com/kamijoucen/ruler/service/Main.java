@@ -41,7 +41,7 @@ public class Main {
             throw new IllegalArgumentException("\"" + filePath + "\" file is empty");
 
         }
-        Ruler.compileScript(content, configuration).run();
+        Ruler.compile(content, configuration).run();
     }
 
     private static StartConfig parseConfig(String[] args) {

@@ -20,8 +20,8 @@ public class ImportAndModuleTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     // ---------- standard library import with assertion ----------
@@ -29,7 +29,7 @@ public class ImportAndModuleTest {
     @Test
     public void testImportSortModule() {
         String script = "import '/ruler/std/sort.txt' sort; var arr = [5, 1, 3]; sort.Sort(arr); return arr;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals("[1, 3, 5]", r.first().toString());
     }
 
@@ -37,7 +37,7 @@ public class ImportAndModuleTest {
     public void testImportCollectionsModule() {
         // Contains(obj, list) -- obj first, list second
         String script = "import '/ruler/std/collections.txt' listUtil; return listUtil.Contains(2, [1, 2, 3]);";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertTrue(r.first().toBoolean());
     }
 
@@ -58,9 +58,9 @@ public class ImportAndModuleTest {
             }
         });
         String script = "import 'cached_module' m; return m.value;";
-        RulerResult r1 = compileScript(script).run();
+        RulerResult r1 = compile(script).run();
         Assert.assertEquals(42L, r1.first().toInteger());
-        RulerResult r2 = compileScript(script).run();
+        RulerResult r2 = compile(script).run();
         Assert.assertEquals(42L, r2.first().toInteger());
         // Loader should only be invoked once because of caching.
         Assert.assertEquals(1, loadCount.get());
@@ -82,7 +82,7 @@ public class ImportAndModuleTest {
             }
         });
         String script = "import infix 'infix_power' p; return 2 pow 3;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(8L, r.first().toInteger());
     }
 
@@ -93,7 +93,7 @@ public class ImportAndModuleTest {
         RulerConfigurationImpl cfg = new RulerConfigurationImpl();
         cfg.registerGlobalImportScriptModule("var answer = 42;", "ans");
         String script = "return ans.answer;";
-        RulerResult r = Ruler.compileScript(script, cfg).run();
+        RulerResult r = Ruler.compile(script, cfg).run();
         Assert.assertEquals(42L, r.first().toInteger());
     }
 
@@ -102,7 +102,7 @@ public class ImportAndModuleTest {
         RulerConfigurationImpl cfg = new RulerConfigurationImpl();
         cfg.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
         String script = "return op.Add(1, 2);";
-        RulerResult r = Ruler.compileScript(script, cfg).run();
+        RulerResult r = Ruler.compile(script, cfg).run();
         Assert.assertEquals(3L, r.first().toInteger());
     }
 }

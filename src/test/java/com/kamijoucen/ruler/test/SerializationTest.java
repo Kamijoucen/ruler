@@ -13,7 +13,7 @@ public class SerializationTest {
     @Test(expected = NotSerializableException.class)
     public void rulerRunnerSerializationNotSupportedTest() throws Exception {
         RulerConfigurationImpl config1 = new RulerConfigurationImpl();
-        RulerRunner original = Ruler.compileScript("return 42;", config1);
+        RulerRunner original = Ruler.compile("return 42;", config1);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
@@ -24,8 +24,7 @@ public class SerializationTest {
     @Test
     public void rulerRunnerHoldsModuleReferenceTest() {
         RulerConfigurationImpl config = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileScript("return 42;", config);
+        RulerRunner runner = Ruler.compile("return 42;", config);
         Assert.assertNotNull(runner.getModule());
-        Assert.assertTrue(runner.isScript());
     }
 }

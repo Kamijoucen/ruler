@@ -20,7 +20,17 @@ public class RsonParser implements AtomParser {
 
     @Override
     public boolean support(TokenStream tokenStream) {
-        return tokenStream.token().type == TokenType.LEFT_BRACE;
+        if (tokenStream.token().type != TokenType.LEFT_BRACE) {
+            return false;
+        }
+        Token next = tokenStream.peek(1);
+        if (next.type == TokenType.RIGHT_BRACE) {
+            return true;
+        }
+        if (next.type != TokenType.IDENTIFIER && next.type != TokenType.STRING) {
+            return false;
+        }
+        return tokenStream.peek(2).type == TokenType.COLON;
     }
 
     @Override

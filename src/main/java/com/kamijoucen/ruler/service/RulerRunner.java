@@ -16,26 +16,21 @@ import java.util.Map;
 
 public class RulerRunner implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     private final RulerModule module;
-    private final boolean isScript;
     private transient RulerConfiguration configuration;
 
-    public RulerRunner(RulerModule module, boolean isScript, RulerConfiguration configuration) {
+    public RulerRunner(RulerModule module, RulerConfiguration configuration) {
         this.module = module;
-        this.isScript = isScript;
         this.configuration = configuration;
     }
 
     public RulerResult run(List<RulerParameter> param, RulerConfiguration configuration) {
         List<Object> values;
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        if (isScript) {
-            values = interpreter.runScript(param,
-                    new Scope("runtime root", true, configuration.getGlobalScope(), null));
-        } else {
-            values = interpreter.runExpression(param,
-                    new Scope("runtime root", true, configuration.getGlobalScope(), null));
-        }
+        values = interpreter.runScript(param,
+                new Scope("runtime root", true, configuration.getGlobalScope(), null));
 
         List<RuleResultValue> ruleResultValues = new ArrayList<>(values.size());
         for (Object value : values) {
@@ -70,10 +65,6 @@ public class RulerRunner implements Serializable {
 
     public RulerModule getModule() {
         return module;
-    }
-
-    public boolean isScript() {
-        return isScript;
     }
 
 }

@@ -30,7 +30,7 @@ public class CircularImportTest {
             }
         });
 
-        RulerRunner runner = Ruler.compileScript("import \"/test/a\" a; return a;", configuration);
+        RulerRunner runner = Ruler.compile("import \"/test/a\" a; return a;", configuration);
         try {
             runner.run();
             Assert.fail("Expected StackOverflowError for circular import");

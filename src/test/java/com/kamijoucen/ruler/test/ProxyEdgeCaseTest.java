@@ -27,7 +27,7 @@ public class ProxyEdgeCaseTest {
                 "});" +
                 "return outerProxy.p.value;";
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(11, result.first().toInteger());
     }
@@ -40,7 +40,7 @@ public class ProxyEdgeCaseTest {
                 "arr[0] = 99;" +
                 "return arr[0];";
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         try {
             runner.run();
             Assert.fail("Expected RulerRuntimeException for array index assignment on proxy treated as RSON");
@@ -63,7 +63,7 @@ public class ProxyEdgeCaseTest {
                 "p.a = 5;" +
                 "return obj.a;";
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        RulerRunner runner = Ruler.compileScript(script, configuration);
+        RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(15, result.first().toInteger());
     }

@@ -55,7 +55,9 @@ public class AtomParserManager implements Parser {
         statementParsers.add(Parsers.CONTINUE_PARSER);
         statementParsers.add(Parsers.RULE_PARSER);
         statementParsers.add(Parsers.INFIX_PARSER);
-        statementParsers.add(Parsers.BLOCK_PARSER);
+        // 故意从 statementParsers 中移除 BLOCK_PARSER 和 RSON_PARSER：
+        // 它们将在 parseExpression 中作为基本表达式处理，
+        // 这样顶层的 RSON/块字面量后面才能正确跟中缀运算符。
 
         // 以下解析器既是语句解析器，也是表达式解析器
         statementParsers.add(Parsers.IF_PARSER);
@@ -73,6 +75,7 @@ public class AtomParserManager implements Parser {
         expressionParsers.add(Parsers.NULL_PARSER);
         expressionParsers.add(Parsers.ARRAY_PARSER);
         expressionParsers.add(Parsers.RSON_PARSER);
+        expressionParsers.add(Parsers.BLOCK_PARSER);
         expressionParsers.add(Parsers.TYPE_OF_PARSER);
 
         // 这些既是语句也可以是表达式的解析器也需要添加到表达式解析器列表中

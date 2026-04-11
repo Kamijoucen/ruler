@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.domain.module.RulerModule;
 import com.kamijoucen.ruler.domain.parameter.RulerParameter;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.logic.util.AssertUtil;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.logic.util.ConvertUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -30,24 +29,6 @@ public class RulerInterpreter {
     public RulerInterpreter(RulerModule module, RulerConfiguration configuration) {
         this.module = module;
         this.configuration = configuration;
-    }
-
-    public List<Object> runExpression(List<RulerParameter> param, Scope runScope) {
-        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
-        RuntimeContext runtimeContext = configuration.createDefaultRuntimeContext(values);
-        if (hasImportGlobalModule) {
-            List<ImportNode> globalImportModules = configuration.getGlobalImportModules();
-            if (CollectionUtil.isNotEmpty(globalImportModules)) {
-                for (ImportNode node : globalImportModules) {
-                    node.eval(runScope, runtimeContext);
-                }
-            }
-        }
-        BaseNode firstNode = CollectionUtil.first(module.getStatements());
-        // 执行表达式
-        AssertUtil.notNull(firstNode);
-        BaseValue value = firstNode.eval(runScope, runtimeContext);
-        return CollectionUtil.list(convertToRealValue(value));
     }
 
     public List<Object> runStatement(Scope runScope, RuntimeContext runtimeContext) {

@@ -19,8 +19,8 @@ public class ErrorAndLimitTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     // ---------- max loop number ----------
@@ -29,14 +29,14 @@ public class ErrorAndLimitTest {
     public void testMaxLoopNumberExceededWhile() {
         configuration.setMaxLoopNumber(3);
         String script = "var i = 0; while true { i = i + 1; }";
-        compileScript(script).run();
+        compile(script).run();
     }
 
     @Test(expected = RulerRuntimeException.class)
     public void testMaxLoopNumberExceededForEach() {
         configuration.setMaxLoopNumber(2);
         String script = "for v in [1, 2, 3, 4, 5] { println(v); }";
-        compileScript(script).run();
+        compile(script).run();
     }
 
     // ---------- max stack depth ----------
@@ -45,49 +45,49 @@ public class ErrorAndLimitTest {
     public void testMaxStackDepthExceeded() {
         configuration.setMaxStackDepth(5);
         String script = "var f = fun(n) { if n <= 1 { return 1; } return n * f(n - 1); }; return f(10);";
-        compileScript(script).run();
+        compile(script).run();
     }
 
     // ---------- panic ----------
 
     @Test(expected = PanicException.class)
     public void testPanic() {
-        compileScript("Panic('something wrong');").run();
+        compile("Panic('something wrong');").run();
     }
 
     // ---------- undefined variable ----------
 
     @Test(expected = RulerRuntimeException.class)
     public void testUndefinedVariable() {
-        compileScript("return x;").run();
+        compile("return x;").run();
     }
 
     // ---------- redeclare variable ----------
 
     @Test(expected = RulerRuntimeException.class)
     public void testRedeclareVariable() {
-        compileScript("var a = 1; var a = 2;").run();
+        compile("var a = 1; var a = 2;").run();
     }
 
     // ---------- calling non-function ----------
 
     @Test(expected = RulerRuntimeException.class)
     public void testCallNonFunction() {
-        compileScript("var a = 1; a();").run();
+        compile("var a = 1; a();").run();
     }
 
     // ---------- if condition non-boolean ----------
 
     @Test(expected = RulerRuntimeException.class)
     public void testIfConditionNonBoolean() {
-        compileScript("if 1 { return 1; }").run();
+        compile("if 1 { return 1; }").run();
     }
 
     // ---------- invalid assignment target ----------
 
     @Test(expected = SyntaxException.class)
     public void testInvalidLhsAssignment() {
-        compileScript("1 = 2;").run();
+        compile("1 = 2;").run();
     }
 
     // ---------- division by zero produces infinity (not exception) ----------
@@ -95,7 +95,7 @@ public class ErrorAndLimitTest {
     @Test
     public void testDivByZeroIsInfinity() {
         RulerConfigurationImpl cfg = new RulerConfigurationImpl();
-        com.kamijoucen.ruler.domain.parameter.RulerResult r = Ruler.compileExpression("1 / 0", cfg).run();
+        com.kamijoucen.ruler.domain.parameter.RulerResult r = Ruler.compile("1 / 0", cfg).run();
         Assert.assertTrue(Double.isInfinite(r.first().toDouble()));
     }
 }

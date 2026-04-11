@@ -26,7 +26,7 @@ public class PerformanceTest {
 
         final String addScript = "var i = 0; var j = 0; while i < 100 { i = i + 1; j = j + 1 + 2 + 3 + 4+ 5 + 6+ 7; } return j;";
         configuration = new RulerConfigurationImpl();
-        addTestRunner = Ruler.compileScript(addScript, configuration);
+        addTestRunner = Ruler.compile(addScript, configuration);
     }
 
     @Benchmark

@@ -23,11 +23,11 @@ public class StringInterpolationTest {
     }
 
     public RulerRunner getExpressionRunner(String text) {
-        return Ruler.compileExpression(text, configuration);
+        return Ruler.compile(text, configuration);
     }
 
     public RulerRunner getScriptRunner(String text) {
-        return Ruler.compileScript(text, configuration);
+        return Ruler.compile(text, configuration);
     }
 
     @Test

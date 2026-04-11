@@ -7,17 +7,10 @@ import com.kamijoucen.ruler.domain.module.RulerScript;
 
 public class Ruler {
 
-    public static RulerRunner compileScript(String text, RulerConfiguration configuration) {
+    public static RulerRunner compile(String text, RulerConfiguration configuration) {
         RulerScript script = new RulerScript();
         script.setContent(text);
         RulerModule module = new RulerCompiler(script, configuration).compileScript();
-        return new RulerRunner(module, true, configuration);
-    }
-
-    public static RulerRunner compileExpression(String text, RulerConfiguration configuration) {
-        RulerScript script = new RulerScript();
-        script.setContent(text);
-        RulerModule module = new RulerCompiler(script, configuration).compileExpression();
-        return new RulerRunner(module, false, configuration);
+        return new RulerRunner(module, configuration);
     }
 }

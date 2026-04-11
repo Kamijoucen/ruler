@@ -18,8 +18,8 @@ public class RuleAndInfixTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     // ---------- rule statement ----------
@@ -27,7 +27,7 @@ public class RuleAndInfixTest {
     @Test
     public void testRuleStatementSingleReturn() {
         String script = "rule 'r1' { return 42; }";
-        RulerRunner runner = compileScript(script);
+        RulerRunner runner = compile(script);
         RulerResult r = runner.run();
         Assert.assertEquals(1, r.size());
         Object result = r.first().getValue();
@@ -42,7 +42,7 @@ public class RuleAndInfixTest {
     public void testRuleStatementMultipleReturns() {
         // Due to BlockEval breaking on returnFlag, only the first return is captured.
         String script = "rule 'r1' { return 1; return 2; return 3; }";
-        RulerRunner runner = compileScript(script);
+        RulerRunner runner = compile(script);
         RulerResult r = runner.run();
         Assert.assertEquals(1, r.size());
         Object result = r.first().getValue();
@@ -57,7 +57,7 @@ public class RuleAndInfixTest {
         // Due to returnFlag not being reset by RuleStatementEval, the interpreter
         // breaks after the first rule that contains a return.
         String script = "rule 'a' { return 1; } rule 'b' { return 2; }";
-        RulerRunner runner = compileScript(script);
+        RulerRunner runner = compile(script);
         RulerResult r = runner.run();
         Assert.assertEquals(1, r.size());
         SubRuleResultValue srv = (SubRuleResultValue) r.first().getValue();
@@ -67,7 +67,7 @@ public class RuleAndInfixTest {
     @Test
     public void testRuleWithNoReturn() {
         String script = "rule 'empty' { var a = 1; } return 0;";
-        RulerRunner runner = compileScript(script);
+        RulerRunner runner = compile(script);
         RulerResult r = runner.run();
         Assert.assertEquals(1, r.size());
         Assert.assertEquals(0L, r.first().toInteger());
@@ -79,14 +79,14 @@ public class RuleAndInfixTest {
     public void testInfixDefinition() {
         // Infix operators must be identifier-based to be parsed by the lexer/parser.
         String script = "infix fun pow(a, b) { return a - b; } return 10 pow 3;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(7L, r.first().toInteger());
     }
 
     @Test
     public void testInfixDefinitionWithClosure() {
         String script = "var base = 5; infix fun addBase(a, b) { return base + a + b; } return 1 addBase 2;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(8L, r.first().toInteger());
     }
 
@@ -94,7 +94,7 @@ public class RuleAndInfixTest {
     public void testInfixDefinitionPrecedence() {
         // Custom identifier infix operators share precedence 30 with ADD/SUB.
         String script = "infix fun mul(a, b) { return a * b; } return 2 + 3 mul 4;";
-        RulerResult r = compileScript(script).run();
+        RulerResult r = compile(script).run();
         Assert.assertEquals(20L, r.first().toInteger());
     }
 }

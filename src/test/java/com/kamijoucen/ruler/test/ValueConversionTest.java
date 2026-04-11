@@ -19,8 +19,8 @@ public class ValueConversionTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    private RulerRunner compileScript(String text) {
-        return Ruler.compileScript(text, configuration);
+    private RulerRunner compile(String text) {
+        return Ruler.compile(text, configuration);
     }
 
     // ---------- Java List to Array conversion ----------
@@ -30,7 +30,7 @@ public class ValueConversionTest {
         String script = "return $arr.length();";
         Map<String, Object> param = new HashMap<>();
         param.put("arr", Arrays.asList(1, 2, 3, 4));
-        RulerResult r = compileScript(script).run(param);
+        RulerResult r = compile(script).run(param);
         Assert.assertEquals(4L, r.first().toInteger());
     }
 
@@ -39,7 +39,7 @@ public class ValueConversionTest {
         String script = "return $arr[1];";
         Map<String, Object> param = new HashMap<>();
         param.put("arr", Arrays.asList("a", "b", "c"));
-        RulerResult r = compileScript(script).run(param);
+        RulerResult r = compile(script).run(param);
         Assert.assertEquals("b", r.first().toString());
     }
 
@@ -50,7 +50,7 @@ public class ValueConversionTest {
         String script = "return $val === null;";
         Map<String, Object> param = new HashMap<>();
         param.put("val", null);
-        RulerResult r = compileScript(script).run(param);
+        RulerResult r = compile(script).run(param);
         Assert.assertTrue(r.first().toBoolean());
     }
 
@@ -62,7 +62,7 @@ public class ValueConversionTest {
         Map<String, Object> param = new HashMap<>();
         Date now = new Date();
         param.put("d", now);
-        RulerResult r = compileScript(script).run(param);
+        RulerResult r = compile(script).run(param);
         Assert.assertTrue(r.first().getValue() instanceof Date);
     }
 
@@ -75,7 +75,7 @@ public class ValueConversionTest {
         Map<String, Object> inner = new HashMap<>();
         inner.put("name", "ruler");
         param.put("obj", inner);
-        RulerResult r = compileScript(script).run(param);
+        RulerResult r = compile(script).run(param);
         Assert.assertEquals("ruler", r.first().toString());
     }
 
@@ -83,49 +83,49 @@ public class ValueConversionTest {
 
     @Test
     public void testTypeofInteger() {
-        RulerResult r = compileScript("return typeof(1);").run();
+        RulerResult r = compile("return typeof(1);").run();
         Assert.assertEquals("int", r.first().toString());
     }
 
     @Test
     public void testTypeofDouble() {
-        RulerResult r = compileScript("return typeof(1.0);").run();
+        RulerResult r = compile("return typeof(1.0);").run();
         Assert.assertEquals("double", r.first().toString());
     }
 
     @Test
     public void testTypeofString() {
-        RulerResult r = compileScript("return typeof('hello');").run();
+        RulerResult r = compile("return typeof('hello');").run();
         Assert.assertEquals("string", r.first().toString());
     }
 
     @Test
     public void testTypeofBoolean() {
-        RulerResult r = compileScript("return typeof(true);").run();
+        RulerResult r = compile("return typeof(true);").run();
         Assert.assertEquals("boolean", r.first().toString());
     }
 
     @Test
     public void testTypeofArray() {
-        RulerResult r = compileScript("return typeof([1, 2]);").run();
+        RulerResult r = compile("return typeof([1, 2]);").run();
         Assert.assertEquals("array", r.first().toString());
     }
 
     @Test
     public void testTypeofObject() {
-        RulerResult r = compileScript("return typeof({});").run();
+        RulerResult r = compile("return typeof({});").run();
         Assert.assertEquals("object", r.first().toString());
     }
 
     @Test
     public void testTypeofNull() {
-        RulerResult r = compileScript("return typeof(null);").run();
+        RulerResult r = compile("return typeof(null);").run();
         Assert.assertEquals("null", r.first().toString());
     }
 
     @Test
     public void testTypeofFunction() {
-        RulerResult r = compileScript("return typeof(fun() {});").run();
+        RulerResult r = compile("return typeof(fun() {});").run();
         Assert.assertEquals("function", r.first().toString());
     }
 
@@ -133,7 +133,7 @@ public class ValueConversionTest {
 
     @Test
     public void testReturnArrayToJava() {
-        RulerResult r = compileScript("return [1, 2, 3];").run();
+        RulerResult r = compile("return [1, 2, 3];").run();
         Object val = r.first().getValue();
         Assert.assertTrue(val instanceof List);
         List<?> list = (List<?>) val;
@@ -142,7 +142,7 @@ public class ValueConversionTest {
 
     @Test
     public void testReturnRsonToJava() {
-        RulerResult r = compileScript("return {a: 1, b: 'hi'};").run();
+        RulerResult r = compile("return {a: 1, b: 'hi'};").run();
         Object val = r.first().getValue();
         Assert.assertTrue(val instanceof Map);
         Map<?, ?> map = (Map<?, ?>) val;
