@@ -1,10 +1,11 @@
 package com.kamijoucen.ruler.component;
 
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
-
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.kamijoucen.ruler.domain.token.Token;
+import com.kamijoucen.ruler.domain.token.TokenType;
 
 public class TokenStreamImpl implements TokenStream {
 
@@ -14,6 +15,7 @@ public class TokenStreamImpl implements TokenStream {
 
     private int offset = -1;
     private long lastTokenLine = -1;
+    private final ArrayDeque<Long> lastTokenLineStack = new ArrayDeque<>();
 
     public TokenStreamImpl(Lexical lexical) {
         this.lexical = lexical;
@@ -37,6 +39,7 @@ public class TokenStreamImpl implements TokenStream {
         if (offset >= tokens.size()) {
             return tokens.get(tokens.size() - 1);
         }
+        lastTokenLineStack.push(lastTokenLine);
         Token prev = offset >= 0 ? tokens.get(offset) : null;
         if (prev != null) {
             lastTokenLine = prev.location.line;
@@ -64,12 +67,19 @@ public class TokenStreamImpl implements TokenStream {
 
     @Override
     public void rollBackToken() {
-        offset--;
+        rollBackToken(1);
     }
 
     @Override
     public void rollBackToken(int step) {
-        offset -= step;
+        for (int i = 0; i < step; i++) {
+            if (offset >= 0) {
+                offset--;
+                if (!lastTokenLineStack.isEmpty()) {
+                    lastTokenLine = lastTokenLineStack.pop();
+                }
+            }
+        }
     }
 
     @Override
