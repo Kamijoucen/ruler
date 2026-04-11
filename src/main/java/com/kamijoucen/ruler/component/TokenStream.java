@@ -18,4 +18,6 @@ public interface TokenStream {
 
     void rollBackToken(int step);
 
+    boolean isNewLine();
+
 }

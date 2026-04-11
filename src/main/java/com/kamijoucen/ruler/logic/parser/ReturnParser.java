@@ -30,16 +30,22 @@ public class ReturnParser implements AtomParser {
         tokenStream.nextToken();
 
         List<BaseNode> param = new ArrayList<>();
-        if (tokenStream.token().type != TokenType.SEMICOLON) {
+        if (!isReturnEnd(tokenStream)) {
             param.add(manager.parseExpression());
         }
 
-        while (tokenStream.token().type != TokenType.SEMICOLON) {
+        while (!isReturnEnd(tokenStream)) {
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();
             param.add(manager.parseExpression());
         }
 
         return new ReturnNode(param, returnToken.location);
+    }
+
+    private boolean isReturnEnd(TokenStream tokenStream) {
+        TokenType t = tokenStream.token().type;
+        return t == TokenType.SEMICOLON || t == TokenType.RIGHT_BRACE || t == TokenType.EOF
+                || tokenStream.isNewLine();
     }
 }

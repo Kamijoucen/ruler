@@ -10,15 +10,25 @@ public class Token {
 
     public final char stringFlag;
 
+    public final long startLine;
+
+    public final long startColumn;
+
     public Token(TokenType type, String name, TokenLocation location) {
-        this(type, name, location, '\0');
+        this(type, name, location, '\0', location.line, location.column);
     }
 
     public Token(TokenType type, String name, TokenLocation location, char stringFlag) {
+        this(type, name, location, stringFlag, location.line, location.column);
+    }
+
+    public Token(TokenType type, String name, TokenLocation location, char stringFlag, long startLine, long startColumn) {
         this.type = type;
         this.name = name;
         this.location = location;
         this.stringFlag = stringFlag;
+        this.startLine = startLine;
+        this.startColumn = startColumn;
     }
 
     @Override

@@ -24,6 +24,8 @@ public class DefaultLexical implements Lexical {
     private boolean isEnd;
     private char curStringFlag;
     private final String fileName;
+    private long tokenStartLine;
+    private long tokenStartColumn;
 
     public DefaultLexical(String content, String fileName, RulerConfiguration configuration) {
         this.offset = 0;
@@ -80,6 +82,8 @@ public class DefaultLexical implements Lexical {
 
             if (state != State.NONE && state != State.COMMENT) {
                 match = true;
+                tokenStartLine = line;
+                tokenStartColumn = column;
             }
 
             switch (state) {
@@ -284,14 +288,14 @@ public class DefaultLexical implements Lexical {
     }
 
     private void makeToken(TokenType type) {
-        currentToken =
-                new Token(type, buffer.toString(), new TokenLocation(line, column, fileName));
+        currentToken = new Token(type, buffer.toString(),
+                new TokenLocation(line, column, fileName), '\0', tokenStartLine, tokenStartColumn);
         buffer.delete(0, buffer.length());
     }
 
     private void makeToken(TokenType type, char stringFlag) {
-        currentToken =
-                new Token(type, buffer.toString(), new TokenLocation(line, column, fileName), stringFlag);
+        currentToken = new Token(type, buffer.toString(),
+                new TokenLocation(line, column, fileName), stringFlag, tokenStartLine, tokenStartColumn);
         buffer.delete(0, buffer.length());
     }
 
@@ -340,8 +344,9 @@ public class DefaultLexical implements Lexical {
     }
 
     private void forward() {
+        char current = charAt();
         offset = offset + 1;
-        if (safeCharAt() != '\n') {
+        if (current != '\n') {
             ++column;
         } else {
             column = 0;

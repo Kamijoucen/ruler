@@ -114,8 +114,11 @@ public class AtomParserManager implements Parser {
                     "import statement without alias and infix is not allowed",
                     importToken.location);
         }
-        AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
-        tokenStream.nextToken();
+        if (tokenStream.token().type == TokenType.SEMICOLON) {
+            tokenStream.nextToken();
+        } else if (!tokenStream.isNewLine() && tokenStream.token().type != TokenType.EOF) {
+            throw new SyntaxException("expected semicolon or newline after import statement", tokenStream.token().location);
+        }
         return new ImportNode(path, aliasToken == null ? null : aliasToken.name, hasImportInfix,
                 importToken.location);
     }
@@ -151,8 +154,13 @@ public class AtomParserManager implements Parser {
         }
 
         if (isNeedSemicolon) {
-            AssertUtil.assertToken(tokenStream, TokenType.SEMICOLON);
-            tokenStream.nextToken();
+            if (tokenStream.token().type == TokenType.SEMICOLON) {
+                tokenStream.nextToken();
+            } else if (!tokenStream.isNewLine() && tokenStream.token().type != TokenType.EOF
+                    && tokenStream.token().type != TokenType.RIGHT_BRACE) {
+                throw new SyntaxException("expected semicolon or newline after statement",
+                        tokenStream.token().location);
+            }
         }
 
         if (isRoot) {
@@ -189,6 +197,9 @@ public class AtomParserManager implements Parser {
             Token curOpToken = tokenStream.token();
             int curTokenProc = OperationDefine.findPrecedence(curOpToken.type);
             if (curTokenProc < expPrec) {
+                return lhs;
+            }
+            if (curOpToken.type == TokenType.IDENTIFIER && tokenStream.isNewLine()) {
                 return lhs;
             }
 
