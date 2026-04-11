@@ -47,32 +47,23 @@ public class RulerInterpreter {
         // 执行表达式
         AssertUtil.notNull(firstNode);
         BaseValue value = firstNode.eval(runScope, runtimeContext);
-
-        ValueConvert convert =
-                this.configuration.getValueConvertManager().getConverter(value.getType());
-        return CollectionUtil.list(convert.baseToReal(value, configuration));
+        return CollectionUtil.list(convertToRealValue(value));
     }
 
     public List<Object> runStatement(Scope runScope, RuntimeContext runtimeContext) {
+        clearControlFlags(runtimeContext);
         List<BaseValue> values = new ArrayList<>();
         for (BaseNode statement : module.getStatements()) {
             BaseValue value = statement.eval(runScope, runtimeContext);
             values.add(value);
+            clearControlFlags(runtimeContext);
         }
         if (CollectionUtil.isEmpty(values)) {
             return Collections.emptyList();
         }
         List<Object> realValue = new ArrayList<>(values.size());
         for (BaseValue baseValue : values) {
-            // TODO 临时处理函数和闭包的返回值
-            if (baseValue.getType() == ValueType.FUNCTION
-                    || baseValue.getType() == ValueType.CLOSURE) {
-                realValue.add(baseValue);
-            } else {
-                ValueConvert convert = this.configuration.getValueConvertManager()
-                        .getConverter(baseValue.getType());
-                realValue.add(convert.baseToReal(baseValue, configuration));
-            }
+            realValue.add(convertToRealValue(baseValue));
         }
         return realValue;
     }
@@ -108,24 +99,32 @@ public class RulerInterpreter {
         }
         List<Object> realValue = new ArrayList<>(returnValue.size());
         for (BaseValue baseValue : returnValue) {
-            if (baseValue == null) {
-                realValue.add(null);
-                continue;
-            }
-            if (baseValue.getType() == ValueType.FUNCTION
-                    || baseValue.getType() == ValueType.CLOSURE) {
-                realValue.add(baseValue);
-                continue;
-            }
-            ValueConvert convert =
-                    this.configuration.getValueConvertManager().getConverter(baseValue.getType());
-            if (convert == null) {
-                realValue.add(baseValue);
-            } else {
-                realValue.add(convert.baseToReal(baseValue, configuration));
-            }
+            realValue.add(convertToRealValue(baseValue));
         }
         return realValue;
+    }
+
+    private Object convertToRealValue(BaseValue baseValue) {
+        if (baseValue == null) {
+            return null;
+        }
+        if (baseValue.getType() == ValueType.FUNCTION
+                || baseValue.getType() == ValueType.CLOSURE) {
+            return baseValue;
+        }
+        ValueConvert convert =
+                this.configuration.getValueConvertManager().getConverter(baseValue.getType());
+        if (convert == null) {
+            return baseValue;
+        }
+        return convert.baseToReal(baseValue, configuration);
+    }
+
+    private void clearControlFlags(RuntimeContext runtimeContext) {
+        runtimeContext.setBreakFlag(false);
+        runtimeContext.setContinueFlag(false);
+        runtimeContext.setReturnFlag(false);
+        runtimeContext.clearReturnSpace();
     }
 
     public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
