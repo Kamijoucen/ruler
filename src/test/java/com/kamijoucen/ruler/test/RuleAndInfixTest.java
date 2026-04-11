@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import com.kamijoucen.ruler.domain.parameter.SubRuleResultValue;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class RuleAndInfixTest {
@@ -40,28 +41,38 @@ public class RuleAndInfixTest {
 
     @Test
     public void testRuleStatementMultipleReturns() {
-        // Due to BlockEval breaking on returnFlag, only the first return is captured.
-        String script = "rule 'r1' { return 1; return 2; return 3; }";
+        String script = "rule 'r1' { return 1, 2, 3; }";
         RulerRunner runner = compile(script);
         RulerResult r = runner.run();
         Assert.assertEquals(1, r.size());
         Object result = r.first().getValue();
         Assert.assertTrue(result instanceof SubRuleResultValue);
         SubRuleResultValue srv = (SubRuleResultValue) result;
-        Assert.assertEquals(1, srv.getValues().size());
+        Assert.assertEquals(3, srv.getValues().size());
         Assert.assertEquals(1L, srv.getValues().get(0));
+        Assert.assertEquals(2L, srv.getValues().get(1));
+        Assert.assertEquals(3L, srv.getValues().get(2));
     }
 
     @Test
-    public void testMultipleRulesOneWithReturnBreaks() {
-        // Due to returnFlag not being reset by RuleStatementEval, the interpreter
-        // breaks after the first rule that contains a return.
+    public void currentBehaviorRuleReturnFlagLeaksAcrossRulesTest() {
+        // Current behavior: RuleStatementEval leaves returnFlag set, so later rules are skipped.
         String script = "rule 'a' { return 1; } rule 'b' { return 2; }";
         RulerRunner runner = compile(script);
         RulerResult r = runner.run();
         Assert.assertEquals(1, r.size());
         SubRuleResultValue srv = (SubRuleResultValue) r.first().getValue();
         Assert.assertEquals("a", srv.getName());
+    }
+
+    @Ignore("Known issue: RuleStatementEval leaves returnFlag set after a rule returns")
+    @Test
+    public void multipleRulesShouldBothExecuteTest() {
+        String script = "rule 'a' { return 1; } rule 'b' { return 2; }";
+        RulerResult r = compile(script).run();
+        Assert.assertEquals(2, r.size());
+        Assert.assertEquals("a", ((SubRuleResultValue) r.getResult().get(0).getValue()).getName());
+        Assert.assertEquals("b", ((SubRuleResultValue) r.getResult().get(1).getValue()).getName());
     }
 
     @Test

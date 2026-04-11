@@ -66,6 +66,25 @@ public class ImportAndModuleTest {
         Assert.assertEquals(1, loadCount.get());
     }
 
+    @Test
+    public void testCachedModuleUsesFreshRuntimeStatePerImportAlias() {
+        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+            @Override
+            public boolean match(String path) {
+                return "counter_module".equals(path);
+            }
+
+            @Override
+            public String load(String path) {
+                return "var counter = 0; fun Next() { counter = counter + 1; return counter; }";
+            }
+        });
+
+        String script = "import 'counter_module' a; import 'counter_module' b; a.Next(); return b.Next();";
+        RulerResult result = compile(script).run();
+        Assert.assertEquals(1L, result.first().toInteger());
+    }
+
     // ---------- import infix ----------
 
     @Test

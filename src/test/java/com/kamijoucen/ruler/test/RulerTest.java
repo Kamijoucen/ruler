@@ -1,15 +1,15 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.service.Ruler;
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.logic.function.RulerFunction;
-import com.kamijoucen.ruler.service.RulerRunner;
 import com.kamijoucen.ruler.domain.parameter.RulerParameter;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.service.RulerRunner;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,143 +35,101 @@ public class RulerTest {
 
     @Test
     public void test7() {
-
-        String str = "var a = 0; if false { a = 1; b = 66;} else if true {a=2;} else { a = 3;}";
-
+        String str = "var a = 0; if false { a = 1; } else if true { a = 2; } else { a = 3; } return a;";
         RulerRunner runner = Ruler.compile(str, configuration);
-
-        runner.run();
-
+        Assert.assertEquals(2L, runner.run().first().toInteger());
     }
 
     @Test
     public void test8() {
-
-        String str = "var str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible();} println(str, 1, 2, 3, '李思岑');";
-
-        String str2 = "text = \"hello world!\"; println(text);";
-
+        String str = "var str = ''; if 5 < 5 { str = '123123'; } else { str = makeItPossible(); } return typeof(str);";
         RulerRunner runner = Ruler.compile(str, configuration);
-
-        runner.run();
-
+        Assert.assertEquals("string", runner.run().first().toString());
     }
 
     @Test
     public void test9() {
-        String str2 = "var i = 15; println(i);";
-        RulerRunner runner = Ruler.compile(str2, configuration);
-
-        runner.run();
-
+        String str = "var i = 15; return i;";
+        RulerRunner runner = Ruler.compile(str, configuration);
+        Assert.assertEquals(15L, runner.run().first().toInteger());
     }
 
     @Test
     public void test_rson_parse() {
-
-        String str = "var rson = {name:'name', age:1, doit:fun() { println('gogogogo'); },}; println(rson.name, rson.age, rson.doit());";
-
+        String str = "var rson = {name:'name', age:1, doit:fun() { return 'go'; }}; return rson.name ++ ':' ++ rson.doit();";
         RulerRunner script = Ruler.compile(str, configuration);
-
-        script.run();
-
-        System.out.println(script);
-
+        Assert.assertEquals("name:go", script.run().first().toString());
     }
 
     @Test
     public void test_rson_parse2() {
-
-        String str = "var rson = {f: { ff: fun() {println('go!');} }};";
-
+        String str = "var rson = {f: {ff: fun() { return 'go!'; }}}; return rson.f.ff();";
         RulerRunner script = Ruler.compile(str, configuration);
-
-        System.out.println(script);
-
+        Assert.assertEquals("go!", script.run().first().toString());
     }
 
     @Test
     public void test_dot_call2() {
-        String str = "var test = '啊啊啊啊啊'; var name = {getAge: fun() { return 19, test; }, name: '哈哈哈哈'}; println(name.name); println(name.getAge());";
-
+        String str = "var test = 'value'; var name = {getAge: fun() { return 19, test; }, name: 'hello'}; var result = name.getAge(); return [name.name, result[0], result[1]];";
         RulerRunner script = Ruler.compile(str, configuration);
-
-        script.run();
+        List<?> values = (List<?>) script.run().first().getValue();
+        Assert.assertEquals("hello", values.get(0));
+        Assert.assertEquals(19L, values.get(1));
+        Assert.assertEquals("value", values.get(2));
     }
 
     @Test
     public void test_rson_this() {
-
-        String str = "var a = {f: fun(self, age) { println('------', age); return self.name; }, name: 'ggggggggg11'}; println(a.f(18));";
-
+        String str = "var a = {f: fun(self, age) { return self.name ++ age; }, name: 'name-'}; return a.f(18);";
         RulerRunner script = Ruler.compile(str, configuration);
-
-        script.run();
-
+        Assert.assertEquals("name-18", script.run().first().toString());
     }
 
     @Test
     public void out_name() {
-
-        String str = "println(({a:1}).a);";
-
+        String str = "return ({a:1}).a;";
         RulerRunner script = Ruler.compile(str, configuration);
-
-        Map<String, Object> param = new HashMap<String, Object>();
-        param.put("a", "lisicen");
-        param.put("v1", 1);
-        param.put("v2", 15);
-
-        script.run(param);
-
+        Assert.assertEquals(1L, script.run().first().toInteger());
     }
 
     @Test
     public void typeof_test() {
-        String str = "var a = '15'; println(typeof a); println(typeof (fun() {})());println(typeof 1);println(typeof 1.0);println(typeof println);";
-        String sql = "var a = 5; println($a);";
-        RulerRunner script = Ruler.compile(sql, configuration);
-        script.run();
+        String str = "return [typeof('15'), typeof(fun() {}), typeof(1), typeof(1.0), typeof(println)];";
+        RulerRunner script = Ruler.compile(str, configuration);
+        List<?> result = (List<?>) script.run().first().getValue();
+        Assert.assertEquals("string", result.get(0));
+        Assert.assertEquals("function", result.get(1));
+        Assert.assertEquals("int", result.get(2));
+        Assert.assertEquals("double", result.get(3));
+        Assert.assertEquals("function", result.get(4));
     }
 
     @Test
     public void null_input_test() {
-
-        String script = "$name == '12'";
+        String script = "$name === null";
         RulerRunner runner = Ruler.compile(script, configuration);
-
         Map<String, Object> args = new HashMap<String, Object>();
-        args.put("name", 12);
-
+        args.put("name", null);
         RulerResult result = runner.run(args);
-
-        System.out.println(result.first().toBoolean());
+        Assert.assertTrue(result.first().toBoolean());
     }
 
     @Test
     public void array_call() {
-
-        String script = "var arr = [[1]];  println(arr[0].length());";
-        // String script = "var arr = [[1]]; println(arr[0]?.Length());";
-
+        String script = "var arr = [[1]]; return arr[0].length();";
         RulerRunner run = Ruler.compile(script, configuration);
-
-        run.run();
+        Assert.assertEquals(1L, run.run().first().toInteger());
     }
 
     @Test
     public void import_test() {
-
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
-
         RulerRunner run = Ruler.compile(script, configuration);
-
         run.run();
     }
 
     @Test
     public void custom_function() {
-
         configuration.registerGlobalFunction(new RulerFunction() {
             @Override
             public String getName() {
@@ -184,31 +142,24 @@ public class RulerTest {
             }
         });
 
-        String text = "var a = 哈哈哈哈(); println(typeof(哈哈哈哈));";
-
+        String text = "return [哈哈哈哈(), typeof(哈哈哈哈)];";
         RulerRunner run = Ruler.compile(text, configuration);
-
-        run.run();
-
+        List<?> result = (List<?>) run.run().first().getValue();
+        Assert.assertEquals("我们gg啦！！！", result.get(0));
+        Assert.assertEquals("function", result.get(1));
     }
 
     @Test
     public void in_arr_test() {
-
         String script = "var arr = [2, 1, 85, 15,3]; println(listUtil.In(825, arr));";
-
         RulerRunner run = Ruler.compile(script, configuration);
-
         run.run();
-
     }
 
     @Test
     public void util_test() {
         String script = "import '/ruler/std/util.txt' util; var arr = [2, 1, 85, 15,3]; println(util.NotContainsAnyOne(63, arr, fun(v1, v2) { return v1 == v2; }));";
-
         RulerRunner run = Ruler.compile(script, configuration);
-
         run.run();
     }
 
@@ -228,9 +179,7 @@ public class RulerTest {
 
     @Test
     public void eq_null() {
-
         String s = "((util.EqArrayAnyOne($_start_user_key, ['125'])) && (util.Eq($var_623a8e5cfe7b9e1b639f2679, 'c8024e9451db4b37b86643c6fb8b8c71')))";
-
         RulerRunner run = Ruler.compile(s, configuration);
 
         RulerParameter p = new RulerParameter(ValueType.STRING, "var_623a8e5cfe7b9e1b639f2679",
@@ -243,51 +192,35 @@ public class RulerTest {
         System.out.println(result.first().toBoolean());
     }
 
-    // @Test
-    // public void loop_count_check() {
-    //     String script = "var i = 0; while i < 10 { i = i + 1; println(i); }";
-
-    //     RuleRunner run = Ruler.compile(script, configuration);
-
-    //     run.run();
-    // }
-
     @Test
     public void time_stamp_check() {
         String script = "import '/ruler/std/sort.txt' sort; var arr = [2, 1, 85, 15,3]; sort.Sort(arr); println(arr);";
-
         RulerRunner run = Ruler.compile(script, configuration);
-
         System.out.println("- " + System.currentTimeMillis());
         run.run();
         System.out.println("- " + System.currentTimeMillis());
-
     }
 
     @Test
     public void loop_root_return() {
-        String script = "var i = 0; println((fun() {return 'aaa'; })()); while i < 10 { i = i + 1; if i == 5 { return 'lisicen'; } } return 'hehe';";
+        String script = "var i = 0; while i < 10 { i = i + 1; if i == 5 { return 'lisicen'; } } return 'hehe';";
         RulerRunner run = Ruler.compile(script, configuration);
-
-        RulerResult result = run.run();
-        System.out.println(result);
+        Assert.assertEquals("lisicen", run.run().first().toString());
     }
 
     @Test
     public void fun_args_test() {
-        String script = "var a = fun() { println(_args_); }; a(1, [1, 2], 1.1);";
-
+        String script = "var a = fun() { return _args_[1][1]; }; return a(1, [1, 2], 1.1);";
         RulerRunner run = Ruler.compile(script, configuration);
-        RulerResult result = run.run();
+        Assert.assertEquals(2L, run.run().first().toInteger());
     }
 
     @Test
     public void global_test() {
         String script = "println(op.Add(1, 2, -3)); println(op.Sub(6, 3, -1));";
-
         RulerRunner run = Ruler.compile(script, configuration);
         long v1 = System.currentTimeMillis();
-        RulerResult result = run.run();
+        run.run();
         long v2 = System.currentTimeMillis();
         System.out.println("time1: " + (v2 - v1));
 
@@ -299,82 +232,51 @@ public class RulerTest {
 
     @Test
     public void global_script_test() {
-
         String script = "println(ok.Ok());";
-
         RulerRunner run = Ruler.compile(script, configuration);
         run.run();
-
     }
 
     @Test
     public void string_plus_test() {
-        List<String> list = new ArrayList<String>();
-        System.out.println(list.getClass().isArray());
+        String script = "return 'hello' ++ ' world';";
+        RulerRunner runner = Ruler.compile(script, configuration);
+        Assert.assertEquals("hello world", runner.run().first().toString());
     }
-
 
     @Test
     public void scopeTest1() {
-
-        String script = "var f = fun() { println(a); }; var a = 100; f();";
-
+        String script = "var f = fun() { return a; }; var a = 100; return f();";
         RulerRunner run = Ruler.compile(script, configuration);
-
-        run.run();
-
+        Assert.assertEquals(100L, run.run().first().toInteger());
     }
 
     @Test
     public void testAssign() {
-        String script = "for arg in _args_:\n" +
-                "        num = num + ToNumber(arg);";
+        String script = "var num = 0; for arg in [1, 2, 3] { num = num + arg; } return num;";
         RulerRunner runner = Ruler.compile(script, configuration);
-
+        Assert.assertEquals(6L, runner.run().first().toInteger());
     }
 
     @Test
     public void testIf() {
-        String script = "if true {} i = i + 1;";
+        String script = "var i = 0; if true {} i = i + 1; return i;";
         RulerRunner runner = Ruler.compile(script, configuration);
-    }
-
-    // @Test
-    // public void testb() {
-    //     String str = "name.test()[1].num = 15;";
-    //     RuleRunner runner = Ruler.compile(str, configuration);
-    //     System.out.println(runner.run());
-    // }
-
-    @Test
-    public void testc() {
-
-        String str = "'aaaa'.println()";
-
-        RulerRunner runner = Ruler.compile(str, configuration);
-
-        RulerResult result = runner.run();
-        System.out.println(result);
+        Assert.assertEquals(1L, runner.run().first().toInteger());
     }
 
     @Test
     public void testSimpleBreak() {
-
         String str = "var i = 0; while i < 10 { i = i + 1; if i == 5 { break; } } return i;";
-
         RulerRunner runner = Ruler.compile(str, configuration);
-
-
-        Assert.assertEquals(5, runner.run().first().toInteger());
-
+        Assert.assertEquals(5L, runner.run().first().toInteger());
     }
 
-    // static cap test
     @Test
     public void testStaticCap() {
-        String str = "var a = 1; var f = fun[a]() { println(a); }; var b = 2; f();";
+        String str = "var a = 1; var f = fun[a]() { return a; }; a = 2; return f();";
         RulerRunner runner = Ruler.compile(str, configuration);
-        runner.run();
+        Assert.assertEquals(1L, runner.run().first().toInteger());
     }
 
     @Test
@@ -395,7 +297,6 @@ public class RulerTest {
     public void test_method_no_self_direct_call() {
         String str = "var f = fun(self, a, b) { return a + b; }; var obj = { add: f }; return obj.add(1, 2);";
         RulerRunner runner = Ruler.compile(str, configuration);
-        Assert.assertEquals(3, runner.run().first().toInteger());
+        Assert.assertEquals(3L, runner.run().first().toInteger());
     }
-
 }
