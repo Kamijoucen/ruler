@@ -34,6 +34,14 @@ public class ReplAndStatementTest {
         return interpreter.runStatement(runScope, runtimeContext);
     }
 
+    private List<Object> runScript(String code) {
+        RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", code), configuration);
+        com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileScript();
+        RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
+        interpreter.setHasImportGlobalModule(false);
+        return interpreter.runScript(runScope, runtimeContext);
+    }
+
     // ---------- compile statement basic ----------
 
     @Test
@@ -98,5 +106,40 @@ public class ReplAndStatementTest {
         Assert.assertEquals(1L, result.get(0));
         Assert.assertEquals(2L, result.get(1));
         Assert.assertEquals(3L, result.get(2));
+    }
+
+    // ---------- script implicit return ----------
+
+    @Test
+    public void testScriptImplicitReturnExpression() {
+        List<Object> result = runScript("var a = 5; a + 3;");
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(8L, result.get(0));
+    }
+
+    @Test
+    public void testScriptImplicitReturnVarDefine() {
+        List<Object> result = runScript("var a = 10;");
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(10L, result.get(0));
+    }
+
+    @Test
+    public void testScriptExplicitReturnStillWorks() {
+        List<Object> result = runScript("return 42;");
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals(42L, result.get(0));
+    }
+
+    @Test
+    public void testScriptEmptyReturnGivesEmptyList() {
+        List<Object> result = runScript("return;");
+        Assert.assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testEmptyScriptReturnsEmptyList() {
+        List<Object> result = runScript("");
+        Assert.assertEquals(0, result.size());
     }
 }

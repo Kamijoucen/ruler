@@ -149,6 +149,30 @@ public class FunctionAndClosureTest {
         Assert.assertEquals(7L, r.first().toInteger());
     }
 
+    // ---------- implicit return ----------
+
+    @Test
+    public void testImplicitReturnExpression() {
+        String script = "fun f() { 42; } return f();";
+        RulerResult r = compileScript(script).run();
+        Assert.assertEquals(42L, r.first().toInteger());
+    }
+
+    @Test
+    public void testImplicitReturnVarDefine() {
+        String script = "fun f() { var a = 10; } return f();";
+        RulerResult r = compileScript(script).run();
+        Assert.assertEquals(10L, r.first().toInteger());
+    }
+
+    @Test
+    public void testExplicitEmptyReturnStillNull() {
+        String script = "fun f() { return; } return f();";
+        RulerResult r = compileScript(script).run();
+        Assert.assertEquals(1, r.size());
+        Assert.assertNull(r.first().getValue());
+    }
+
     // ---------- arrow function ----------
 
     @Test

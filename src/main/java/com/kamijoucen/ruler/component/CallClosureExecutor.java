@@ -51,16 +51,19 @@ public class CallClosureExecutor {
             }
         }
         // call function
-        closure.getBlock().eval(callScope, context);
+        BaseValue blockVal = closure.getBlock().eval(callScope, context);
         // get return value
-        List<BaseValue> returnSpace = context.getReturnSpace();
-        if (CollectionUtil.isEmpty(returnSpace)) {
-            return NullValue.INSTANCE;
+        if (context.isReturnFlag()) {
+            List<BaseValue> returnSpace = context.getReturnSpace();
+            if (CollectionUtil.isEmpty(returnSpace)) {
+                return NullValue.INSTANCE;
+            }
+            if (returnSpace.size() == 1) {
+                return returnSpace.get(0);
+            }
+            return new ArrayValue(returnSpace);
         }
-        if (returnSpace.size() == 1) {
-            return returnSpace.get(0);
-        }
-        return new ArrayValue(returnSpace);
+        return blockVal;
 
     }
 

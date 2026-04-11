@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.test;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenLocation;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
-import com.kamijoucen.ruler.domain.value.NullValue;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import org.junit.Assert;
 import org.junit.Test;

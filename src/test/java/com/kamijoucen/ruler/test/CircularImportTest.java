@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.component.option.CustomImportLoader;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.service.Ruler;
 import com.kamijoucen.ruler.service.RulerRunner;
 import org.junit.Assert;

@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
-import com.kamijoucen.ruler.domain.value.BaseValue;
 
 import java.util.List;
 import java.util.Map;

@@ -49,6 +49,7 @@ public class ImportEval implements BaseEval<ImportNode> {
         RulerInterpreter interpreter =
                 new RulerInterpreter(importModule, context.getConfiguration());
         interpreter.setHasImportGlobalModule(false);
+        interpreter.setImplicitReturn(false);
         interpreter.runScript(runScope, otherContext);
         // include infix
         if (node.isHasImportInfix()) {

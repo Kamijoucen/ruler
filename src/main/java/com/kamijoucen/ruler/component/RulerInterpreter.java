@@ -11,6 +11,7 @@ import com.kamijoucen.ruler.logic.util.AssertUtil;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.logic.util.ConvertUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
+import com.kamijoucen.ruler.domain.value.NullValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 
@@ -24,6 +25,7 @@ public class RulerInterpreter {
     private final RulerModule module;
     private final transient RulerConfiguration configuration;
     private boolean hasImportGlobalModule = true;
+    private boolean implicitReturn = true;
 
     public RulerInterpreter(RulerModule module, RulerConfiguration configuration) {
         this.module = module;
@@ -76,31 +78,52 @@ public class RulerInterpreter {
     }
 
     public List<Object> runScript(Scope runScope, RuntimeContext runtimeContext) {
+        List<BaseNode> userStatements = module.getStatements();
         List<BaseNode> allNode = new ArrayList<>(
-                module.getStatements().size() + configuration.getGlobalImportModules().size());
+                userStatements.size() + configuration.getGlobalImportModules().size());
         if (hasImportGlobalModule) {
             allNode.addAll(configuration.getGlobalImportModules());
         }
-        allNode.addAll(module.getStatements());
+        allNode.addAll(userStatements);
+        boolean hasUserStatement = !userStatements.isEmpty();
 
+        BaseValue lastVal = NullValue.INSTANCE;
         for (BaseNode statement : allNode) {
-            statement.eval(runScope, runtimeContext);
+            lastVal = statement.eval(runScope, runtimeContext);
             if (runtimeContext.isReturnFlag()) {
                 break;
             }
         }
+        boolean wasReturn = runtimeContext.isReturnFlag();
         runtimeContext.setReturnFlag(false);
         List<BaseValue> returnValue = runtimeContext.getReturnSpace();
         runtimeContext.clearReturnSpace();
+
+        if (implicitReturn && !wasReturn && hasUserStatement && CollectionUtil.isEmpty(returnValue)) {
+            returnValue = Collections.singletonList(lastVal);
+        }
 
         if (CollectionUtil.isEmpty(returnValue)) {
             return Collections.emptyList();
         }
         List<Object> realValue = new ArrayList<>(returnValue.size());
         for (BaseValue baseValue : returnValue) {
+            if (baseValue == null) {
+                realValue.add(null);
+                continue;
+            }
+            if (baseValue.getType() == ValueType.FUNCTION
+                    || baseValue.getType() == ValueType.CLOSURE) {
+                realValue.add(baseValue);
+                continue;
+            }
             ValueConvert convert =
                     this.configuration.getValueConvertManager().getConverter(baseValue.getType());
-            realValue.add(convert.baseToReal(baseValue, configuration));
+            if (convert == null) {
+                realValue.add(baseValue);
+            } else {
+                realValue.add(convert.baseToReal(baseValue, configuration));
+            }
         }
         return realValue;
     }
@@ -117,6 +140,14 @@ public class RulerInterpreter {
 
     public void setHasImportGlobalModule(boolean hasImportGlobalModule) {
         this.hasImportGlobalModule = hasImportGlobalModule;
+    }
+
+    public boolean isImplicitReturn() {
+        return implicitReturn;
+    }
+
+    public void setImplicitReturn(boolean implicitReturn) {
+        this.implicitReturn = implicitReturn;
     }
 
 }

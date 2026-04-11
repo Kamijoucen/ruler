@@ -9,10 +9,8 @@ import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ManagerTest {
 

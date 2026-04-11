@@ -2,7 +2,6 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.service.Ruler;
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.service.RulerRunner;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import org.junit.Assert;

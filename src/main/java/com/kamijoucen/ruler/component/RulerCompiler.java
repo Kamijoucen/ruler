@@ -9,8 +9,6 @@ import com.kamijoucen.ruler.domain.module.RulerModule;
 import com.kamijoucen.ruler.domain.module.RulerScript;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.type.FailureType;
-import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.logic.util.SyntaxCheckUtil;
 
