@@ -7,6 +7,8 @@ import com.kamijoucen.ruler.domain.ast.factor.*;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
+import com.kamijoucen.ruler.domain.runtime.TypeScope;
+import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.domain.type.*;
 
 public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
@@ -51,7 +53,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        if (node.getOp() == com.kamijoucen.ruler.domain.token.TokenType.NOT) {
+        if (node.getOp() == TokenType.NOT) {
             RulerType expType = node.getLhs().typeCheck(scope, context);
             if (expType.getKind() == TypeKind.UNKNOWN) {
                 return UnknownType.INSTANCE;
@@ -72,7 +74,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
         if (expType.getKind() == TypeKind.UNKNOWN) {
             return UnknownType.INSTANCE;
         }
-        if (node.getOp() == com.kamijoucen.ruler.domain.token.TokenType.NOT) {
+        if (node.getOp() == TokenType.NOT) {
             if (expType.getKind() != TypeKind.BOOL) {
                 throw new SyntaxException(
                         "unary operator '!' requires BOOL but got " + expType.getKind(),
@@ -80,8 +82,8 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
             }
             return BoolType.INSTANCE;
         }
-        if (node.getOp() == com.kamijoucen.ruler.domain.token.TokenType.SUB
-                || node.getOp() == com.kamijoucen.ruler.domain.token.TokenType.ADD) {
+        if (node.getOp() == TokenType.SUB
+                || node.getOp() == TokenType.ADD) {
             if (!expType.isNumeric()) {
                 throw new SyntaxException(
                         "unary operator '" + unaryOpSymbol(node.getOp())
@@ -115,7 +117,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(BlockNode node, Scope scope, RuntimeContext context) {
-        context.setTypeScope(new com.kamijoucen.ruler.domain.runtime.TypeScope(context.getTypeScope()));
+        context.setTypeScope(new TypeScope(context.getTypeScope()));
         try {
             for (BaseNode block : node.getBlocks()) {
                 block.typeCheck(scope, context);
@@ -166,7 +168,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
     @Override
     public RulerType eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
         node.getList().typeCheck(scope, context);
-        context.setTypeScope(new com.kamijoucen.ruler.domain.runtime.TypeScope(context.getTypeScope()));
+        context.setTypeScope(new TypeScope(context.getTypeScope()));
         try {
             if (node.getLoopName() != null) {
                 context.getTypeScope().put(node.getLoopName().name, UnknownType.INSTANCE);
@@ -209,7 +211,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(ClosureDefineNode node, Scope scope, RuntimeContext context) {
-        context.setTypeScope(new com.kamijoucen.ruler.domain.runtime.TypeScope(context.getTypeScope()));
+        context.setTypeScope(new TypeScope(context.getTypeScope()));
         try {
             for (BaseNode param : node.getParam()) {
                 param.typeCheck(scope, context);
@@ -269,14 +271,14 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
         return UnknownType.INSTANCE;
     }
 
-    private String unaryOpSymbol(com.kamijoucen.ruler.domain.token.TokenType op) {
-        if (op == com.kamijoucen.ruler.domain.token.TokenType.ADD) {
+    private String unaryOpSymbol(TokenType op) {
+        if (op == TokenType.ADD) {
             return "+";
         }
-        if (op == com.kamijoucen.ruler.domain.token.TokenType.SUB) {
+        if (op == TokenType.SUB) {
             return "-";
         }
-        if (op == com.kamijoucen.ruler.domain.token.TokenType.NOT) {
+        if (op == TokenType.NOT) {
             return "!";
         }
         return op.name();

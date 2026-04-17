@@ -8,7 +8,7 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
-public class IndexOfFunction implements RulerFunction {
+public class ArrayIndexOfFunction implements RulerFunction {
 
     @Override
     public String getName() {

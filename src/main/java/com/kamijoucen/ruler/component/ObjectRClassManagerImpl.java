@@ -46,7 +46,7 @@ public class ObjectRClassManagerImpl implements RClassManager {
         RClass baseRClass = createBaseRClass();
         addFunToRClass(new LengthFunction(), baseRClass);
         addFunToRClass("substring", new SubstringFunction(), baseRClass);
-        addFunToRClass("indexOf", new com.kamijoucen.ruler.logic.function.string.IndexOfFunction(), baseRClass);
+        addFunToRClass("indexOf", new StringIndexOfFunction(), baseRClass);
         addFunToRClass("replace", new ReplaceFunction(), baseRClass);
         addFunToRClass("split", new SplitFunction(), baseRClass);
         addFunToRClass("trim", new TrimFunction(), baseRClass);
@@ -69,7 +69,7 @@ public class ObjectRClassManagerImpl implements RClassManager {
         addFunToRClass("reverse", new ReverseFunction(), rClass);
         addFunToRClass("concat", new ConcatFunction(), rClass);
         addFunToRClass("join", new JoinFunction(), rClass);
-        addFunToRClass("indexOf", new com.kamijoucen.ruler.logic.function.array.IndexOfFunction(), rClass);
+        addFunToRClass("indexOf", new ArrayIndexOfFunction(), rClass);
         addFunToRClass("sort", new SortFunction(), rClass);
         addFunToRClass("map", new MapFunction(), rClass);
         addFunToRClass("filter", new FilterFunction(), rClass);

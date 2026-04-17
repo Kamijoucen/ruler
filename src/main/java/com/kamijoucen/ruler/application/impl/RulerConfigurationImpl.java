@@ -152,7 +152,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         putGlobal(new RandomFunction());
 
         putGlobal(new SubstringFunction());
-        putGlobal(new com.kamijoucen.ruler.logic.function.string.IndexOfFunction());
+        putGlobal(new StringIndexOfFunction());
         putGlobal(new ReplaceFunction());
         putGlobal(new SplitFunction());
         putGlobal(new TrimFunction());
@@ -173,7 +173,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         putGlobal(new PopFunction());
         putGlobal(new ShiftFunction());
         putGlobal(new UnshiftFunction());
-        putGlobal(new com.kamijoucen.ruler.logic.function.array.IndexOfFunction());
+        putGlobal(new ArrayIndexOfFunction());
         putGlobal(new SortFunction());
 
         putGlobal(new KeysFunction());
