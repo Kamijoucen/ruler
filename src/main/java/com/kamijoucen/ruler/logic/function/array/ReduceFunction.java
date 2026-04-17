@@ -7,6 +7,8 @@ import com.kamijoucen.ruler.domain.value.*;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigInteger;
+
 public class ReduceFunction implements RulerFunction {
 
     @Override
@@ -40,7 +42,7 @@ public class ReduceFunction implements RulerFunction {
         for (int i = startIndex; i < arr.getValues().size(); i++) {
             BaseValue item = arr.getValues().get(i);
             accumulator = callCallback(callback, currentScope, context, accumulator, item,
-                    context.getConfiguration().getIntegerNumberCache().getValue(i), arr);
+                    context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(i)), arr);
         }
         return accumulator;
     }

@@ -6,8 +6,10 @@ import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.*;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
-import java.util.Collections;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Comparator;
 import java.util.List;
 
@@ -39,7 +41,7 @@ public class SortFunction implements RulerFunction {
     private Comparator<BaseValue> defaultComparator() {
         return (a, b) -> {
             if (isNumber(a) && isNumber(b)) {
-                return Double.compare(toDouble(a), toDouble(b));
+                return NumberUtil.compareNumbers(a, b);
             }
             if (a.getType() == ValueType.STRING && b.getType() == ValueType.STRING) {
                 return ((StringValue) a).getValue().compareTo(((StringValue) b).getValue());
@@ -61,11 +63,11 @@ public class SortFunction implements RulerFunction {
                 throw new RulerRuntimeException("arraySort comparator must be a function");
             }
             if (result.getType() == ValueType.INTEGER) {
-                long v = ((IntegerValue) result).getValue();
-                return v > 0 ? 1 : (v < 0 ? -1 : 0);
+                BigInteger v = ((IntegerValue) result).getValue();
+                return v.compareTo(BigInteger.ZERO);
             } else if (result.getType() == ValueType.DOUBLE) {
-                double v = ((DoubleValue) result).getValue();
-                return v > 0 ? 1 : (v < 0 ? -1 : 0);
+                BigDecimal v = ((DoubleValue) result).getValue();
+                return v.compareTo(BigDecimal.ZERO);
             }
             throw new RulerRuntimeException("arraySort comparator must return a number");
         };
@@ -73,12 +75,5 @@ public class SortFunction implements RulerFunction {
 
     private boolean isNumber(BaseValue value) {
         return value.getType() == ValueType.INTEGER || value.getType() == ValueType.DOUBLE;
-    }
-
-    private double toDouble(BaseValue value) {
-        if (value.getType() == ValueType.INTEGER) {
-            return ((IntegerValue) value).getValue();
-        }
-        return ((DoubleValue) value).getValue();
     }
 }

@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.logic.function.math;
 
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -8,6 +7,8 @@ import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
+
 
 public class MinFunction implements RulerFunction {
 
@@ -21,22 +22,23 @@ public class MinFunction implements RulerFunction {
         if (param == null || param.length == 0) {
             return null;
         }
-        double min = Double.MAX_VALUE;
-        boolean hasDouble = false;
-        for (Object p : param) {
-            BaseValue value = (BaseValue) p;
+        BaseValue min = (BaseValue) param[0];
+        boolean hasDouble = min.getType() == ValueType.DOUBLE;
+        for (int i = 1; i < param.length; i++) {
+            BaseValue value = (BaseValue) param[i];
             if (value.getType() == ValueType.DOUBLE) {
                 hasDouble = true;
-                min = Math.min(min, ((DoubleValue) value).getValue());
-            } else if (value.getType() == ValueType.INTEGER) {
-                min = Math.min(min, ((IntegerValue) value).getValue());
-            } else {
-                throw new RulerRuntimeException("min expects numbers");
+            }
+            if (NumberUtil.compareNumbers(value, min) < 0) {
+                min = value;
             }
         }
         if (hasDouble) {
-            return new DoubleValue(min);
+            return new DoubleValue(NumberUtil.toBigDecimal(min));
         }
-        return context.getConfiguration().getIntegerNumberCache().getValue((long) min);
+        if (min.getType() == ValueType.INTEGER) {
+            return context.getConfiguration().getIntegerNumberCache().getValue(((IntegerValue) min).getValue());
+        }
+        return new DoubleValue(NumberUtil.toBigDecimal(min));
     }
 }

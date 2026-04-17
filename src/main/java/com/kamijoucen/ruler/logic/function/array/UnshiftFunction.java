@@ -8,6 +8,8 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigInteger;
+
 public class UnshiftFunction implements RulerFunction {
 
     @Override
@@ -23,11 +25,11 @@ public class UnshiftFunction implements RulerFunction {
             throw new RulerRuntimeException("arrayUnshift expects an array");
         }
         if (param == null || param.length < off + 1) {
-            return context.getConfiguration().getIntegerNumberCache().getValue(arr.getValues().size());
+            return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(arr.getValues().size()));
         }
         for (int i = param.length - 1; i >= off; i--) {
             arr.getValues().add(0, (BaseValue) param[i]);
         }
-        return context.getConfiguration().getIntegerNumberCache().getValue(arr.getValues().size());
+        return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(arr.getValues().size()));
     }
 }

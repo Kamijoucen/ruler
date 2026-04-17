@@ -68,7 +68,7 @@ public class InterpreterBehaviorTest {
 
         List<Object> result = interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
 
-        Assert.assertEquals(Collections.singletonList(6L), result);
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(6)), result);
     }
 
     @Test(expected = RulerRuntimeException.class)
@@ -113,7 +113,7 @@ public class InterpreterBehaviorTest {
 
         List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
 
-        Assert.assertEquals(Collections.singletonList(42L), result);
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(42)), result);
     }
 
     @Test
@@ -138,7 +138,7 @@ public class InterpreterBehaviorTest {
 
         Assert.assertEquals(3, result.size());
         Assert.assertNull(result.get(0));
-        Assert.assertEquals(1L, result.get(1));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), result.get(1));
         Assert.assertEquals("ok", result.get(2));
     }
 
@@ -149,7 +149,7 @@ public class InterpreterBehaviorTest {
         RulerInterpreter firstInterpreter =
                 new RulerInterpreter(compileScriptModule("return 7;"), configuration);
         firstInterpreter.setHasImportGlobalModule(false);
-        Assert.assertEquals(Collections.singletonList(7L),
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(7)),
                 firstInterpreter.runScript(newRuntimeRootScope(), runtimeContext));
 
         RulerInterpreter secondInterpreter =
@@ -157,7 +157,7 @@ public class InterpreterBehaviorTest {
         secondInterpreter.setHasImportGlobalModule(false);
         List<Object> result = secondInterpreter.runScript(newRuntimeRootScope(), runtimeContext);
 
-        Assert.assertEquals(Collections.singletonList(3L), result);
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(3)), result);
         Assert.assertFalse(runtimeContext.isReturnFlag());
         Assert.assertNull(runtimeContext.getReturnSpace());
     }
@@ -182,7 +182,7 @@ public class InterpreterBehaviorTest {
         callInterpreter.setHasImportGlobalModule(false);
         List<Object> result = callInterpreter.runStatement(runScope, runtimeContext);
 
-        Assert.assertEquals(Collections.singletonList(2L), result);
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);
         Assert.assertFalse(runtimeContext.isReturnFlag());
         Assert.assertNull(runtimeContext.getReturnSpace());
     }
@@ -206,7 +206,7 @@ public class InterpreterBehaviorTest {
 
         List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
 
-        Assert.assertEquals(Collections.singletonList(2L), result);
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);
     }
 
     @Test(expected = RulerRuntimeException.class)
@@ -270,6 +270,6 @@ public class InterpreterBehaviorTest {
 
         List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
 
-        Assert.assertEquals(Collections.singletonList(2L), result);
+        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);
     }
 }

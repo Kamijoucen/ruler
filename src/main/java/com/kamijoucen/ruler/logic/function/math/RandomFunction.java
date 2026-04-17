@@ -6,6 +6,8 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigDecimal;
+
 public class RandomFunction implements RulerFunction {
 
     @Override
@@ -15,6 +17,6 @@ public class RandomFunction implements RulerFunction {
 
     @Override
     public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
-        return new DoubleValue(Math.random());
+        return new DoubleValue(BigDecimal.valueOf(Math.random()));
     }
 }

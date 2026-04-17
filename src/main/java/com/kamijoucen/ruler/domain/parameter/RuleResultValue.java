@@ -43,12 +43,16 @@ public class RuleResultValue {
         return (Boolean) value;
     }
 
+    public long toLong() {
+        return ((Number) value).longValue();
+    }
+
     public long toInteger() {
-        return (long) value;
+        return ((Number) value).longValue();
     }
 
     public double toDouble() {
-        return (Double) value;
+        return ((Number) value).doubleValue();
     }
 
 }

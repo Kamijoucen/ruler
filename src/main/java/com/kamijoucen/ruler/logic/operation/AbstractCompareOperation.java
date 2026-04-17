@@ -6,15 +6,12 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.BoolValue;
-import com.kamijoucen.ruler.domain.value.DoubleValue;
-import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public abstract class AbstractCompareOperation implements BinaryOperation {
 
-    protected abstract boolean compareLong(long l, long r);
-
-    protected abstract boolean compareDouble(double l, double r);
+    protected abstract boolean compareNumber(int cmpResult);
 
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
@@ -25,21 +22,9 @@ public abstract class AbstractCompareOperation implements BinaryOperation {
         ValueType lType = lValue.getType();
         ValueType rType = rValue.getType();
 
-        if (lType == ValueType.INTEGER && rType == ValueType.INTEGER) {
-            return BoolValue.get(compareLong(
-                    ((IntegerValue) lValue).getValue(),
-                    ((IntegerValue) rValue).getValue()));
-        }
-
         if ((lType == ValueType.INTEGER || lType == ValueType.DOUBLE)
                 && (rType == ValueType.INTEGER || rType == ValueType.DOUBLE)) {
-            double lv = lType == ValueType.INTEGER
-                    ? ((IntegerValue) lValue).getValue()
-                    : ((DoubleValue) lValue).getValue();
-            double rv = rType == ValueType.INTEGER
-                    ? ((IntegerValue) rValue).getValue()
-                    : ((DoubleValue) rValue).getValue();
-            return BoolValue.get(compareDouble(lv, rv));
+            return BoolValue.get(compareNumber(NumberUtil.compareNumbers(lValue, rValue)));
         }
 
         throw new IllegalOperationException(

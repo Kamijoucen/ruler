@@ -7,11 +7,13 @@ import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenLocation;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 
+import java.math.BigDecimal;
+
 public class DoubleNode extends AbstractBaseNode {
 
-    public double value;
+    public BigDecimal value;
 
-    public DoubleNode(double value, TokenLocation location) {
+    public DoubleNode(BigDecimal value, TokenLocation location) {
         super(location);
         this.value = value;
     }
@@ -26,11 +28,11 @@ public class DoubleNode extends AbstractBaseNode {
         return context.getTypeCheckVisitor().eval(this, scope, context);
     }
 
-    public double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 }

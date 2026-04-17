@@ -7,6 +7,8 @@ import com.kamijoucen.ruler.domain.value.*;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,7 @@ public class FilterFunction implements RulerFunction {
         int index = 0;
         for (BaseValue item : arr.getValues()) {
             BaseValue keep = callCallback(callback, currentScope, context, item,
-                    context.getConfiguration().getIntegerNumberCache().getValue(index), arr);
+                    context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(index)), arr);
             if (isTruthy(keep)) {
                 result.add(item);
             }
@@ -49,10 +51,10 @@ public class FilterFunction implements RulerFunction {
             return false;
         }
         if (value.getType() == ValueType.INTEGER) {
-            return ((IntegerValue) value).getValue() != 0;
+            return ((IntegerValue) value).getValue().compareTo(BigInteger.ZERO) != 0;
         }
         if (value.getType() == ValueType.DOUBLE) {
-            return ((DoubleValue) value).getValue() != 0;
+            return ((DoubleValue) value).getValue().compareTo(BigDecimal.ZERO) != 0;
         }
         return true;
     }

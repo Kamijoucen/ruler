@@ -2,6 +2,8 @@ package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 
+import java.math.BigInteger;
+
 public class IntegerNumberCacheImpl implements IntegerNumberCache {
 
     private static final int CACHE_SIZE = 1024;
@@ -12,16 +14,17 @@ public class IntegerNumberCacheImpl implements IntegerNumberCache {
     }
 
     @Override
-    public IntegerValue getValue(long num) {
-        if (num >= 0 && num < CACHE_SIZE) {
-            return CACHE[(int) num];
+    public IntegerValue getValue(BigInteger num) {
+        if (num.signum() >= 0 && num.compareTo(BigInteger.valueOf(CACHE_SIZE)) < 0) {
+            int index = num.intValue();
+            return CACHE[index];
         }
         return new IntegerValue(num);
     }
 
     private void init() {
         for (int i = 0; i < CACHE_SIZE; i++) {
-            CACHE[i] = new IntegerValue(i);
+            CACHE[i] = new IntegerValue(BigInteger.valueOf(i));
         }
     }
 

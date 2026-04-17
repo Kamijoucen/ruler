@@ -1,10 +1,13 @@
 package com.kamijoucen.ruler.domain.value;
 
+import java.math.BigInteger;
+import java.util.Objects;
+
 public class IntegerValue extends AbstractValue {
 
-    private long value;
+    private final BigInteger value;
 
-    public IntegerValue(long value) {
+    public IntegerValue(BigInteger value) {
         this.value = value;
     }
 
@@ -15,14 +18,29 @@ public class IntegerValue extends AbstractValue {
 
     @Override
     public String toString() {
-        return String.valueOf(value);
+        return value.toString();
     }
 
-    public long getValue() {
+    public BigInteger getValue() {
         return value;
     }
 
-    public void setValue(long value) {
-        this.value = value;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj instanceof IntegerValue) {
+            return value.equals(((IntegerValue) obj).value);
+        }
+        if (obj instanceof Number) {
+            return value.longValue() == ((Number) obj).longValue();
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

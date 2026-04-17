@@ -9,6 +9,7 @@ import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -92,22 +93,22 @@ public class ManagerTest {
     @Test
     public void integerNumberCacheHitTest() {
         IntegerNumberCacheImpl cache = new IntegerNumberCacheImpl();
-        Assert.assertSame(cache.getValue(0), cache.getValue(0));
-        Assert.assertSame(cache.getValue(1023), cache.getValue(1023));
+        Assert.assertSame(cache.getValue(BigInteger.valueOf(0)), cache.getValue(BigInteger.valueOf(0)));
+        Assert.assertSame(cache.getValue(BigInteger.valueOf(1023)), cache.getValue(BigInteger.valueOf(1023)));
     }
 
     @Test
     public void integerNumberCacheMissTest() {
         IntegerNumberCacheImpl cache = new IntegerNumberCacheImpl();
-        Assert.assertNotSame(cache.getValue(1024), cache.getValue(1024));
-        Assert.assertNotSame(cache.getValue(-1), cache.getValue(-1));
+        Assert.assertNotSame(cache.getValue(BigInteger.valueOf(1024)), cache.getValue(BigInteger.valueOf(1024)));
+        Assert.assertNotSame(cache.getValue(BigInteger.valueOf(-1)), cache.getValue(BigInteger.valueOf(-1)));
     }
 
     @Test
     public void integerNumberCacheValueTest() {
         IntegerNumberCacheImpl cache = new IntegerNumberCacheImpl();
-        Assert.assertEquals(100, cache.getValue(100).getValue());
-        Assert.assertEquals(2048, cache.getValue(2048).getValue());
-        Assert.assertEquals(-100, cache.getValue(-100).getValue());
+        Assert.assertEquals(BigInteger.valueOf(100), cache.getValue(BigInteger.valueOf(100)).getValue());
+        Assert.assertEquals(BigInteger.valueOf(2048), cache.getValue(BigInteger.valueOf(2048)).getValue());
+        Assert.assertEquals(BigInteger.valueOf(-100), cache.getValue(BigInteger.valueOf(-100)).getValue());
     }
 }

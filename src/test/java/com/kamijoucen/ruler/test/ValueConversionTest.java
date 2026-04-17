@@ -146,7 +146,7 @@ public class ValueConversionTest {
         Object val = r.first().getValue();
         Assert.assertTrue(val instanceof Map);
         Map<?, ?> map = (Map<?, ?>) val;
-        Assert.assertEquals(1L, map.get("a"));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), map.get("a"));
         Assert.assertEquals("hi", map.get("b"));
     }
 }

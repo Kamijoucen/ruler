@@ -11,6 +11,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -65,25 +66,25 @@ public class RuntimeContextTest {
 
     @Test
     public void setReturnSpaceTest() {
-        context.setReturnSpace(Arrays.asList(new IntegerValue(1), new IntegerValue(2)));
+        context.setReturnSpace(Arrays.asList(new IntegerValue(BigInteger.valueOf(1)), new IntegerValue(BigInteger.valueOf(2))));
         Assert.assertTrue(context.hasReturnValue());
         Assert.assertEquals(2, context.getReturnSpace().size());
     }
 
     @Test
     public void addReturnSpaceTest() {
-        context.addReturnSpace(new IntegerValue(10));
+        context.addReturnSpace(new IntegerValue(BigInteger.valueOf(10)));
         Assert.assertTrue(context.hasReturnValue());
         Assert.assertEquals(1, context.getReturnSpace().size());
-        Assert.assertEquals(10, ((IntegerValue) context.getReturnSpace().get(0)).getValue());
+        Assert.assertEquals(BigInteger.valueOf(10), ((IntegerValue) context.getReturnSpace().get(0)).getValue());
 
-        context.addReturnSpace(new IntegerValue(20));
+        context.addReturnSpace(new IntegerValue(BigInteger.valueOf(20)));
         Assert.assertEquals(2, context.getReturnSpace().size());
     }
 
     @Test
     public void clearReturnSpaceTest() {
-        context.addReturnSpace(new IntegerValue(1));
+        context.addReturnSpace(new IntegerValue(BigInteger.valueOf(1)));
         Assert.assertTrue(context.hasReturnValue());
         context.clearReturnSpace();
         Assert.assertFalse(context.hasReturnValue());
@@ -92,8 +93,8 @@ public class RuntimeContextTest {
 
     @Test
     public void findOutValueExistingTest() {
-        context.setOutSpace(Collections.singletonMap("score", new IntegerValue(85)));
-        Assert.assertEquals(85, ((IntegerValue) context.findOutValue("score")).getValue());
+        context.setOutSpace(Collections.singletonMap("score", new IntegerValue(BigInteger.valueOf(85))));
+        Assert.assertEquals(BigInteger.valueOf(85), ((IntegerValue) context.findOutValue("score")).getValue());
     }
 
     @Test

@@ -10,6 +10,7 @@ import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.RsonValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class IndexOperation implements BinaryOperation {
 
@@ -22,12 +23,12 @@ public class IndexOperation implements BinaryOperation {
 
         if (lVal.getType() == ValueType.ARRAY && idx.getType() == ValueType.INTEGER) {
             ArrayValue array = (ArrayValue) lVal;
-            IntegerValue index = (IntegerValue) idx;
+            int index = NumberUtil.toIntIndex((IntegerValue) idx);
             // 检查数组是否越界
-            if (index.getValue() >= array.getValues().size()) {
+            if (index >= array.getValues().size()) {
                 throw new IndexOutOfBoundsException("Array index out of bounds");
             }
-            return array.getValues().get((int) index.getValue());
+            return array.getValues().get(index);
         } else if (lVal.getType() == ValueType.RSON && idx.getType() == ValueType.STRING) {
             RsonValue rson = (RsonValue) lVal;
             StringValue string = (StringValue) idx;
@@ -35,11 +36,11 @@ public class IndexOperation implements BinaryOperation {
                     string.getValue(), context);
         } else if (lVal.getType() == ValueType.STRING && idx.getType() == ValueType.INTEGER) {
             StringValue str = (StringValue) lVal;
-            IntegerValue index = (IntegerValue) idx;
-            if (index.getValue() >= str.getValue().length()) {
+            int index = NumberUtil.toIntIndex((IntegerValue) idx);
+            if (index >= str.getValue().length()) {
                 throw new IndexOutOfBoundsException("String index out of bounds");
             }
-            return new StringValue(String.valueOf(str.getValue().charAt((int) index.getValue())));
+            return new StringValue(String.valueOf(str.getValue().charAt(index)));
         } else {
             // TODO message fmt
             throw new SyntaxException("index operation not supported");

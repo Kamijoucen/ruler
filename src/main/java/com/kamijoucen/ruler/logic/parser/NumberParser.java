@@ -10,6 +10,9 @@ import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 /**
  * 数字字面量解析器
  */
@@ -28,9 +31,9 @@ public class NumberParser implements AtomParser {
         tokenStream.nextToken();
 
         if (token.type == TokenType.INTEGER) {
-            return new IntegerNode(Long.parseLong(token.name), token.location);
+            return new IntegerNode(new BigInteger(token.name), token.location);
         } else if (token.type == TokenType.DOUBLE) {
-            return new DoubleNode(Double.parseDouble(token.name), token.location);
+            return new DoubleNode(new BigDecimal(token.name), token.location);
         } else {
             throw new SyntaxException("expected a number\t token=" + token);
         }

@@ -9,6 +9,8 @@ import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigDecimal;
+
 public class PowFunction implements RulerFunction {
 
     @Override
@@ -23,14 +25,14 @@ public class PowFunction implements RulerFunction {
         }
         double base = toDouble((BaseValue) param[0]);
         double exponent = toDouble((BaseValue) param[1]);
-        return new DoubleValue(Math.pow(base, exponent));
+        return new DoubleValue(BigDecimal.valueOf(Math.pow(base, exponent)));
     }
 
     private double toDouble(BaseValue value) {
         if (value.getType() == ValueType.INTEGER) {
-            return ((IntegerValue) value).getValue();
+            return ((IntegerValue) value).getValue().doubleValue();
         } else if (value.getType() == ValueType.DOUBLE) {
-            return ((DoubleValue) value).getValue();
+            return ((DoubleValue) value).getValue().doubleValue();
         }
         throw new RulerRuntimeException("pow expects numbers");
     }

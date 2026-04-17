@@ -8,8 +8,7 @@ import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
 import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 
-import java.text.NumberFormat;
-import java.text.ParseException;
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -18,34 +17,28 @@ import java.util.Map;
 public class ConvertUtil {
 
     public static Number parseToNumber(String str) {
-        NumberFormat formatter = NumberFormat.getInstance();
         try {
-            return formatter.parse(str);
-        } catch (ParseException e) {
+            return new BigDecimal(str);
+        } catch (NumberFormatException e) {
             return null;
         }
     }
 
     public static BaseValue stringToValue(String str, RuntimeContext context) {
-        Number result = parseToNumber(str);
-        if (result == null) {
+        BigDecimal decimal;
+        try {
+            decimal = new BigDecimal(str);
+        } catch (NumberFormatException e) {
             return null;
         }
-        if (result instanceof Double) {
-            return new DoubleValue(result.doubleValue());
+        if (decimal.scale() <= 0 || decimal.stripTrailingZeros().scale() <= 0) {
+            return context.getConfiguration().getIntegerNumberCache().getValue(decimal.toBigIntegerExact());
         }
-        return context.getConfiguration().getIntegerNumberCache().getValue(result.intValue());
+        return new DoubleValue(decimal);
     }
 
     public static BaseValue stringToValue(StringValue strValue, RuntimeContext context) {
-        Number result = parseToNumber(strValue.getValue());
-        if (result == null) {
-            return strValue;
-        }
-        if (result instanceof Double) {
-            return new DoubleValue(result.doubleValue());
-        }
-        return context.getConfiguration().getIntegerNumberCache().getValue(result.intValue());
+        return stringToValue(strValue.getValue(), context);
     }
 
     public static Map<String, BaseValue> convertParamToBase(List<RulerParameter> params, RulerConfiguration configuration) {

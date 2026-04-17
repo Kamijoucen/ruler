@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +30,10 @@ public class SliceFunction implements RulerFunction {
         if (param == null || param.length < off + 1 || !(param[off] instanceof IntegerValue)) {
             throw new RulerRuntimeException("arraySlice expects an array and integer start index");
         }
-        int start = (int) ((IntegerValue) param[off]).getValue();
+        int start = NumberUtil.toIntIndex((IntegerValue) param[off]);
         int end = arr.getValues().size();
         if (param.length >= off + 2 && param[off + 1] instanceof IntegerValue) {
-            end = (int) ((IntegerValue) param[off + 1]).getValue();
+            end = NumberUtil.toIntIndex((IntegerValue) param[off + 1]);
         }
         List<BaseValue> values = arr.getValues();
         int actualStart = Math.max(0, start);

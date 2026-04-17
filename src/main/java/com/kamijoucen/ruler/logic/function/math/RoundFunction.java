@@ -5,9 +5,11 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
-import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 public class RoundFunction implements RulerFunction {
 
@@ -25,7 +27,8 @@ public class RoundFunction implements RulerFunction {
         if (value.getType() == ValueType.INTEGER) {
             return value;
         } else if (value.getType() == ValueType.DOUBLE) {
-            return context.getConfiguration().getIntegerNumberCache().getValue(Math.round(((DoubleValue) value).getValue()));
+            BigDecimal v = ((DoubleValue) value).getValue();
+            return context.getConfiguration().getIntegerNumberCache().getValue(v.setScale(0, RoundingMode.HALF_UP).toBigIntegerExact());
         }
         throw new RulerRuntimeException("round expects a number");
     }

@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class CharAtFunction implements RulerFunction {
 
@@ -25,6 +26,6 @@ public class CharAtFunction implements RulerFunction {
             throw new RulerRuntimeException("StringCharAt expects an integer");
         }
         IntegerValue index = (IntegerValue) param[off];
-        return new StringValue(String.valueOf(str.getValue().charAt((int) index.getValue())));
+        return new StringValue(String.valueOf(str.getValue().charAt(NumberUtil.toIntIndex(index))));
     }
 }

@@ -40,7 +40,6 @@ import com.kamijoucen.ruler.logic.function.MakeItPossibleFunction;
 import com.kamijoucen.ruler.logic.function.PanicFunction;
 import com.kamijoucen.ruler.logic.function.PrintFunction;
 import com.kamijoucen.ruler.logic.function.ProxyFunction;
-import com.kamijoucen.ruler.logic.function.ReturnConvertFunctionProxy;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.logic.function.TimestampFunction;
 import com.kamijoucen.ruler.logic.function.ToBooleanFunction;

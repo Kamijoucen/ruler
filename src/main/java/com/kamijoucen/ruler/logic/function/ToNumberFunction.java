@@ -23,11 +23,7 @@ public class ToNumberFunction implements RulerFunction {
                 || baseValue.getType() == ValueType.DOUBLE) {
             return baseValue;
         }
-        BaseValue numberValue = ConvertUtil.stringToValue(String.valueOf(baseValue), context);
-        if (numberValue == null) {
-            throw new IllegalArgumentException("cannot convert " + baseValue + " to number");
-        }
-        return numberValue;
+        return ConvertUtil.stringToValue(String.valueOf(baseValue), context);
     }
 
 }

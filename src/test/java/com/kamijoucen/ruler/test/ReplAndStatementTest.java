@@ -48,14 +48,14 @@ public class ReplAndStatementTest {
     public void testCompileStatementVarDefine() {
         List<Object> result = runStatement("var a = 10;");
         Assert.assertEquals(1, result.size());
-        Assert.assertEquals(10L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(10), result.get(0));
     }
 
     @Test
     public void testCompileStatementExpression() {
         List<Object> result = runStatement("1 + 2 * 3;");
         Assert.assertEquals(1, result.size());
-        Assert.assertEquals(7L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(7), result.get(0));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ReplAndStatementTest {
         runStatement("var counter = 0;");
         runStatement("counter = counter + 1;");
         List<Object> result = runStatement("counter;");
-        Assert.assertEquals(1L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), result.get(0));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ReplAndStatementTest {
         Assert.assertEquals(1, defResult.size());
         Assert.assertTrue(defResult.get(0) instanceof ClosureValue);
         List<Object> result = runStatement("add(2, 3);");
-        Assert.assertEquals(5L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(5), result.get(0));
     }
 
     @Test
@@ -90,7 +90,7 @@ public class ReplAndStatementTest {
         runStatement("var base = 10;");
         runStatement("var f = fun(x) { return base + x; };");
         List<Object> result = runStatement("f(5);");
-        Assert.assertEquals(15L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(15), result.get(0));
     }
 
     // ---------- multi-statement in one compile ----------
@@ -103,9 +103,9 @@ public class ReplAndStatementTest {
         interpreter.setHasImportGlobalModule(false);
         List<Object> result = interpreter.runStatement(runScope, runtimeContext);
         Assert.assertEquals(3, result.size());
-        Assert.assertEquals(1L, result.get(0));
-        Assert.assertEquals(2L, result.get(1));
-        Assert.assertEquals(3L, result.get(2));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(2), result.get(1));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), result.get(2));
     }
 
     // ---------- script implicit return ----------
@@ -114,21 +114,21 @@ public class ReplAndStatementTest {
     public void testScriptImplicitReturnExpression() {
         List<Object> result = runScript("var a = 5; a + 3;");
         Assert.assertEquals(1, result.size());
-        Assert.assertEquals(8L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(8), result.get(0));
     }
 
     @Test
     public void testScriptImplicitReturnVarDefine() {
         List<Object> result = runScript("var a = 10;");
         Assert.assertEquals(1, result.size());
-        Assert.assertEquals(10L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(10), result.get(0));
     }
 
     @Test
     public void testScriptExplicitReturnStillWorks() {
         List<Object> result = runScript("return 42;");
         Assert.assertEquals(1, result.size());
-        Assert.assertEquals(42L, result.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(42), result.get(0));
     }
 
     @Test

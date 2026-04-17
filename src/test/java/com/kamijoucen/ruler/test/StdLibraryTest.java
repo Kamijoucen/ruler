@@ -146,8 +146,8 @@ public class StdLibraryTest {
         RulerResult r = run("return arrayMap([1, 2, 3], fun(x) { return x * 2; });");
         List<?> list = list(r);
         Assert.assertEquals(3, list.size());
-        Assert.assertEquals(2L, list.get(0));
-        Assert.assertEquals(6L, list.get(2));
+        Assert.assertEquals(java.math.BigInteger.valueOf(2), list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(6), list.get(2));
     }
 
     @Test
@@ -155,7 +155,7 @@ public class StdLibraryTest {
         RulerResult r = run("return arrayFilter([1, 2, 3, 4], fun(x) { return x > 2; });");
         List<?> list = list(r);
         Assert.assertEquals(2, list.size());
-        Assert.assertEquals(3L, list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), list.get(0));
     }
 
     @Test
@@ -181,7 +181,7 @@ public class StdLibraryTest {
         RulerResult r = run("return arraySlice([1, 2, 3, 4], 1, 3);");
         List<?> list = list(r);
         Assert.assertEquals(2, list.size());
-        Assert.assertEquals(2L, list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(2), list.get(0));
     }
 
     @Test
@@ -198,7 +198,7 @@ public class StdLibraryTest {
     @Test
     public void arrayReverseTest() {
         RulerResult r = run("var a = [1, 2, 3]; arrayReverse(a); return a;");
-        Assert.assertEquals(3L, list(r).get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), list(r).get(0));
     }
 
     @Test
@@ -216,7 +216,7 @@ public class StdLibraryTest {
         RulerResult r = run("var a = [2, 3]; arrayUnshift(a, 1); return a;");
         List<?> list = list(r);
         Assert.assertEquals(3, list.size());
-        Assert.assertEquals(1L, list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), list.get(0));
     }
 
     @Test
@@ -229,16 +229,16 @@ public class StdLibraryTest {
     public void arraySortTest() {
         RulerResult r = run("var a = [3, 1, 2]; arraySort(a); return a;");
         List<?> list = list(r);
-        Assert.assertEquals(1L, list.get(0));
-        Assert.assertEquals(3L, list.get(2));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), list.get(2));
     }
 
     @Test
     public void arraySortComparatorTest() {
         RulerResult r = run("var a = [1, 2, 3]; arraySort(a, fun(a, b) { return b - a; }); return a;");
         List<?> list = list(r);
-        Assert.assertEquals(3L, list.get(0));
-        Assert.assertEquals(1L, list.get(2));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), list.get(2));
     }
 
     // ==================== array object methods ====================
@@ -273,7 +273,7 @@ public class StdLibraryTest {
         RulerResult r = run("return values({a: 1, b: 2});");
         List<?> list = list(r);
         Assert.assertEquals(2, list.size());
-        Assert.assertEquals(1L, list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), list.get(0));
     }
 
     @Test

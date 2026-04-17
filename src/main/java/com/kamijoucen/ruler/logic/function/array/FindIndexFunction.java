@@ -7,6 +7,9 @@ import com.kamijoucen.ruler.domain.value.*;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+
 public class FindIndexFunction implements RulerFunction {
 
     @Override
@@ -22,19 +25,19 @@ public class FindIndexFunction implements RulerFunction {
             throw new RulerRuntimeException("arrayFindIndex expects an array");
         }
         if (param == null || param.length < off + 1) {
-            return context.getConfiguration().getIntegerNumberCache().getValue(-1);
+            return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(-1));
         }
         BaseValue callback = (BaseValue) param[off];
         int index = 0;
         for (BaseValue item : arr.getValues()) {
             BaseValue keep = callCallback(callback, currentScope, context, item,
-                    context.getConfiguration().getIntegerNumberCache().getValue(index), arr);
+                    context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(index)), arr);
             if (isTruthy(keep)) {
-                return context.getConfiguration().getIntegerNumberCache().getValue(index);
+                return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(index));
             }
             index++;
         }
-        return context.getConfiguration().getIntegerNumberCache().getValue(-1);
+        return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(-1));
     }
 
     private boolean isTruthy(BaseValue value) {
@@ -45,10 +48,10 @@ public class FindIndexFunction implements RulerFunction {
             return false;
         }
         if (value.getType() == ValueType.INTEGER) {
-            return ((IntegerValue) value).getValue() != 0;
+            return ((IntegerValue) value).getValue().compareTo(BigInteger.ZERO) != 0;
         }
         if (value.getType() == ValueType.DOUBLE) {
-            return ((DoubleValue) value).getValue() != 0;
+            return ((DoubleValue) value).getValue().compareTo(BigDecimal.ZERO) != 0;
         }
         return true;
     }

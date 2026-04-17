@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class UnarySubOperation implements BinaryOperation {
 
@@ -16,10 +17,10 @@ public class UnarySubOperation implements BinaryOperation {
         BaseValue value = params[0];
         ValueType type = value.getType();
         if (type == ValueType.INTEGER) {
-            return new IntegerValue(-((IntegerValue) value).getValue());
+            return NumberUtil.negate((IntegerValue) value);
         }
         if (type == ValueType.DOUBLE) {
-            return new DoubleValue(-((DoubleValue) value).getValue());
+            return NumberUtil.negate((DoubleValue) value);
         }
         throw new IllegalOperationException(
                 "Negation operation is not supported for this value: " + value);

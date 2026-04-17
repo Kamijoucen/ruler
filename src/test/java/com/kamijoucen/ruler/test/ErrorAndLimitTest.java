@@ -90,12 +90,11 @@ public class ErrorAndLimitTest {
         compile("1 = 2;").run();
     }
 
-    // ---------- division by zero produces infinity (not exception) ----------
+    // ---------- division by zero throws ArithmeticException ----------
 
-    @Test
-    public void testDivByZeroIsInfinity() {
+    @Test(expected = ArithmeticException.class)
+    public void testDivByZeroThrows() {
         RulerConfigurationImpl cfg = new RulerConfigurationImpl();
-        com.kamijoucen.ruler.domain.parameter.RulerResult r = Ruler.compile("1 / 0", cfg).run();
-        Assert.assertTrue(Double.isInfinite(r.first().toDouble()));
+        Ruler.compile("1 / 0", cfg).run();
     }
 }

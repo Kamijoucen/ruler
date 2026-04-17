@@ -36,7 +36,7 @@ public class RuleAndInfixTest {
         SubRuleResultValue srv = (SubRuleResultValue) result;
         Assert.assertEquals("r1", srv.getName());
         Assert.assertEquals(1, srv.getValues().size());
-        Assert.assertEquals(42L, srv.getValues().get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(42), srv.getValues().get(0));
     }
 
     @Test
@@ -49,9 +49,9 @@ public class RuleAndInfixTest {
         Assert.assertTrue(result instanceof SubRuleResultValue);
         SubRuleResultValue srv = (SubRuleResultValue) result;
         Assert.assertEquals(3, srv.getValues().size());
-        Assert.assertEquals(1L, srv.getValues().get(0));
-        Assert.assertEquals(2L, srv.getValues().get(1));
-        Assert.assertEquals(3L, srv.getValues().get(2));
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), srv.getValues().get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(2), srv.getValues().get(1));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), srv.getValues().get(2));
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class EqOperation implements BinaryOperation {
 
@@ -18,21 +19,15 @@ public class EqOperation implements BinaryOperation {
             BaseValue... params) {
         BaseValue lValue = lhs.eval(scope, context);
         BaseValue rValue = rhs.eval(scope, context);
-        return BoolValue.get(equal(lValue, rValue));
+        return BoolValue.get(equal(lValue, rValue, context));
     }
 
-    private boolean equal(BaseValue l, BaseValue r) {
+    private boolean equal(BaseValue l, BaseValue r, RuntimeContext context) {
         ValueType lt = l.getType();
         ValueType rt = r.getType();
 
-        if (isNumber(lt) && isNumber(rt)) {
-            double lv = lt == ValueType.INTEGER
-                    ? ((IntegerValue) l).getValue()
-                    : ((DoubleValue) l).getValue();
-            double rv = rt == ValueType.INTEGER
-                    ? ((IntegerValue) r).getValue()
-                    : ((DoubleValue) r).getValue();
-            return lv == rv;
+        if (NumberUtil.isNumber(lt) && NumberUtil.isNumber(rt)) {
+            return NumberUtil.compareNumbers(l, r) == 0;
         }
 
         if (lt == ValueType.BOOL && rt == ValueType.BOOL) {
@@ -48,22 +43,24 @@ public class EqOperation implements BinaryOperation {
         }
 
         if (!strict) {
-            if (lt == ValueType.STRING && isNumber(rt)) {
+            if (lt == ValueType.STRING && NumberUtil.isNumber(rt)) {
                 try {
-                    double rv = rt == ValueType.INTEGER
-                            ? ((IntegerValue) r).getValue()
-                            : ((DoubleValue) r).getValue();
-                    return Double.parseDouble(l.toString()) == rv;
+                    BaseValue parsed = com.kamijoucen.ruler.logic.util.ConvertUtil.stringToValue(l.toString(), context);
+                    if (parsed == null) {
+                        return false;
+                    }
+                    return NumberUtil.compareNumbers(parsed, r) == 0;
                 } catch (NumberFormatException e) {
                     return false;
                 }
             }
-            if (isNumber(lt) && rt == ValueType.STRING) {
+            if (NumberUtil.isNumber(lt) && rt == ValueType.STRING) {
                 try {
-                    double lv = lt == ValueType.INTEGER
-                            ? ((IntegerValue) l).getValue()
-                            : ((DoubleValue) l).getValue();
-                    return lv == Double.parseDouble(r.toString());
+                    BaseValue parsed = com.kamijoucen.ruler.logic.util.ConvertUtil.stringToValue(r.toString(), context);
+                    if (parsed == null) {
+                        return false;
+                    }
+                    return NumberUtil.compareNumbers(l, parsed) == 0;
                 } catch (NumberFormatException e) {
                     return false;
                 }
@@ -79,7 +76,4 @@ public class EqOperation implements BinaryOperation {
         return l.toString().equals(r.toString());
     }
 
-    private boolean isNumber(ValueType type) {
-        return type == ValueType.INTEGER || type == ValueType.DOUBLE;
-    }
 }

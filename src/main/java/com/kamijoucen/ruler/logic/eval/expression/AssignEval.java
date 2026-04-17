@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class AssignEval implements BaseEval<AssignNode> {
 
@@ -55,7 +56,7 @@ public class AssignEval implements BaseEval<AssignNode> {
         if (preValue.getType() == ValueType.ARRAY) {
             checkType(indexValue, ValueType.INTEGER, "Array index must be an integer");
             ArrayValue arrayValue = (ArrayValue) preValue;
-            arrayValue.getValues().set((int) ((IntegerValue) indexValue).getValue(), value);
+            arrayValue.getValues().set(NumberUtil.toIntIndex((IntegerValue) indexValue), value);
         } else if (preValue.getType() == ValueType.RSON) {
             checkType(indexValue, ValueType.STRING, "Object key must be a string");
             RsonValue rsonValue = (RsonValue) preValue;

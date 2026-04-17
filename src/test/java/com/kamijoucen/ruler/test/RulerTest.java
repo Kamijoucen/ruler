@@ -74,7 +74,7 @@ public class RulerTest {
         RulerRunner script = Ruler.compile(str, configuration);
         List<?> values = (List<?>) script.run().first().getValue();
         Assert.assertEquals("hello", values.get(0));
-        Assert.assertEquals(19L, values.get(1));
+        Assert.assertEquals(java.math.BigInteger.valueOf(19), values.get(1));
         Assert.assertEquals("value", values.get(2));
     }
 

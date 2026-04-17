@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.domain.value.*;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class MapFunction implements RulerFunction {
         int index = 0;
         for (BaseValue item : arr.getValues()) {
             BaseValue mapped = callCallback(callback, currentScope, context, item,
-                    context.getConfiguration().getIntegerNumberCache().getValue(index), arr);
+                    context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(index)), arr);
             result.add(mapped);
             index++;
         }

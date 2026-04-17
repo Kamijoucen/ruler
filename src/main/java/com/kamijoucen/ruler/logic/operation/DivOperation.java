@@ -3,17 +3,19 @@ package com.kamijoucen.ruler.logic.operation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
+import com.kamijoucen.ruler.domain.value.IntegerValue;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class DivOperation extends AbstractArithmeticOperation {
 
     @Override
-    protected BaseValue computeLong(long l, long r, RuntimeContext context) {
-        return new DoubleValue((double) l / r);
+    protected BaseValue computeInteger(IntegerValue l, IntegerValue r, RuntimeContext context) {
+        return NumberUtil.div(l, r);
     }
 
     @Override
-    protected BaseValue computeDouble(double l, double r, RuntimeContext context) {
-        return new DoubleValue(l / r);
+    protected BaseValue computeDecimal(DoubleValue l, DoubleValue r, RuntimeContext context) {
+        return NumberUtil.div(l, r);
     }
 
     @Override

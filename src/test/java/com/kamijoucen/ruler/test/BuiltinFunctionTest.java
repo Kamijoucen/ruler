@@ -33,9 +33,9 @@ public class BuiltinFunctionTest {
         Assert.assertEquals(12.5, run("return ToNumber('12.5');").first().toDouble(), 0.0001);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void toNumberInvalidStringTest() {
-        run("return ToNumber('abc');");
+        Assert.assertNull(run("return ToNumber('abc');").first().getValue());
     }
 
     @Test

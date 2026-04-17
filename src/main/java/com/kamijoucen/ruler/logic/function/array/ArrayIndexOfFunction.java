@@ -8,6 +8,8 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
+import java.math.BigInteger;
+
 public class ArrayIndexOfFunction implements RulerFunction {
 
     @Override
@@ -23,14 +25,14 @@ public class ArrayIndexOfFunction implements RulerFunction {
             throw new RulerRuntimeException("arrayIndexOf expects an array");
         }
         if (param == null || param.length < off + 1) {
-            return context.getConfiguration().getIntegerNumberCache().getValue(-1);
+            return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(-1));
         }
         BaseValue target = (BaseValue) param[off];
         for (int i = 0; i < arr.getValues().size(); i++) {
             if (arr.getValues().get(i).equals(target)) {
-                return context.getConfiguration().getIntegerNumberCache().getValue(i);
+                return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(i));
             }
         }
-        return context.getConfiguration().getIntegerNumberCache().getValue(-1);
+        return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(-1));
     }
 }

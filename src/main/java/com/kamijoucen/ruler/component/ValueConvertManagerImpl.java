@@ -3,6 +3,8 @@ package com.kamijoucen.ruler.component;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.domain.value.convert.*;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,8 +40,10 @@ public class ValueConvertManagerImpl implements ValueConvertManager {
 
         CLASS_MAP.put(Integer.class, integerConvert);
         CLASS_MAP.put(Long.class, integerConvert);
+        CLASS_MAP.put(BigInteger.class, integerConvert);
         CLASS_MAP.put(Double.class, doubleConvert);
         CLASS_MAP.put(Float.class, doubleConvert);
+        CLASS_MAP.put(BigDecimal.class, doubleConvert);
         CLASS_MAP.put(String.class, stringConvert);
         CLASS_MAP.put(Boolean.class, boolConvert);
         CLASS_MAP.put(Date.class, dateConvert);

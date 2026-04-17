@@ -8,6 +8,7 @@ import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class SubstringFunction implements RulerFunction {
 
@@ -29,9 +30,9 @@ public class SubstringFunction implements RulerFunction {
         if (!(param[off] instanceof IntegerValue)) {
             throw new RulerRuntimeException("stringSubstring expects an integer start index");
         }
-        int start = (int) ((IntegerValue) param[off]).getValue();
+        int start = NumberUtil.toIntIndex((IntegerValue) param[off]);
         if (param.length >= off + 2 && param[off + 1] instanceof IntegerValue) {
-            int end = (int) ((IntegerValue) param[off + 1]).getValue();
+            int end = NumberUtil.toIntIndex((IntegerValue) param[off + 1]);
             return new StringValue(str.getValue().substring(start, end));
         }
         return new StringValue(str.getValue().substring(start));

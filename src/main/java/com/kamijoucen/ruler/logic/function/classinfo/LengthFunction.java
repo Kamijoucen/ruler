@@ -8,6 +8,8 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 
+import java.math.BigInteger;
+
 public class LengthFunction implements RulerFunction {
 
     @Override
@@ -20,11 +22,11 @@ public class LengthFunction implements RulerFunction {
             Object... param) {
         if (self.getType() == ValueType.ARRAY) {
             return context.getConfiguration().getIntegerNumberCache()
-                    .getValue(((ArrayValue) self).getValues().size());
+                    .getValue(BigInteger.valueOf(((ArrayValue) self).getValues().size()));
         } else if (self.getType() == ValueType.STRING) {
             StringValue stringValue = (StringValue) self;
             return context.getConfiguration().getIntegerNumberCache()
-                    .getValue(stringValue.getValue().length());
+                    .getValue(BigInteger.valueOf(stringValue.getValue().length()));
         }
         return null;
     }

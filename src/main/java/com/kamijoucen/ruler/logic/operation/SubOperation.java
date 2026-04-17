@@ -4,17 +4,18 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class SubOperation extends AbstractArithmeticOperation {
 
     @Override
-    protected BaseValue computeLong(long l, long r, RuntimeContext context) {
-        return new IntegerValue(l - r);
+    protected BaseValue computeInteger(IntegerValue l, IntegerValue r, RuntimeContext context) {
+        return NumberUtil.sub(l, r);
     }
 
     @Override
-    protected BaseValue computeDouble(double l, double r, RuntimeContext context) {
-        return new DoubleValue(l - r);
+    protected BaseValue computeDecimal(DoubleValue l, DoubleValue r, RuntimeContext context) {
+        return NumberUtil.sub(l, r);
     }
 
     @Override

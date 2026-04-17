@@ -5,6 +5,8 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 
+import java.math.BigDecimal;
+
 public class DoubleConvert implements ValueConvert {
     @Override
     public ValueType getType() {
@@ -13,11 +15,14 @@ public class DoubleConvert implements ValueConvert {
 
     @Override
     public BaseValue realToBase(Object value, RulerConfiguration configuration) {
-        return new DoubleValue(Double.parseDouble(value.toString()));
+        if (value instanceof BigDecimal) {
+            return new DoubleValue((BigDecimal) value);
+        }
+        return new DoubleValue(new BigDecimal(value.toString()));
     }
 
     @Override
     public Object baseToReal(BaseValue value, RulerConfiguration configuration) {
-        return Double.parseDouble(value.toString());
+        return new BigDecimal(value.toString());
     }
 }

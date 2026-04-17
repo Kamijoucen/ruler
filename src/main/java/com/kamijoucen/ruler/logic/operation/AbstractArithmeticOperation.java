@@ -8,12 +8,15 @@ import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.DoubleValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
+
+import java.math.BigDecimal;
 
 public abstract class AbstractArithmeticOperation implements BinaryOperation {
 
-    protected abstract BaseValue computeLong(long l, long r, RuntimeContext context);
+    protected abstract BaseValue computeInteger(IntegerValue l, IntegerValue r, RuntimeContext context);
 
-    protected abstract BaseValue computeDouble(double l, double r, RuntimeContext context);
+    protected abstract BaseValue computeDecimal(DoubleValue l, DoubleValue r, RuntimeContext context);
 
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
@@ -25,21 +28,14 @@ public abstract class AbstractArithmeticOperation implements BinaryOperation {
         ValueType rType = rValue.getType();
 
         if (lType == ValueType.INTEGER && rType == ValueType.INTEGER) {
-            return computeLong(
-                    ((IntegerValue) lValue).getValue(),
-                    ((IntegerValue) rValue).getValue(),
-                    context);
+            return computeInteger((IntegerValue) lValue, (IntegerValue) rValue, context);
         }
 
         if ((lType == ValueType.INTEGER || lType == ValueType.DOUBLE)
                 && (rType == ValueType.INTEGER || rType == ValueType.DOUBLE)) {
-            double lv = lType == ValueType.INTEGER
-                    ? ((IntegerValue) lValue).getValue()
-                    : ((DoubleValue) lValue).getValue();
-            double rv = rType == ValueType.INTEGER
-                    ? ((IntegerValue) rValue).getValue()
-                    : ((DoubleValue) rValue).getValue();
-            return computeDouble(lv, rv, context);
+            BigDecimal lv = NumberUtil.toBigDecimal(lValue);
+            BigDecimal rv = NumberUtil.toBigDecimal(rValue);
+            return computeDecimal(new DoubleValue(lv), new DoubleValue(rv), context);
         }
 
         throw new IllegalOperationException(

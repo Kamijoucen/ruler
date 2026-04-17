@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.module.RulerModule;
 import com.kamijoucen.ruler.domain.parameter.RulerParameter;

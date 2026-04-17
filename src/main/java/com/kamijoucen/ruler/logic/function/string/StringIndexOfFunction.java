@@ -8,6 +8,9 @@ import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.logic.util.NumberUtil;
+
+import java.math.BigInteger;
 
 public class StringIndexOfFunction implements RulerFunction {
 
@@ -26,8 +29,8 @@ public class StringIndexOfFunction implements RulerFunction {
         StringValue sub = (StringValue) param[off];
         int fromIndex = 0;
         if (param.length >= off + 2 && param[off + 1] instanceof IntegerValue) {
-            fromIndex = (int) ((IntegerValue) param[off + 1]).getValue();
+            fromIndex = NumberUtil.toIntIndex((IntegerValue) param[off + 1]);
         }
-        return context.getConfiguration().getIntegerNumberCache().getValue(str.getValue().indexOf(sub.getValue(), fromIndex));
+        return context.getConfiguration().getIntegerNumberCache().getValue(BigInteger.valueOf(str.getValue().indexOf(sub.getValue(), fromIndex)));
     }
 }
