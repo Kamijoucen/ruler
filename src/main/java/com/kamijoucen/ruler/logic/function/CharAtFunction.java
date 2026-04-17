@@ -16,14 +16,15 @@ public class CharAtFunction implements RulerFunction {
 
     @Override
     public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
-        if (!(param[0] instanceof StringValue)) {
+        StringValue str = FunctionParamUtil.string(self, param);
+        int off = FunctionParamUtil.offset(self);
+        if (str == null) {
             throw new RulerRuntimeException("StringCharAt expects a string");
         }
-        if (!(param[1] instanceof IntegerValue)) {
+        if (param == null || param.length < off + 1 || !(param[off] instanceof IntegerValue)) {
             throw new RulerRuntimeException("StringCharAt expects an integer");
         }
-        StringValue value = (StringValue) param[0];
-        IntegerValue index = (IntegerValue) param[1];
-        return value.getValue().charAt((int) index.getValue());
+        IntegerValue index = (IntegerValue) param[off];
+        return new StringValue(String.valueOf(str.getValue().charAt((int) index.getValue())));
     }
 }

@@ -1,11 +1,16 @@
 package com.kamijoucen.ruler.component;
 
+import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
+import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.function.*;
+import com.kamijoucen.ruler.logic.function.array.*;
 import com.kamijoucen.ruler.logic.function.classinfo.LengthFunction;
 import com.kamijoucen.ruler.logic.function.classinfo.PrintSelfFunction;
 import com.kamijoucen.ruler.logic.function.classinfo.PushFunction;
 import com.kamijoucen.ruler.logic.function.classinfo.ToStringFunction;
+import com.kamijoucen.ruler.logic.function.string.*;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
+import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.FunctionValue;
 import com.kamijoucen.ruler.domain.value.RClass;
 import com.kamijoucen.ruler.domain.value.RClassValue;
@@ -40,6 +45,16 @@ public class ObjectRClassManagerImpl implements RClassManager {
     private RClass createStringClass() {
         RClass baseRClass = createBaseRClass();
         addFunToRClass(new LengthFunction(), baseRClass);
+        addFunToRClass("substring", new SubstringFunction(), baseRClass);
+        addFunToRClass("indexOf", new com.kamijoucen.ruler.logic.function.string.IndexOfFunction(), baseRClass);
+        addFunToRClass("replace", new ReplaceFunction(), baseRClass);
+        addFunToRClass("split", new SplitFunction(), baseRClass);
+        addFunToRClass("trim", new TrimFunction(), baseRClass);
+        addFunToRClass("upperCase", new UpperCaseFunction(), baseRClass);
+        addFunToRClass("lowerCase", new LowerCaseFunction(), baseRClass);
+        addFunToRClass("startsWith", new StartsWithFunction(), baseRClass);
+        addFunToRClass("endsWith", new EndsWithFunction(), baseRClass);
+        addFunToRClass("charAt", new CharAtFunction(), baseRClass);
         return baseRClass;
     }
 
@@ -47,6 +62,20 @@ public class ObjectRClassManagerImpl implements RClassManager {
         RClass rClass = createBaseRClass();
         addFunToRClass(new LengthFunction(), rClass);
         addFunToRClass(new PushFunction(), rClass);
+        addFunToRClass("pop", new PopFunction(), rClass);
+        addFunToRClass("shift", new ShiftFunction(), rClass);
+        addFunToRClass("unshift", new UnshiftFunction(), rClass);
+        addFunToRClass("slice", new SliceFunction(), rClass);
+        addFunToRClass("reverse", new ReverseFunction(), rClass);
+        addFunToRClass("concat", new ConcatFunction(), rClass);
+        addFunToRClass("join", new JoinFunction(), rClass);
+        addFunToRClass("indexOf", new com.kamijoucen.ruler.logic.function.array.IndexOfFunction(), rClass);
+        addFunToRClass("sort", new SortFunction(), rClass);
+        addFunToRClass("map", new MapFunction(), rClass);
+        addFunToRClass("filter", new FilterFunction(), rClass);
+        addFunToRClass("reduce", new ReduceFunction(), rClass);
+        addFunToRClass("find", new FindFunction(), rClass);
+        addFunToRClass("findIndex", new FindIndexFunction(), rClass);
         return rClass;
     }
 
@@ -62,8 +91,31 @@ public class ObjectRClassManagerImpl implements RClassManager {
         return value;
     }
 
-
     private void addFunToRClass(RulerFunction func, RClass rClass) {
         rClass.getProperties().put(func.getName(), new FunctionValue(func));
+    }
+
+    private void addFunToRClass(String name, RulerFunction func, RClass rClass) {
+        rClass.getProperties().put(name, new FunctionValue(new NamedWrapper(name, func)));
+    }
+
+    private static class NamedWrapper implements RulerFunction {
+        private final String name;
+        private final RulerFunction delegate;
+
+        NamedWrapper(String name, RulerFunction delegate) {
+            this.name = name;
+            this.delegate = delegate;
+        }
+
+        @Override
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
+            return delegate.call(context, currentScope, self, param);
+        }
     }
 }

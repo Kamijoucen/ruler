@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import com.kamijoucen.ruler.service.Ruler;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -49,13 +48,11 @@ public class BuiltinFunctionTest {
         run("return ToBoolean(1);");
     }
 
-    @Ignore("Known issue: StringCharAt returns char without a registered converter")
     @Test
     public void stringCharAtTest() {
         Assert.assertEquals("u", run("return StringCharAt('ruler', 1);").first().toString());
     }
 
-    @Ignore("Known issue: StringCharAt returns char without a registered converter")
     @Test(expected = IndexOutOfBoundsException.class)
     public void stringCharAtOutOfBoundsTest() {
         run("return StringCharAt('ab', 3);");

@@ -46,6 +46,11 @@ import com.kamijoucen.ruler.logic.function.TimestampFunction;
 import com.kamijoucen.ruler.logic.function.ToBooleanFunction;
 import com.kamijoucen.ruler.logic.function.ToNumberFunction;
 import com.kamijoucen.ruler.logic.function.ValueConvertFunctionProxy;
+import com.kamijoucen.ruler.logic.function.array.*;
+import com.kamijoucen.ruler.logic.function.math.*;
+import com.kamijoucen.ruler.logic.function.object.*;
+import com.kamijoucen.ruler.logic.function.string.*;
+import com.kamijoucen.ruler.logic.function.type.*;
 import com.kamijoucen.ruler.component.CallClosureExecutor;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -126,25 +131,67 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private void initDefaultFunction() {
         registerGlobalFunction(new PrintFunction());
         registerGlobalFunction(new MakeItPossibleFunction());
-        registerGlobalFunction(new CharAtFunction());
         registerGlobalFunction(new DatetimeFunction());
         registerGlobalFunction(new TimestampFunction());
         registerGlobalFunction(new PanicFunction());
 
-        RulerFunction toNumberFunction = new ToNumberFunction();
-        RulerFunction toBooleanFunction = new ToBooleanFunction();
-        RulerFunction proxyFunction = new ProxyFunction();
+        putGlobal(new ToNumberFunction());
+        putGlobal(new ToBooleanFunction());
+        putGlobal(new ProxyFunction());
+        putGlobal(new CallFunction());
+        putGlobal(new CharAtFunction());
 
-        RulerFunction charAtFunction = new ReturnConvertFunctionProxy(new CharAtFunction(), this);
+        putGlobal(new AbsFunction());
+        putGlobal(new MinFunction());
+        putGlobal(new MaxFunction());
+        putGlobal(new RoundFunction());
+        putGlobal(new FloorFunction());
+        putGlobal(new CeilFunction());
+        putGlobal(new PowFunction());
+        putGlobal(new SqrtFunction());
+        putGlobal(new RandomFunction());
 
-        CallFunction callFunction = new CallFunction();
+        putGlobal(new SubstringFunction());
+        putGlobal(new com.kamijoucen.ruler.logic.function.string.IndexOfFunction());
+        putGlobal(new ReplaceFunction());
+        putGlobal(new SplitFunction());
+        putGlobal(new TrimFunction());
+        putGlobal(new UpperCaseFunction());
+        putGlobal(new LowerCaseFunction());
+        putGlobal(new StartsWithFunction());
+        putGlobal(new EndsWithFunction());
 
-        this.globalScope.putLocal(toNumberFunction.getName(), new FunctionValue(toNumberFunction));
-        this.globalScope.putLocal(toBooleanFunction.getName(),
-                new FunctionValue(toBooleanFunction));
-        this.globalScope.putLocal(charAtFunction.getName(), new FunctionValue(charAtFunction));
-        this.globalScope.putLocal(proxyFunction.getName(), new FunctionValue(proxyFunction));
-        this.globalScope.putLocal(callFunction.getName(), new FunctionValue(callFunction));
+        putGlobal(new MapFunction());
+        putGlobal(new FilterFunction());
+        putGlobal(new ReduceFunction());
+        putGlobal(new FindFunction());
+        putGlobal(new FindIndexFunction());
+        putGlobal(new SliceFunction());
+        putGlobal(new ConcatFunction());
+        putGlobal(new JoinFunction());
+        putGlobal(new ReverseFunction());
+        putGlobal(new PopFunction());
+        putGlobal(new ShiftFunction());
+        putGlobal(new UnshiftFunction());
+        putGlobal(new com.kamijoucen.ruler.logic.function.array.IndexOfFunction());
+        putGlobal(new SortFunction());
+
+        putGlobal(new KeysFunction());
+        putGlobal(new ValuesFunction());
+        putGlobal(new HasKeyFunction());
+        putGlobal(new MergeFunction());
+
+        putGlobal(new IsNullFunction());
+        putGlobal(new IsNumberFunction());
+        putGlobal(new IsStringFunction());
+        putGlobal(new IsBoolFunction());
+        putGlobal(new IsArrayFunction());
+        putGlobal(new IsFunctionFunction());
+        putGlobal(new IsDateFunction());
+    }
+
+    private void putGlobal(RulerFunction func) {
+        this.globalScope.putLocal(func.getName(), new FunctionValue(func));
     }
 
     @Override

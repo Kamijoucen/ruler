@@ -1,10 +1,35 @@
-fun Contains(str) {
+fun substring(str, start, end) {
+    return stringSubstring(str, start, end);
 }
 
-fun Trim(str) {
-
+fun indexOf(str, sub, fromIndex) {
+    return stringIndexOf(str, sub, fromIndex);
 }
 
-fun IsBlank(str) {
+fun replace(str, old, new) {
+    return stringReplace(str, old, new);
+}
 
+fun split(str, regex) {
+    return stringSplit(str, regex);
+}
+
+fun trim(str) {
+    return stringTrim(str);
+}
+
+fun upperCase(str) {
+    return stringUpperCase(str);
+}
+
+fun lowerCase(str) {
+    return stringLowerCase(str);
+}
+
+fun startsWith(str, prefix) {
+    return stringStartsWith(str, prefix);
+}
+
+fun endsWith(str, suffix) {
+    return stringEndsWith(str, suffix);
 }
