@@ -187,4 +187,35 @@ public class CompileTypeCheckTest {
         Assert.assertNotNull(Ruler.compile("for i in [1,2,3] { println(i); }", configuration));
     }
 
+    // ==================== division returns DOUBLE ====================
+
+    /**
+     * 整数除法在运行时返回 DoubleValue（NumberUtil.div 走 BigDecimal），
+     * 因此类型检查应将 INT/INT 推导为 DOUBLE，避免与运行时不一致。
+     * 推导后再做布尔运算应触发类型错误（DOUBLE 而非 BOOL）。
+     */
+    @Test
+    public void integerDivisionShouldBeTypedAsDouble() {
+        try {
+            Ruler.compile("(4 / 2) && true", configuration);
+            Assert.fail("Expected SyntaxException because (INT/INT) should be DOUBLE not BOOL");
+        } catch (SyntaxException e) {
+            Assert.assertTrue("expected DOUBLE in error message but got: " + e.getMessage(),
+                    e.getMessage().contains("DOUBLE"));
+        }
+    }
+
+    @Test
+    public void divisionWithDoubleStillCompiles() {
+        Assert.assertNotNull(Ruler.compile("var x = 4 / 2 + 1.5; return x;", configuration));
+    }
+
+    @Test
+    public void divisionRuntimeReturnsDouble() {
+        Object first = Ruler.compile("return 4 / 2;", configuration).run().first().getValue();
+        Assert.assertTrue("expected BigDecimal/Double runtime value, got: "
+                        + (first == null ? "null" : first.getClass()),
+                first instanceof java.math.BigDecimal || first instanceof Double);
+    }
+
 }

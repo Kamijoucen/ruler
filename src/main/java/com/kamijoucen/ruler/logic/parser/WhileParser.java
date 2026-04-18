@@ -27,35 +27,34 @@ public class WhileParser implements AtomParser {
 
     @Override
     public BaseNode parse(AtomParserManager manager) {
-        boolean inLoop = manager.isInLoop();
+        boolean prevInLoop = manager.isInLoop();
         manager.setInLoop(true);
-
-        TokenStream tokenStream = manager.getTokenStream();
-        Token whileToken = tokenStream.token();
-        AssertUtil.assertToken(whileToken, TokenType.KEY_WHILE);
-        tokenStream.nextToken();
-
-        // 解析条件表达式
-        BaseNode condition = manager.parseExpression();
-        BaseNode blockAST;
-
-        // 解析循环体
-        if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            blockAST = parseBlock(manager);
-        } else if (tokenStream.token().type == TokenType.COLON) {
+        try {
+            TokenStream tokenStream = manager.getTokenStream();
+            Token whileToken = tokenStream.token();
+            AssertUtil.assertToken(whileToken, TokenType.KEY_WHILE);
             tokenStream.nextToken();
-            BaseNode statement = manager.parseStatement();
-            blockAST = new BlockNode(Collections.singletonList(statement), statement.getLocation());
-        } else {
-            throw new SyntaxException("expected '{' or ': after while condition\t token=" + tokenStream.token());
-        }
 
-        // 恢复循环状态
-        if (!inLoop) {
-            manager.setInLoop(false);
-        }
+            // 解析条件表达式
+            BaseNode condition = manager.parseExpression();
+            BaseNode blockAST;
 
-        return new WhileStatementNode(condition, blockAST, whileToken.location);
+            // 解析循环体
+            if (tokenStream.token().type == TokenType.LEFT_BRACE) {
+                blockAST = parseBlock(manager);
+            } else if (tokenStream.token().type == TokenType.COLON) {
+                tokenStream.nextToken();
+                BaseNode statement = manager.parseStatement();
+                blockAST = new BlockNode(Collections.singletonList(statement), statement.getLocation());
+            } else {
+                throw new SyntaxException("expected '{' or ': after while condition\t token=" + tokenStream.token());
+            }
+
+            return new WhileStatementNode(condition, blockAST, whileToken.location);
+        } finally {
+            // 无论是否解析异常，都需要恢复进入前的循环状态，避免污染后续解析
+            manager.setInLoop(prevInLoop);
+        }
     }
 
     // 解析代码块

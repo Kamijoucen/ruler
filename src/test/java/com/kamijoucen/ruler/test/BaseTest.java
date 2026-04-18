@@ -23,7 +23,6 @@ public class BaseTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
         configuration.registerGlobalFunction(new FuncParamLengthTestFunction());
     }
 
@@ -37,7 +36,8 @@ public class BaseTest {
 
     @Test
     public void arrayInTest() {
-        String script = "op.In($target, [99, 1.5, 5])";
+        configuration.registerGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
+        String script = "listUtil.In($target, [99, 1.5, 5])";
         RulerRunner runner = getExpressionRunner(script);
 
         Map<String, Object> param = new HashMap<String, Object>();

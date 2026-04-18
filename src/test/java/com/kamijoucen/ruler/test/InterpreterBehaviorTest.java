@@ -24,7 +24,7 @@ public class InterpreterBehaviorTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
+        configuration.registerGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
     }
 
     private RulerModule compileScriptModule(String code) {
@@ -64,17 +64,17 @@ public class InterpreterBehaviorTest {
     @Test
     public void runScriptSingleExpressionImportsGlobalModuleByDefault() {
         RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("op.Add(1, 2, 3)"), configuration);
+                new RulerInterpreter(compileScriptModule("listUtil.Contains(2, [1, 2, 3])"), configuration);
 
         List<Object> result = interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
 
-        Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(6)), result);
+        Assert.assertEquals(Collections.singletonList(Boolean.TRUE), result);
     }
 
     @Test(expected = RulerRuntimeException.class)
     public void runScriptSingleExpressionCanDisableGlobalModuleImport() {
         RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("op.Add(1, 2)"), configuration);
+                new RulerInterpreter(compileScriptModule("listUtil.Contains(2, [1, 2, 3])"), configuration);
         interpreter.setHasImportGlobalModule(false);
 
         interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
@@ -240,7 +240,7 @@ public class InterpreterBehaviorTest {
 
             @Override
             public String load(String path) {
-                return "return op.Add(1, 2);";
+                return "return listUtil.Contains(2, [1, 2]);";
             }
         });
 

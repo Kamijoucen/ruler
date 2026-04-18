@@ -260,18 +260,16 @@ rule "name_check" {
 ### 导入标准库
 
 ```ruler
-import "/ruler/std/global.txt" op;
 import "/ruler/std/collections.txt" collections;
 import "/ruler/std/util.txt" util;
 
-println(op.Add(1, 2, 3));
 println(collections.Contains(1, [1, 2, 3]));
 ```
 
 Java 端注册全局导入：
 
 ```java
-cfg.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
+cfg.registerGlobalImportPathModule("/ruler/std/collections.txt", "collections");
 ```
 
 ## CLI / REPL

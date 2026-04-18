@@ -28,7 +28,6 @@ public class BinaryChecker {
             case ADD:
             case SUB:
             case MUL:
-            case DIV:
                 if (!lhs.isNumeric() || !rhs.isNumeric()) {
                     throw new SyntaxException(
                             "operator '" + opName + "' requires numeric types but got "
@@ -37,6 +36,16 @@ public class BinaryChecker {
                 }
                 return (lhs.getKind() == TypeKind.DOUBLE || rhs.getKind() == TypeKind.DOUBLE)
                         ? DoubleType.INSTANCE : IntegerType.INSTANCE;
+            case DIV:
+                if (!lhs.isNumeric() || !rhs.isNumeric()) {
+                    throw new SyntaxException(
+                            "operator '" + opName + "' requires numeric types but got "
+                                    + lhs.getKind() + " and " + rhs.getKind(),
+                            node.getLocation());
+                }
+                // 运行时除法始终返回 DoubleValue（NumberUtil.div 使用 BigDecimal 带 scale），
+                // 因此静态类型也固定为 DOUBLE，避免与运行时不一致。
+                return DoubleType.INSTANCE;
             case STRING_ADD:
                 return StringType.INSTANCE;
             case LT:

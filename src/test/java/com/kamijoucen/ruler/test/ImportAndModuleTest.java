@@ -119,9 +119,9 @@ public class ImportAndModuleTest {
     @Test
     public void testGlobalImportPathModule() {
         RulerConfigurationImpl cfg = new RulerConfigurationImpl();
-        cfg.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
-        String script = "return op.Add(1, 2);";
+        cfg.registerGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
+        String script = "return listUtil.Contains(2, [1, 2]);";
         RulerResult r = Ruler.compile(script, cfg).run();
-        Assert.assertEquals(3L, r.first().toInteger());
+        Assert.assertTrue(r.first().toBoolean());
     }
 }

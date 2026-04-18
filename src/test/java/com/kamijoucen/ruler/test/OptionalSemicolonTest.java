@@ -62,8 +62,8 @@ public class OptionalSemicolonTest {
 
     @Test
     public void testImportWithoutSemicolon() {
-        String script = "import \"/ruler/std/global.txt\" op\nreturn op.Add(1,2,3)";
-        Assert.assertEquals(6L, compile(script).run().first().toInteger());
+        String script = "import \"/ruler/std/collections.txt\" listUtil\nreturn listUtil.Contains(2, [1,2,3])";
+        Assert.assertTrue(compile(script).run().first().toBoolean());
     }
 
     @Test
@@ -193,7 +193,7 @@ public class OptionalSemicolonTest {
 
     @Test
     public void testImportInfixWithoutSemicolon() {
-        String script = "import infix \"/ruler/std/global.txt\" op\nreturn 0";
+        String script = "import infix \"/ruler/std/collections.txt\" listUtil\nreturn 0";
         Assert.assertEquals(0L, compile(script).run().first().toInteger());
     }
 

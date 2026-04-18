@@ -19,7 +19,6 @@ public class StringInterpolationTest {
     @Before
     public void init() {
         configuration = new RulerConfigurationImpl();
-        configuration.registerGlobalImportPathModule("/ruler/std/global.txt", "op");
     }
 
     public RulerRunner getExpressionRunner(String text) {
@@ -53,7 +52,7 @@ public class StringInterpolationTest {
 
     @Test
     public void functionCallInterpolation() {
-        String script = "return \"val: {op.Add(1, 2, 3)}\";";
+        String script = "fun add(a, b, c) { return a + b + c; } return \"val: {add(1, 2, 3)}\";";
         RulerResult result = getScriptRunner(script).run();
         Assert.assertEquals("val: 6", result.first().toString());
     }

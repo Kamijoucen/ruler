@@ -67,7 +67,6 @@ Panic(msg)
 位于 `resources/ruler/std/` 下，按需 import：
 
 ```
-import "/ruler/std/global.txt" op;    // 中缀运算符扩展（Add/Sub/Gt/Lt...）
 import "/ruler/std/collections.txt";  // IsArray / IsEmpty / Contains / Swap
 import "/ruler/std/util.txt";         // Eq / EqArrayEveryOne / EqArrayAnyOne...
 import "/ruler/std/sort.txt" sort;   // Sort(arr, compare)
