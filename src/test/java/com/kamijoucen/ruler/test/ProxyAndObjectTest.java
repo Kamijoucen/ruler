@@ -3,11 +3,15 @@ package com.kamijoucen.ruler.test;
 import com.kamijoucen.ruler.service.Ruler;
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Proxy 和对象相关的基础测试用例
+ */
 public class ProxyAndObjectTest {
 
     private RulerConfigurationImpl configuration;
@@ -21,7 +25,7 @@ public class ProxyAndObjectTest {
         return Ruler.compile(text, configuration);
     }
 
-    // ---------- proxy get ----------
+    // ---------- proxy get 相关测试 ----------
 
     @Test
     public void testProxyGet() {
@@ -30,27 +34,56 @@ public class ProxyAndObjectTest {
         Assert.assertEquals(99L, r.first().toInteger());
     }
 
-    // ---------- proxy put ----------
+    @Test
+    public void testProxyGetWithoutSet() {
+        // 只有 get trap，没有 set trap，赋值应该透传到目标对象
+        String script = "var obj = {a: 1}; var p = Proxy(obj, {get: fun(self, name) { return self[name]; }}); p.a = 5; return obj.a;";
+        RulerResult r = compile(script).run();
+        Assert.assertEquals(5L, r.first().toInteger());
+    }
+
+    // ---------- proxy set 相关测试 ----------
 
     @Test
-    public void testProxyPut() {
-        // The interpreter's proxy/modifyObject does not pass the put callback return value back to AssignEval.
-        // We verify the callback was invoked by checking that the underlying object received the assignment.
-        String script = "var obj = {a: 1}; var p = Proxy(obj, {put: fun(self, name, val) { self[name] = val; return val; }}); p.a = 5; return obj.a;";
+    public void testProxySet() {
+        String script = "var obj = {a: 1}; var p = Proxy(obj, {set: fun(self, name, val) { self[name] = val; return val; }}); p.a = 5; return obj.a;";
         RulerResult r = compile(script).run();
         Assert.assertEquals(5L, r.first().toInteger());
     }
 
     @Test
-    public void testProxyPutWithModification() {
-        // Note: the current implementation does not reflect callback-side multiplication
-        // back to the underlying object in this scenario; it records the original value.
-        String script = "var obj = {a: 1}; var p = Proxy(obj, {put: fun(self, name, val) { self[name] = val * 2; return val; }}); p.a = 5; return obj.a;";
+    public void testProxySetWithModification() {
+        // set trap 可以修改要存储的值，底层对象会反映这个修改
+        String script = "var obj = {a: 1}; var p = Proxy(obj, {set: fun(self, name, val) { self[name] = val * 2; return val; }}); p.a = 5; return obj.a;";
         RulerResult r = compile(script).run();
-        Assert.assertEquals(5L, r.first().toInteger());
+        Assert.assertEquals(10L, r.first().toInteger());
     }
 
-    // ---------- string index ----------
+    @Test
+    public void testProxySetReturnValueIsAssignmentResult() {
+        // set trap 的返回值成为赋值表达式的结果（点号访问）
+        String script = "var obj = {a: 1}; var p = Proxy(obj, {set: fun(self, name, val) { return val * 3; }}); var result = (p.a = 5); return result;";
+        RulerResult r = compile(script).run();
+        Assert.assertEquals(15L, r.first().toInteger());
+    }
+
+    @Test
+    public void testProxySetIndexReturnValueIsAssignmentResult() {
+        // set trap 的返回值成为赋值表达式的结果（索引访问）
+        String script = "var obj = {a: 1}; var p = Proxy(obj, {set: fun(self, name, val) { return val + 10; }}); var result = (p['a'] = 5); return result;";
+        RulerResult r = compile(script).run();
+        Assert.assertEquals(15L, r.first().toInteger());
+    }
+
+    @Test
+    public void testProxyMissingPropertyGetReturnsNull() {
+        // 通过 proxy 访问不存在的属性，默认返回 null
+        String script = "var obj = {}; var p = Proxy(obj, {get: fun(self, name) { return self[name]; }}); return p.nonexistent === null;";
+        RulerResult r = compile(script).run();
+        Assert.assertTrue(r.first().toBoolean());
+    }
+
+    // ---------- 字符串索引测试 ----------
 
     @Test
     public void testStringIndex() {
@@ -59,12 +92,12 @@ public class ProxyAndObjectTest {
         Assert.assertEquals("e", r.first().toString());
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = RulerRuntimeException.class)
     public void testStringIndexOutOfBounds() {
         compile("return 'ab'[10];").run();
     }
 
-    // ---------- empty rson ----------
+    // ---------- 空对象测试 ----------
 
     @Test
     public void testEmptyRson() {
@@ -73,7 +106,7 @@ public class ProxyAndObjectTest {
         Assert.assertEquals("object", r.first().toString());
     }
 
-    // ---------- rson string keys ----------
+    // ---------- 对象字符串键测试 ----------
 
     @Test
     public void testRsonStringKeyRead() {
@@ -82,7 +115,7 @@ public class ProxyAndObjectTest {
         Assert.assertEquals(42L, r.first().toInteger());
     }
 
-    // ---------- rson index assignment ----------
+    // ---------- 对象索引赋值测试 ----------
 
     @Test
     public void testRsonIndexAssign() {
@@ -98,9 +131,9 @@ public class ProxyAndObjectTest {
         Assert.assertEquals(99L, r.first().toInteger());
     }
 
-    // ---------- array index out of bounds ----------
+    // ---------- 数组越界测试 ----------
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = RulerRuntimeException.class)
     public void testArrayIndexOutOfBounds() {
         compile("return [1,2][5];").run();
     }

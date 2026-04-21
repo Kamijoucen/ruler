@@ -6,13 +6,11 @@ import com.kamijoucen.ruler.domain.ast.expression.DotNode;
 import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.domain.value.*;
-import com.kamijoucen.ruler.logic.util.NumberUtil;
+import com.kamijoucen.ruler.logic.property.PropertyAccessor;
 
 public class AssignEval implements BaseEval<AssignNode> {
 
@@ -50,37 +48,13 @@ public class AssignEval implements BaseEval<AssignNode> {
     private BaseValue evalIndexOperation(AssignNode node, Scope scope, RuntimeContext context,
             BinaryOperationNode binaryNode, BaseValue preValue) {
         BaseValue indexValue = binaryNode.getRhs().eval(scope, context);
-
         BaseValue value = node.getRhs().eval(scope, context);
-
-        if (preValue.getType() == ValueType.ARRAY) {
-            checkType(indexValue, ValueType.INTEGER, "Array index must be an integer");
-            ArrayValue arrayValue = (ArrayValue) preValue;
-            arrayValue.getValues().set(NumberUtil.toIntIndex((IntegerValue) indexValue), value);
-        } else if (preValue.getType() == ValueType.RSON) {
-            checkType(indexValue, ValueType.STRING, "Object key must be a string");
-            RsonValue rsonValue = (RsonValue) preValue;
-            context.getConfiguration().getObjectAccessControlManager().modifyObject(rsonValue,
-                    ((StringValue) indexValue).getValue(), value, context);
-        } else {
-            throw new IllegalOperationException(preValue.getType() + " is not indexable");
-        }
-        return value;
+        return PropertyAccessor.setIndexProperty(preValue, indexValue, value, context);
     }
 
     private BaseValue evalDotOperation(AssignNode node, Scope scope, RuntimeContext context, BaseValue preValue) {
-        if (preValue.getType() != ValueType.RSON) {
-            throw new IllegalOperationException(preValue.getType() + " is not indexable");
-        }
         String fieldKey = ((NameNode) ((DotNode) node.getLhs()).getRhs()).name.name;
         BaseValue value = node.getRhs().eval(scope, context);
-        context.getConfiguration().getObjectAccessControlManager().modifyObject(preValue, fieldKey, value, context);
-        return value;
-    }
-
-    private void checkType(BaseValue value, ValueType expectedType, String errorMessage) {
-        if (value.getType() != expectedType) {
-            throw new RulerRuntimeException(errorMessage);
-        }
+        return PropertyAccessor.setProperty(preValue, fieldKey, value, context);
     }
 }

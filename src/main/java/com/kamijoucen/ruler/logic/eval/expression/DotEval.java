@@ -12,6 +12,8 @@ import com.kamijoucen.ruler.domain.value.ClosureValue;
 import com.kamijoucen.ruler.domain.value.FunctionValue;
 import com.kamijoucen.ruler.domain.value.MethodValue;
 import com.kamijoucen.ruler.domain.value.ModuleValue;
+import com.kamijoucen.ruler.domain.value.ProxyValue;
+import com.kamijoucen.ruler.logic.property.PropertyAccessor;
 
 public class DotEval implements BaseEval<DotNode> {
 
@@ -24,8 +26,7 @@ public class DotEval implements BaseEval<DotNode> {
             throw new RulerRuntimeException("dot expression rhs must be an identifier");
         }
         String callName = ((NameNode) nodeName).name.name;
-        BaseValue callValue = context.getConfiguration().getObjectAccessControlManager().accessObject(prevValue,
-                callName, context);
+        BaseValue callValue = PropertyAccessor.getProperty(prevValue, callName, context);
         if ((callValue instanceof ClosureValue || callValue instanceof FunctionValue)
                 && !(prevValue instanceof ModuleValue)) {
             return new MethodValue(callValue, prevValue);

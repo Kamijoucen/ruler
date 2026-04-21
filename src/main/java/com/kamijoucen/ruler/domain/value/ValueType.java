@@ -30,6 +30,8 @@ public enum ValueType {
 
     RULE_RESULT,
 
-    METHOD
+    METHOD,
+
+    PROXY
 
 }

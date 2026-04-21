@@ -12,6 +12,8 @@ import com.kamijoucen.ruler.component.Parsers;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
+import com.kamijoucen.ruler.domain.common.Constant;
+import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
@@ -59,6 +61,9 @@ public class FunParser implements AtomParser {
         String name = null;
         if (tokenStream.token().type == TokenType.IDENTIFIER) {
             name = tokenStream.token().name;
+            if (Constant.isReservedName(name)) {
+                throw new SyntaxException("reserved name cannot be used as identifier: " + name);
+            }
             tokenStream.nextToken();
         }
 
@@ -69,6 +74,10 @@ public class FunParser implements AtomParser {
         if (tokenStream.token().type != TokenType.RIGHT_PAREN) {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
             BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
+            String paramName = ((NameNode) nameNode).name.name;
+            if (Constant.isReservedName(paramName)) {
+                throw new SyntaxException("reserved name cannot be used as identifier: " + paramName);
+            }
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
                 DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode,
@@ -85,6 +94,10 @@ public class FunParser implements AtomParser {
             AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
 
             BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
+            String paramName = ((NameNode) nameNode).name.name;
+            if (Constant.isReservedName(paramName)) {
+                throw new SyntaxException("reserved name cannot be used as identifier: " + paramName);
+            }
             if (tokenStream.token().type == TokenType.ASSIGN) {
                 tokenStream.nextToken();
                 DefaultParamValNode paramValNode = new DefaultParamValNode((NameNode) nameNode,

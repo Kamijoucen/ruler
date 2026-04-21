@@ -1,5 +1,6 @@
 package com.kamijoucen.ruler.domain.runtime;
 
+import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.token.TokenLocation;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -39,6 +40,9 @@ public class Scope {
     }
 
     public void update(String name, BaseValue value) {
+        if (Constant.isReservedName(name)) {
+            throw new RulerRuntimeException("cannot reassign reserved variable: " + name);
+        }
         if (valueSpace.containsKey(name)) {
             putLocal(name, value);
         } else if (parentScope != null) {
@@ -49,6 +53,9 @@ public class Scope {
     }
 
     public void defineLocal(String name, BaseValue value) {
+        if (Constant.isReservedName(name)) {
+            throw new RulerRuntimeException("cannot define reserved variable: " + name);
+        }
         if (valueSpace.containsKey(name)) {
             throw new RulerRuntimeException("variable already defined: " + name);
         }

@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.service.Ruler;
 import org.junit.Assert;
@@ -17,12 +16,12 @@ public class IndexAndAssignmentBoundaryTest {
         configuration = new RulerConfigurationImpl();
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = RulerRuntimeException.class)
     public void arrayNegativeIndexThrowsTest() {
         Ruler.compile("return [1, 2][-1];", configuration).run();
     }
 
-    @Test(expected = IndexOutOfBoundsException.class)
+    @Test(expected = RulerRuntimeException.class)
     public void stringNegativeIndexThrowsTest() {
         Ruler.compile("return 'ab'[-1];", configuration).run();
     }
@@ -45,11 +44,11 @@ public class IndexAndAssignmentBoundaryTest {
             Ruler.compile("var obj = {a: 1}; obj[1] = 2;", configuration).run();
             Assert.fail("Expected RulerRuntimeException");
         } catch (RulerRuntimeException e) {
-            Assert.assertTrue(e.getMessage().contains("Object key must be a string"));
+            Assert.assertTrue(e.getMessage().contains("invalid key type for object"));
         }
     }
 
-    @Test(expected = IllegalOperationException.class)
+    @Test(expected = RulerRuntimeException.class)
     public void dotAssignmentOnNonObjectThrowsTest() {
         Ruler.compile("var value = 1; value.a = 2;", configuration).run();
     }

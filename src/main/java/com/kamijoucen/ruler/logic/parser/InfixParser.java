@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.domain.ast.expression.InfixDefinitionNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
+import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -36,6 +37,9 @@ public class InfixParser implements AtomParser {
         String infixName = functionNode.getName();
         if (IOUtil.isBlank(infixName)) {
             throw new SyntaxException("infix function name is blank!\t token=" + infixToken);
+        }
+        if (Constant.isReservedName(infixName)) {
+            throw new SyntaxException("reserved name cannot be used as identifier: " + infixName);
         }
         return new InfixDefinitionNode(functionNode, infixToken.location);
     }

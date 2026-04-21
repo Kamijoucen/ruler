@@ -221,8 +221,9 @@ var proxyConfig = {
         }
         return self[name];
     },
-    put: fun(self, name, newValue) {
+    set: fun(self, name, newValue) {
         self[name] = newValue;
+        return newValue;
     }
 };
 arr = Proxy(arr, proxyConfig);

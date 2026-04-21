@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.domain.ast.factor.RsonNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
+import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -48,6 +49,9 @@ public class RsonParser implements AtomParser {
                 throw new SyntaxException("invalid key\t token=" + tokenStream.token());
             }
             Token name = tokenStream.token();
+            if (Constant.isReservedName(name.name)) {
+                throw new SyntaxException("reserved name cannot be used as identifier: " + name.name);
+            }
             tokenStream.nextToken();
 
             AssertUtil.assertToken(tokenStream, TokenType.COLON);
@@ -67,6 +71,9 @@ public class RsonParser implements AtomParser {
                 throw new SyntaxException("invalid key\t token=" + tokenStream.token());
             }
             Token name = tokenStream.token();
+            if (Constant.isReservedName(name.name)) {
+                throw new SyntaxException("reserved name cannot be used as identifier: " + name.name);
+            }
             tokenStream.nextToken();
             AssertUtil.assertToken(tokenStream, TokenType.COLON);
             tokenStream.nextToken();

@@ -4,7 +4,6 @@ import com.kamijoucen.ruler.component.BinaryOperationFactoryImpl;
 import com.kamijoucen.ruler.component.ParamTypePreProcessImpl;
 import com.kamijoucen.ruler.component.IntegerNumberCacheImpl;
 import com.kamijoucen.ruler.component.ValueConvertManagerImpl;
-import com.kamijoucen.ruler.component.ObjectAccessControlManagerImpl;
 import com.kamijoucen.ruler.component.SpiLoaderManagerImpl;
 import com.kamijoucen.ruler.component.ConfigModuleManagerImpl;
 import com.kamijoucen.ruler.component.CustomImportLoaderManagerImpl;
@@ -22,7 +21,6 @@ import com.kamijoucen.ruler.component.ConfigModuleManager;
 import com.kamijoucen.ruler.component.CreateRuntimeContextFactory;
 import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 import com.kamijoucen.ruler.component.IntegerNumberCache;
-import com.kamijoucen.ruler.component.ObjectAccessControlManager;
 import com.kamijoucen.ruler.component.ParamTypePreProcess;
 import com.kamijoucen.ruler.component.RClassManager;
 import com.kamijoucen.ruler.application.RulerConfiguration;
@@ -91,9 +89,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private ValueConvertManager valueConvertManager = new ValueConvertManagerImpl();
 
     private CallClosureExecutor callClosureExecutor = new CallClosureExecutor(this);
-
-    private ObjectAccessControlManager objectAccessControlManager =
-            new ObjectAccessControlManagerImpl();
 
     private SpiLoaderManager spiLoaderManager = new SpiLoaderManagerImpl();
 
@@ -256,16 +251,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public RClassManager getRClassManager() {
         return this.rClassFactory;
-    }
-
-    @Override
-    public ObjectAccessControlManager getObjectAccessControlManager() {
-        return this.objectAccessControlManager;
-    }
-
-    public void setObjectAccessControlManager(
-            ObjectAccessControlManager objectAccessControlManager) {
-        this.objectAccessControlManager = objectAccessControlManager;
     }
 
     @Override

@@ -18,9 +18,6 @@ public class CallEval implements BaseEval<CallNode> {
         for (int i = 0; i < callParams.size(); i++) {
             invokeParams[i] = callParams.get(i).eval(scope, context);
         }
-        BaseValue returnValue = node.getOperation().invoke(node.getLhs(), null, scope, context, invokeParams);
-        context.setReturnFlag(false);
-        context.clearReturnSpace();
-        return returnValue;
+        return node.getOperation().invoke(node.getLhs(), null, scope, context, invokeParams);
     }
 }

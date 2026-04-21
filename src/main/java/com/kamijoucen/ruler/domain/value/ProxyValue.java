@@ -1,30 +1,27 @@
 package com.kamijoucen.ruler.domain.value;
 
-import java.util.Map;
+public class ProxyValue extends AbstractValue {
 
-public class ProxyValue extends RsonValue {
+    private final BaseValue target;
 
-    private BaseValue value;
+    private final RsonValue handler;
 
-    private RsonValue configValue;
-
-    public ProxyValue(BaseValue value, RsonValue configValue) {
-        super(null);
-        this.value = value;
-        this.configValue = configValue;
+    public ProxyValue(BaseValue target, RsonValue handler) {
+        this.target = target;
+        this.handler = handler;
     }
 
     @Override
-    public Map<String, BaseValue> getFields() {
-        throw new UnsupportedOperationException("proxy value cannot get fields");
+    public ValueType getType() {
+        return ValueType.PROXY;
     }
 
-    public BaseValue getValue() {
-        return value;
+    public BaseValue getTarget() {
+        return target;
     }
 
-    public RsonValue getConfigValue() {
-        return configValue;
+    public RsonValue getHandler() {
+        return handler;
     }
 
 }
