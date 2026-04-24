@@ -10,6 +10,7 @@ import com.kamijoucen.ruler.logic.parser.FunParser;
 import com.kamijoucen.ruler.logic.parser.IdentifierParser;
 import com.kamijoucen.ruler.logic.parser.IfParser;
 import com.kamijoucen.ruler.logic.parser.InfixParser;
+import com.kamijoucen.ruler.logic.parser.MatchParser;
 import com.kamijoucen.ruler.logic.parser.NullParser;
 import com.kamijoucen.ruler.logic.parser.NumberParser;
 import com.kamijoucen.ruler.logic.parser.ParenParser;
@@ -34,6 +35,7 @@ public class Parsers {
     public static final IdentifierParser IDENTIFIER_PARSER = new IdentifierParser();
     public static final IfParser IF_PARSER = new IfParser();
     public static final InfixParser INFIX_PARSER = new InfixParser();
+    public static final MatchParser MATCH_PARSER = new MatchParser();
     public static final NullParser NULL_PARSER = new NullParser();
     public static final NumberParser NUMBER_PARSER = new NumberParser();
     public static final ParenParser PAREN_PARSER = new ParenParser();

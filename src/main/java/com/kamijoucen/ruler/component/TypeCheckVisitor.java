@@ -271,6 +271,20 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
         return UnknownType.INSTANCE;
     }
 
+    @Override
+    public RulerType eval(MatchNode node, Scope scope, RuntimeContext context) {
+        node.getScrutinee().typeCheck(scope, context);
+        for (MatchCase matchCase : node.getCases()) {
+            context.setTypeScope(new TypeScope(context.getTypeScope()));
+            try {
+                matchCase.getBody().typeCheck(scope, context);
+            } finally {
+                context.setTypeScope(context.getTypeScope().getParent());
+            }
+        }
+        return UnknownType.INSTANCE;
+    }
+
     private String unaryOpSymbol(TokenType op) {
         if (op == TokenType.ADD) {
             return "+";

@@ -3,7 +3,11 @@ package com.kamijoucen.ruler.logic.operation;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.domain.value.BaseValue;
+import com.kamijoucen.ruler.domain.value.BoolValue;
+import com.kamijoucen.ruler.domain.value.StringValue;
+import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.logic.util.ConvertUtil;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class NeOperation implements BinaryOperation {
@@ -45,7 +49,7 @@ public class NeOperation implements BinaryOperation {
         if (!strict) {
             if (lt == ValueType.STRING && NumberUtil.isNumber(rt)) {
                 try {
-                    BaseValue parsed = com.kamijoucen.ruler.logic.util.ConvertUtil.stringToValue(l.toString(), context);
+                    BaseValue parsed = ConvertUtil.stringToValue(l.toString(), context);
                     if (parsed == null) {
                         return false;
                     }
@@ -56,7 +60,7 @@ public class NeOperation implements BinaryOperation {
             }
             if (NumberUtil.isNumber(lt) && rt == ValueType.STRING) {
                 try {
-                    BaseValue parsed = com.kamijoucen.ruler.logic.util.ConvertUtil.stringToValue(r.toString(), context);
+                    BaseValue parsed = ConvertUtil.stringToValue(r.toString(), context);
                     if (parsed == null) {
                         return false;
                     }

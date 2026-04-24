@@ -221,4 +221,13 @@ public abstract class AbstractVisitor<T> implements NodeVisitor<T> {
         return null;
     }
 
+    @Override
+    public T eval(MatchNode node, Scope scope, RuntimeContext context) {
+        node.getScrutinee().eval(scope, context);
+        for (MatchCase matchCase : node.getCases()) {
+            matchCase.getBody().eval(scope, context);
+        }
+        return null;
+    }
+
 }

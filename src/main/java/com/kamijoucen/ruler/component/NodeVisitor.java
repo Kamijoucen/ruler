@@ -67,4 +67,6 @@ public interface NodeVisitor<T> {
 
     T eval(DefaultParamValNode node, Scope scope, RuntimeContext context);
 
+    T eval(MatchNode node, Scope scope, RuntimeContext context);
+
 }

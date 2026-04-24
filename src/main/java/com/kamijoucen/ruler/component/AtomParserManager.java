@@ -18,6 +18,7 @@ import com.kamijoucen.ruler.logic.parser.FunParser;
 import com.kamijoucen.ruler.logic.parser.IdentifierParser;
 import com.kamijoucen.ruler.logic.parser.IfParser;
 import com.kamijoucen.ruler.logic.parser.InfixParser;
+import com.kamijoucen.ruler.logic.parser.MatchParser;
 import com.kamijoucen.ruler.logic.parser.RuleParser;
 import com.kamijoucen.ruler.logic.parser.WhileParser;
 import com.kamijoucen.ruler.application.RulerConfiguration;
@@ -64,6 +65,7 @@ public class AtomParserManager implements Parser {
         statementParsers.add(Parsers.WHILE_PARSER);
         statementParsers.add(Parsers.FOR_EACH_PARSER);
         statementParsers.add(Parsers.FUN_PARSER);
+        statementParsers.add(Parsers.MATCH_PARSER);
 
         // 表达式级别解析器
         expressionParsers.add(Parsers.IDENTIFIER_PARSER);
@@ -83,6 +85,7 @@ public class AtomParserManager implements Parser {
         expressionParsers.add(Parsers.WHILE_PARSER);
         expressionParsers.add(Parsers.FOR_EACH_PARSER);
         expressionParsers.add(Parsers.FUN_PARSER);
+        expressionParsers.add(Parsers.MATCH_PARSER);
     }
 
     @Override
@@ -182,7 +185,7 @@ public class AtomParserManager implements Parser {
         return !(parser instanceof IfParser || parser instanceof WhileParser
                 || parser instanceof ForEachParser || parser instanceof FunParser
                 || parser instanceof RuleParser || parser instanceof InfixParser
-                || parser instanceof BlockParser);
+                || parser instanceof BlockParser || parser instanceof MatchParser);
     }
 
     @Override
