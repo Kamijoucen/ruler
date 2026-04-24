@@ -180,16 +180,7 @@ public final class PatternMatcher {
         if (lt == ValueType.NULL && rt == ValueType.NULL) {
             return true;
         }
-
-        if (lt == ValueType.NULL || rt == ValueType.NULL) {
-            return false;
-        }
-
-        if (lt != rt) {
-            return false;
-        }
-
-        return l.toString().equals(r.toString());
+        return false;
     }
 
 }

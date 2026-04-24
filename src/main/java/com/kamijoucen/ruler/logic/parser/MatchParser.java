@@ -18,7 +18,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * match表达式解析器
@@ -95,6 +97,24 @@ public class MatchParser implements AtomParser {
     private PatternNode parsePrimaryPattern(AtomParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token token = tokenStream.token();
+
+        // 负数字面量模式：仅当 `-` 紧跟 INTEGER 或 DOUBLE 时解析为负数字面量模式。
+        // 其它组合保持原有错误路径（default 抛 unsupported pattern type: SUB）。
+        if (token.type == TokenType.SUB) {
+            Token next = tokenStream.peek();
+            if (next.type == TokenType.INTEGER) {
+                tokenStream.nextToken();   // 消费 -
+                tokenStream.nextToken();   // 消费 INTEGER
+                return new LiteralPatternNode(
+                        new IntegerNode(new BigInteger(next.name).negate(), token.location));
+            }
+            if (next.type == TokenType.DOUBLE) {
+                tokenStream.nextToken();
+                tokenStream.nextToken();
+                return new LiteralPatternNode(
+                        new DoubleNode(new BigDecimal(next.name).negate(), token.location));
+            }
+        }
 
         switch (token.type) {
             case LEFT_SQUARE:
@@ -177,6 +197,7 @@ public class MatchParser implements AtomParser {
         tokenStream.nextToken();
 
         List<ObjectPatternField> fields = new ArrayList<>();
+        Set<String> seenFieldNames = new HashSet<>();
         RestPatternNode restPattern = null;
 
         while (tokenStream.token().type != TokenType.RIGHT_BRACE
@@ -202,6 +223,11 @@ public class MatchParser implements AtomParser {
             }
             tokenStream.nextToken();
             String fieldName = fieldNameToken.name;
+
+            if (!seenFieldNames.add(fieldName)) {
+                throw new SyntaxException(
+                        "duplicate field in object pattern: " + fieldName, fieldNameToken.location);
+            }
 
             AssertUtil.assertToken(tokenStream, TokenType.COLON);
             tokenStream.nextToken();
