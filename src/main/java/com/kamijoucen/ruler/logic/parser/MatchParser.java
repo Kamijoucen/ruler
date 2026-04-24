@@ -139,6 +139,12 @@ public class MatchParser implements AtomParser {
             case KEY_NULL:
                 tokenStream.nextToken();
                 return new LiteralPatternNode(new NullNode(token.location));
+            case KEY_TYPEOF:
+                tokenStream.nextToken();
+                Token typeToken = tokenStream.token();
+                AssertUtil.assertToken(typeToken, TokenType.STRING);
+                tokenStream.nextToken();
+                return new TypeofPatternNode(typeToken.name);
             case KEY_VAR:
                 tokenStream.nextToken();
                 Token bindToken = tokenStream.token();

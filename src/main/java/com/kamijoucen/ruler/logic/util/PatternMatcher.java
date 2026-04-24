@@ -37,6 +37,12 @@ public final class PatternMatcher {
             }
             return null;
         }
+        if (pattern instanceof TypeofPatternNode) {
+            if (matchTypeof(((TypeofPatternNode) pattern).getExpectedType(), value)) {
+                return Collections.emptyMap();
+            }
+            return null;
+        }
         if (pattern instanceof NamePatternNode) {
             String name = ((NamePatternNode) pattern).getName();
             Map<String, BaseValue> bindings = new HashMap<>();
@@ -190,6 +196,38 @@ public final class PatternMatcher {
             return true;
         }
         return false;
+    }
+
+    private static boolean matchTypeof(String expectedType, BaseValue value) {
+        ValueType actualType = value.getType();
+        switch (expectedType) {
+            case "int":
+                return actualType == ValueType.INTEGER;
+            case "double":
+                return actualType == ValueType.DOUBLE;
+            case "boolean":
+                return actualType == ValueType.BOOL;
+            case "string":
+                return actualType == ValueType.STRING;
+            case "array":
+                return actualType == ValueType.ARRAY;
+            case "object":
+                return actualType == ValueType.RSON;
+            case "null":
+                return actualType == ValueType.NULL;
+            case "function":
+                return actualType == ValueType.FUNCTION ||
+                       actualType == ValueType.CLOSURE ||
+                       actualType == ValueType.METHOD;
+            case "date":
+                return actualType == ValueType.DATE;
+            case "proxy":
+                return actualType == ValueType.PROXY;
+            case "rule_result":
+                return actualType == ValueType.RULE_RESULT;
+            default:
+                return false;
+        }
     }
 
 }

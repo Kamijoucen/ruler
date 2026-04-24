@@ -245,4 +245,80 @@ public class MatchExpressionTest {
         Assert.assertEquals("done", result.first().toString());
     }
 
+    // ===== typeof 模式匹配 =====
+
+    @Test
+    public void typeofIntPatternTest() {
+        String script = "match 42 {\n    typeof 'int' -> 'integer'\n    typeof 'double' -> 'float'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("integer", result.first().toString());
+    }
+
+    @Test
+    public void typeofStringPatternTest() {
+        String script = "match 'hello' {\n    typeof 'string' -> 'text'\n    typeof 'int' -> 'number'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("text", result.first().toString());
+    }
+
+    @Test
+    public void typeofArrayPatternTest() {
+        String script = "match [1, 2, 3] {\n    typeof 'array' -> 'list'\n    typeof 'object' -> 'map'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("list", result.first().toString());
+    }
+
+    @Test
+    public void typeofObjectPatternTest() {
+        String script = "match {a: 1} {\n    typeof 'object' -> 'map'\n    typeof 'array' -> 'list'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("map", result.first().toString());
+    }
+
+    @Test
+    public void typeofBoolPatternTest() {
+        String script = "match true {\n    typeof 'boolean' -> 'bool'\n    typeof 'int' -> 'number'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("bool", result.first().toString());
+    }
+
+    @Test
+    public void typeofNullPatternTest() {
+        String script = "match null {\n    typeof 'null' -> 'nothing'\n    typeof 'int' -> 'number'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("nothing", result.first().toString());
+    }
+
+    @Test
+    public void typeofFunctionPatternTest() {
+        String script = "match fun() { 1 } {\n    typeof 'function' -> 'callable'\n    typeof 'int' -> 'number'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("callable", result.first().toString());
+    }
+
+    @Test
+    public void typeofDoublePatternTest() {
+        String script = "match 3.14 {\n    typeof 'double' -> 'float'\n    typeof 'int' -> 'integer'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("float", result.first().toString());
+    }
+
+    @Test
+    public void typeofMixedWithLiteralPatternTest() {
+        String script = "match 42 {\n    100 -> 'hundred'\n    typeof 'int' -> 'integer'\n    42 -> 'forty-two'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("integer", result.first().toString());
+    }
+
+    @Test
+    public void typeofNoMatchTest() {
+        String script = "match 'hello' {\n    typeof 'int' -> 'integer'\n    typeof 'array' -> 'list'\n}";
+        try {
+            getRunner(script).run();
+            Assert.fail("Expected RulerRuntimeException for no matching case");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("match error"));
+        }
+    }
+
 }

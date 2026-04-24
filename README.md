@@ -118,6 +118,13 @@ var guardResult = match 15 {
     _ -> "zero"
 }
 
+var typeofResult = match [1, 2, 3] {
+    typeof "string" -> "text"
+    typeof "array"  -> "list"
+    typeof "object" -> "map"
+    _ -> "other"
+}
+
 // ===== 中缀运算符 =====
 infix fun push(arr, v) {
     arr.push(v)
@@ -160,6 +167,7 @@ var t = typeof(arr)            // "array"
     closureResult: calc(1),
     matchResult: result,
     guardResult: guardResult,
+    typeofResult: typeofResult,
     pipeline: pipeline,
     proxyValue: proxied.doubleLength,
     typeName: t
@@ -174,6 +182,7 @@ match value {
     "hello"     -> "string"       // 字符串字面量
     var n       -> n + 1          // 变量绑定
     TOKEN_TYPE  -> "matched"      // 值比较（使用已定义变量的值）
+    typeof "int" -> "integer"     // 类型检查
     _           -> "default"      // 通配符
     [var a, var b]      -> a + b          // 数组解构
     [var h, ...var t]   -> h              // 数组 + rest
@@ -185,6 +194,7 @@ match value {
 
 - 匹配顺序从上到下，命中第一个即返回
 - 绑定的变量只在 `->` 右侧有效，不泄漏到外部
+- `typeof "typeName"` 按类型名匹配，支持 `"int"`、`"double"`、`"string"`、`"boolean"`、`"array"`、`"object"`、`"null"`、`"function"`、`"date"`、`"proxy"`、`"rule_result"`
 - `{}` 匹配任何对象（部分匹配语义）
 - `...` 必须出现在模式末尾
 - 字面量匹配使用严格相等（`===`）
