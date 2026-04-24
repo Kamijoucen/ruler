@@ -1,6 +1,3 @@
-// JSON parser and stringifier
-// Pure Ruler implementation using state machine + recursive descent
-
 fun _jsonCreateParser(text) {
     return {
         text: text,
@@ -219,18 +216,6 @@ fun _jsonParseValue(parser) {
     };
 }
 
-// Public API
-
-fun parse(text) {
-    var parser = _jsonCreateParser(text);
-    var result = _jsonParseValue(parser);
-    _jsonSkipWhitespace(parser);
-    if parser.pos != parser.len {
-        panic("JSON parse error: unexpected trailing characters");
-    }
-    return result;
-}
-
 fun _jsonEscapeString(str) {
     var result = "";
     for ch in str.array() {
@@ -264,6 +249,18 @@ fun _jsonStringifyObject(obj) {
         parts.push(_jsonEscapeString(key) ++ ":" ++ stringify(value));
     }
     return "{" ++ arrayJoin(parts, ",") ++ "}";
+}
+
+// Public API
+
+fun parse(text) {
+    var parser = _jsonCreateParser(text);
+    var result = _jsonParseValue(parser);
+    _jsonSkipWhitespace(parser);
+    if parser.pos != parser.len {
+        panic("JSON parse error: unexpected trailing characters");
+    }
+    return result;
 }
 
 fun stringify(value) {
