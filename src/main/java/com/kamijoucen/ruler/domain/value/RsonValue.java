@@ -24,4 +24,22 @@ public class RsonValue extends AbstractValue {
         return fields;
     }
 
+    @Override
+    public String toString() {
+        if (fields.isEmpty()) {
+            return "{}";
+        }
+        StringBuilder sb = new StringBuilder("{");
+        boolean first = true;
+        for (Map.Entry<String, BaseValue> entry : fields.entrySet()) {
+            if (!first) {
+                sb.append(", ");
+            }
+            first = false;
+            sb.append(entry.getKey()).append(": ").append(entry.getValue());
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
 }

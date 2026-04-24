@@ -9,7 +9,7 @@ import com.kamijoucen.ruler.domain.value.StringValue;
 public class ToStringFunction implements RulerFunction {
     @Override
     public String getName() {
-        return "ToString";
+        return "toString";
     }
 
     @Override

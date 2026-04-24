@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.BoolValue;
+import com.kamijoucen.ruler.domain.value.StringValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
 
@@ -25,6 +26,11 @@ public abstract class AbstractCompareOperation implements BinaryOperation {
         if ((lType == ValueType.INTEGER || lType == ValueType.DOUBLE)
                 && (rType == ValueType.INTEGER || rType == ValueType.DOUBLE)) {
             return BoolValue.get(compareNumber(NumberUtil.compareNumbers(lValue, rValue)));
+        }
+
+        if (lType == ValueType.STRING && rType == ValueType.STRING) {
+            int cmp = ((StringValue) lValue).getValue().compareTo(((StringValue) rValue).getValue());
+            return BoolValue.get(compareNumber(cmp));
         }
 
         throw new IllegalOperationException(

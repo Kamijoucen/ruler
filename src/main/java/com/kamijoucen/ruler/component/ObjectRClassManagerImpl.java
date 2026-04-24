@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.function.*;
 import com.kamijoucen.ruler.logic.function.array.*;
+import com.kamijoucen.ruler.logic.function.object.*;
 import com.kamijoucen.ruler.logic.function.classinfo.LengthFunction;
 import com.kamijoucen.ruler.logic.function.classinfo.PrintSelfFunction;
 import com.kamijoucen.ruler.logic.function.classinfo.PushFunction;
@@ -39,6 +40,9 @@ public class ObjectRClassManagerImpl implements RClassManager {
 
     private RClass createRsonClass() {
         RClass baseRClass = createBaseRClass();
+        addFunToRClass("get", new ObjectGetFunction(), baseRClass);
+        addFunToRClass("pick", new ObjectPickFunction(), baseRClass);
+        addFunToRClass("omit", new ObjectOmitFunction(), baseRClass);
         return baseRClass;
     }
 
@@ -76,6 +80,10 @@ public class ObjectRClassManagerImpl implements RClassManager {
         addFunToRClass("reduce", new ReduceFunction(), rClass);
         addFunToRClass("find", new FindFunction(), rClass);
         addFunToRClass("findIndex", new FindIndexFunction(), rClass);
+        addFunToRClass("isEmpty", new ArrayIsEmptyFunction(), rClass);
+        addFunToRClass("first", new ArrayFirstFunction(), rClass);
+        addFunToRClass("last", new ArrayLastFunction(), rClass);
+        addFunToRClass("contains", new ArrayContainsFunction(), rClass);
         return rClass;
     }
 

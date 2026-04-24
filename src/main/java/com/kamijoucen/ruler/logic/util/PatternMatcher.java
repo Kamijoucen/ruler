@@ -22,7 +22,16 @@ public final class PatternMatcher {
     ) {
         if (pattern instanceof LiteralPatternNode) {
             BaseNode literal = ((LiteralPatternNode) pattern).getLiteral();
-            BaseValue literalValue = literal.eval(scope, context);
+            BaseValue literalValue;
+            if (literal instanceof NameNode) {
+                // bare 标识符值比较：从 scope 中查找变量值
+                literalValue = scope.find(((NameNode) literal).name.name);
+                if (literalValue == null) {
+                    throw new RulerRuntimeException("undefined variable in pattern: " + ((NameNode) literal).name.name);
+                }
+            } else {
+                literalValue = literal.eval(scope, context);
+            }
             if (strictEqual(literalValue, value, context)) {
                 return Collections.emptyMap();
             }

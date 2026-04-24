@@ -114,7 +114,7 @@ public class MatchEdgeCaseTest {
     @Test
     public void emptyObjectScrutineeNonEmptyPatternTest() {
         // 空对象不含任何字段，带字段的模式应不匹配
-        String script = "match {} {\n    {a: x} -> 'has-a'\n    _ -> 'none'\n}";
+        String script = "match {} {\n    {a: var x} -> 'has-a'\n    _ -> 'none'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("none", result.first().toString());
     }
@@ -131,7 +131,7 @@ public class MatchEdgeCaseTest {
     @Test
     public void objectDuplicateFieldNamePatternTest() {
         // 同一对象模式中字段名重复应在解析期报错
-        String script = "match {a: 1} {\n    {a: x, a: y} -> 'bad'\n}";
+        String script = "match {a: 1} {\n    {a: var x, a: var y} -> 'bad'\n}";
         try {
             getRunner(script).run();
             Assert.fail("Expected SyntaxException for duplicate field in object pattern");
@@ -144,21 +144,21 @@ public class MatchEdgeCaseTest {
 
     @Test
     public void arrayRestTypeIsArrayTest() {
-        String script = "match [1, 2, 3] {\n    [_, ...tail] -> typeof(tail)\n}";
+        String script = "match [1, 2, 3] {\n    [_, ...var tail] -> typeof(tail)\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("array", result.first().toString());
     }
 
     @Test
     public void objectRestTypeIsObjectTest() {
-        String script = "match {a: 1, b: 2} {\n    {a: _, ...rest} -> typeof(rest)\n}";
+        String script = "match {a: 1, b: 2} {\n    {a: _, ...var rest} -> typeof(rest)\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("object", result.first().toString());
     }
 
     @Test
     public void arrayRestCapturesEmptyTest() {
-        String script = "match [1] {\n    [a, ...tail] -> tail.length()\n}";
+        String script = "match [1] {\n    [var a, ...var tail] -> tail.length()\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(0, result.first().toInteger());
     }
@@ -166,7 +166,7 @@ public class MatchEdgeCaseTest {
     @Test
     public void objectRestCapturesEmptyTest() {
         // 所有字段都被显式消费后，rest 对应空对象
-        String script = "match {a: 1} {\n    {a: x, ...rest} -> typeof(rest)\n}";
+        String script = "match {a: 1} {\n    {a: var x, ...var rest} -> typeof(rest)\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("object", result.first().toString());
     }
@@ -176,16 +176,16 @@ public class MatchEdgeCaseTest {
     @Test
     public void guardCallsFunctionTest() {
         String script = "fun isPositive(x) { x > 0 }\n"
-                + "match 5 {\n    n if isPositive(n) -> 'pos'\n    _ -> 'np'\n}";
+                + "match 5 {\n    var n if isPositive(n) -> 'pos'\n    _ -> 'np'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("pos", result.first().toString());
     }
 
     @Test
     public void bindingShadowsOuterTest() {
-        // 外层 n=99；case 中 binding n 应 shadow 外层变量，返回 5
+        // 外层 n=99；case 中 var n 绑定应 shadow 外层变量，返回 5
         String script = "var n = 99\n"
-                + "match 5 {\n    n -> n\n}";
+                + "match 5 {\n    var n -> n\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(5, result.first().toInteger());
     }

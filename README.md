@@ -107,14 +107,14 @@ var calc = fun(x) -> base + x
 
 // ===== 模式匹配（含结构匹配）=====
 var result = match [1, 2, {a: 3, b: 4}] {
-    [1, 2, {a: x, b: y}] -> x + y
-    [head, ...tail] -> head + tail.length()
+    [1, 2, {a: var x, b: var y}] -> x + y
+    [var head, ...var tail] -> head + tail.length()
     _ -> 0
 }
 
 var guardResult = match 15 {
-    n if n > 10 -> "big"
-    n if n > 0  -> "small"
+    var n if n > 10 -> "big"
+    var n if n > 0  -> "small"
     _ -> "zero"
 }
 
@@ -172,13 +172,14 @@ var t = typeof(arr)            // "array"
 match value {
     1           -> "one"           // 字面量
     "hello"     -> "string"       // 字符串字面量
-    n           -> n + 1          // 变量绑定
+    var n       -> n + 1          // 变量绑定
+    TOKEN_TYPE  -> "matched"      // 值比较（使用已定义变量的值）
     _           -> "default"      // 通配符
-    [a, b]      -> a + b          // 数组解构
-    [h, ...t]   -> h              // 数组 + rest
-    {x: v}      -> v              // 对象解构（部分匹配）
-    {a: x, ...r}-> x + r.b       // 对象 + rest
-    n if n > 0 -> "positive"     // 守卫表达式
+    [var a, var b]      -> a + b          // 数组解构
+    [var h, ...var t]   -> h              // 数组 + rest
+    {x: var v}      -> v                  // 对象解构（部分匹配）
+    {a: var x, ...var r}-> x + r.b       // 对象 + rest
+    var n if n > 0 -> "positive"         // 守卫表达式
 }
 ```
 

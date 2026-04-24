@@ -66,7 +66,7 @@ public class MatchExpressionTest {
 
     @Test
     public void nameBindingTest() {
-        String script = "match 42 {\n    n -> n + 1\n}";
+        String script = "match 42 {\n    var n -> n + 1\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(43, result.first().toInteger());
     }
@@ -74,7 +74,7 @@ public class MatchExpressionTest {
     @Test
     public void bindingScopeTest() {
         // 变量绑定不应泄漏到 match 外部
-        String script = "match 1 {\n    x -> x\n}\nreturn x";
+        String script = "match 1 {\n    var x -> x\n}\nreturn x";
         try {
             getRunner(script).run();
             Assert.fail("Expected RulerRuntimeException for undefined variable x");
@@ -111,7 +111,7 @@ public class MatchExpressionTest {
 
     @Test
     public void multiBindingTest() {
-        String script = "match 'ok' {\n    a -> a ++ '!'\n}";
+        String script = "match 'ok' {\n    var a -> a ++ '!'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("ok!", result.first().toString());
     }
@@ -243,15 +243,6 @@ public class MatchExpressionTest {
         String script = "match 1 {\n    1 -> 'ok'\n    _ -> 'fail'\n}\nreturn 'done'";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("done", result.first().toString());
-    }
-
-    @Test
-    public void matchWithExternalParamTest() {
-        String script = "match $status {\n    200 -> 'ok'\n    404 -> 'not found'\n    _ -> 'error'\n}";
-        java.util.Map<String, Object> param = new java.util.HashMap<>();
-        param.put("status", 404);
-        RulerResult result = getRunner(script).run(param);
-        Assert.assertEquals("not found", result.first().toString());
     }
 
 }

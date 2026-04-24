@@ -12,7 +12,6 @@ import com.kamijoucen.ruler.domain.value.ClosureValue;
 import com.kamijoucen.ruler.domain.value.FunctionValue;
 import com.kamijoucen.ruler.domain.value.MethodValue;
 import com.kamijoucen.ruler.domain.value.ModuleValue;
-import com.kamijoucen.ruler.domain.value.ProxyValue;
 import com.kamijoucen.ruler.logic.property.PropertyAccessor;
 
 public class DotEval implements BaseEval<DotNode> {

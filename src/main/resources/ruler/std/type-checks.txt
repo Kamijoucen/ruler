@@ -1,0 +1,4 @@
+fun isInteger(x) { return typeof(x) == "int" }
+fun isDouble(x) { return typeof(x) == "double" }
+fun isObject(x) { return typeof(x) == "object" }
+fun isCollection(x) { return typeof(x) == "array" || typeof(x) == "object" }

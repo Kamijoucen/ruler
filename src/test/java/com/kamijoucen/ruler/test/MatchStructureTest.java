@@ -33,14 +33,14 @@ public class MatchStructureTest {
 
     @Test
     public void arrayBindingTest() {
-        String script = "match [1, 2] {\n    [a, b] -> a + b\n}";
+        String script = "match [1, 2] {\n    [var a, var b] -> a + b\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(3, result.first().toInteger());
     }
 
     @Test
     public void arrayWildcardTest() {
-        String script = "match [1, 2, 3] {\n    [_, x, _] -> x\n}";
+        String script = "match [1, 2, 3] {\n    [_, var x, _] -> x\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(2, result.first().toInteger());
     }
@@ -54,35 +54,35 @@ public class MatchStructureTest {
 
     @Test
     public void arrayRestBindingTest() {
-        String script = "match [1, 2, 3, 4] {\n    [head, ...tail] -> head + tail.length()\n}";
+        String script = "match [1, 2, 3, 4] {\n    [var head, ...var tail] -> head + tail.length()\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(4, result.first().toInteger());
     }
 
     @Test
     public void arrayRestIgnoreTest() {
-        String script = "match [1, 2, 3] {\n    [first, ..._] -> first\n}";
+        String script = "match [1, 2, 3] {\n    [var first, ..._] -> first\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(1, result.first().toInteger());
     }
 
     @Test
     public void arrayRestOnlyTest() {
-        String script = "match [1, 2, 3] {\n    [...all] -> all.length()\n}";
+        String script = "match [1, 2, 3] {\n    [...var all] -> all.length()\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(3, result.first().toInteger());
     }
 
     @Test
     public void arrayMismatchLengthTest() {
-        String script = "match [1, 2] { [a, b, c] -> 'three'; [a, b] -> 'two' }";
+        String script = "match [1, 2] { [var a, var b, var c] -> 'three'; [var a, var b] -> 'two' }";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("two", result.first().toString());
     }
 
     @Test
     public void arrayMismatchTypeTest() {
-        String script = "match 42 {\n    [a, b] -> 'array'\n    _ -> 'not array'\n}";
+        String script = "match 42 {\n    [var a, var b] -> 'array'\n    _ -> 'not array'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("not array", result.first().toString());
     }
@@ -98,7 +98,7 @@ public class MatchStructureTest {
 
     @Test
     public void objectBindingTest() {
-        String script = "match {a: 1, b: 2} {\n    {a: x, b: y} -> x + y\n}";
+        String script = "match {a: 1, b: 2} {\n    {a: var x, b: var y} -> x + y\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(3, result.first().toInteger());
     }
@@ -119,35 +119,35 @@ public class MatchStructureTest {
 
     @Test
     public void objectRestBindingTest() {
-        String script = "match {a: 1, b: 2, c: 3} {\n    {a: x, ...rest} -> x + rest.b + rest.c\n}";
+        String script = "match {a: 1, b: 2, c: 3} {\n    {a: var x, ...var rest} -> x + rest.b + rest.c\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(6, result.first().toInteger());
     }
 
     @Test
     public void objectRestIgnoreTest() {
-        String script = "match {a: 1, b: 2} {\n    {a: x, ..._} -> x\n}";
+        String script = "match {a: 1, b: 2} {\n    {a: var x, ..._} -> x\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(1, result.first().toInteger());
     }
 
     @Test
     public void objectFieldMissingTest() {
-        String script = "match {a: 1} {\n    {a: x, b: y} -> 'has b'\n    {a: x} -> 'only a'\n}";
+        String script = "match {a: 1} {\n    {a: var x, b: var y} -> 'has b'\n    {a: var x} -> 'only a'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("only a", result.first().toString());
     }
 
     @Test
     public void objectMismatchTypeTest() {
-        String script = "match 42 {\n    {a: x} -> 'object'\n    _ -> 'not object'\n}";
+        String script = "match 42 {\n    {a: var x} -> 'object'\n    _ -> 'not object'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("not object", result.first().toString());
     }
 
     @Test
     public void objectStringFieldNameTest() {
-        String script = "match {'field-name': 42} {\n    {'field-name': v} -> v\n}";
+        String script = "match {'field-name': 42} {\n    {'field-name': var v} -> v\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(42, result.first().toInteger());
     }
@@ -156,21 +156,21 @@ public class MatchStructureTest {
 
     @Test
     public void nestedArrayObjectTest() {
-        String script = "match [{name: 'ruler'}, 2] {\n    [{name: n}, x] -> n ++ x\n}";
+        String script = "match [{name: 'ruler'}, 2] {\n    [{name: var n}, var x] -> n ++ x\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("ruler2", result.first().toString());
     }
 
     @Test
     public void nestedObjectTest() {
-        String script = "match {user: {name: 'ruler', age: 18}} {\n    {user: {name: n, age: a}} -> n ++ a\n}";
+        String script = "match {user: {name: 'ruler', age: 18}} {\n    {user: {name: var n, age: var a}} -> n ++ a\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("ruler18", result.first().toString());
     }
 
     @Test
     public void nestedArrayInObjectTest() {
-        String script = "match {items: [1, 2, 3]} {\n    {items: [first, ..._]} -> first\n}";
+        String script = "match {items: [1, 2, 3]} {\n    {items: [var first, ..._]} -> first\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals(1, result.first().toInteger());
     }
@@ -179,28 +179,28 @@ public class MatchStructureTest {
 
     @Test
     public void guardPositiveTest() {
-        String script = "match 5 {\n    n if n > 0 -> 'positive'\n    _ -> 'other'\n}";
+        String script = "match 5 {\n    var n if n > 0 -> 'positive'\n    _ -> 'other'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("positive", result.first().toString());
     }
 
     @Test
     public void guardNegativeTest() {
-        String script = "match -3 {\n    n if n > 0 -> 'positive'\n    n if n < 0 -> 'negative'\n    _ -> 'zero'\n}";
+        String script = "match -3 {\n    var n if n > 0 -> 'positive'\n    var n if n < 0 -> 'negative'\n    _ -> 'zero'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("negative", result.first().toString());
     }
 
     @Test
     public void guardFallbackTest() {
-        String script = "match 0 {\n    n if n > 0 -> 'positive'\n    _ -> 'zero or negative'\n}";
+        String script = "match 0 {\n    var n if n > 0 -> 'positive'\n    _ -> 'zero or negative'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("zero or negative", result.first().toString());
     }
 
     @Test
     public void guardNonBoolTest() {
-        String script = "match 1 {\n    n if n + 1 -> 'bad'\n    _ -> 'ok'\n}";
+        String script = "match 1 {\n    var n if n + 1 -> 'bad'\n    _ -> 'ok'\n}";
         try {
             getRunner(script).run();
             Assert.fail("Expected RulerRuntimeException for non-bool guard");
@@ -211,14 +211,14 @@ public class MatchStructureTest {
 
     @Test
     public void guardAccessBindingTest() {
-        String script = "match [1, 2, 3] {\n    [a, b, c] if a + b == c -> 'sum ok'\n    _ -> 'other'\n}";
+        String script = "match [1, 2, 3] {\n    [var a, var b, var c] if a + b == c -> 'sum ok'\n    _ -> 'other'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("sum ok", result.first().toString());
     }
 
     @Test
     public void guardAccessOuterScopeTest() {
-        String script = "var limit = 10\nmatch 5 {\n    n if n < limit -> 'below'\n    _ -> 'above'\n}";
+        String script = "var limit = 10\nmatch 5 {\n    var n if n < limit -> 'below'\n    _ -> 'above'\n}";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("below", result.first().toString());
     }
@@ -227,7 +227,7 @@ public class MatchStructureTest {
 
     @Test
     public void duplicateBindingTest() {
-        String script = "match [1, 2] {\n    [a, a] -> 'dup'\n    _ -> 'other'\n}";
+        String script = "match [1, 2] {\n    [var a, var a] -> 'dup'\n    _ -> 'other'\n}";
         try {
             getRunner(script).run();
             Assert.fail("Expected RulerRuntimeException for duplicate binding");
@@ -257,7 +257,7 @@ public class MatchStructureTest {
         } catch (Exception e) {
             // parser 会在 ... 后 break，然后看到 a 期望 ] 但实际是逗号/a
             // 实际上由于 parseArrayPattern 在 ... 后直接 break，然后期望 ]
-            // 如果后面还有 a, 那么会报 expected ']' 
+            // 如果后面还有 a, 那么会报 expected ']'
             Assert.assertTrue(e.getMessage().contains("expected ']' in array pattern") ||
                               e.getMessage().contains("expected token: RIGHT_SQUARE"));
         }
@@ -277,7 +277,7 @@ public class MatchStructureTest {
 
     @Test
     public void matchInFunctionTest() {
-        String script = "fun classify(arr) { match arr { [single] -> 'single'; [a, b] -> 'pair'; _ -> 'many' } }\n" +
+        String script = "fun classify(arr) { match arr { [var single] -> 'single'; [var a, var b] -> 'pair'; _ -> 'many' } }\n" +
                         "return classify([1])";
         RulerResult result = getRunner(script).run();
         Assert.assertEquals("single", result.first().toString());
@@ -286,7 +286,7 @@ public class MatchStructureTest {
     @Test
     public void matchWithReturnTest() {
         String script = "return match {status: 200, data: 'ok'} {\n" +
-                        "    {status: 200, data: d} -> d\n" +
+                        "    {status: 200, data: var d} -> d\n" +
                         "    _ -> 'error'\n" +
                         "}";
         RulerResult result = getRunner(script).run();
@@ -296,7 +296,7 @@ public class MatchStructureTest {
     @Test
     public void complexNestedGuardTest() {
         String script = "match {user: {name: 'ruler', age: 25}, tags: ['a', 'b']} {\n" +
-                        "    {user: {name: n, age: a}, tags: [first, ..._]} if a >= 18 -> n ++ first\n" +
+                        "    {user: {name: var n, age: var a}, tags: [var first, ..._]} if a >= 18 -> n ++ first\n" +
                         "    _ -> 'other'\n" +
                         "}";
         RulerResult result = getRunner(script).run();

@@ -139,12 +139,19 @@ public class MatchParser implements AtomParser {
             case KEY_NULL:
                 tokenStream.nextToken();
                 return new LiteralPatternNode(new NullNode(token.location));
+            case KEY_VAR:
+                tokenStream.nextToken();
+                Token bindToken = tokenStream.token();
+                AssertUtil.assertToken(bindToken, TokenType.IDENTIFIER);
+                tokenStream.nextToken();
+                return new NamePatternNode(bindToken.name);
             case IDENTIFIER:
                 tokenStream.nextToken();
                 if ("_".equals(token.name)) {
                     return WildcardPatternNode.INSTANCE;
                 }
-                return new NamePatternNode(token.name);
+                // bare 标识符：值比较（从 scope 中查找变量值）
+                return new LiteralPatternNode(new NameNode(token, token.location));
             default:
                 throw new SyntaxException("unsupported pattern type: " + token.type, token.location);
         }
@@ -165,8 +172,17 @@ public class MatchParser implements AtomParser {
             if (tokenStream.token().type == TokenType.DOT_DOT_DOT) {
                 tokenStream.nextToken();
                 Token restToken = tokenStream.token();
-                AssertUtil.assertToken(restToken, TokenType.IDENTIFIER);
-                tokenStream.nextToken();
+                // 支持 ...var tail 和 ...tail 两种语法
+                if (restToken.type == TokenType.KEY_VAR) {
+                    tokenStream.nextToken();
+                    restToken = tokenStream.token();
+                    AssertUtil.assertToken(restToken, TokenType.IDENTIFIER);
+                    tokenStream.nextToken();
+                } else if (restToken.type == TokenType.IDENTIFIER) {
+                    tokenStream.nextToken();
+                } else {
+                    throw new SyntaxException("expected identifier or 'var' after '...' in array pattern", restToken.location);
+                }
                 if ("_".equals(restToken.name)) {
                     restPattern = new RestPatternNode(null);
                 } else {
@@ -206,8 +222,17 @@ public class MatchParser implements AtomParser {
             if (tokenStream.token().type == TokenType.DOT_DOT_DOT) {
                 tokenStream.nextToken();
                 Token restToken = tokenStream.token();
-                AssertUtil.assertToken(restToken, TokenType.IDENTIFIER);
-                tokenStream.nextToken();
+                // 支持 ...var rest 和 ...rest 两种语法
+                if (restToken.type == TokenType.KEY_VAR) {
+                    tokenStream.nextToken();
+                    restToken = tokenStream.token();
+                    AssertUtil.assertToken(restToken, TokenType.IDENTIFIER);
+                    tokenStream.nextToken();
+                } else if (restToken.type == TokenType.IDENTIFIER) {
+                    tokenStream.nextToken();
+                } else {
+                    throw new SyntaxException("expected identifier or 'var' after '...' in object pattern", restToken.location);
+                }
                 if ("_".equals(restToken.name)) {
                     restPattern = new RestPatternNode(null);
                 } else {
