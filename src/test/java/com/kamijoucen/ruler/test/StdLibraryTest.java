@@ -317,4 +317,76 @@ public class StdLibraryTest {
         RulerResult r = Ruler.compile(script, configuration).run();
         Assert.assertEquals("[1, 3, 5]", r.first().toString());
     }
+
+    // ==================== json module ====================
+
+    @Test
+    public void jsonParsePrimitivesTest() {
+        Assert.assertNull(run("import '/ruler/std/json.txt' json; return json.parse('null');").first().getValue());
+        Assert.assertTrue(run("import '/ruler/std/json.txt' json; return json.parse('true');").first().toBoolean());
+        Assert.assertFalse(run("import '/ruler/std/json.txt' json; return json.parse('false');").first().toBoolean());
+        Assert.assertEquals(42L, run("import '/ruler/std/json.txt' json; return json.parse('42');").first().toInteger());
+        Assert.assertEquals(-3.14, run("import '/ruler/std/json.txt' json; return json.parse('-3.14');").first().toDouble(), 0.0001);
+        Assert.assertEquals("hello", run("import '/ruler/std/json.txt' json; return json.parse('\"hello\"');").first().toString());
+    }
+
+    @Test
+    public void jsonParseArrayTest() {
+        RulerResult r = run("import '/ruler/std/json.txt' json; return json.parse('[1, 2, 3]');");
+        List<?> list = list(r);
+        Assert.assertEquals(3, list.size());
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), list.get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(3), list.get(2));
+    }
+
+    @Test
+    public void jsonParseObjectTest() {
+        String script = "import '/ruler/std/json.txt' json; var obj = json.parse('{\"a\": 1, \"b\": \"two\"}'); return obj.a;";
+        Assert.assertEquals(1L, run(script).first().toInteger());
+        script = "import '/ruler/std/json.txt' json; var obj = json.parse('{\"a\": 1, \"b\": \"two\"}'); return obj.b;";
+        Assert.assertEquals("two", run(script).first().toString());
+    }
+
+    @Test
+    public void jsonStringifyPrimitivesTest() {
+        Assert.assertEquals("null", run("import '/ruler/std/json.txt' json; return json.stringify(null);").first().toString());
+        Assert.assertEquals("true", run("import '/ruler/std/json.txt' json; return json.stringify(true);").first().toString());
+        Assert.assertEquals("false", run("import '/ruler/std/json.txt' json; return json.stringify(false);").first().toString());
+        Assert.assertEquals("42", run("import '/ruler/std/json.txt' json; return json.stringify(42);").first().toString());
+        Assert.assertEquals("\"hello\"", run("import '/ruler/std/json.txt' json; return json.stringify(\"hello\");").first().toString());
+    }
+
+    @Test
+    public void jsonStringifyArrayTest() {
+        Assert.assertEquals("[1,2,3]", run("import '/ruler/std/json.txt' json; return json.stringify([1, 2, 3]);").first().toString());
+    }
+
+    @Test
+    public void jsonStringifyObjectTest() {
+        String result = run("import '/ruler/std/json.txt' json; return json.stringify({a: 1});").first().toString();
+        Assert.assertEquals("{\"a\":1}", result);
+    }
+
+    @Test
+    public void jsonRoundTripTest() {
+        String script = "import '/ruler/std/json.txt' json; var s = json.stringify({x: [1, 2], y: \"test\"}); return json.stringify(json.parse(s));";
+        String result = run(script).first().toString();
+        Assert.assertTrue(result.contains("\"x\":[1,2]"));
+        Assert.assertTrue(result.contains("\"y\":\"test\""));
+    }
+
+    @Test(expected = Exception.class)
+    public void jsonParseTrailingCommaErrorTest() {
+        run("import '/ruler/std/json.txt' json; return json.parse('[1, 2,]');");
+    }
+
+    @Test(expected = Exception.class)
+    public void jsonParseLeadingZeroErrorTest() {
+        run("import '/ruler/std/json.txt' json; return json.parse('01');");
+    }
+
+    @Test(expected = Exception.class)
+    public void jsonStringifyFunctionErrorTest() {
+        run("import '/ruler/std/json.txt' json; return json.stringify(fun(){});");
+    }
 }

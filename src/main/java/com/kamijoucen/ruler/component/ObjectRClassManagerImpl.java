@@ -59,6 +59,7 @@ public class ObjectRClassManagerImpl implements RClassManager {
         addFunToRClass("startsWith", new StartsWithFunction(), baseRClass);
         addFunToRClass("endsWith", new EndsWithFunction(), baseRClass);
         addFunToRClass("charAt", new CharAtFunction(), baseRClass);
+        addFunToRClass("array", new ToArrayFunction(), baseRClass);
         return baseRClass;
     }
 

@@ -260,4 +260,77 @@ public class MatchEdgeCaseTest {
         }
     }
 
+    // ===== 字符串转数组后模式匹配 =====
+
+    @Test
+    public void stringArrayToPatternTest() {
+        String script = "match 'abc'.array() {\n    [var h, ...var t] -> h ++ t.length()\n    _ -> 'fail'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("a2", result.first().toString());
+    }
+
+    @Test
+    public void stringArrayEmptyTest() {
+        String script = "match ''.array() {\n    [] -> 'empty'\n    _ -> 'not empty'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("empty", result.first().toString());
+    }
+
+    @Test
+    public void stringArrayExactMatchTest() {
+        String script = "match 'ab'.array() {\n    [var a, var b] -> a ++ b\n    _ -> 'fail'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("ab", result.first().toString());
+    }
+
+    @Test
+    public void stringArrayHeadTailTest() {
+        String script = "var arr = 'xyz'.array()\n" +
+                        "return arr[0] ++ arr.length()";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("x3", result.first().toString());
+    }
+
+    @Test
+    public void stringArrayTypeTest() {
+        String script = "typeof('test'.array())";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("array", result.first().toString());
+    }
+
+    // ===== match case body 中的 break/continue =====
+
+    @Test
+    public void matchBreakPropagationTest() {
+        String script = "var result = ''\n"
+                + "var i = 0\n"
+                + "while i < 5 {\n"
+                + "    i = i + 1\n"
+                + "    match i {\n"
+                + "        3 -> break\n"
+                + "        _   -> result = result ++ i\n"
+                + "    }\n"
+                + "}\n"
+                + "return result";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("12", result.first().toString());
+    }
+
+    @Test
+    public void matchContinuePropagationTest() {
+        String script = "var result = ''\n"
+                + "var i = 0\n"
+                + "while i < 5 {\n"
+                + "    i = i + 1\n"
+                + "    match i {\n"
+                + "        3 -> continue\n"
+                + "        _   -> result = result ++ i\n"
+                + "    }\n"
+                + "    result = result ++ '-'\n"
+                + "}\n"
+                + "return result";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("1-2-4-5-", result.first().toString());
+    }
+
 }

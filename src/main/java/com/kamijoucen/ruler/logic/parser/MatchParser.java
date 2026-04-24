@@ -83,8 +83,8 @@ public class MatchParser implements AtomParser {
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
             body = Parsers.BLOCK_PARSER.parse(manager);
         } else {
-            BaseNode expr = manager.parseExpression();
-            body = new BlockNode(Collections.singletonList(expr), expr.getLocation());
+            BaseNode stmt = manager.parseStatement();
+            body = new BlockNode(Collections.singletonList(stmt), stmt.getLocation());
         }
 
         return new MatchCase(pattern, guard, body);

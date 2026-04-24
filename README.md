@@ -174,6 +174,31 @@ var t = typeof(arr)            // "array"
 }
 ```
 
+## JSON 标准库
+
+内置 JSON 解析与序列化模块，纯 Ruler 脚本实现（状态机 + 递归下降分析），严格遵循 JSON 标准。
+
+```ruler
+import "/ruler/std/json.txt" json
+
+// 解析 JSON 字符串
+var obj = json.parse('{"name": "ruler", "version": 1.0}')
+var name = obj.name          // "ruler"
+
+// 序列化为 JSON
+var str = json.stringify({
+    name: "ruler",
+    tags: ["script", "java"],
+    active: true
+})
+// 输出：{"name":"ruler","tags":["script","java"],"active":true}
+```
+
+- 支持类型：`null`、`boolean`、`number`、`string`、`array`、`object`
+- 解析时严格校验：禁止前导零、禁止尾随逗号、字符串转义完整支持
+- 不支持类型（如 `function`、`proxy`）序列化时会抛出异常
+- Unicode 转义（`\uXXXX`）暂不支持，遇到会明确报错
+
 ## 模式匹配语法说明
 
 ```ruler
@@ -201,6 +226,25 @@ match value {
 - 字面量前缀负号（`-5`、`-3.14`）作为字面量模式支持；其它一元表达式、`or` 模式、`as` 别名暂不支持
 - 对象模式中同一字段名不得重复（解析期抛 `SyntaxException`）
 - 空 `match { }` 即无任何 case 时抛 `SyntaxException`
+- 字符串需先调用 `.array()` 转为字符数组再进行解构：
+  ```ruler
+  match "hello".array() {
+      [var h, ...var t] -> h ++ t.length()   // "h5"
+      []                -> "empty"
+      _                 -> "other"
+  }
+  ```
+- case 体中支持 `break`、`continue` 等控制流语句：
+  ```ruler
+  while true {
+      var ch = nextChar()
+      match ch {
+          "}" -> break
+          "," -> continue
+          _   -> handle(ch)
+      }
+  }
+  ```
 
 ## 编译期类型检查
 

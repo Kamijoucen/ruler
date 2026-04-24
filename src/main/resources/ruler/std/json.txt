@@ -1,0 +1,281 @@
+// JSON parser and stringifier
+// Pure Ruler implementation using state machine + recursive descent
+
+fun _jsonCreateParser(text) {
+    return {
+        text: text,
+        pos: 0,
+        len: text.length()
+    };
+}
+
+fun _jsonPeek(parser) {
+    if parser.pos == parser.len: return null;
+    return stringSubstring(parser.text, parser.pos, parser.pos + 1);
+}
+
+fun _jsonAdvance(parser) {
+    var ch = _jsonPeek(parser);
+    parser.pos = parser.pos + 1;
+    return ch;
+}
+
+fun _jsonSkipWhitespace(parser) {
+    while true {
+        var ch = _jsonPeek(parser);
+        if ch == " " || ch == "\t" || ch == "\n" || ch == "\r" {
+            _jsonAdvance(parser);
+        } else {
+            break;
+        }
+    }
+}
+
+fun _jsonParseString(parser) {
+    _jsonAdvance(parser); // skip opening "
+    var result = "";
+    while true {
+        var ch = _jsonAdvance(parser);
+        if ch == null {
+            panic("JSON parse error: unterminated string");
+        }
+        if ch == "\"" {
+            break;
+        }
+        if ch == "\\" {
+            var esc = _jsonAdvance(parser);
+            if esc == null {
+                panic("JSON parse error: unterminated escape sequence");
+            }
+            var resolved = match esc {
+                "\"" -> "\""
+                "\\" -> "\\"
+                "/"  -> "/"
+                "b"  -> "\b"
+                "f"  -> "\f"
+                "n"  -> "\n"
+                "r"  -> "\r"
+                "t"  -> "\t"
+                "u"  -> panic("JSON parse error: Unicode escape sequences (\\uXXXX) are not supported yet")
+                _    -> panic("JSON parse error: invalid escape sequence: \"" ++ esc)
+            };
+            result = result ++ resolved;
+        } else if ch == "\n" || ch == "\r" {
+            panic("JSON parse error: unescaped control character in string");
+        } else {
+            result = result ++ ch;
+        }
+    }
+    return result;
+}
+
+fun _jsonParseNumber(parser) {
+    var start = parser.pos;
+    if _jsonPeek(parser) == "-" {
+        _jsonAdvance(parser);
+    }
+    var ch = _jsonPeek(parser);
+    if ch == "0" {
+        _jsonAdvance(parser);
+        var next = _jsonPeek(parser);
+        if next != null && next >= "0" && next <= "9" {
+            panic("JSON parse error: leading zeros are not allowed");
+        }
+    } else if ch >= "1" && ch <= "9" {
+        _jsonAdvance(parser);
+        while true {
+            var next = _jsonPeek(parser);
+            if next == null: break;
+            if next >= "0" && next <= "9" {
+                _jsonAdvance(parser);
+            } else {
+                break;
+            }
+        }
+    } else {
+        panic("JSON parse error: invalid number");
+    }
+
+    if _jsonPeek(parser) == "." {
+        _jsonAdvance(parser);
+        var frac = _jsonPeek(parser);
+        if frac == null || frac < "0" || frac > "9" {
+            panic("JSON parse error: missing digits after decimal point");
+        }
+        while true {
+            var next = _jsonPeek(parser);
+            if next == null: break;
+            if next >= "0" && next <= "9" {
+                _jsonAdvance(parser);
+            } else {
+                break;
+            }
+        }
+    }
+
+    if _jsonPeek(parser) == "e" || _jsonPeek(parser) == "E" {
+        _jsonAdvance(parser);
+        if _jsonPeek(parser) == "+" || _jsonPeek(parser) == "-" {
+            _jsonAdvance(parser);
+        }
+        var exp = _jsonPeek(parser);
+        if exp == null || exp < "0" || exp > "9" {
+            panic("JSON parse error: missing digits in exponent");
+        }
+        while true {
+            var next = _jsonPeek(parser);
+            if next == null: break;
+            if next >= "0" && next <= "9" {
+                _jsonAdvance(parser);
+            } else {
+                break;
+            }
+        }
+    }
+
+    var numStr = stringSubstring(parser.text, start, parser.pos);
+    return ToNumber(numStr);
+}
+
+fun _jsonParseLiteral(parser, expected, value) {
+    var i = 0;
+    while i < expected.length() {
+        var ch = _jsonAdvance(parser);
+        if ch != stringSubstring(expected, i, i + 1) {
+            panic("JSON parse error: expected '" ++ expected ++ "'");
+        }
+        i = i + 1;
+    }
+    return value;
+}
+
+fun _jsonParseObject(parser) {
+    _jsonAdvance(parser); // skip {
+    var obj = {};
+    _jsonSkipWhitespace(parser);
+    if _jsonPeek(parser) == "}" {
+        _jsonAdvance(parser);
+        return obj;
+    }
+    while true {
+        _jsonSkipWhitespace(parser);
+        if _jsonPeek(parser) != "\"" {
+            panic("JSON parse error: expected string key");
+        }
+        var key = _jsonParseString(parser);
+        _jsonSkipWhitespace(parser);
+        if _jsonAdvance(parser) != ":" {
+            panic("JSON parse error: expected ':' after object key");
+        }
+        var value = _jsonParseValue(parser);
+        obj[key] = value;
+        _jsonSkipWhitespace(parser);
+        match _jsonAdvance(parser) {
+            "}" -> break
+            "," -> continue
+            _   -> panic("JSON parse error: expected ',' or '}'")
+        }
+    }
+    return obj;
+}
+
+fun _jsonParseArray(parser) {
+    _jsonAdvance(parser); // skip [
+    var arr = [];
+    _jsonSkipWhitespace(parser);
+    if _jsonPeek(parser) == "]" {
+        _jsonAdvance(parser);
+        return arr;
+    }
+    while true {
+        var value = _jsonParseValue(parser);
+        arr.push(value);
+        _jsonSkipWhitespace(parser);
+        match _jsonAdvance(parser) {
+            "]" -> break
+            "," -> continue
+            _   -> panic("JSON parse error: expected ',' or ']'")
+        }
+    }
+    return arr;
+}
+
+fun _jsonParseValue(parser) {
+    _jsonSkipWhitespace(parser);
+    var ch = _jsonPeek(parser);
+    if ch == null {
+        panic("JSON parse error: unexpected end of input");
+    }
+    return match ch {
+        "\"" -> _jsonParseString(parser)
+        "{"  -> _jsonParseObject(parser)
+        "["  -> _jsonParseArray(parser)
+        "t"  -> _jsonParseLiteral(parser, "true", true)
+        "f"  -> _jsonParseLiteral(parser, "false", false)
+        "n"  -> _jsonParseLiteral(parser, "null", null)
+        "-"  -> _jsonParseNumber(parser)
+        var c if c >= "0" && c <= "9" -> _jsonParseNumber(parser)
+        _    -> panic("JSON parse error: unexpected token: " ++ ch)
+    };
+}
+
+// Public API
+
+fun parse(text) {
+    var parser = _jsonCreateParser(text);
+    var result = _jsonParseValue(parser);
+    _jsonSkipWhitespace(parser);
+    if parser.pos != parser.len {
+        panic("JSON parse error: unexpected trailing characters");
+    }
+    return result;
+}
+
+fun _jsonEscapeString(str) {
+    var result = "";
+    for ch in str.array() {
+        match ch {
+            "\"" -> result = result ++ "\\\""
+            "\\" -> result = result ++ "\\\\"
+            "\b" -> result = result ++ "\\b"
+            "\f" -> result = result ++ "\\f"
+            "\n" -> result = result ++ "\\n"
+            "\r" -> result = result ++ "\\r"
+            "\t" -> result = result ++ "\\t"
+            _    -> result = result ++ ch
+        }
+    }
+    return "\"" ++ result ++ "\"";
+}
+
+fun _jsonStringifyArray(arr) {
+    var parts = [];
+    for item in arr {
+        parts.push(stringify(item));
+    }
+    return "[" ++ arrayJoin(parts, ",") ++ "]";
+}
+
+fun _jsonStringifyObject(obj) {
+    var parts = [];
+    var ks = keys(obj);
+    for key in ks {
+        var value = obj[key];
+        parts.push(_jsonEscapeString(key) ++ ":" ++ stringify(value));
+    }
+    return "{" ++ arrayJoin(parts, ",") ++ "}";
+}
+
+fun stringify(value) {
+    if value == null: return "null";
+    return match value {
+        true       -> "true"
+        false      -> "false"
+        typeof "int"    -> "" ++ value
+        typeof "double" -> "" ++ value
+        typeof "string" -> _jsonEscapeString(value)
+        typeof "array"  -> _jsonStringifyArray(value)
+        typeof "object" -> _jsonStringifyObject(value)
+        _               -> panic("JSON stringify error: unsupported type: " ++ typeof(value))
+    };
+}
