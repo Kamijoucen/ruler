@@ -6,7 +6,8 @@ import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.NullValue;
+import com.kamijoucen.ruler.domain.value.BoolValue;
+import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.logic.util.PatternMatcher;
 
@@ -26,6 +27,19 @@ public class MatchEval implements BaseEval<MatchNode> {
                 for (Map.Entry<String, BaseValue> entry : bindings.entrySet()) {
                     caseScope.defineLocal(entry.getKey(), entry.getValue());
                 }
+
+                if (matchCase.getGuard() != null) {
+                    BaseValue guardValue = matchCase.getGuard().eval(caseScope, context);
+                    if (guardValue.getType() != ValueType.BOOL) {
+                        throw new RulerRuntimeException(
+                                "guard expression must return boolean",
+                                matchCase.getGuard().getLocation());
+                    }
+                    if (!((BoolValue) guardValue).getValue()) {
+                        continue;
+                    }
+                }
+
                 return matchCase.getBody().eval(caseScope, context);
             }
         }

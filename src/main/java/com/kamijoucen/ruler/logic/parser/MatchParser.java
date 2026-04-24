@@ -68,6 +68,12 @@ public class MatchParser implements AtomParser {
         TokenStream tokenStream = manager.getTokenStream();
         PatternNode pattern = parsePattern(manager);
 
+        BaseNode guard = null;
+        if (tokenStream.token().type == TokenType.KEY_IF) {
+            tokenStream.nextToken();
+            guard = manager.parseExpression();
+        }
+
         AssertUtil.assertToken(tokenStream, TokenType.ARROW);
         tokenStream.nextToken();
 
@@ -79,14 +85,22 @@ public class MatchParser implements AtomParser {
             body = new BlockNode(Collections.singletonList(expr), expr.getLocation());
         }
 
-        return new MatchCase(pattern, body);
+        return new MatchCase(pattern, guard, body);
     }
 
     private PatternNode parsePattern(AtomParserManager manager) {
+        return parsePrimaryPattern(manager);
+    }
+
+    private PatternNode parsePrimaryPattern(AtomParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token token = tokenStream.token();
 
         switch (token.type) {
+            case LEFT_SQUARE:
+                return parseArrayPattern(manager);
+            case LEFT_BRACE:
+                return parseObjectPattern(manager);
             case INTEGER:
                 tokenStream.nextToken();
                 return new LiteralPatternNode(new IntegerNode(new BigInteger(token.name), token.location));
@@ -114,6 +128,98 @@ public class MatchParser implements AtomParser {
             default:
                 throw new SyntaxException("unsupported pattern type: " + token.type, token.location);
         }
+    }
+
+    private PatternNode parseArrayPattern(AtomParserManager manager) {
+        TokenStream tokenStream = manager.getTokenStream();
+        Token startToken = tokenStream.token();
+        AssertUtil.assertToken(startToken, TokenType.LEFT_SQUARE);
+        tokenStream.nextToken();
+
+        List<PatternNode> elements = new ArrayList<>();
+        RestPatternNode restPattern = null;
+
+        while (tokenStream.token().type != TokenType.RIGHT_SQUARE
+                && tokenStream.token().type != TokenType.EOF) {
+
+            if (tokenStream.token().type == TokenType.DOT_DOT_DOT) {
+                tokenStream.nextToken();
+                Token restToken = tokenStream.token();
+                AssertUtil.assertToken(restToken, TokenType.IDENTIFIER);
+                tokenStream.nextToken();
+                if ("_".equals(restToken.name)) {
+                    restPattern = new RestPatternNode(null);
+                } else {
+                    restPattern = new RestPatternNode(restToken.name);
+                }
+                break;
+            }
+
+            elements.add(parsePattern(manager));
+
+            if (tokenStream.token().type == TokenType.COMMA) {
+                tokenStream.nextToken();
+            } else if (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
+                throw new SyntaxException("expected ',' or ']' in array pattern", tokenStream.token().location);
+            }
+        }
+
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
+        tokenStream.nextToken();
+
+        return new ArrayPatternNode(elements, restPattern);
+    }
+
+    private PatternNode parseObjectPattern(AtomParserManager manager) {
+        TokenStream tokenStream = manager.getTokenStream();
+        Token startToken = tokenStream.token();
+        AssertUtil.assertToken(startToken, TokenType.LEFT_BRACE);
+        tokenStream.nextToken();
+
+        List<ObjectPatternField> fields = new ArrayList<>();
+        RestPatternNode restPattern = null;
+
+        while (tokenStream.token().type != TokenType.RIGHT_BRACE
+                && tokenStream.token().type != TokenType.EOF) {
+
+            if (tokenStream.token().type == TokenType.DOT_DOT_DOT) {
+                tokenStream.nextToken();
+                Token restToken = tokenStream.token();
+                AssertUtil.assertToken(restToken, TokenType.IDENTIFIER);
+                tokenStream.nextToken();
+                if ("_".equals(restToken.name)) {
+                    restPattern = new RestPatternNode(null);
+                } else {
+                    restPattern = new RestPatternNode(restToken.name);
+                }
+                break;
+            }
+
+            // 字段名
+            Token fieldNameToken = tokenStream.token();
+            if (fieldNameToken.type != TokenType.IDENTIFIER && fieldNameToken.type != TokenType.STRING) {
+                throw new SyntaxException("expected identifier or string as object pattern field name", fieldNameToken.location);
+            }
+            tokenStream.nextToken();
+            String fieldName = fieldNameToken.name;
+
+            AssertUtil.assertToken(tokenStream, TokenType.COLON);
+            tokenStream.nextToken();
+
+            PatternNode fieldPattern = parsePattern(manager);
+            fields.add(new ObjectPatternField(fieldName, fieldPattern));
+
+            if (tokenStream.token().type == TokenType.COMMA) {
+                tokenStream.nextToken();
+            } else if (tokenStream.token().type != TokenType.RIGHT_BRACE) {
+                throw new SyntaxException("expected ',' or '}' in object pattern", tokenStream.token().location);
+            }
+        }
+
+        AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);
+        tokenStream.nextToken();
+
+        return new ObjectPatternNode(fields, restPattern);
     }
 
 }

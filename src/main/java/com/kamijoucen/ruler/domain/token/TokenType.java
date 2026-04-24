@@ -61,6 +61,8 @@ public enum TokenType {
 
     KEY_MATCH,      // match
 
+    DOT_DOT_DOT,    // ...
+
     EOF,
 
     UN_KNOW,

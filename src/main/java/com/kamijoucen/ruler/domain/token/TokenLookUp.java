@@ -40,6 +40,7 @@ public class TokenLookUp {
         SYMBOL.put("===", TokenType.STRICT_EQ);
         SYMBOL.put("!==", TokenType.STRICT_NE);
         SYMBOL.put("#", TokenType.HASH);
+        SYMBOL.put("...", TokenType.DOT_DOT_DOT);
 
         KEY_WORDS.put("return", TokenType.KEY_RETURN);
         KEY_WORDS.put("if", TokenType.KEY_IF);

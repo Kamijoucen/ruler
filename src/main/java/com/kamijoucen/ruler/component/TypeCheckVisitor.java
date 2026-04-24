@@ -277,6 +277,9 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
         for (MatchCase matchCase : node.getCases()) {
             context.setTypeScope(new TypeScope(context.getTypeScope()));
             try {
+                if (matchCase.getGuard() != null) {
+                    matchCase.getGuard().typeCheck(scope, context);
+                }
                 matchCase.getBody().typeCheck(scope, context);
             } finally {
                 context.setTypeScope(context.getTypeScope().getParent());
