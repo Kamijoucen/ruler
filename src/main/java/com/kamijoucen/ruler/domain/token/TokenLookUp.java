@@ -28,6 +28,7 @@ public class TokenLookUp {
         SYMBOL.put("==", TokenType.EQ);
         SYMBOL.put("!=", TokenType.NE);
         SYMBOL.put("&&", TokenType.AND);
+        SYMBOL.put("|", TokenType.PIPE);
         SYMBOL.put("||", TokenType.OR);
         SYMBOL.put("->", TokenType.ARROW);
         SYMBOL.put("!", TokenType.NOT);

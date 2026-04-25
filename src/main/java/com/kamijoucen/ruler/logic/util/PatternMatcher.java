@@ -58,6 +58,15 @@ public final class PatternMatcher {
         if (pattern instanceof ObjectPatternNode) {
             return matchObjectPattern((ObjectPatternNode) pattern, value, scope, context);
         }
+        if (pattern instanceof OrPatternNode) {
+            for (PatternNode alt : ((OrPatternNode) pattern).getAlternatives()) {
+                Map<String, BaseValue> bindings = match(alt, value, scope, context);
+                if (bindings != null) {
+                    return bindings;
+                }
+            }
+            return null;
+        }
         if (pattern instanceof RestPatternNode) {
             RestPatternNode rest = (RestPatternNode) pattern;
             if (rest.getName() == null || "_".equals(rest.getName())) {

@@ -125,6 +125,12 @@ var typeofResult = match [1, 2, 3] {
     _ -> "other"
 }
 
+var orResult = match 2 {
+    1 | 2 | 3 -> "small"
+    [var a, var b] | [var a, var b, var c] -> "array"
+    _ -> "other"
+}
+
 // ===== 中缀运算符 =====
 infix fun push(arr, v) {
     arr.push(v)
@@ -214,6 +220,9 @@ match value {
     {x: var v}      -> v                  // 对象解构（部分匹配）
     {a: var x, ...var r}-> x + r.b       // 对象 + rest
     var n if n > 0 -> "positive"         // 守卫表达式
+    1 | 2 | 3   -> "small"        // 或模式
+    [1, var x] | [2, var x] -> x  // 结构或模式
+    {status: 200 | 404} -> "http" // 字段值或模式
 }
 ```
 
@@ -223,7 +232,8 @@ match value {
 - `{}` 匹配任何对象（部分匹配语义）
 - `...` 必须出现在模式末尾
 - 字面量匹配使用严格相等（`===`）
-- 字面量前缀负号（`-5`、`-3.14`）作为字面量模式支持；其它一元表达式、`or` 模式、`as` 别名暂不支持
+- 字面量前缀负号（`-5`、`-3.14`）作为字面量模式支持；其它一元表达式、`as` 别名暂不支持
+- 模式间可用 `|` 表示“或”：`1 | 2 | 3` 匹配任意一个即可
 - 对象模式中同一字段名不得重复（解析期抛 `SyntaxException`）
 - 空 `match { }` 即无任何 case 时抛 `SyntaxException`
 - 字符串需先调用 `.array()` 转为字符数组再进行解构：

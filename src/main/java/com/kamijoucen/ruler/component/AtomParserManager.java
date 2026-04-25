@@ -201,6 +201,11 @@ public class AtomParserManager implements Parser {
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
+            if (curOpToken.type == TokenType.PIPE) {
+                throw new SyntaxException(
+                        "\"|\" is only allowed in pattern matching",
+                        curOpToken.location);
+            }
             int curTokenProc = OperationDefine.findPrecedence(curOpToken.type);
             if (curTokenProc < expPrec) {
                 return lhs;

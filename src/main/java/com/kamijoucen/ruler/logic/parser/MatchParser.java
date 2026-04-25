@@ -91,7 +91,18 @@ public class MatchParser implements AtomParser {
     }
 
     private PatternNode parsePattern(AtomParserManager manager) {
-        return parsePrimaryPattern(manager);
+        PatternNode left = parsePrimaryPattern(manager);
+        TokenStream tokenStream = manager.getTokenStream();
+        if (tokenStream.token().type != TokenType.PIPE) {
+            return left;
+        }
+        List<PatternNode> alternatives = new ArrayList<>();
+        alternatives.add(left);
+        while (tokenStream.token().type == TokenType.PIPE) {
+            tokenStream.nextToken();
+            alternatives.add(parsePrimaryPattern(manager));
+        }
+        return new OrPatternNode(alternatives);
     }
 
     private PatternNode parsePrimaryPattern(AtomParserManager manager) {
