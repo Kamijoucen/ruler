@@ -333,4 +333,23 @@ public class MatchEdgeCaseTest {
         Assert.assertEquals("1-2-4-5-", result.first().toString());
     }
 
+    // ===== typeof 'function' 对 ClosureValue / MethodValue =====
+
+    @Test
+    public void typeofClosurePatternTest() {
+        String script = "var c = fun(x) -> x\n"
+                + "match c {\n    typeof 'function' -> 'closure'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("closure", result.first().toString());
+    }
+
+    @Test
+    public void typeofMethodPatternTest() {
+        String script = "var obj = { greet: fun(self) { 'hi' } }\n"
+                + "var m = obj.greet\n"
+                + "match m {\n    typeof 'function' -> 'method'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("method", result.first().toString());
+    }
+
 }

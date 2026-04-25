@@ -303,4 +303,68 @@ public class MatchStructureTest {
         Assert.assertEquals("rulera", result.first().toString());
     }
 
+    // ===== typeof 在结构化子模式中 =====
+
+    @Test
+    public void typeofInArraySubPatternTest() {
+        String script = "match [1, 'hi'] {\n    [typeof 'int', typeof 'string'] -> 'mixed'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("mixed", result.first().toString());
+    }
+
+    @Test
+    public void typeofInObjectSubPatternTest() {
+        String script = "match {a: 42, b: 'hello'} {\n    {a: typeof 'int', b: typeof 'string'} -> 'mixed'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("mixed", result.first().toString());
+    }
+
+    // ===== 裸标识符值比较在子模式中 =====
+
+    @Test
+    public void bareIdentInArrayPatternTest() {
+        String script = "var TAG = 42\n" +
+                        "match [42, 'value'] {\n" +
+                        "    [TAG, var v] -> v\n" +
+                        "    _ -> 'other'\n" +
+                        "}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("value", result.first().toString());
+    }
+
+    // ===== 深度嵌套 =====
+
+    @Test
+    public void deepNestedArrayPatternTest() {
+        String script = "match [[[42]]] {\n" +
+                        "    [[[var x]]] -> x\n" +
+                        "    _ -> 'other'\n" +
+                        "}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals(42, result.first().toInteger());
+    }
+
+    @Test
+    public void deepNestedMixedPatternTest() {
+        String script = "match {data: {items: [1, 2, 3]}} {\n" +
+                        "    {data: {items: [var a, var b, var c]}} -> a + b * c\n" +
+                        "    _ -> 'other'\n" +
+                        "}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals(7, result.first().toInteger());
+    }
+
+    // ===== 显式字段与 rest 重复绑定 =====
+
+    @Test
+    public void duplicateBindingAcrossFieldAndRestTest() {
+        String script = "match {a: 1, b: 2} {\n    {a: var x, ...var x} -> 'bad'\n    _ -> 'other'\n}";
+        try {
+            getRunner(script).run();
+            Assert.fail("Expected RulerRuntimeException for duplicate binding across field and rest");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("duplicate binding"));
+        }
+    }
+
 }

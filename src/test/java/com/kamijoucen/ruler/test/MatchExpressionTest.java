@@ -8,6 +8,9 @@ import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.service.RulerRunner;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MatchExpressionTest {
 
@@ -319,6 +322,22 @@ public class MatchExpressionTest {
         } catch (RulerRuntimeException e) {
             Assert.assertTrue(e.getMessage().contains("match error"));
         }
+    }
+
+    @Test
+    public void typeofDatePatternTest() {
+        String script = "match $d {\n    typeof 'date' -> 'is_date'\n    _ -> 'other'\n}";
+        Map<String, Object> param = new HashMap<>();
+        param.put("d", new Date());
+        RulerResult result = getRunner(script).run(param);
+        Assert.assertEquals("is_date", result.first().toString());
+    }
+
+    @Test
+    public void typeofProxyPatternTest() {
+        String script = "match Proxy([], {}) {\n    typeof 'proxy' -> 'is_proxy'\n    _ -> 'other'\n}";
+        RulerResult result = getRunner(script).run();
+        Assert.assertEquals("is_proxy", result.first().toString());
     }
 
 }
