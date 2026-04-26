@@ -239,7 +239,7 @@ match value {
 - 字符串需先调用 `.array()` 转为字符数组再进行解构：
   ```ruler
   match "hello".array() {
-      [var h, ...var t] -> h ++ t.length()   // "h5"
+      [var h, ...var t] -> h ++ t.length()   // "h4"
       []                -> "empty"
       _                 -> "other"
   }
