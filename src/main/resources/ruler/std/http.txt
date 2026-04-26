@@ -1,0 +1,44 @@
+import "/ruler/std/json.txt" json
+
+fun get(url, headers) {
+    return httpRequest("GET", url, headers, null);
+}
+
+fun post(url, headers, body) {
+    return httpRequest("POST", url, headers, body);
+}
+
+fun put(url, headers, body) {
+    return httpRequest("PUT", url, headers, body);
+}
+
+fun patch(url, headers, body) {
+    return httpRequest("PATCH", url, headers, body);
+}
+
+fun delete(url, headers) {
+    return httpRequest("DELETE", url, headers, null);
+}
+
+fun request(config) {
+    return httpSend(config);
+}
+
+fun requestJson(config) {
+    var newConfig = {};
+    for key in keys(config) {
+        newConfig[key] = config[key];
+    }
+    if newConfig.body != null && typeof(newConfig.body) == "object" {
+        newConfig.body = json.stringify(newConfig.body);
+        if newConfig.headers == null {
+            newConfig.headers = {};
+        }
+        newConfig.headers["Content-Type"] = "application/json";
+    }
+    var resp = httpSend(newConfig);
+    if resp.error == null && resp.body != null && resp.body != "" {
+        resp.data = json.parse(resp.body);
+    }
+    return resp;
+}

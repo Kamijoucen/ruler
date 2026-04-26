@@ -45,6 +45,8 @@ import com.kamijoucen.ruler.logic.function.ToNumberFunction;
 import com.kamijoucen.ruler.logic.function.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.logic.function.array.*;
 import com.kamijoucen.ruler.logic.function.math.*;
+import com.kamijoucen.ruler.logic.function.net.HttpRequestFunction;
+import com.kamijoucen.ruler.logic.function.net.HttpSendFunction;
 import com.kamijoucen.ruler.logic.function.object.*;
 import com.kamijoucen.ruler.logic.function.string.*;
 import com.kamijoucen.ruler.logic.function.type.*;
@@ -182,6 +184,9 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         putGlobal(new IsArrayFunction());
         putGlobal(new IsFunctionFunction());
         putGlobal(new IsDateFunction());
+
+        registerGlobalFunction(new HttpRequestFunction());
+        registerGlobalFunction(new HttpSendFunction());
     }
 
     private void putGlobal(RulerFunction func) {
