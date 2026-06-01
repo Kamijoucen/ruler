@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.ast.expression.DotNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
+import com.kamijoucen.ruler.logic.eval.ClosureCallLogic;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -42,7 +43,7 @@ public class CallOperation implements BinaryOperation {
                     return (BaseValue) function.call(context, scope, boundSelf, (Object[]) funcParam);
                 case CLOSURE:
                     ClosureValue closureFunction = ((ClosureValue) callFunc);
-                    return context.getConfiguration().getCallClosureExecutor().call(
+                    return ClosureCallLogic.call(
                             closureFunction, scope, context, funcParam);
                 default: {
                     Object printObj = callFunc;

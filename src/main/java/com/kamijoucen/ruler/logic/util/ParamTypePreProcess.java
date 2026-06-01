@@ -1,8 +1,7 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic.util;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.parameter.RulerParameter;
-import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 
@@ -11,27 +10,23 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-public class ParamTypePreProcessImpl implements ParamTypePreProcess {
+public final class ParamTypePreProcess {
 
-    private final RulerConfiguration rulerConfiguration;
-
-    public ParamTypePreProcessImpl(RulerConfiguration rulerConfiguration) {
-        this.rulerConfiguration = rulerConfiguration;
+    private ParamTypePreProcess() {
     }
 
-    @Override
-    public List<RulerParameter> process(Map<String, Object> param) {
+    public static List<RulerParameter> process(RulerConfiguration configuration, Map<String, Object> param) {
         if (CollectionUtil.isEmpty(param)) {
             return Collections.emptyList();
         }
         List<RulerParameter> list = new ArrayList<>(param.size());
         for (Map.Entry<String, Object> entry : param.entrySet()) {
-            list.add(processOne(entry));
+            list.add(processOne(configuration, entry));
         }
         return list;
     }
 
-    private RulerParameter processOne(Map.Entry<String, Object> entry) {
+    private static RulerParameter processOne(RulerConfiguration configuration, Map.Entry<String, Object> entry) {
         Object value = entry.getValue();
         if (value == null) {
             return new RulerParameter(ValueType.NULL, entry.getKey(), null);
@@ -43,7 +38,7 @@ public class ParamTypePreProcessImpl implements ParamTypePreProcess {
             return new RulerParameter(ValueType.ARRAY, entry.getKey(), value);
         }
 
-        ValueConvert convert = this.rulerConfiguration.getValueConvertManager().getConverter(value);
+        ValueConvert convert = configuration.getValueConvertManager().getConverter(value);
         if (convert == null) {
             throw new IllegalArgumentException("unsupported parameter type: " + value.getClass());
         }

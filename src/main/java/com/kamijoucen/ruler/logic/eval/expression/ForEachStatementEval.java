@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.domain.ast.expression.ForEachStatementNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.common.QuadConsumer;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.component.LoopCountCheckOperation;
+import com.kamijoucen.ruler.domain.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.Token;
@@ -38,8 +38,7 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = null;
         QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;
         if (context.getConfiguration().getMaxLoopNumber() > 0) {
-            loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
-                    .createLoopCountCheckOperation();
+            loopCountCheckOperation = new LoopCountCheckOperation();
             check = checkLoopNumberEval;
         } else {
             check = blankEval;

@@ -8,7 +8,6 @@ import com.kamijoucen.ruler.domain.ast.expression.ClosureDefineNode;
 import com.kamijoucen.ruler.domain.ast.expression.DefaultParamValNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.domain.ast.factor.ReturnNode;
-import com.kamijoucen.ruler.component.Parsers;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;

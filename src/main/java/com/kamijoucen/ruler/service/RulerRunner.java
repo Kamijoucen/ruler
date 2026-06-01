@@ -7,6 +7,7 @@ import com.kamijoucen.ruler.domain.parameter.RuleResultValue;
 import com.kamijoucen.ruler.domain.parameter.RulerParameter;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import com.kamijoucen.ruler.domain.runtime.Scope;
+import com.kamijoucen.ruler.logic.util.ParamTypePreProcess;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class RulerRunner implements Serializable {
         if (param == null) {
             param = Collections.emptyMap();
         }
-        List<RulerParameter> parameter = configuration.getParamTypePreProcess().process(param);
+        List<RulerParameter> parameter = ParamTypePreProcess.process(configuration, param);
         return run(parameter);
     }
 

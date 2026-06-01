@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.component.ImportCacheManager;
-import com.kamijoucen.ruler.component.StackDepthCheckOperation;
+import com.kamijoucen.ruler.domain.runtime.StackDepthCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.TypeScope;
 import com.kamijoucen.ruler.domain.value.IntegerValue;

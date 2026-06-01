@@ -1,5 +1,6 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic;
 
+import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.*;
 import com.kamijoucen.ruler.domain.ast.factor.*;

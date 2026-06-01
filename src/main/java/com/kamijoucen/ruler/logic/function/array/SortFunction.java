@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.eval.ClosureCallLogic;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
@@ -54,8 +55,7 @@ public class SortFunction implements RulerFunction {
         return (a, b) -> {
             BaseValue result;
             if (comparator.getType() == ValueType.CLOSURE) {
-                result = context.getConfiguration().getCallClosureExecutor()
-                        .call((ClosureValue) comparator, scope, context, a, b);
+                result = ClosureCallLogic.call((ClosureValue) comparator, scope, context, a, b);
             } else if (comparator.getType() == ValueType.FUNCTION) {
                 result = (BaseValue) ((FunctionValue) comparator).getValue()
                         .call(context, scope, null, a, b);

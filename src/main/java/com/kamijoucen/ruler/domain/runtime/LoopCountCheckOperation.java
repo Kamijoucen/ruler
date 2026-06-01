@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.domain.runtime;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;

@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.component;
 
+import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.common.State;
-import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenLocation;

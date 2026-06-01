@@ -2,7 +2,7 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.component.AtomParserManager;
 import com.kamijoucen.ruler.component.DefaultLexical;
-import com.kamijoucen.ruler.component.Parsers;
+import com.kamijoucen.ruler.logic.parser.Parsers;
 import com.kamijoucen.ruler.component.TokenStreamImpl;
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.domain.ast.BaseNode;

@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.domain;
 
 import com.kamijoucen.ruler.domain.ast.expression.*;
 import com.kamijoucen.ruler.domain.ast.factor.*;

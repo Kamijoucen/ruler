@@ -1,27 +1,4 @@
-package com.kamijoucen.ruler.component;
-
-import com.kamijoucen.ruler.logic.parser.ArrayParser;
-import com.kamijoucen.ruler.logic.parser.BlockParser;
-import com.kamijoucen.ruler.logic.parser.BoolParser;
-import com.kamijoucen.ruler.logic.parser.BreakParser;
-import com.kamijoucen.ruler.logic.parser.ContinueParser;
-import com.kamijoucen.ruler.logic.parser.ForEachParser;
-import com.kamijoucen.ruler.logic.parser.FunParser;
-import com.kamijoucen.ruler.logic.parser.IdentifierParser;
-import com.kamijoucen.ruler.logic.parser.IfParser;
-import com.kamijoucen.ruler.logic.parser.InfixParser;
-import com.kamijoucen.ruler.logic.parser.MatchParser;
-import com.kamijoucen.ruler.logic.parser.NullParser;
-import com.kamijoucen.ruler.logic.parser.NumberParser;
-import com.kamijoucen.ruler.logic.parser.ParenParser;
-import com.kamijoucen.ruler.logic.parser.ReturnParser;
-import com.kamijoucen.ruler.logic.parser.RsonParser;
-import com.kamijoucen.ruler.logic.parser.RuleParser;
-import com.kamijoucen.ruler.logic.parser.StringParser;
-import com.kamijoucen.ruler.logic.parser.TypeOfParser;
-import com.kamijoucen.ruler.logic.parser.UnaryExpressionParser;
-import com.kamijoucen.ruler.logic.parser.VarParser;
-import com.kamijoucen.ruler.logic.parser.WhileParser;
+package com.kamijoucen.ruler.logic.parser;
 
 public class Parsers {
 

@@ -1,8 +1,5 @@
 package com.kamijoucen.ruler.application;
 import com.kamijoucen.ruler.component.BinaryOperationFactory;
-import com.kamijoucen.ruler.component.ParamTypePreProcess;
-import com.kamijoucen.ruler.component.RuntimeBehaviorFactory;
-import com.kamijoucen.ruler.component.CreateRuntimeContextFactory;
 import com.kamijoucen.ruler.component.RClassManager;
 import com.kamijoucen.ruler.component.IntegerNumberCache;
 import com.kamijoucen.ruler.component.ValueConvertManager;
@@ -10,11 +7,10 @@ import com.kamijoucen.ruler.component.ConfigModuleManager;
 import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 
 import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
-import com.kamijoucen.ruler.component.NodeVisitor;
+import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
-import com.kamijoucen.ruler.component.CallClosureExecutor;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -44,12 +40,6 @@ public interface RulerConfiguration {
 
     NodeVisitor<BaseValue> getEvalVisitor();
 
-    ParamTypePreProcess getParamTypePreProcess();
-
-    RuntimeBehaviorFactory getRuntimeBehaviorFactory();
-
-    CreateRuntimeContextFactory getCreateDefaultRuntimeContextFactory();
-
     RClassManager getRClassManager();
 
     Integer getMaxLoopNumber();
@@ -61,8 +51,6 @@ public interface RulerConfiguration {
     IntegerNumberCache getIntegerNumberCache();
 
     ValueConvertManager getValueConvertManager();
-
-    CallClosureExecutor getCallClosureExecutor();
 
     ConfigModuleManager getConfigModuleManager();
 

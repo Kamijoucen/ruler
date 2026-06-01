@@ -3,7 +3,6 @@ package com.kamijoucen.ruler.logic.parser;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.BlockNode;
 import com.kamijoucen.ruler.domain.ast.expression.IfStatementNode;
-import com.kamijoucen.ruler.component.Parsers;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;

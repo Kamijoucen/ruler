@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.domain.runtime;
-import com.kamijoucen.ruler.component.StackDepthCheckOperation;
 
-import com.kamijoucen.ruler.component.NodeVisitor;
+import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.domain.type.RulerType;

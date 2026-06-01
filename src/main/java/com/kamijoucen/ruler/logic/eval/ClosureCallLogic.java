@@ -1,4 +1,5 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic.eval;
+
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 
@@ -9,7 +10,6 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.DefaultParamValNode;
 import com.kamijoucen.ruler.domain.ast.factor.NameNode;
 import com.kamijoucen.ruler.domain.common.Constant;
-import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.ArrayValue;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -17,16 +17,12 @@ import com.kamijoucen.ruler.domain.value.ClosureValue;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.value.NullValue;
 
-public class CallClosureExecutor {
+public final class ClosureCallLogic {
 
-    private final RulerConfiguration configuration;
-
-    public CallClosureExecutor(RulerConfiguration configuration) {
-        this.configuration = configuration;
+    private ClosureCallLogic() {
     }
 
-    public BaseValue call(ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
-        // TODO
+    public static BaseValue call(ClosureValue closure, Scope scope, RuntimeContext context, BaseValue... params) {
         Scope callScope = new Scope("closure", false, closure.getDefineScope(), null);
         // put args in scope
         callScope.putLocal(Constant.FUN_ARG_LIST, new ArrayValue(Arrays.asList(params)));

@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.logic.property;
 
-import com.kamijoucen.ruler.component.CallClosureExecutor;
 import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.eval.ClosureCallLogic;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 import java.util.Objects;
@@ -218,11 +218,10 @@ public final class PropertyAccessor {
     }
 
     /**
-     * 调用 closure，清理 returnFlag 的工作下沉到 CallClosureExecutor
+     * 调用 closure，清理 returnFlag 的工作下沉到 ClosureCallLogic
      */
     private static BaseValue callClosure(RuntimeContext context, ClosureValue closure,
                                           BaseValue... params) {
-        CallClosureExecutor executor = context.getConfiguration().getCallClosureExecutor();
-        return executor.call(closure, null, context, params);
+        return ClosureCallLogic.call(closure, null, context, params);
     }
 }

@@ -1,6 +1,7 @@
 package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
+import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.domain.type.RulerType;
 
 public class ParseContext {

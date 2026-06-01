@@ -1,28 +1,24 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic.util;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
+import com.kamijoucen.ruler.domain.runtime.StackDepthCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.TypeScope;
-import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 
 import java.util.Map;
 
-public class CreateRuntimeContextFactoryImpl implements CreateRuntimeContextFactory {
+public final class RuntimeContextFactory {
 
-    private final RulerConfiguration configuration;
-
-    public CreateRuntimeContextFactoryImpl(RulerConfiguration configuration) {
-        this.configuration = configuration;
+    private RuntimeContextFactory() {
     }
 
-    @Override
-    public RuntimeContext create(Map<String, BaseValue> outSpace) {
+    public static RuntimeContext create(RulerConfiguration configuration, Map<String, BaseValue> outSpace) {
         RuntimeContext runtimeContext = new RuntimeContext(
                 configuration.getEvalVisitor(),
                 configuration.getTypeCheckVisitor(),
                 configuration.getImportCache(),
-                configuration.getRuntimeBehaviorFactory().createStackDepthCheckOperation(),
+                new StackDepthCheckOperation(),
                 configuration);
         if (!CollectionUtil.isEmpty(outSpace)) {
             runtimeContext.setOutSpace(outSpace);

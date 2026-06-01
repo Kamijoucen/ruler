@@ -4,6 +4,7 @@ import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.eval.ClosureCallLogic;
 import com.kamijoucen.ruler.logic.function.FunctionParamUtil;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 
@@ -62,8 +63,7 @@ public class FilterFunction implements RulerFunction {
     private BaseValue callCallback(BaseValue callback, Scope scope, RuntimeContext context,
                                    BaseValue item, BaseValue index, BaseValue arr) {
         if (callback.getType() == ValueType.CLOSURE) {
-            return context.getConfiguration().getCallClosureExecutor()
-                    .call((ClosureValue) callback, scope, context, item, index, arr);
+            return ClosureCallLogic.call((ClosureValue) callback, scope, context, item, index, arr);
         } else if (callback.getType() == ValueType.FUNCTION) {
             return (BaseValue) ((FunctionValue) callback).getValue()
                     .call(context, scope, null, item, index, arr);

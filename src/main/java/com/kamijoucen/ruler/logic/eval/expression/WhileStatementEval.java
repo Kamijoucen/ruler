@@ -4,7 +4,7 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.expression.WhileStatementNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.common.QuadConsumer;
-import com.kamijoucen.ruler.component.LoopCountCheckOperation;
+import com.kamijoucen.ruler.domain.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
@@ -27,8 +27,7 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
         LoopCountCheckOperation loopCountCheckOperation = null;
         QuadConsumer<LoopCountCheckOperation, BaseNode, Scope, RuntimeContext> check;
         if (context.getConfiguration().getMaxLoopNumber() > 0) {
-            loopCountCheckOperation = context.getConfiguration().getRuntimeBehaviorFactory()
-                    .createLoopCountCheckOperation();
+            loopCountCheckOperation = new LoopCountCheckOperation();
             check = checkLoopNumberEval;
         } else {
             check = blankEval;

@@ -1,5 +1,6 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic.eval;
 
+import com.kamijoucen.ruler.logic.AbstractVisitor;
 import com.kamijoucen.ruler.domain.ast.expression.*;
 import com.kamijoucen.ruler.domain.ast.factor.*;
 import com.kamijoucen.ruler.logic.eval.expression.*;

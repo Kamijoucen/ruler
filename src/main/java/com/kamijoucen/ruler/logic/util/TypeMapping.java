@@ -1,11 +1,14 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic.util;
 
 import com.kamijoucen.ruler.domain.value.ValueType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class TypeMapping {
+public final class TypeMapping {
+
+    private TypeMapping() {
+    }
 
     private static final Map<ValueType, String> mapping = new HashMap<>();
 

@@ -1,36 +1,30 @@
 package com.kamijoucen.ruler.application.impl;
 import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.component.BinaryOperationFactoryImpl;
-import com.kamijoucen.ruler.component.ParamTypePreProcessImpl;
 import com.kamijoucen.ruler.component.IntegerNumberCacheImpl;
 import com.kamijoucen.ruler.component.ValueConvertManagerImpl;
 import com.kamijoucen.ruler.component.SpiLoaderManagerImpl;
 import com.kamijoucen.ruler.component.ConfigModuleManagerImpl;
 import com.kamijoucen.ruler.component.CustomImportLoaderManagerImpl;
-import com.kamijoucen.ruler.component.RuntimeBehaviorFactoryImpl;
 import com.kamijoucen.ruler.component.ObjectRClassManagerImpl;
-import com.kamijoucen.ruler.component.CreateRuntimeContextFactoryImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
-import com.kamijoucen.ruler.component.NodeVisitor;
+import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.component.BinaryOperationFactory;
 import com.kamijoucen.ruler.component.ConfigModuleManager;
-import com.kamijoucen.ruler.component.CreateRuntimeContextFactory;
 import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 import com.kamijoucen.ruler.component.IntegerNumberCache;
-import com.kamijoucen.ruler.component.ParamTypePreProcess;
 import com.kamijoucen.ruler.component.RClassManager;
 import com.kamijoucen.ruler.application.RulerConfiguration;
-import com.kamijoucen.ruler.component.RuntimeBehaviorFactory;
 import com.kamijoucen.ruler.component.SpiLoaderManager;
 import com.kamijoucen.ruler.component.ValueConvertManager;
 import com.kamijoucen.ruler.domain.ConfigModule;
 import com.kamijoucen.ruler.component.option.CustomImportLoader;
 import com.kamijoucen.ruler.component.option.StdImportLoader;
-import com.kamijoucen.ruler.component.EvalVisitor;
+import com.kamijoucen.ruler.logic.eval.EvalVisitor;
 import com.kamijoucen.ruler.logic.function.CallFunction;
 import com.kamijoucen.ruler.logic.function.CharAtFunction;
 import com.kamijoucen.ruler.logic.function.DatetimeFunction;
@@ -50,12 +44,12 @@ import com.kamijoucen.ruler.logic.function.net.HttpSendFunction;
 import com.kamijoucen.ruler.logic.function.object.*;
 import com.kamijoucen.ruler.logic.function.string.*;
 import com.kamijoucen.ruler.logic.function.type.*;
-import com.kamijoucen.ruler.component.CallClosureExecutor;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.component.TypeCheckVisitor;
+import com.kamijoucen.ruler.logic.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.domain.type.RulerType;
 import com.kamijoucen.ruler.logic.util.IOUtil;
+import com.kamijoucen.ruler.logic.util.RuntimeContextFactory;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.FunctionValue;
 
@@ -74,12 +68,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
 
-    private ParamTypePreProcess paramTypePreProcess = new ParamTypePreProcessImpl(this);
-
-    private RuntimeBehaviorFactory runtimeBehaviorFactory;
-
-    private CreateRuntimeContextFactory createRuntimeContextFactory;
-
     private RClassManager rClassFactory;
 
     private Integer maxLoopNumber = -1;
@@ -89,8 +77,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     private IntegerNumberCache integerNumberCache = new IntegerNumberCacheImpl();
 
     private ValueConvertManager valueConvertManager = new ValueConvertManagerImpl();
-
-    private CallClosureExecutor callClosureExecutor = new CallClosureExecutor(this);
 
     private SpiLoaderManager spiLoaderManager = new SpiLoaderManagerImpl();
 
@@ -119,9 +105,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     private void initEngineBehaviorFactory() {
-        this.runtimeBehaviorFactory = new RuntimeBehaviorFactoryImpl();
         this.rClassFactory = new ObjectRClassManagerImpl();
-        this.createRuntimeContextFactory = new CreateRuntimeContextFactoryImpl(this);
     }
 
     private void initDefaultFunction() {
@@ -239,21 +223,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public ParamTypePreProcess getParamTypePreProcess() {
-        return paramTypePreProcess;
-    }
-
-    @Override
-    public RuntimeBehaviorFactory getRuntimeBehaviorFactory() {
-        return this.runtimeBehaviorFactory;
-    }
-
-    @Override
-    public CreateRuntimeContextFactory getCreateDefaultRuntimeContextFactory() {
-        return this.createRuntimeContextFactory;
-    }
-
-    @Override
     public RClassManager getRClassManager() {
         return this.rClassFactory;
     }
@@ -274,10 +243,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     public void setRClassFactory(RClassManager metaInfoFactory) {
         this.rClassFactory = metaInfoFactory;
-    }
-
-    public void setRuntimeBehaviorFactory(RuntimeBehaviorFactory runtimeBehaviorFactory) {
-        this.runtimeBehaviorFactory = runtimeBehaviorFactory;
     }
 
     public void setMaxLoopNumber(Integer maxLoopNumber) {
@@ -310,7 +275,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public RuntimeContext createDefaultRuntimeContext(Map<String, BaseValue> outSpace) {
-        return createRuntimeContextFactory.create(outSpace);
+        return RuntimeContextFactory.create(this, outSpace);
     }
 
     @Override
@@ -321,11 +286,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     @Override
     public ValueConvertManager getValueConvertManager() {
         return valueConvertManager;
-    }
-
-    @Override
-    public CallClosureExecutor getCallClosureExecutor() {
-        return callClosureExecutor;
     }
 
     public void setValueConvertManager(ValueConvertManager valueConvertManager) {
@@ -346,19 +306,6 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     public void setImportCache(ImportCacheManager importCache) {
         this.importCache = importCache;
-    }
-
-    public void setParamTypePreProcess(ParamTypePreProcess paramTypePreProcess) {
-        this.paramTypePreProcess = paramTypePreProcess;
-    }
-
-    public CreateRuntimeContextFactory getCreateRuntimeContextFactory() {
-        return createRuntimeContextFactory;
-    }
-
-    public void setCreateRuntimeContextFactory(
-            CreateRuntimeContextFactory createRuntimeContextFactory) {
-        this.createRuntimeContextFactory = createRuntimeContextFactory;
     }
 
     public void setIntegerNumberCache(IntegerNumberCache integerNumberCache) {

@@ -5,7 +5,7 @@ import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.component.TypeMapping;
+import com.kamijoucen.ruler.logic.util.TypeMapping;
 import com.kamijoucen.ruler.logic.util.IOUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.StringValue;
