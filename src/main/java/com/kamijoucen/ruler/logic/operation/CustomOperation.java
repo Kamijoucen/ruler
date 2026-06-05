@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.logic.operation;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.VirtualNode;
+import com.kamijoucen.ruler.domain.ast.VirtualNode;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenType;

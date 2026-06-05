@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
-import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
+import com.kamijoucen.ruler.domain.ast.ImportNode;
+import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
 import com.kamijoucen.ruler.component.ParseContext;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;

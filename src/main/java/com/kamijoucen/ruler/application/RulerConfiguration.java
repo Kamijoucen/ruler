@@ -6,7 +6,7 @@ import com.kamijoucen.ruler.component.ValueConvertManager;
 import com.kamijoucen.ruler.component.ConfigModuleManager;
 import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 
-import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
+import com.kamijoucen.ruler.domain.ast.ImportNode;
 import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.domain.type.RulerType;

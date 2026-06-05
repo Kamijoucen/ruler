@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.expression.ClosureDefineNode;
-import com.kamijoucen.ruler.domain.ast.expression.InfixDefinitionNode;
+import com.kamijoucen.ruler.domain.ast.ClosureDefineNode;
+import com.kamijoucen.ruler.domain.ast.InfixDefinitionNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;

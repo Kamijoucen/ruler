@@ -1,6 +1,6 @@
-package com.kamijoucen.ruler.logic.eval.factor;
+package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.factor.DoubleNode;
+import com.kamijoucen.ruler.domain.ast.DoubleNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;

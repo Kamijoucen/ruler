@@ -1,6 +1,6 @@
-package com.kamijoucen.ruler.logic.eval.factor;
+package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
+import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;

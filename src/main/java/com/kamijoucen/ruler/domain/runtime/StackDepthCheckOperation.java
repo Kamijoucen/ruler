@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.domain.runtime;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 
 public class StackDepthCheckOperation {
 

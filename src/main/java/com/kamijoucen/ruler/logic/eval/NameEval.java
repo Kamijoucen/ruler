@@ -1,6 +1,6 @@
-package com.kamijoucen.ruler.logic.eval.factor;
+package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.factor.NameNode;
+import com.kamijoucen.ruler.domain.ast.NameNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;

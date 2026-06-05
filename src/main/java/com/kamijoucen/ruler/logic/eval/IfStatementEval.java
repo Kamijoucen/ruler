@@ -1,7 +1,7 @@
-package com.kamijoucen.ruler.logic.eval.expression;
+package com.kamijoucen.ruler.logic.eval;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.expression.IfStatementNode;
+import com.kamijoucen.ruler.domain.ast.IfStatementNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;

@@ -1,6 +1,6 @@
-package com.kamijoucen.ruler.logic.eval.expression;
+package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.expression.InfixDefinitionNode;
+import com.kamijoucen.ruler.domain.ast.InfixDefinitionNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;

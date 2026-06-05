@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
+import com.kamijoucen.ruler.domain.ast.ImportNode;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;

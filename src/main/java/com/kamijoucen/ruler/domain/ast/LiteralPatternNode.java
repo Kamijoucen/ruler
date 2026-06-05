@@ -1,6 +1,5 @@
-package com.kamijoucen.ruler.domain.ast.factor;
+package com.kamijoucen.ruler.domain.ast;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
 
 public class LiteralPatternNode implements PatternNode {
 

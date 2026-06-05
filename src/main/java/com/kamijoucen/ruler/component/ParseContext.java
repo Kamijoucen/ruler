@@ -6,6 +6,8 @@ import com.kamijoucen.ruler.domain.type.RulerType;
 
 public class ParseContext {
 
+
+    @SuppressWarnings("unused")
     private final RulerConfiguration configuration;
 
     private NodeVisitor<RulerType> typeCheckVisitor;

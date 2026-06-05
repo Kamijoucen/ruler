@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
-import com.kamijoucen.ruler.domain.ast.factor.UnaryOperationNode;
+import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
+import com.kamijoucen.ruler.domain.ast.UnaryOperationNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;

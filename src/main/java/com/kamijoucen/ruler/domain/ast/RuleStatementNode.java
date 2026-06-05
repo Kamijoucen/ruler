@@ -1,8 +1,6 @@
-package com.kamijoucen.ruler.domain.ast.expression;
+package com.kamijoucen.ruler.domain.ast;
 import com.kamijoucen.ruler.domain.type.RulerType;
 
-import com.kamijoucen.ruler.domain.ast.AbstractBaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.StringNode;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.TokenLocation;

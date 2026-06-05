@@ -1,7 +1,6 @@
 package com.kamijoucen.ruler.domain;
 
-import com.kamijoucen.ruler.domain.ast.expression.*;
-import com.kamijoucen.ruler.domain.ast.factor.*;
+import com.kamijoucen.ruler.domain.ast.*;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 

@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.logic.typecheck;
 
-import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
+import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;

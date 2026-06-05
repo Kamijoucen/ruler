@@ -1,11 +1,11 @@
 package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.expression.VariableDefineNode;
+import com.kamijoucen.ruler.domain.ast.VariableDefineNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
-import com.kamijoucen.ruler.domain.ast.factor.NameNode;
+import com.kamijoucen.ruler.domain.ast.NameNode;
 import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;

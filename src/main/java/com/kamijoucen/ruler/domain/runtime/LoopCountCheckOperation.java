@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.domain.runtime;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 

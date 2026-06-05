@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.expression.BlockNode;
-import com.kamijoucen.ruler.domain.ast.expression.RuleStatementNode;
-import com.kamijoucen.ruler.domain.ast.factor.StringNode;
+import com.kamijoucen.ruler.domain.ast.BlockNode;
+import com.kamijoucen.ruler.domain.ast.RuleStatementNode;
+import com.kamijoucen.ruler.domain.ast.StringNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;

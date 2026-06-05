@@ -1,8 +1,8 @@
-package com.kamijoucen.ruler.logic.eval.expression;
+package com.kamijoucen.ruler.logic.eval;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.expression.DotNode;
-import com.kamijoucen.ruler.domain.ast.factor.NameNode;
+import com.kamijoucen.ruler.domain.ast.DotNode;
+import com.kamijoucen.ruler.domain.ast.NameNode;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;

@@ -1,7 +1,5 @@
-package com.kamijoucen.ruler.domain.ast.expression;
+package com.kamijoucen.ruler.domain.ast;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.PatternNode;
 
 public class MatchCase {
 

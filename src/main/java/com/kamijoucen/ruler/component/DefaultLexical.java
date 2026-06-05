@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.logic.util.IOUtil;
 
 public class DefaultLexical implements Lexical {
 
+    @SuppressWarnings("unused")
     private final RulerConfiguration configuration;
 
     private int offset;
@@ -316,6 +317,7 @@ public class DefaultLexical implements Lexical {
         return offset < content.length();
     }
 
+    @SuppressWarnings("unused")
     private boolean isNotOver(int i) {
         return offset + i < content.length();
     }
@@ -325,6 +327,7 @@ public class DefaultLexical implements Lexical {
         forward();
     }
 
+    @SuppressWarnings("unused")
     private void append(char ch) {
         buffer.append(ch);
     }

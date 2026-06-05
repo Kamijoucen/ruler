@@ -6,7 +6,6 @@ import com.kamijoucen.ruler.domain.exception.PanicException;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.service.RulerRunner;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 

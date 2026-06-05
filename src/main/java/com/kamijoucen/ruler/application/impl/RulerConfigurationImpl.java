@@ -11,7 +11,7 @@ import com.kamijoucen.ruler.component.ObjectRClassManagerImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.kamijoucen.ruler.domain.ast.expression.ImportNode;
+import com.kamijoucen.ruler.domain.ast.ImportNode;
 import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.component.BinaryOperationFactory;
 import com.kamijoucen.ruler.component.ConfigModuleManager;

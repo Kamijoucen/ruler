@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.StringInterpolationNode;
-import com.kamijoucen.ruler.domain.ast.factor.StringNode;
+import com.kamijoucen.ruler.domain.ast.StringInterpolationNode;
+import com.kamijoucen.ruler.domain.ast.StringNode;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;

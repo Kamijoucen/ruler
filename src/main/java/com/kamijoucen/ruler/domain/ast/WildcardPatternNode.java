@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.domain.ast.factor;
+package com.kamijoucen.ruler.domain.ast;
 
 public class WildcardPatternNode implements PatternNode {
 

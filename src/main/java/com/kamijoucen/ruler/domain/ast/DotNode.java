@@ -1,8 +1,6 @@
-package com.kamijoucen.ruler.domain.ast.expression;
+package com.kamijoucen.ruler.domain.ast;
 import com.kamijoucen.ruler.domain.type.RulerType;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.BinaryOperationNode;
 import com.kamijoucen.ruler.logic.operation.BinaryOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;

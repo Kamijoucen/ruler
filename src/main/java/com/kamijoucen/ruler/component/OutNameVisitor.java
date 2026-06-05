@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.logic.AbstractVisitor;
-import com.kamijoucen.ruler.domain.ast.factor.OutNameNode;
+import com.kamijoucen.ruler.domain.ast.OutNameNode;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.token.Token;

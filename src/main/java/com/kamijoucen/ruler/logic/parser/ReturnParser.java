@@ -3,7 +3,7 @@ package com.kamijoucen.ruler.logic.parser;
 import java.util.ArrayList;
 import java.util.List;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.factor.ReturnNode;
+import com.kamijoucen.ruler.domain.ast.ReturnNode;
 import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.component.AtomParser;
 import com.kamijoucen.ruler.component.AtomParserManager;
