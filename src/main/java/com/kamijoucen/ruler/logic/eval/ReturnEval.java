@@ -20,8 +20,7 @@ public class ReturnEval implements BaseEval<ReturnNode> {
         for (BaseNode baseNode : param) {
             values.add(baseNode.eval(scope, context));
         }
-        context.setReturnFlag(true);
-        context.setReturnSpace(values);
+        context.startReturn(values);
         return NullValue.INSTANCE;
     }
 }

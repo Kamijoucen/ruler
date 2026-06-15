@@ -4,9 +4,7 @@ import java.util.Collections;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.BlockNode;
 import com.kamijoucen.ruler.domain.ast.ForEachStatementNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -23,7 +21,7 @@ public class ForEachParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         boolean prevInLoop = manager.isInLoop();
         manager.setInLoop(true);
         try {

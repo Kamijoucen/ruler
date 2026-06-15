@@ -4,11 +4,7 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.StringInterpolationNode;
 import com.kamijoucen.ruler.domain.ast.StringNode;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
-import com.kamijoucen.ruler.component.DefaultLexical;
-import com.kamijoucen.ruler.component.TokenStreamImpl;
+
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenLocation;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -28,7 +24,7 @@ public class StringParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
 
         AssertUtil.assertToken(tokenStream, TokenType.STRING);
@@ -51,7 +47,7 @@ public class StringParser implements AtomParser {
         return new StringInterpolationNode(parts, token.location);
     }
 
-    private List<BaseNode> parseInterpolation(String text, TokenLocation location, AtomParserManager manager) {
+    private List<BaseNode> parseInterpolation(String text, TokenLocation location, ParserManager manager) {
         List<BaseNode> parts = new ArrayList<>();
         StringBuilder literal = new StringBuilder();
         int i = 0;
@@ -98,7 +94,7 @@ public class StringParser implements AtomParser {
                     literal.setLength(0);
                 }
 
-                BaseNode exprNode = parseSubExpression(exprText, location, manager);
+                BaseNode exprNode = manager.parseExpression(exprText, location);
                 parts.add(exprNode);
 
                 i = exprEnd + 1;
@@ -186,21 +182,4 @@ public class StringParser implements AtomParser {
         return sb.toString();
     }
 
-    private BaseNode parseSubExpression(String exprText, TokenLocation location, AtomParserManager manager) {
-        String fileName = location.fileName;
-        DefaultLexical lexical = new DefaultLexical(exprText, fileName, manager.getConfiguration());
-        TokenStreamImpl ts = new TokenStreamImpl(lexical);
-        ts.scan();
-        ts.nextToken();
-        AtomParserManager subManager = new AtomParserManager(ts, manager.getConfiguration());
-        try {
-            BaseNode node = subManager.parseExpression();
-            if (ts.token().type != TokenType.EOF) {
-                throw new SyntaxException("illegal string interpolation expression '" + exprText + "'", location);
-            }
-            return node;
-        } catch (NullPointerException e) {
-            throw new SyntaxException("illegal string interpolation expression '" + exprText + "'", location);
-        }
-    }
 }

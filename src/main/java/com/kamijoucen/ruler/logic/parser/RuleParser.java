@@ -4,9 +4,7 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.BlockNode;
 import com.kamijoucen.ruler.domain.ast.RuleStatementNode;
 import com.kamijoucen.ruler.domain.ast.StringNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -23,7 +21,7 @@ public class RuleParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token ruleToken = tokenStream.token();
 

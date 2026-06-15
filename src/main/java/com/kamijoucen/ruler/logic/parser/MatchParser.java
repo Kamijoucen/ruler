@@ -1,8 +1,5 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
-import com.kamijoucen.ruler.component.TokenStream;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.BlockNode;
 import com.kamijoucen.ruler.domain.ast.MatchCase;
@@ -32,7 +29,7 @@ public class MatchParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token matchToken = tokenStream.token();
 
@@ -65,7 +62,7 @@ public class MatchParser implements AtomParser {
         return new MatchNode(scrutinee, cases, matchToken.location);
     }
 
-    private MatchCase parseCase(AtomParserManager manager) {
+    private MatchCase parseCase(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         PatternNode pattern = parsePattern(manager);
 
@@ -89,7 +86,7 @@ public class MatchParser implements AtomParser {
         return new MatchCase(pattern, guard, body);
     }
 
-    private PatternNode parsePattern(AtomParserManager manager) {
+    private PatternNode parsePattern(ParserManager manager) {
         PatternNode left = parsePrimaryPattern(manager);
         TokenStream tokenStream = manager.getTokenStream();
         if (tokenStream.token().type != TokenType.PIPE) {
@@ -104,7 +101,7 @@ public class MatchParser implements AtomParser {
         return new OrPatternNode(alternatives);
     }
 
-    private PatternNode parsePrimaryPattern(AtomParserManager manager) {
+    private PatternNode parsePrimaryPattern(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token token = tokenStream.token();
 
@@ -173,7 +170,7 @@ public class MatchParser implements AtomParser {
         }
     }
 
-    private PatternNode parseArrayPattern(AtomParserManager manager) {
+    private PatternNode parseArrayPattern(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token startToken = tokenStream.token();
         AssertUtil.assertToken(startToken, TokenType.LEFT_SQUARE);
@@ -222,7 +219,7 @@ public class MatchParser implements AtomParser {
         return new ArrayPatternNode(elements, restPattern);
     }
 
-    private PatternNode parseObjectPattern(AtomParserManager manager) {
+    private PatternNode parseObjectPattern(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token startToken = tokenStream.token();
         AssertUtil.assertToken(startToken, TokenType.LEFT_BRACE);

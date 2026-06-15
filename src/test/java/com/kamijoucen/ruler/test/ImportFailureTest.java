@@ -46,6 +46,22 @@ public class ImportFailureTest {
     }
 
     @Test
+    public void nestedImportFailureIncludesImportChainTest() {
+        Map<String, String> modules = new HashMap<>();
+        modules.put("a", "import 'b' b; return 1;");
+        modules.put("b", "import 'missing' m; return 2;");
+        registerModules(modules);
+
+        try {
+            Ruler.compile("import 'a' a; return a;", configuration).run();
+            Assert.fail("Expected RulerRuntimeException");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("module 'missing' not found"));
+            Assert.assertTrue(e.getMessage().contains("import chain: a -> b -> missing"));
+        }
+    }
+
+    @Test
     public void duplicateAliasFailsAtCompileTimeTest() {
         Map<String, String> modules = new HashMap<>();
         modules.put("m1", "var value = 1;");

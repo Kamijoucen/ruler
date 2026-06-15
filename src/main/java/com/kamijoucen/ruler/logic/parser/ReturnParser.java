@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.ReturnNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
@@ -22,7 +20,7 @@ public class ReturnParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
 
         AssertUtil.assertToken(tokenStream, TokenType.KEY_RETURN);

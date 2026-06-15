@@ -37,7 +37,7 @@ public class RulerCompiler {
         tokenStream.scan();
         tokenStream.nextToken();
 
-        Parser parser = new AtomParserManager(tokenStream, configuration);
+        AtomParserManager parser = new AtomParserManager(tokenStream, configuration);
         List<BaseNode> statements = new ArrayList<>();
         while (tokenStream.token().type != TokenType.EOF) {
             if (tokenStream.token().type == TokenType.KEY_IMPORT) {
@@ -59,7 +59,7 @@ public class RulerCompiler {
         TokenStreamImpl tokenStream = new TokenStreamImpl(lexical);
         tokenStream.scan();
         tokenStream.nextToken();
-        Parser parser = new AtomParserManager(tokenStream, configuration);
+        AtomParserManager parser = new AtomParserManager(tokenStream, configuration);
         // parse import
         List<ImportNode> list = new ArrayList<>();
         while (tokenStream.token().type == TokenType.KEY_IMPORT) {

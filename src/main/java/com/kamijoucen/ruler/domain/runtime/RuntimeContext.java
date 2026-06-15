@@ -2,8 +2,8 @@ package com.kamijoucen.ruler.domain.runtime;
 
 import com.kamijoucen.ruler.domain.NodeVisitor;
 import com.kamijoucen.ruler.application.RulerConfiguration;
-import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.domain.type.RulerType;
+import com.kamijoucen.ruler.logic.eval.ImportCache;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.ClosureValue;
@@ -12,6 +12,7 @@ import com.kamijoucen.ruler.domain.value.NullValue;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 // TODO 如果后期支持多线程，这里的上下文与每个线程绑定，抽象一个对于一次执行公用的上下文
 public class RuntimeContext {
@@ -21,7 +22,7 @@ public class RuntimeContext {
     private final Map<String, ClosureValue> infixOperationSpace;
     private NodeVisitor<BaseValue> nodeVisitor;
     private NodeVisitor<RulerType> typeCheckVisitor;
-    private ImportCacheManager importCache;
+    private ImportCache importCache;
     private final StackDepthCheckOperation stackDepthCheckOperation;
 
     private boolean breakFlag = false;
@@ -33,7 +34,7 @@ public class RuntimeContext {
 
     public RuntimeContext(NodeVisitor<BaseValue> nodeVisitor,
                           NodeVisitor<RulerType> typeCheckVisitor,
-                          ImportCacheManager importCache,
+                          ImportCache importCache,
                           StackDepthCheckOperation stackDepthCheckOperation,
                           RulerConfiguration configuration) {
         this.outSpace = new HashMap<>();
@@ -53,6 +54,14 @@ public class RuntimeContext {
         this.breakFlag = breakFlag;
     }
 
+    public boolean consumeBreakFlag() {
+        if (!breakFlag) {
+            return false;
+        }
+        breakFlag = false;
+        return true;
+    }
+
     public boolean isContinueFlag() {
         return continueFlag;
     }
@@ -61,12 +70,53 @@ public class RuntimeContext {
         this.continueFlag = continueFlag;
     }
 
+    public boolean consumeContinueFlag() {
+        if (!continueFlag) {
+            return false;
+        }
+        continueFlag = false;
+        return true;
+    }
+
     public boolean isReturnFlag() {
         return returnFlag;
     }
 
     public void setReturnFlag(boolean returnFlag) {
         this.returnFlag = returnFlag;
+    }
+
+    public void clearControlFlags() {
+        breakFlag = false;
+        continueFlag = false;
+        clearReturnState();
+    }
+
+    public void clearLoopFlags() {
+        breakFlag = false;
+        continueFlag = false;
+    }
+
+    public void clearReturnState() {
+        returnFlag = false;
+        returnSpace = null;
+    }
+
+    public void startReturn(List<BaseValue> values) {
+        returnFlag = true;
+        returnSpace = values;
+    }
+
+    public <T> T withIsolatedReturn(Supplier<T> supplier) {
+        boolean outerReturnFlag = returnFlag;
+        List<BaseValue> outerReturnSpace = returnSpace;
+        clearReturnState();
+        try {
+            return supplier.get();
+        } finally {
+            returnFlag = outerReturnFlag;
+            returnSpace = outerReturnSpace;
+        }
     }
 
     public BaseValue findOutValue(String name) {
@@ -85,7 +135,7 @@ public class RuntimeContext {
         return typeCheckVisitor;
     }
 
-    public ImportCacheManager getImportCache() {
+    public ImportCache getImportCache() {
         return importCache;
     }
 
@@ -128,7 +178,7 @@ public class RuntimeContext {
         this.typeCheckVisitor = typeCheckVisitor;
     }
 
-    public void setImportCache(ImportCacheManager importCache) {
+    public void setImportCache(ImportCache importCache) {
         this.importCache = importCache;
     }
 

@@ -5,6 +5,7 @@ import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.domain.runtime.StackDepthCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.TypeScope;
+import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.IntegerValue;
 import com.kamijoucen.ruler.domain.value.NullValue;
 import org.junit.Assert;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class RuntimeContextTest {
 
@@ -89,6 +91,51 @@ public class RuntimeContextTest {
         context.clearReturnSpace();
         Assert.assertFalse(context.hasReturnValue());
         Assert.assertNull(context.getReturnSpace());
+    }
+
+    @Test
+    public void clearControlFlagsTest() {
+        context.setBreakFlag(true);
+        context.setContinueFlag(true);
+        context.startReturn(Collections.singletonList(new IntegerValue(BigInteger.valueOf(1))));
+
+        context.clearControlFlags();
+
+        Assert.assertFalse(context.isBreakFlag());
+        Assert.assertFalse(context.isContinueFlag());
+        Assert.assertFalse(context.isReturnFlag());
+        Assert.assertNull(context.getReturnSpace());
+    }
+
+    @Test
+    public void consumeLoopFlagsTest() {
+        Assert.assertFalse(context.consumeBreakFlag());
+        Assert.assertFalse(context.consumeContinueFlag());
+
+        context.setBreakFlag(true);
+        context.setContinueFlag(true);
+
+        Assert.assertTrue(context.consumeBreakFlag());
+        Assert.assertFalse(context.isBreakFlag());
+        Assert.assertTrue(context.consumeContinueFlag());
+        Assert.assertFalse(context.isContinueFlag());
+    }
+
+    @Test
+    public void withIsolatedReturnRestoresOuterReturnStateTest() {
+        context.startReturn(Collections.singletonList(new IntegerValue(BigInteger.valueOf(1))));
+
+        List<BaseValue> innerReturn = context.withIsolatedReturn(() -> {
+            Assert.assertFalse(context.isReturnFlag());
+            Assert.assertNull(context.getReturnSpace());
+            context.startReturn(Collections.singletonList(new IntegerValue(BigInteger.valueOf(2))));
+            return context.getReturnSpace();
+        });
+
+        Assert.assertEquals(BigInteger.valueOf(2), ((IntegerValue) innerReturn.get(0)).getValue());
+        Assert.assertTrue(context.isReturnFlag());
+        Assert.assertEquals(BigInteger.valueOf(1),
+                ((IntegerValue) context.getReturnSpace().get(0)).getValue());
     }
 
     @Test

@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.component.TokenStream;
+import com.kamijoucen.ruler.logic.parser.TokenStream;
 import com.kamijoucen.ruler.domain.exception.NoImplException;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;

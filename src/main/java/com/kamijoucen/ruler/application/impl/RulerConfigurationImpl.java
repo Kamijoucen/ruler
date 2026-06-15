@@ -25,6 +25,7 @@ import com.kamijoucen.ruler.domain.ConfigModule;
 import com.kamijoucen.ruler.component.option.CustomImportLoader;
 import com.kamijoucen.ruler.component.option.StdImportLoader;
 import com.kamijoucen.ruler.logic.eval.EvalVisitor;
+import com.kamijoucen.ruler.logic.eval.ImportCache;
 import com.kamijoucen.ruler.logic.function.CallFunction;
 import com.kamijoucen.ruler.logic.function.CharAtFunction;
 import com.kamijoucen.ruler.logic.function.DatetimeFunction;
@@ -36,7 +37,7 @@ import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.logic.function.TimestampFunction;
 import com.kamijoucen.ruler.logic.function.ToBooleanFunction;
 import com.kamijoucen.ruler.logic.function.ToNumberFunction;
-import com.kamijoucen.ruler.logic.function.ValueConvertFunctionProxy;
+import com.kamijoucen.ruler.component.ValueConvertFunctionProxy;
 import com.kamijoucen.ruler.logic.function.array.*;
 import com.kamijoucen.ruler.logic.function.math.*;
 import com.kamijoucen.ruler.logic.function.net.HttpRequestFunction;
@@ -48,10 +49,12 @@ import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.typecheck.TypeCheckVisitor;
 import com.kamijoucen.ruler.domain.type.RulerType;
+import com.kamijoucen.ruler.logic.util.CollectionUtil;
 import com.kamijoucen.ruler.logic.util.IOUtil;
-import com.kamijoucen.ruler.logic.util.RuntimeContextFactory;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.FunctionValue;
+import com.kamijoucen.ruler.domain.runtime.StackDepthCheckOperation;
+import com.kamijoucen.ruler.domain.runtime.TypeScope;
 
 public class RulerConfigurationImpl implements RulerConfiguration {
 
@@ -64,7 +67,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     private NodeVisitor<BaseValue> evalVisitor = new EvalVisitor();
 
-    private ImportCacheManager importCache = new ImportCacheManager();
+    private ImportCache importCache = new ImportCacheManager();
 
     private BinaryOperationFactory binaryOperationFactory = new BinaryOperationFactoryImpl();
 
@@ -264,7 +267,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
     }
 
     @Override
-    public ImportCacheManager getImportCache() {
+    public ImportCache getImportCache() {
         return importCache;
     }
 
@@ -275,7 +278,17 @@ public class RulerConfigurationImpl implements RulerConfiguration {
 
     @Override
     public RuntimeContext createDefaultRuntimeContext(Map<String, BaseValue> outSpace) {
-        return RuntimeContextFactory.create(this, outSpace);
+        RuntimeContext runtimeContext = new RuntimeContext(
+                getEvalVisitor(),
+                getTypeCheckVisitor(),
+                getImportCache(),
+                new StackDepthCheckOperation(),
+                this);
+        if (!CollectionUtil.isEmpty(outSpace)) {
+            runtimeContext.setOutSpace(outSpace);
+        }
+        runtimeContext.setTypeScope(new TypeScope(null));
+        return runtimeContext;
     }
 
     @Override
@@ -304,7 +317,7 @@ public class RulerConfigurationImpl implements RulerConfiguration {
         this.evalVisitor = evalVisitor;
     }
 
-    public void setImportCache(ImportCacheManager importCache) {
+    public void setImportCache(ImportCache importCache) {
         this.importCache = importCache;
     }
 

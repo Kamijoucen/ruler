@@ -33,7 +33,6 @@ public class CollectionUtil {
         return list.get(list.size() - 1);
     }
 
-
     public static void removeLast(List<?> list) {
         if (isNotEmpty(list)) {
             list.remove(list.size() - 1);

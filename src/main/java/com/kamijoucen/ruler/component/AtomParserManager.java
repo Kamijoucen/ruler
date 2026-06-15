@@ -20,30 +20,32 @@ import com.kamijoucen.ruler.logic.parser.IdentifierParser;
 import com.kamijoucen.ruler.logic.parser.IfParser;
 import com.kamijoucen.ruler.logic.parser.InfixParser;
 import com.kamijoucen.ruler.logic.parser.MatchParser;
+import com.kamijoucen.ruler.logic.parser.AtomParser;
+import com.kamijoucen.ruler.logic.parser.ParserManager;
 import com.kamijoucen.ruler.logic.parser.RuleParser;
+import com.kamijoucen.ruler.logic.parser.TokenStream;
 import com.kamijoucen.ruler.logic.parser.WhileParser;
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.logic.operation.BinaryOperation;
 import com.kamijoucen.ruler.domain.token.Token;
+import com.kamijoucen.ruler.domain.token.TokenLocation;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
-public class AtomParserManager implements Parser {
+public class AtomParserManager implements ParserManager {
 
     private final List<AtomParser> statementParsers = new ArrayList<>();
     private final List<AtomParser> expressionParsers = new ArrayList<>();
     private final TokenStream tokenStream;
-    private final ParseContext parseContext;
     private final RulerConfiguration configuration;
     private final IdentifierParser identifierParser = Parsers.IDENTIFIER_PARSER;
+    private boolean isRoot = true;
+    private boolean inLoop;
 
     public AtomParserManager(TokenStream tokenStream, RulerConfiguration configuration) {
         this.tokenStream = tokenStream;
         this.configuration = configuration;
-        this.parseContext = new ParseContext(configuration);
-        this.parseContext.setTypeCheckVisitor(this.configuration.getTypeCheckVisitor());
-        this.parseContext.setRoot(true);
 
         // 注册所有原子解析器
         registerParsers();
@@ -133,52 +135,54 @@ public class AtomParserManager implements Parser {
     @Override
     public BaseNode parseStatement() {
         Token token = tokenStream.token();
-        boolean isRoot = parseContext.isRoot();
+        boolean wasRoot = isRoot;
         if (token.type == TokenType.KEY_RULE || token.type == TokenType.KEY_INFIX) {
-            if (!isRoot) {
+            if (!wasRoot) {
                 throw new UnsupportedOperationException();
             }
         }
-        if (isRoot) {
-            parseContext.setRoot(false);
+        if (wasRoot) {
+            isRoot = false;
         }
 
-        // 查找适合的语句解析器并执行解析
-        BaseNode statement = null;
-        boolean isNeedSemicolon = true;
+        try {
+            // 查找适合的语句解析器并执行解析
+            BaseNode statement = null;
+            boolean isNeedSemicolon = true;
 
-        for (AtomParser parser : statementParsers) {
-            if (parser.support(tokenStream)) { // 使用整个tokenStream代替单个token
-                statement = parser.parse(this);
-                // 根据具体解析器类型确定是否需要分号
-                isNeedSemicolon = needSemicolon(parser);
-                break;
+            for (AtomParser parser : statementParsers) {
+                if (parser.support(tokenStream)) { // 使用整个tokenStream代替单个token
+                    statement = parser.parse(this);
+                    // 根据具体解析器类型确定是否需要分号
+                    isNeedSemicolon = needSemicolon(parser);
+                    break;
+                }
+            }
+
+            if (statement == null) {
+                statement = parseExpression();
+            }
+
+            if (isNeedSemicolon) {
+                if (tokenStream.token().type == TokenType.SEMICOLON) {
+                    tokenStream.nextToken();
+                } else if (!tokenStream.isNewLine() && tokenStream.token().type != TokenType.EOF
+                        && tokenStream.token().type != TokenType.RIGHT_BRACE) {
+                    throw new SyntaxException("expected semicolon or newline after statement",
+                            tokenStream.token().location);
+                }
+            }
+
+            if (statement == null) {
+                throw new SyntaxException("unknown expression start '" + token.name + "'", token.location);
+            }
+
+            return statement;
+        } finally {
+            if (wasRoot) {
+                isRoot = true;
             }
         }
-
-        if (statement == null) {
-            statement = parseExpression();
-        }
-
-        if (isNeedSemicolon) {
-            if (tokenStream.token().type == TokenType.SEMICOLON) {
-                tokenStream.nextToken();
-            } else if (!tokenStream.isNewLine() && tokenStream.token().type != TokenType.EOF
-                    && tokenStream.token().type != TokenType.RIGHT_BRACE) {
-                throw new SyntaxException("expected semicolon or newline after statement",
-                        tokenStream.token().location);
-            }
-        }
-
-        if (isRoot) {
-            parseContext.setRoot(true);
-        }
-
-        if (statement == null) {
-            throw new SyntaxException("unknown expression start '" + token.name + "'", token.location);
-        }
-
-        return statement;
     }
 
     // 判断特定解析器是否需要分号
@@ -199,6 +203,29 @@ public class AtomParserManager implements Parser {
         return parseBinaryNode(0, lhs);
     }
 
+    @Override
+    public BaseNode parseExpression(String expression, TokenLocation location) {
+        DefaultLexical lexical = new DefaultLexical(expression, location.fileName, configuration);
+        TokenStreamImpl stream = new TokenStreamImpl(lexical);
+        stream.scan();
+        stream.nextToken();
+        AtomParserManager manager = new AtomParserManager(stream, configuration);
+        try {
+            BaseNode node = manager.parseExpression();
+            if (stream.token().type != TokenType.EOF) {
+                throw new SyntaxException(
+                        "illegal string interpolation expression '" + expression + "'",
+                        location);
+            }
+            return node;
+        } catch (NullPointerException e) {
+            throw new SyntaxException(
+                    "illegal string interpolation expression '" + expression + "'",
+                    location);
+        }
+    }
+
+    @Override
     public BaseNode parseBinaryNode(int expPrec, BaseNode lhs) {
         while (true) {
             Token curOpToken = tokenStream.token();
@@ -233,8 +260,7 @@ public class AtomParserManager implements Parser {
                 }
                 lhs = new AssignNode(lhs, rhs, null, lhs.getLocation());
             } else {
-                BinaryOperation operation = this.configuration.getBinaryOperationFactory()
-                        .findOperation(curOpToken.type.name());
+                BinaryOperation operation = findOperation(curOpToken.type.name());
                 Objects.requireNonNull(operation);
                 lhs = new BinaryOperationNode(curOpToken.type, curOpToken.name, lhs, rhs, operation,
                         lhs.getLocation());
@@ -242,6 +268,7 @@ public class AtomParserManager implements Parser {
         }
     }
 
+    @Override
     public BaseNode parsePrimaryExpression() {
         BaseNode node = null;
         // 使用表达式解析器解析基本表达式
@@ -276,8 +303,7 @@ public class AtomParserManager implements Parser {
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
                 tokenStream.nextToken();
 
-                BinaryOperation callOperation = configuration.getBinaryOperationFactory()
-                        .findOperation(TokenType.CALL.name());
+                BinaryOperation callOperation = findOperation(TokenType.CALL.name());
                 node = new CallNode(node, null, params, callOperation, node.getLocation());
             } else if (tokenStream.token().type == TokenType.LEFT_SQUARE) {
                 // 数组索引
@@ -289,8 +315,7 @@ public class AtomParserManager implements Parser {
                 AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);
                 tokenStream.nextToken();
 
-                BinaryOperation indexOperation = configuration.getBinaryOperationFactory()
-                        .findOperation(TokenType.INDEX.name());
+                BinaryOperation indexOperation = findOperation(TokenType.INDEX.name());
                 node = new IndexNode(node, indexNode, indexOperation, node.getLocation());
             } else {
                 // 对象属性访问
@@ -300,21 +325,22 @@ public class AtomParserManager implements Parser {
                 // only identifiers are supported for dot call
                 BaseNode nameNode = identifierParser.parse(this);
 
-                BinaryOperation dotOperation = configuration.getBinaryOperationFactory()
-                        .findOperation(TokenType.DOT.name());
+                BinaryOperation dotOperation = findOperation(TokenType.DOT.name());
                 node = new DotNode(node, nameNode, dotOperation, node.getLocation());
             }
         }
         return node;
     }
 
-    // 各种getter方法，供原子解析器使用
-    public TokenStream getTokenStream() {
-        return tokenStream;
+    @Override
+    public BinaryOperation findOperation(String operationName) {
+        return configuration.getBinaryOperationFactory().findOperation(operationName);
     }
 
-    public ParseContext getParseContext() {
-        return parseContext;
+    // 各种getter方法，供原子解析器使用
+    @Override
+    public TokenStream getTokenStream() {
+        return tokenStream;
     }
 
     public RulerConfiguration getConfiguration() {
@@ -322,12 +348,14 @@ public class AtomParserManager implements Parser {
     }
 
     // 是否处于循环内
+    @Override
     public boolean isInLoop() {
-        return parseContext.isInLoop();
+        return inLoop;
     }
 
     // 设置是否在循环内
+    @Override
     public void setInLoop(boolean inLoop) {
-        parseContext.setInLoop(inLoop);
+        this.inLoop = inLoop;
     }
 }

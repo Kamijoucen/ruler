@@ -6,6 +6,7 @@ import com.kamijoucen.ruler.domain.exception.PanicException;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.service.RulerRunner;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -75,11 +76,35 @@ public class ErrorAndLimitTest {
         compile("var a = 1; a();").run();
     }
 
+    @Test
+    public void callNonFunctionErrorIncludesLocationTest() {
+        try {
+            compile("var a = 1;\na();").run();
+            Assert.fail("Expected RulerRuntimeException");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("is not a function"));
+            Assert.assertNotNull(e.getLocation());
+            Assert.assertTrue(e.getMessage().contains("at "));
+        }
+    }
+
     // ---------- if condition non-boolean ----------
 
     @Test(expected = RulerRuntimeException.class)
     public void testIfConditionNonBoolean() {
         compile("if 1 { return 1; }").run();
+    }
+
+    @Test
+    public void whileConditionNonBooleanErrorIncludesLocationTest() {
+        try {
+            compile("var f = fun() { return 1; };\nwhile f() { return 1; }").run();
+            Assert.fail("Expected RulerRuntimeException");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("while condition must be boolean"));
+            Assert.assertNotNull(e.getLocation());
+            Assert.assertTrue(e.getMessage().contains("at "));
+        }
     }
 
     // ---------- invalid assignment target ----------

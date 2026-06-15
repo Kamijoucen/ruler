@@ -2,45 +2,13 @@ package com.kamijoucen.ruler.test;
 
 import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
 import com.kamijoucen.ruler.component.option.CustomImportLoader;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.service.RulerRunner;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class CircularImportTest {
 
-    @Test
-    public void currentBehaviorCircularImportOverflowsStackTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
-            @Override
-            public boolean match(String path) {
-                return path.startsWith("/test/");
-            }
-
-            @Override
-            public String load(String path) {
-                if ("/test/a".equals(path)) {
-                    return "import \"/test/b\" b; return 1;";
-                }
-                if ("/test/b".equals(path)) {
-                    return "import \"/test/a\" a; return 2;";
-                }
-                return null;
-            }
-        });
-
-        RulerRunner runner = Ruler.compile("import \"/test/a\" a; return a;", configuration);
-        try {
-            runner.run();
-            Assert.fail("Expected StackOverflowError for circular import");
-        } catch (StackOverflowError e) {
-            // expected
-        }
-    }
-
-    @Ignore("Known issue: circular imports recurse until StackOverflowError")
     @Test
     public void circularImportShouldFailFastTest() {
         RulerConfigurationImpl configuration = new RulerConfigurationImpl();
@@ -65,8 +33,67 @@ public class CircularImportTest {
         try {
             Ruler.compile("import \"/test/a\" a; return a;", configuration).run();
             Assert.fail("Expected a controlled circular-import exception");
-        } catch (Throwable e) {
-            Assert.assertFalse(e instanceof StackOverflowError);
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("circular import"));
+            Assert.assertTrue(e.getMessage().contains("/test/a -> /test/b -> /test/a"));
         }
+    }
+
+    @Test
+    public void selfCircularImportShouldFailFastTest() {
+        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+            @Override
+            public boolean match(String path) {
+                return "/test/self".equals(path);
+            }
+
+            @Override
+            public String load(String path) {
+                return "import \"/test/self\" self; return 1;";
+            }
+        });
+
+        try {
+            Ruler.compile("import \"/test/self\" self; return self;", configuration).run();
+            Assert.fail("Expected a controlled circular-import exception");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("/test/self -> /test/self"));
+        }
+    }
+
+    @Test
+    public void circularImportFailureDoesNotPoisonNextImportTest() {
+        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+            @Override
+            public boolean match(String path) {
+                return path.startsWith("/test/");
+            }
+
+            @Override
+            public String load(String path) {
+                if ("/test/self".equals(path)) {
+                    return "import \"/test/self\" self; return 1;";
+                }
+                if ("/test/ok".equals(path)) {
+                    return "var value = 3;";
+                }
+                return null;
+            }
+        });
+
+        try {
+            Ruler.compile("import \"/test/self\" self; return self;", configuration).run();
+            Assert.fail("Expected a controlled circular-import exception");
+        } catch (RulerRuntimeException e) {
+            Assert.assertTrue(e.getMessage().contains("circular import"));
+        }
+
+        Assert.assertEquals(3L,
+                Ruler.compile("import \"/test/ok\" ok; return ok.value;", configuration)
+                        .run()
+                        .first()
+                        .toInteger());
     }
 }

@@ -29,7 +29,8 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
     public BaseValue eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue listValue = node.getList().eval(scope, context);
         if (listValue.getType() != ValueType.ARRAY) {
-            throw new RulerRuntimeException("for-each requires an array");
+            throw new RulerRuntimeException("for-each requires an array",
+                    node.getList().getLocation());
         }
         List<BaseValue> arrayValues = ((ArrayValue) listValue).getValues();
         Token loopName = node.getLoopName();
@@ -53,11 +54,9 @@ public class ForEachStatementEval implements BaseEval<ForEachStatementNode> {
             lastValue = block.eval(forScope, context);
             if (context.isReturnFlag()) {
                 break;
-            } else if (context.isBreakFlag()) {
-                context.setBreakFlag(false);
+            } else if (context.consumeBreakFlag()) {
                 break;
-            } else if (context.isContinueFlag()) {
-                context.setContinueFlag(false);
+            } else if (context.consumeContinueFlag()) {
                 continue;
             }
         }

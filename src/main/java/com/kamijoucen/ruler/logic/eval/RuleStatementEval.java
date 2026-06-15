@@ -21,10 +21,10 @@ public class RuleStatementEval implements BaseEval<RuleStatementNode> {
         Scope ruleScope = new Scope(alias.getValue(), false, scope, null);
 
         BlockNode block = node.getBlock();
-        block.eval(ruleScope, context);
-
-        List<BaseValue> returnValues = context.getReturnSpace();
-        context.clearReturnSpace();
+        List<BaseValue> returnValues = context.withIsolatedReturn(() -> {
+            block.eval(ruleScope, context);
+            return context.getReturnSpace();
+        });
 
         if (CollectionUtil.isNotEmpty(returnValues)) {
             context.addReturnSpace(new SubRuleValue(alias.getValue(), returnValues));

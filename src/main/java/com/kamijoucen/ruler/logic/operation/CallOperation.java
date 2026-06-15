@@ -50,8 +50,8 @@ public class CallOperation implements BinaryOperation {
                     if (lhs instanceof DotNode) {
                         printObj = ((NameNode) ((DotNode) lhs).getRhs()).name.name;
                     }
-                    // TODO 优化错误信息
-                    throw new RulerRuntimeException(printObj + " is not a function");
+                    throw new RulerRuntimeException(printObj + " is not a function",
+                            lhs.getLocation());
                 }
             }
         } finally {

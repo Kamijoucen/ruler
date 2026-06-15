@@ -53,9 +53,9 @@ public class InterpreterBehaviorTest {
     public void runScriptSingleExpressionReturnsClosureWithoutConversion() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("fun(x) { return x + 1; }"), configuration);
-        interpreter.setHasImportGlobalModule(false);
 
-        List<Object> result = interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
+        List<Object> result =
+                interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(1, result.size());
         Assert.assertTrue(result.get(0) instanceof ClosureValue);
@@ -75,43 +75,36 @@ public class InterpreterBehaviorTest {
     public void runScriptSingleExpressionCanDisableGlobalModuleImport() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("listUtil.Contains(2, [1, 2, 3])"), configuration);
-        interpreter.setHasImportGlobalModule(false);
 
-        interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
+        interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
     }
 
     @Test
-    public void runScriptDisablingImplicitReturnDropsLastExpression() {
+    public void runImportModuleDropsLastExpression() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("var a = 1; a + 2;"), configuration);
-        interpreter.setHasImportGlobalModule(false);
-        interpreter.setImplicitReturn(false);
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = interpreter.runImportModule(newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void runScriptDisablingImplicitReturnDropsLastVarDefinition() {
+    public void runImportModuleDropsLastVarDefinition() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("var answer = 42;"), configuration);
-        interpreter.setHasImportGlobalModule(false);
-        interpreter.setImplicitReturn(false);
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = interpreter.runImportModule(newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
-    public void runScriptExplicitReturnStillWorksWhenImplicitReturnDisabled() {
+    public void runImportModuleKeepsExplicitReturn() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("return 42;"), configuration);
-        interpreter.setHasImportGlobalModule(false);
-        interpreter.setImplicitReturn(false);
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = interpreter.runImportModule(newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(42)), result);
     }
@@ -120,9 +113,9 @@ public class InterpreterBehaviorTest {
     public void runScriptReturnsClosureWithoutConversion() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("return fun() { return 1; };"), configuration);
-        interpreter.setHasImportGlobalModule(false);
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result =
+                interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(1, result.size());
         Assert.assertTrue(result.get(0) instanceof ClosureValue);
@@ -132,9 +125,9 @@ public class InterpreterBehaviorTest {
     public void runScriptTopLevelMultiReturnPreservesNullAndValues() {
         RulerInterpreter interpreter =
                 new RulerInterpreter(compileScriptModule("return null, 1, 'ok';"), configuration);
-        interpreter.setHasImportGlobalModule(false);
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result =
+                interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(3, result.size());
         Assert.assertNull(result.get(0));
@@ -148,14 +141,13 @@ public class InterpreterBehaviorTest {
 
         RulerInterpreter firstInterpreter =
                 new RulerInterpreter(compileScriptModule("return 7;"), configuration);
-        firstInterpreter.setHasImportGlobalModule(false);
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(7)),
-                firstInterpreter.runScript(newRuntimeRootScope(), runtimeContext));
+                firstInterpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), runtimeContext));
 
         RulerInterpreter secondInterpreter =
                 new RulerInterpreter(compileScriptModule("var a = 1; a + 2;"), configuration);
-        secondInterpreter.setHasImportGlobalModule(false);
-        List<Object> result = secondInterpreter.runScript(newRuntimeRootScope(), runtimeContext);
+        List<Object> result =
+                secondInterpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), runtimeContext);
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(3)), result);
         Assert.assertFalse(runtimeContext.isReturnFlag());
@@ -169,17 +161,14 @@ public class InterpreterBehaviorTest {
 
         RulerInterpreter defineInterpreter =
                 new RulerInterpreter(compileStatementModule("fun f() { var x = 1; return x + 1; }"), configuration);
-        defineInterpreter.setHasImportGlobalModule(false);
         defineInterpreter.runStatement(runScope, runtimeContext);
 
         RulerInterpreter returnInterpreter =
                 new RulerInterpreter(compileStatementModule("return 42;"), configuration);
-        returnInterpreter.setHasImportGlobalModule(false);
         Assert.assertEquals(1, returnInterpreter.runStatement(runScope, runtimeContext).size());
 
         RulerInterpreter callInterpreter =
                 new RulerInterpreter(compileStatementModule("f();"), configuration);
-        callInterpreter.setHasImportGlobalModule(false);
         List<Object> result = callInterpreter.runStatement(runScope, runtimeContext);
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);

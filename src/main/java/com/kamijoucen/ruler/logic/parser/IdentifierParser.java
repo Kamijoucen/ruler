@@ -3,9 +3,7 @@ package com.kamijoucen.ruler.logic.parser;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.NameNode;
 import com.kamijoucen.ruler.domain.ast.OutNameNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -22,7 +20,7 @@ public class IdentifierParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         Token token = manager.getTokenStream().token();
         BaseNode nameNode;
         if (token.type == TokenType.IDENTIFIER) {

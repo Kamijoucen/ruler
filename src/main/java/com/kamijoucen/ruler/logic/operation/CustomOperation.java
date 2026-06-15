@@ -29,10 +29,7 @@ public class CustomOperation implements BinaryOperation {
         BaseValue rValue = rhs.eval(scope, context);
 
         VirtualNode virtualNode = new VirtualNode(params[0]);
-        BaseValue returnValue = callOperation.invoke(virtualNode, null, scope, context, lValue, rValue);
-        context.setReturnFlag(false);
-        context.clearReturnSpace();
-        return returnValue;
+        return callOperation.invoke(virtualNode, null, scope, context, lValue, rValue);
     }
 
 }

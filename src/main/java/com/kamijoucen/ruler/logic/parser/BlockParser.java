@@ -2,9 +2,7 @@ package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
@@ -23,7 +21,7 @@ public class BlockParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token lToken = tokenStream.token();
         AssertUtil.assertToken(lToken, TokenType.LEFT_BRACE);

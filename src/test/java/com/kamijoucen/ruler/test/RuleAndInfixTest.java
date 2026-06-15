@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import com.kamijoucen.ruler.domain.parameter.SubRuleResultValue;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class RuleAndInfixTest {
@@ -55,24 +54,40 @@ public class RuleAndInfixTest {
     }
 
     @Test
-    public void currentBehaviorRuleReturnFlagLeaksAcrossRulesTest() {
-        // Current behavior: RuleStatementEval leaves returnFlag set, so later rules are skipped.
-        String script = "rule 'a' { return 1; } rule 'b' { return 2; }";
-        RulerRunner runner = compile(script);
-        RulerResult r = runner.run();
-        Assert.assertEquals(1, r.size());
-        SubRuleResultValue srv = (SubRuleResultValue) r.first().getValue();
-        Assert.assertEquals("a", srv.getName());
-    }
-
-    @Ignore("Known issue: RuleStatementEval leaves returnFlag set after a rule returns")
-    @Test
     public void multipleRulesShouldBothExecuteTest() {
         String script = "rule 'a' { return 1; } rule 'b' { return 2; }";
         RulerResult r = compile(script).run();
         Assert.assertEquals(2, r.size());
-        Assert.assertEquals("a", ((SubRuleResultValue) r.getResult().get(0).getValue()).getName());
-        Assert.assertEquals("b", ((SubRuleResultValue) r.getResult().get(1).getValue()).getName());
+        SubRuleResultValue first = (SubRuleResultValue) r.getResult().get(0).getValue();
+        SubRuleResultValue second = (SubRuleResultValue) r.getResult().get(1).getValue();
+        Assert.assertEquals("a", first.getName());
+        Assert.assertEquals("b", second.getName());
+        Assert.assertEquals(java.math.BigInteger.valueOf(1), first.getValues().get(0));
+        Assert.assertEquals(java.math.BigInteger.valueOf(2), second.getValues().get(0));
+    }
+
+    @Test
+    public void ruleReturnDoesNotStopFollowingStatementsTest() {
+        String script = "rule 'a' { return 1; } var value = 2; rule 'b' { return value; }";
+        RulerResult r = compile(script).run();
+        Assert.assertEquals(2, r.size());
+        SubRuleResultValue second = (SubRuleResultValue) r.getResult().get(1).getValue();
+        Assert.assertEquals("b", second.getName());
+        Assert.assertEquals(java.math.BigInteger.valueOf(2), second.getValues().get(0));
+    }
+
+    @Test
+    public void closureCallBetweenRulesDoesNotClearPreviousRuleResultTest() {
+        String script = "rule 'a' { return 1; }"
+                + "var f = fun() { return 9; };"
+                + "var ignored = f();"
+                + "rule 'b' { return 2; }";
+        RulerResult r = compile(script).run();
+        Assert.assertEquals(2, r.size());
+        SubRuleResultValue first = (SubRuleResultValue) r.getResult().get(0).getValue();
+        SubRuleResultValue second = (SubRuleResultValue) r.getResult().get(1).getValue();
+        Assert.assertEquals("a", first.getName());
+        Assert.assertEquals("b", second.getName());
     }
 
     @Test

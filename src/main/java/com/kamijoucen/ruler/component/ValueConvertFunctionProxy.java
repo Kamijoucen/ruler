@@ -1,5 +1,4 @@
-package com.kamijoucen.ruler.logic.function;
-
+package com.kamijoucen.ruler.component;
 
 import com.kamijoucen.ruler.application.RulerConfiguration;
 import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
@@ -8,6 +7,7 @@ import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
 import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
+import com.kamijoucen.ruler.logic.function.RulerFunction;
 
 public class ValueConvertFunctionProxy implements RulerFunction {
 
@@ -53,5 +53,4 @@ public class ValueConvertFunctionProxy implements RulerFunction {
         ValueConvert convert = configuration.getValueConvertManager().getConverter(baseValue.getType());
         return convert.baseToReal(baseValue, configuration);
     }
-
 }

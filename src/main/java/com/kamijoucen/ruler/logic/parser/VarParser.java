@@ -2,9 +2,7 @@ package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.VariableDefineNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.ast.NameNode;
 import com.kamijoucen.ruler.domain.common.Constant;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
@@ -25,7 +23,7 @@ public class VarParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token varToken = tokenStream.token();
 

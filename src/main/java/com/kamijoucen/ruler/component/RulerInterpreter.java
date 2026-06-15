@@ -7,7 +7,6 @@ import com.kamijoucen.ruler.domain.parameter.RulerParameter;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
-import com.kamijoucen.ruler.logic.util.ConvertUtil;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.NullValue;
 import com.kamijoucen.ruler.domain.value.ValueType;
@@ -15,6 +14,7 @@ import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +22,6 @@ public class RulerInterpreter {
 
     private final RulerModule module;
     private final transient RulerConfiguration configuration;
-    private boolean hasImportGlobalModule = true;
-    private boolean implicitReturn = true;
 
     public RulerInterpreter(RulerModule module, RulerConfiguration configuration) {
         this.module = module;
@@ -31,12 +29,12 @@ public class RulerInterpreter {
     }
 
     public List<Object> runStatement(Scope runScope, RuntimeContext runtimeContext) {
-        clearControlFlags(runtimeContext);
+        runtimeContext.clearControlFlags();
         List<BaseValue> values = new ArrayList<>();
         for (BaseNode statement : module.getStatements()) {
             BaseValue value = statement.eval(runScope, runtimeContext);
             values.add(value);
-            clearControlFlags(runtimeContext);
+            runtimeContext.clearControlFlags();
         }
         if (CollectionUtil.isEmpty(values)) {
             return Collections.emptyList();
@@ -49,10 +47,26 @@ public class RulerInterpreter {
     }
 
     public List<Object> runScript(Scope runScope, RuntimeContext runtimeContext) {
+        return runScript(runScope, runtimeContext, true, true);
+    }
+
+    public List<Object> runScriptWithoutGlobalImports(Scope runScope, RuntimeContext runtimeContext) {
+        return runScript(runScope, runtimeContext, false, true);
+    }
+
+    public List<Object> runImportModule(Scope runScope, RuntimeContext runtimeContext) {
+        return runScript(runScope, runtimeContext, false, false);
+    }
+
+    private List<Object> runScript(
+            Scope runScope,
+            RuntimeContext runtimeContext,
+            boolean includeGlobalModules,
+            boolean implicitReturn) {
         List<BaseNode> userStatements = module.getStatements();
         List<BaseNode> allNode = new ArrayList<>(
                 userStatements.size() + configuration.getGlobalImportModules().size());
-        if (hasImportGlobalModule) {
+        if (includeGlobalModules) {
             allNode.addAll(configuration.getGlobalImportModules());
         }
         allNode.addAll(userStatements);
@@ -66,9 +80,8 @@ public class RulerInterpreter {
             }
         }
         boolean wasReturn = runtimeContext.isReturnFlag();
-        runtimeContext.setReturnFlag(false);
         List<BaseValue> returnValue = runtimeContext.getReturnSpace();
-        runtimeContext.clearReturnSpace();
+        runtimeContext.clearReturnState();
 
         if (implicitReturn && !wasReturn && hasUserStatement && CollectionUtil.isEmpty(returnValue)) {
             returnValue = Collections.singletonList(lastVal);
@@ -100,33 +113,26 @@ public class RulerInterpreter {
         return convert.baseToReal(baseValue, configuration);
     }
 
-    private void clearControlFlags(RuntimeContext runtimeContext) {
-        runtimeContext.setBreakFlag(false);
-        runtimeContext.setContinueFlag(false);
-        runtimeContext.setReturnFlag(false);
-        runtimeContext.clearReturnSpace();
-    }
-
     public List<Object> runScript(List<RulerParameter> param, Scope runScope) {
-        Map<String, BaseValue> values = ConvertUtil.convertParamToBase(param, configuration);
+        Map<String, BaseValue> values = convertParamToBase(param);
         RuntimeContext runtimeContext = configuration.createDefaultRuntimeContext(values);
         return this.runScript(runScope, runtimeContext);
     }
 
-    public Boolean getHasImportGlobalModule() {
-        return hasImportGlobalModule;
-    }
-
-    public void setHasImportGlobalModule(boolean hasImportGlobalModule) {
-        this.hasImportGlobalModule = hasImportGlobalModule;
-    }
-
-    public boolean isImplicitReturn() {
-        return implicitReturn;
-    }
-
-    public void setImplicitReturn(boolean implicitReturn) {
-        this.implicitReturn = implicitReturn;
+    private Map<String, BaseValue> convertParamToBase(List<RulerParameter> params) {
+        if (CollectionUtil.isEmpty(params)) {
+            return Collections.emptyMap();
+        }
+        Map<String, BaseValue> values = new HashMap<>();
+        for (RulerParameter param : params) {
+            ValueConvert convert = configuration.getValueConvertManager().getConverter(param.getType());
+            if (convert == null) {
+                continue;
+            }
+            BaseValue baseValue = convert.realToBase(param.getValue(), configuration);
+            values.put(param.getName(), baseValue);
+        }
+        return values;
     }
 
 }

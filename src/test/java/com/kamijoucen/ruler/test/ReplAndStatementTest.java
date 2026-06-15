@@ -30,7 +30,6 @@ public class ReplAndStatementTest {
         RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", code), configuration);
         com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileStatement();
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        interpreter.setHasImportGlobalModule(false);
         return interpreter.runStatement(runScope, runtimeContext);
     }
 
@@ -38,8 +37,7 @@ public class ReplAndStatementTest {
         RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", code), configuration);
         com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileScript();
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        interpreter.setHasImportGlobalModule(false);
-        return interpreter.runScript(runScope, runtimeContext);
+        return interpreter.runScriptWithoutGlobalImports(runScope, runtimeContext);
     }
 
     // ---------- compile statement basic ----------
@@ -100,7 +98,6 @@ public class ReplAndStatementTest {
         RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", "var a = 1; var b = 2; a + b;"), configuration);
         com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileStatement();
         RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        interpreter.setHasImportGlobalModule(false);
         List<Object> result = interpreter.runStatement(runScope, runtimeContext);
         Assert.assertEquals(3, result.size());
         Assert.assertEquals(java.math.BigInteger.valueOf(1), result.get(0));

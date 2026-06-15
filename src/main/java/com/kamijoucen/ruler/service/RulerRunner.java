@@ -7,7 +7,8 @@ import com.kamijoucen.ruler.domain.parameter.RuleResultValue;
 import com.kamijoucen.ruler.domain.parameter.RulerParameter;
 import com.kamijoucen.ruler.domain.parameter.RulerResult;
 import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.logic.util.ParamTypePreProcess;
+import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.domain.value.convert.ValueConvert;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -52,8 +53,38 @@ public class RulerRunner implements Serializable {
         if (param == null) {
             param = Collections.emptyMap();
         }
-        List<RulerParameter> parameter = ParamTypePreProcess.process(configuration, param);
+        List<RulerParameter> parameter = processParamTypes(param);
         return run(parameter);
+    }
+
+    private List<RulerParameter> processParamTypes(Map<String, Object> param) {
+        if (param.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<RulerParameter> list = new ArrayList<>(param.size());
+        for (Map.Entry<String, Object> entry : param.entrySet()) {
+            list.add(processOneParam(entry));
+        }
+        return list;
+    }
+
+    private RulerParameter processOneParam(Map.Entry<String, Object> entry) {
+        Object value = entry.getValue();
+        if (value == null) {
+            return new RulerParameter(ValueType.NULL, entry.getKey(), null);
+        }
+        if (value.getClass().isArray()) {
+            return new RulerParameter(ValueType.ARRAY, entry.getKey(), value);
+        }
+        if (value instanceof List) {
+            return new RulerParameter(ValueType.ARRAY, entry.getKey(), value);
+        }
+
+        ValueConvert convert = configuration.getValueConvertManager().getConverter(value);
+        if (convert == null) {
+            throw new IllegalArgumentException("unsupported parameter type: " + value.getClass());
+        }
+        return new RulerParameter(convert.getType(), entry.getKey(), value);
     }
 
     public RulerConfiguration getConfiguration() {

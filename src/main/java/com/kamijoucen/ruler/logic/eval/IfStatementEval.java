@@ -17,7 +17,8 @@ public class IfStatementEval implements BaseEval<IfStatementNode> {
     public BaseValue eval(IfStatementNode node, Scope scope, RuntimeContext context) {
         BaseValue conditionValue = node.getCondition().eval(scope, context);
         if (conditionValue.getType() != ValueType.BOOL) {
-            throw new RulerRuntimeException("if condition must be boolean");
+            throw new RulerRuntimeException("if condition must be boolean",
+                    node.getCondition().getLocation());
         }
         BoolValue boolValue = (BoolValue) conditionValue;
         if (boolValue.getValue()) {

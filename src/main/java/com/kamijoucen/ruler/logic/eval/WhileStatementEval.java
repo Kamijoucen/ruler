@@ -4,12 +4,14 @@ import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.WhileStatementNode;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.domain.common.QuadConsumer;
+import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.domain.runtime.LoopCountCheckOperation;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
 import com.kamijoucen.ruler.domain.value.BaseValue;
 import com.kamijoucen.ruler.domain.value.BoolValue;
 import com.kamijoucen.ruler.domain.value.NullValue;
+import com.kamijoucen.ruler.domain.value.ValueType;
 
 public class WhileStatementEval implements BaseEval<WhileStatementNode> {
 
@@ -33,20 +35,27 @@ public class WhileStatementEval implements BaseEval<WhileStatementNode> {
             check = blankEval;
         }
         BaseValue lastValue = NullValue.INSTANCE;
-        while (((BoolValue) node.getCondition().eval(scope, context)).getValue()) {
+        while (evalCondition(node, scope, context)) {
             check.accept(loopCountCheckOperation, node, scope, context);
             lastValue = block.eval(scope, context);
             if (context.isReturnFlag()) {
                 break;
-            } else if (context.isBreakFlag()) {
-                context.setBreakFlag(false);
+            } else if (context.consumeBreakFlag()) {
                 break;
-            } else if (context.isContinueFlag()) {
-                context.setContinueFlag(false);
+            } else if (context.consumeContinueFlag()) {
                 continue;
             }
         }
         return lastValue;
+    }
+
+    private boolean evalCondition(WhileStatementNode node, Scope scope, RuntimeContext context) {
+        BaseValue conditionValue = node.getCondition().eval(scope, context);
+        if (conditionValue.getType() != ValueType.BOOL) {
+            throw new RulerRuntimeException("while condition must be boolean",
+                    node.getCondition().getLocation());
+        }
+        return ((BoolValue) conditionValue).getValue();
     }
 
 }

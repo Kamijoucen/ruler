@@ -1,12 +1,7 @@
 package com.kamijoucen.ruler.logic.util;
 
 import com.kamijoucen.ruler.domain.ast.ImportNode;
-import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
-import com.kamijoucen.ruler.component.ParseContext;
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.type.RulerType;
-import com.kamijoucen.ruler.domain.type.TypeKind;
 import com.kamijoucen.ruler.domain.value.ValueType;
 
 import java.util.HashSet;
@@ -32,13 +27,6 @@ public class SyntaxCheckUtil {
                     throw new SyntaxException("invalid character in import path");
                 }
             }
-        }
-    }
-
-    public static void binaryTypeCheck(BinaryOperationNode node, ParseContext parseContext, RuntimeContext context) {
-        RulerType typeVal = parseContext.getTypeCheckVisitor().eval(node, null, context);
-        if (typeVal.getKind() == TypeKind.FAILURE) {
-            throw new SyntaxException("type error: " + node);
         }
     }
 

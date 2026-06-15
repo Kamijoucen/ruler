@@ -3,9 +3,7 @@ package com.kamijoucen.ruler.logic.parser;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
 import com.kamijoucen.ruler.domain.ast.UnaryOperationNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.logic.operation.BinaryOperation;
 import com.kamijoucen.ruler.logic.operation.UnaryAddOperation;
@@ -28,7 +26,7 @@ public class UnaryExpressionParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token token = tokenStream.token();
         tokenStream.nextToken();
@@ -41,8 +39,7 @@ public class UnaryExpressionParser implements AtomParser {
                 token.location
             );
         } else if (token.type == TokenType.NOT) {
-            BinaryOperation operation = manager.getConfiguration().getBinaryOperationFactory()
-                    .findOperation(TokenType.NOT.name());
+            BinaryOperation operation = manager.findOperation(TokenType.NOT.name());
             Objects.requireNonNull(operation);
             return new BinaryOperationNode(
                 TokenType.NOT,

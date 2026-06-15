@@ -8,8 +8,8 @@ import com.kamijoucen.ruler.component.CustomImportLoaderManager;
 
 import com.kamijoucen.ruler.domain.ast.ImportNode;
 import com.kamijoucen.ruler.domain.NodeVisitor;
-import com.kamijoucen.ruler.component.ImportCacheManager;
 import com.kamijoucen.ruler.domain.type.RulerType;
+import com.kamijoucen.ruler.logic.eval.ImportCache;
 import com.kamijoucen.ruler.logic.function.RulerFunction;
 import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
 import com.kamijoucen.ruler.domain.runtime.Scope;
@@ -34,7 +34,7 @@ public interface RulerConfiguration {
 
     NodeVisitor<RulerType> getTypeCheckVisitor();
 
-    ImportCacheManager getImportCache();
+    ImportCache getImportCache();
 
     BinaryOperationFactory getBinaryOperationFactory();
 

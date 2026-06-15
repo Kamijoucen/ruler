@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.logic.parser.TokenStream;
 
 public class TokenStreamImpl implements TokenStream {
 

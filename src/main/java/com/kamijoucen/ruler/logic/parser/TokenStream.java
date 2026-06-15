@@ -1,4 +1,4 @@
-package com.kamijoucen.ruler.component;
+package com.kamijoucen.ruler.logic.parser;
 
 import com.kamijoucen.ruler.domain.token.Token;
 
@@ -19,5 +19,4 @@ public interface TokenStream {
     void rollBackToken(int step);
 
     boolean isNewLine();
-
 }

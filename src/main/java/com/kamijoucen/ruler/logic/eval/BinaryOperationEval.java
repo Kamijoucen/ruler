@@ -22,7 +22,8 @@ public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
         if (operation instanceof CustomOperation) {
             ClosureValue fun = context.getInfixOperation(node.getOpName());
             if (fun == null) {
-                throw new RulerRuntimeException("Custom infix not found: '" + node.getOpName() + "'");
+                throw new RulerRuntimeException("Custom infix not found: '" + node.getOpName() + "'",
+                        node.getLocation());
             }
             return operation.invoke(node.getLhs(), node.getRhs(), scope, context, fun);
         }

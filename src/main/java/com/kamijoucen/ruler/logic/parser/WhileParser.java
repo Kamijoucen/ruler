@@ -3,9 +3,7 @@ package com.kamijoucen.ruler.logic.parser;
 import com.kamijoucen.ruler.domain.ast.BaseNode;
 import com.kamijoucen.ruler.domain.ast.BlockNode;
 import com.kamijoucen.ruler.domain.ast.WhileStatementNode;
-import com.kamijoucen.ruler.component.TokenStream;
-import com.kamijoucen.ruler.component.AtomParser;
-import com.kamijoucen.ruler.component.AtomParserManager;
+
 import com.kamijoucen.ruler.domain.exception.SyntaxException;
 import com.kamijoucen.ruler.domain.token.Token;
 import com.kamijoucen.ruler.domain.token.TokenType;
@@ -26,7 +24,7 @@ public class WhileParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(AtomParserManager manager) {
+    public BaseNode parse(ParserManager manager) {
         boolean prevInLoop = manager.isInLoop();
         manager.setInLoop(true);
         try {
@@ -58,7 +56,7 @@ public class WhileParser implements AtomParser {
     }
 
     // 解析代码块
-    private BaseNode parseBlock(AtomParserManager manager) {
+    private BaseNode parseBlock(ParserManager manager) {
         TokenStream tokenStream = manager.getTokenStream();
         Token lToken = tokenStream.token();
         AssertUtil.assertToken(lToken, TokenType.LEFT_BRACE);

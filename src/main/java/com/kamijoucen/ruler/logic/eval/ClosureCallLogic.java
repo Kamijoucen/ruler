@@ -43,28 +43,26 @@ public final class ClosureCallLogic {
                     callScope.putLocal(defParamNode.getName().name.name, params[i]);
                 }
             } else {
-                throw new RulerRuntimeException("unsupported parameter node type");
+                throw new RulerRuntimeException("unsupported parameter node type",
+                        paramNode.getLocation());
             }
         }
         // call function
-        BaseValue blockVal = closure.getBlock().eval(callScope, context);
-        // get return value
-        BaseValue result;
-        if (context.isReturnFlag()) {
-            List<BaseValue> returnSpace = context.getReturnSpace();
-            if (CollectionUtil.isEmpty(returnSpace)) {
-                result = NullValue.INSTANCE;
-            } else if (returnSpace.size() == 1) {
-                result = returnSpace.get(0);
-            } else {
-                result = new ArrayValue(returnSpace);
+        return context.withIsolatedReturn(() -> {
+            BaseValue blockVal = closure.getBlock().eval(callScope, context);
+            // get return value
+            if (context.isReturnFlag()) {
+                List<BaseValue> returnSpace = context.getReturnSpace();
+                if (CollectionUtil.isEmpty(returnSpace)) {
+                    return NullValue.INSTANCE;
+                } else if (returnSpace.size() == 1) {
+                    return returnSpace.get(0);
+                } else {
+                    return new ArrayValue(returnSpace);
+                }
             }
-        } else {
-            result = blockVal;
-        }
-        context.setReturnFlag(false);
-        context.clearReturnSpace();
-        return result;
+            return blockVal;
+        });
     }
 
 }
