@@ -1,17 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
-import com.kamijoucen.ruler.domain.ast.UnaryOperationNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.logic.operation.BinaryOperation;
-import com.kamijoucen.ruler.logic.operation.UnaryAddOperation;
-import com.kamijoucen.ruler.logic.operation.UnarySubOperation;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BinaryOperationNode;
+import com.kamijoucen.ruler.types.ast.UnaryOperationNode;
 
-import java.util.Objects;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
+
 
 /**
  * 一元运算符解析器（如+, -, !）
@@ -26,27 +25,23 @@ public class UnaryExpressionParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token token = tokenStream.token();
         tokenStream.nextToken();
 
         if (token.type == TokenType.ADD || token.type == TokenType.SUB) {
             return new UnaryOperationNode(
                 token.type,
-                manager.parsePrimaryExpression(),
-                token.type == TokenType.ADD ? new UnaryAddOperation() : new UnarySubOperation(),
+                Parser.parsePrimaryExpression(state),
                 token.location
             );
         } else if (token.type == TokenType.NOT) {
-            BinaryOperation operation = manager.findOperation(TokenType.NOT.name());
-            Objects.requireNonNull(operation);
             return new BinaryOperationNode(
                 TokenType.NOT,
                 TokenType.NOT.name(),
-                manager.parsePrimaryExpression(),
+                Parser.parsePrimaryExpression(state),
                 null,
-                operation,
                 token.location
             );
         } else {

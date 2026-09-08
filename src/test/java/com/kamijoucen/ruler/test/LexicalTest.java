@@ -1,31 +1,21 @@
 package com.kamijoucen.ruler.test;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.kamijoucen.ruler.component.DefaultLexical;
-import com.kamijoucen.ruler.application.RulerConfiguration;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.logic.lexer.Lexer;
+import com.kamijoucen.ruler.types.lexer.LexerState;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 
 public class LexicalTest {
-
-    private RulerConfiguration configuration;
-    
-    // init config
-    @Before
-    public void init() {
-        configuration = new RulerConfigurationImpl();
-    }
 
     // 三字符符号分词测试
     @Test
     public void strictNeTokenTest() {
         String s = "!==";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.STRICT_NE);
 
     }
@@ -34,8 +24,8 @@ public class LexicalTest {
     @Test
     public void strictEqTokenTest() {
         String s = "===";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.STRICT_EQ);
     }
 
@@ -43,8 +33,8 @@ public class LexicalTest {
     @Test
     public void neTokenTest() {
         String s = "!=";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.NE);
     }
 
@@ -52,8 +42,8 @@ public class LexicalTest {
     @Test
     public void eqTokenTest() {
         String s = "==";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.EQ);
     }
 
@@ -61,8 +51,8 @@ public class LexicalTest {
     @Test
     public void plusTokenTest() {
         String s = "+";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.ADD);
     }
 
@@ -70,8 +60,8 @@ public class LexicalTest {
     @Test
     public void minusTokenTest() {
         String s = "-";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.SUB);
     }
 
@@ -79,8 +69,8 @@ public class LexicalTest {
     @Test
     public void multiplyTokenTest() {
         String s = "*";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.MUL);
     }
 
@@ -88,8 +78,8 @@ public class LexicalTest {
     @Test
     public void divideTokenTest() {
         String s = "/";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.DIV);
     }
 
@@ -97,8 +87,8 @@ public class LexicalTest {
     @Test
     public void incTokenTest() {
         String s = "++";
-        DefaultLexical lexical = new DefaultLexical(s, null, configuration);
-        Token nextToken = lexical.nextToken();
+        LexerState lexical = new LexerState(s, null);
+        Token nextToken = Lexer.nextToken(lexical);
         Assert.assertEquals(nextToken.type, TokenType.STRING_ADD);
     }
 

@@ -1,13 +1,13 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.MatchCase;
-import com.kamijoucen.ruler.domain.ast.MatchNode;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.BoolValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.types.ast.MatchCase;
+import com.kamijoucen.ruler.types.ast.MatchNode;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.BoolValue;
+import com.kamijoucen.ruler.types.value.ValueType;
 import com.kamijoucen.ruler.logic.BaseEval;
 import com.kamijoucen.ruler.logic.util.PatternMatcher;
 
@@ -17,7 +17,7 @@ public class MatchEval implements BaseEval<MatchNode> {
 
     @Override
     public BaseValue eval(MatchNode node, Scope scope, RuntimeContext context) {
-        BaseValue scrutineeValue = node.getScrutinee().eval(scope, context);
+        BaseValue scrutineeValue = EvalVisitor.evaluate(node.getScrutinee(), scope, context);
 
         for (MatchCase matchCase : node.getCases()) {
             Map<String, BaseValue> bindings = PatternMatcher.match(
@@ -29,7 +29,7 @@ public class MatchEval implements BaseEval<MatchNode> {
                 }
 
                 if (matchCase.getGuard() != null) {
-                    BaseValue guardValue = matchCase.getGuard().eval(caseScope, context);
+                    BaseValue guardValue = EvalVisitor.evaluate(matchCase.getGuard(), caseScope, context);
                     if (guardValue.getType() != ValueType.BOOL) {
                         throw new RulerRuntimeException(
                                 "guard expression must return boolean",
@@ -40,7 +40,7 @@ public class MatchEval implements BaseEval<MatchNode> {
                     }
                 }
 
-                return matchCase.getBody().eval(caseScope, context);
+                return EvalVisitor.evaluate(matchCase.getBody(), caseScope, context);
             }
         }
 

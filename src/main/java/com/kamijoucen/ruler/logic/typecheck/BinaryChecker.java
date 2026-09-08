@@ -1,17 +1,17 @@
 package com.kamijoucen.ruler.logic.typecheck;
 
-import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.token.TokenType;
-import com.kamijoucen.ruler.domain.type.*;
+import com.kamijoucen.ruler.types.ast.BinaryOperationNode;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.token.TokenType;
+import com.kamijoucen.ruler.types.typing.*;
 
 public class BinaryChecker {
 
     public RulerType eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        RulerType lhs = node.getLhs().typeCheck(scope, context);
-        RulerType rhs = node.getRhs().typeCheck(scope, context);
+        RulerType lhs = TypeCheckVisitor.check(node.getLhs(), scope, context);
+        RulerType rhs = TypeCheckVisitor.check(node.getRhs(), scope, context);
 
         if (lhs.getKind() == TypeKind.UNKNOWN || rhs.getKind() == TypeKind.UNKNOWN) {
             return UnknownType.INSTANCE;

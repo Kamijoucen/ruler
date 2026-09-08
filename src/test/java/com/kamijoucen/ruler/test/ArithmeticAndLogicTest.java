@@ -1,20 +1,20 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.RulerRunner;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.RulerRunner;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ArithmeticAndLogicTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
     }
 
     private RulerRunner compile(String text) {
@@ -95,12 +95,12 @@ public class ArithmeticAndLogicTest {
         Assert.assertEquals(14L, r.first().toInteger());
     }
 
-    @Test(expected = com.kamijoucen.ruler.domain.exception.SyntaxException.class)
+    @Test(expected = com.kamijoucen.ruler.types.exception.SyntaxException.class)
     public void testAddStringAndNumberThrows() {
         compile("'a' + 1").run();
     }
 
-    @Test(expected = com.kamijoucen.ruler.domain.exception.SyntaxException.class)
+    @Test(expected = com.kamijoucen.ruler.types.exception.SyntaxException.class)
     public void testBoolInArithmeticThrows() {
         compile("true + 1").run();
     }
@@ -211,7 +211,7 @@ public class ArithmeticAndLogicTest {
         Assert.assertTrue(compile("!false").run().first().toBoolean());
     }
 
-    @Test(expected = com.kamijoucen.ruler.domain.exception.SyntaxException.class)
+    @Test(expected = com.kamijoucen.ruler.types.exception.SyntaxException.class)
     public void testNotOnNumberThrows() {
         compile("!1").run();
     }

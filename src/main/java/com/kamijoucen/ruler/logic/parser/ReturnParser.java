@@ -1,12 +1,15 @@
 package com.kamijoucen.ruler.logic.parser;
 
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
+
 import java.util.ArrayList;
 import java.util.List;
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.ReturnNode;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.ReturnNode;
 
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 /**
@@ -20,8 +23,8 @@ public class ReturnParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
 
         AssertUtil.assertToken(tokenStream, TokenType.KEY_RETURN);
         Token returnToken = tokenStream.token();
@@ -29,13 +32,13 @@ public class ReturnParser implements AtomParser {
 
         List<BaseNode> param = new ArrayList<>();
         if (!isReturnEnd(tokenStream)) {
-            param.add(manager.parseExpression());
+            param.add(Parser.parseExpression(state));
         }
 
         while (!isReturnEnd(tokenStream)) {
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();
-            param.add(manager.parseExpression());
+            param.add(Parser.parseExpression(state));
         }
 
         return new ReturnNode(param, returnToken.location);

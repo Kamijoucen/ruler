@@ -1,0 +1,36 @@
+package com.kamijoucen.ruler.stdlib.io;
+
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.spi.RulerFunction;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+public class ReadAllText implements RulerFunction {
+
+    @Override
+    public String getName() {
+        return "ReadAll";
+    }
+
+    @Override
+    public Object call(RuntimeContext context, Scope currentScope, BaseValue self, Object... param) {
+        if (param == null || param.length == 0) {
+            return null;
+        }
+        if (!(param[0] instanceof String)) {
+            return null;
+        }
+        String path = (String) param[0];
+        try {
+            byte[] bytes = Files.readAllBytes(Paths.get(path));
+            return new String(bytes);
+        } catch (IOException e) {
+            throw new RulerRuntimeException(e.getMessage(), e);
+        }
+    }
+}

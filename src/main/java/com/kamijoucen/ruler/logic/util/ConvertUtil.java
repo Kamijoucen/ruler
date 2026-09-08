@@ -1,9 +1,11 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.DoubleValue;
-import com.kamijoucen.ruler.domain.value.StringValue;
+import com.kamijoucen.ruler.types.value.IntegerValue;
+
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.DoubleValue;
+import com.kamijoucen.ruler.types.value.StringValue;
 
 import java.math.BigDecimal;
 
@@ -25,7 +27,7 @@ public class ConvertUtil {
             return null;
         }
         if (decimal.scale() <= 0 || decimal.stripTrailingZeros().scale() <= 0) {
-            return context.getConfiguration().getIntegerNumberCache().getValue(decimal.toBigIntegerExact());
+            return IntegerValue.valueOf(decimal.toBigIntegerExact());
         }
         return new DoubleValue(decimal);
     }

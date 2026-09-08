@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.DoubleValue;
-import com.kamijoucen.ruler.domain.value.IntegerValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.DoubleValue;
+import com.kamijoucen.ruler.types.value.IntegerValue;
+import com.kamijoucen.ruler.types.value.ValueType;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;

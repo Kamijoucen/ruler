@@ -1,12 +1,15 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.RsonNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.common.Constant;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.RsonNode;
+
+import com.kamijoucen.ruler.types.common.Constant;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.util.HashMap;
@@ -33,8 +36,8 @@ public class RsonParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
 
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
         Token lToken = tokenStream.token();
@@ -54,7 +57,7 @@ public class RsonParser implements AtomParser {
 
             AssertUtil.assertToken(tokenStream, TokenType.COLON);
             tokenStream.nextToken();
-            properties.put(name.name, manager.parseExpression());
+            properties.put(name.name, Parser.parseExpression(state));
         }
 
         while (tokenStream.token().type != TokenType.RIGHT_BRACE) {
@@ -75,7 +78,7 @@ public class RsonParser implements AtomParser {
             tokenStream.nextToken();
             AssertUtil.assertToken(tokenStream, TokenType.COLON);
             tokenStream.nextToken();
-            properties.put(name.name, manager.parseExpression());
+            properties.put(name.name, Parser.parseExpression(state));
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);

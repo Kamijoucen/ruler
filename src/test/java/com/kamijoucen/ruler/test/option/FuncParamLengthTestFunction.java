@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.test.option;
 
-import com.kamijoucen.ruler.logic.function.RulerFunction;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
+import com.kamijoucen.ruler.types.spi.RulerFunction;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
 
 public class FuncParamLengthTestFunction implements RulerFunction {
 

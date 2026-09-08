@@ -1,11 +1,11 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BoolNode;
+import com.kamijoucen.ruler.types.ast.BoolNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.BoolValue;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.BoolValue;
 
 public class BooleanEval implements BaseEval<BoolNode> {
     @Override

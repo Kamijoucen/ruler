@@ -1,6 +1,6 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,10 +11,9 @@ public class IOUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(IOUtil.class);
 
-    public final static boolean[] pathFlags = new boolean[256];
-    public final static boolean[] firstIdentifierFlags = new boolean[256];
-    public final static boolean[] identifierFlags = new boolean[256];
-    public final static boolean[] numberFlags = new boolean[256];
+    private static final boolean[] pathFlags = new boolean[256];
+    private static final boolean[] firstIdentifierFlags = new boolean[256];
+    private static final boolean[] identifierFlags = new boolean[256];
 
     static {
 
@@ -24,12 +23,6 @@ public class IOUtil {
                 pathFlags[c] = false;
             } else {
                 pathFlags[c] = true;
-            }
-        }
-
-        for (char c = 0; c < numberFlags.length; ++c) {
-            if (c >= '0' && c <= '9') {
-                numberFlags[c] = true;
             }
         }
 

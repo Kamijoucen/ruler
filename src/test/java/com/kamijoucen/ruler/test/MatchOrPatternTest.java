@@ -3,19 +3,19 @@ package com.kamijoucen.ruler.test;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.api.RulerRunner;
 
 public class MatchOrPatternTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
     }
 
     private RulerRunner getRunner(String text) {

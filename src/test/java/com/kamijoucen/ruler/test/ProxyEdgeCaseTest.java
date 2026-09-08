@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.service.RulerRunner;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.api.RulerRunner;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -30,7 +30,7 @@ public class ProxyEdgeCaseTest {
                 "    }" +
                 "});" +
                 "return outerProxy.p.value;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(11, result.first().toInteger());
@@ -45,7 +45,7 @@ public class ProxyEdgeCaseTest {
                 "var p2 = Proxy(p1, {get: fun(self, name) { return self[name] + 10; }});" +
                 "var p3 = Proxy(p2, {get: fun(self, name) { return self[name] + 100; }});" +
                 "return p3.value;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         // obj.value (1) + 1 (p1) + 10 (p2) + 100 (p3) = 112
@@ -60,7 +60,7 @@ public class ProxyEdgeCaseTest {
                 "arr = Proxy(arr, {get: fun(self, name) { return self[name]; }});" +
                 "arr[0] = 99;" +
                 "return arr[0];";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(99, result.first().toInteger());
@@ -74,7 +74,7 @@ public class ProxyEdgeCaseTest {
                 "arr = Proxy(arr, {set: fun(self, name, val) { self[name] = val * 2; return val; }});" +
                 "arr[0] = 5;" +
                 "return arr[0];";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(10, result.first().toInteger());
@@ -92,7 +92,7 @@ public class ProxyEdgeCaseTest {
                 "});" +
                 "p.a = 5;" +
                 "return obj.a;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(15, result.first().toInteger());
@@ -106,7 +106,7 @@ public class ProxyEdgeCaseTest {
                 "var p1 = Proxy(obj, {get: fun(self, name) { return self[name] + 1; }});" +
                 "var p2 = Proxy(obj, {get: fun(self, name) { return self[name] + 100; }});" +
                 "return p1.value === 11 && p2.value === 110;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertTrue(result.first().toBoolean());
@@ -121,7 +121,7 @@ public class ProxyEdgeCaseTest {
                 "var wrapper = {inner: innerProxy};" +
                 "var outerProxy = Proxy(wrapper, {get: fun(self, name) { return self[name]; }});" +
                 "return outerProxy.inner.value;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         // inner.value (1) + 10 (innerProxy) = 11
@@ -135,7 +135,7 @@ public class ProxyEdgeCaseTest {
                 "var obj = {a: 1};" +
                 "var p = Proxy(obj, {get: fun(self, name) { return self[name]; }});" +
                 "return p.nonexistent === null;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertTrue(result.first().toBoolean());
@@ -148,7 +148,7 @@ public class ProxyEdgeCaseTest {
                 "var obj = {};" +
                 "var p = Proxy(obj, {get: fun(self, name) { return 'missing: ' ++ name; }});" +
                 "return p.foo;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals("missing: foo", result.first().toString());
@@ -164,7 +164,7 @@ public class ProxyEdgeCaseTest {
                 "p.a = 20;" +
                 "p.a = 30;" +
                 "return obj.a;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(30, result.first().toInteger());
@@ -177,7 +177,7 @@ public class ProxyEdgeCaseTest {
                 "var obj = {a: {b: {c: 42}}};" +
                 "var p = Proxy(obj, {get: fun(self, name) { return self[name]; }});" +
                 "return p.a.b.c;";
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile(script, configuration);
         RulerResult result = runner.run();
         Assert.assertEquals(42, result.first().toInteger());

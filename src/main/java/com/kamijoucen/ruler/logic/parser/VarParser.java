@@ -1,13 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.VariableDefineNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.ast.NameNode;
-import com.kamijoucen.ruler.domain.common.Constant;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.VariableDefineNode;
+
+import com.kamijoucen.ruler.types.ast.NameNode;
+import com.kamijoucen.ruler.types.common.Constant;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.util.Objects;
@@ -23,8 +26,8 @@ public class VarParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token varToken = tokenStream.token();
 
         // eat var
@@ -33,7 +36,7 @@ public class VarParser implements AtomParser {
         AssertUtil.assertToken(tokenStream, TokenType.IDENTIFIER);
 
         // 解析变量名
-        BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(manager);
+        BaseNode nameNode = Parsers.IDENTIFIER_PARSER.parse(state);
         Objects.requireNonNull(nameNode);
         String varName = ((NameNode) nameNode).name.name;
         if (Constant.isReservedName(varName)) {
@@ -43,7 +46,7 @@ public class VarParser implements AtomParser {
         // 检查是否有赋值
         if (tokenStream.token().type == TokenType.ASSIGN) {
             tokenStream.nextToken();
-            BaseNode expNode = manager.parseExpression();
+            BaseNode expNode = Parser.parseExpression(state);
             Objects.requireNonNull(expNode);
             return new VariableDefineNode(nameNode, expNode, varToken.location);
         } else {

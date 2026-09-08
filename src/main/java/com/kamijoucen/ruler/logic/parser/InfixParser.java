@@ -1,13 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.ClosureDefineNode;
-import com.kamijoucen.ruler.domain.ast.InfixDefinitionNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.common.Constant;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.ClosureDefineNode;
+import com.kamijoucen.ruler.types.ast.InfixDefinitionNode;
+
+import com.kamijoucen.ruler.types.common.Constant;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 import com.kamijoucen.ruler.logic.util.IOUtil;
 
@@ -22,16 +25,16 @@ public class InfixParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
+    public BaseNode parse(ParseState state) {
 
-        TokenStream tokenStream = manager.getTokenStream();
+        TokenStream tokenStream = state.tokens;
 
         AssertUtil.assertToken(tokenStream, TokenType.KEY_INFIX);
         Token infixToken = tokenStream.token();
         // eat the infix token
         tokenStream.nextToken();
         // infix operation
-        ClosureDefineNode functionNode = (ClosureDefineNode) new FunParser().parse(manager);
+        ClosureDefineNode functionNode = (ClosureDefineNode) new FunParser().parse(state);
         String infixName = functionNode.getName();
         if (IOUtil.isBlank(infixName)) {
             throw new SyntaxException("infix function name is blank!\t token=" + infixToken);

@@ -1,13 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.StringInterpolationNode;
-import com.kamijoucen.ruler.domain.ast.StringNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenLocation;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.StringInterpolationNode;
+import com.kamijoucen.ruler.types.ast.StringNode;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenLocation;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.util.ArrayList;
@@ -24,8 +27,8 @@ public class StringParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
 
         AssertUtil.assertToken(tokenStream, TokenType.STRING);
         Token token = tokenStream.token();
@@ -37,7 +40,7 @@ public class StringParser implements AtomParser {
             return new StringNode(token.name, token.location);
         }
 
-        List<BaseNode> parts = parseInterpolation(token.name, token.location, manager);
+        List<BaseNode> parts = parseInterpolation(token.name, token.location);
         if (parts == null || parts.isEmpty()) {
             return new StringNode(token.name, token.location);
         }
@@ -47,7 +50,7 @@ public class StringParser implements AtomParser {
         return new StringInterpolationNode(parts, token.location);
     }
 
-    private List<BaseNode> parseInterpolation(String text, TokenLocation location, ParserManager manager) {
+    private List<BaseNode> parseInterpolation(String text, TokenLocation location) {
         List<BaseNode> parts = new ArrayList<>();
         StringBuilder literal = new StringBuilder();
         int i = 0;
@@ -94,7 +97,7 @@ public class StringParser implements AtomParser {
                     literal.setLength(0);
                 }
 
-                BaseNode exprNode = manager.parseExpression(exprText, location);
+                BaseNode exprNode = Parser.parseExpression(exprText, location);
                 parts.add(exprNode);
 
                 i = exprEnd + 1;

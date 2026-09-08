@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.component.RulerCompiler;
-import com.kamijoucen.ruler.component.RulerInterpreter;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.module.RulerScript;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.ClosureValue;
+import com.kamijoucen.ruler.logic.compiler.RulerCompiler;
+import com.kamijoucen.ruler.logic.eval.RulerInterpreter;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.module.RulerScript;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.ClosureValue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,29 +15,25 @@ import java.util.List;
 
 public class ReplAndStatementTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
     private Scope runScope;
     private RuntimeContext runtimeContext;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
         runScope = new Scope("repl root", false, configuration.getGlobalScope(), null);
         runtimeContext = configuration.createDefaultRuntimeContext(null);
     }
 
     private List<Object> runStatement(String code) {
-        RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", code), configuration);
-        com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileStatement();
-        RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        return interpreter.runStatement(runScope, runtimeContext);
+        com.kamijoucen.ruler.types.module.RulerModule module = RulerCompiler.compileStatement(new RulerScript("repl", code), configuration);
+        return RulerInterpreter.runStatement(module, runScope, runtimeContext);
     }
 
     private List<Object> runScript(String code) {
-        RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", code), configuration);
-        com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileScript();
-        RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        return interpreter.runScriptWithoutGlobalImports(runScope, runtimeContext);
+        com.kamijoucen.ruler.types.module.RulerModule module = RulerCompiler.compileScript(new RulerScript("repl", code), configuration);
+        return RulerInterpreter.runScriptWithoutGlobalImports(module, runScope, runtimeContext);
     }
 
     // ---------- compile statement basic ----------
@@ -95,10 +91,8 @@ public class ReplAndStatementTest {
 
     @Test
     public void testMultiStatementInOneCompile() {
-        RulerCompiler compiler = new RulerCompiler(new RulerScript("repl", "var a = 1; var b = 2; a + b;"), configuration);
-        com.kamijoucen.ruler.domain.module.RulerModule module = compiler.compileStatement();
-        RulerInterpreter interpreter = new RulerInterpreter(module, configuration);
-        List<Object> result = interpreter.runStatement(runScope, runtimeContext);
+        com.kamijoucen.ruler.types.module.RulerModule module = RulerCompiler.compileStatement(new RulerScript("repl", "var a = 1; var b = 2; a + b;"), configuration);
+        List<Object> result = RulerInterpreter.runStatement(module, runScope, runtimeContext);
         Assert.assertEquals(3, result.size());
         Assert.assertEquals(java.math.BigInteger.valueOf(1), result.get(0));
         Assert.assertEquals(java.math.BigInteger.valueOf(2), result.get(1));

@@ -1,21 +1,22 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
+import com.kamijoucen.ruler.types.ast.BinaryOperationNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.exception.IllegalOperationException;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
 import com.kamijoucen.ruler.logic.operation.BinaryOperation;
+import com.kamijoucen.ruler.logic.operation.Operations;
 import com.kamijoucen.ruler.logic.operation.CustomOperation;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ClosureValue;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.ClosureValue;
 
 public class BinaryOperationEval implements BaseEval<BinaryOperationNode> {
 
     @Override
     public BaseValue eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
-        BinaryOperation operation = node.getOperation();
+        BinaryOperation operation = Operations.findOperation(node.getOp().name());
         if (operation == null) {
             throw new IllegalOperationException("Operation not supported: " + node.getOpName());
         }

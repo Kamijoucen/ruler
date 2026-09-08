@@ -1,26 +1,38 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.exception.PanicException;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.exception.PanicException;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.api.RulerRunner;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class ErrorAndLimitTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
     }
 
     private RulerRunner compile(String text) {
         return Ruler.compile(text, configuration);
+    }
+
+    @Test
+    public void unsupportedBuiltinPropertyRemainsAnInterpreterError() {
+        for (String value : new String[]{"true", "1.2"}) {
+            try {
+                compile("var value = " + value + "; return value.missing;").run();
+                Assert.fail("expected a runtime error for " + value);
+            } catch (RulerRuntimeException expected) {
+                Assert.assertEquals("value is null", expected.getMessage());
+            }
+        }
     }
 
     // ---------- max loop number ----------
@@ -118,7 +130,7 @@ public class ErrorAndLimitTest {
 
     @Test(expected = ArithmeticException.class)
     public void testDivByZeroThrows() {
-        RulerConfigurationImpl cfg = new RulerConfigurationImpl();
+        RulerConfiguration cfg = new RulerConfiguration();
         Ruler.compile("1 / 0", cfg).run();
     }
 }

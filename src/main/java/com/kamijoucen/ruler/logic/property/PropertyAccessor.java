@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.logic.property;
 
-import com.kamijoucen.ruler.domain.common.Constant;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.value.*;
-import com.kamijoucen.ruler.logic.eval.ClosureCallLogic;
+import com.kamijoucen.ruler.types.common.Constant;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.value.*;
+import com.kamijoucen.ruler.logic.eval.CallLogic;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 import java.util.Objects;
@@ -139,7 +139,7 @@ public final class PropertyAccessor {
             result = ((RsonValue) value).getFields().get(name);
         }
         if (result == null) {
-            RClass rClass = context.getConfiguration().getRClassManager().getClassValue(value.getType());
+            RClass rClass = context.getConfiguration().getClassValue(value.getType());
             Objects.requireNonNull(rClass, "class not found: " + value.getType());
             result = rClass.getProperty(name);
         }
@@ -218,10 +218,10 @@ public final class PropertyAccessor {
     }
 
     /**
-     * 调用 closure，清理 returnFlag 的工作下沉到 ClosureCallLogic
+     * 调用 closure，使用统一调用协议维护返回值和调用深度
      */
     private static BaseValue callClosure(RuntimeContext context, ClosureValue closure,
                                           BaseValue... params) {
-        return ClosureCallLogic.call(closure, null, context, params);
+        return CallLogic.callValue(closure, null, context, params);
     }
 }

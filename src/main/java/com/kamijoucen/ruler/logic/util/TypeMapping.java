@@ -1,8 +1,7 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.types.value.ValueType;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public final class TypeMapping {
@@ -10,19 +9,11 @@ public final class TypeMapping {
     private TypeMapping() {
     }
 
-    private static final Map<ValueType, String> mapping = new HashMap<>();
-
-    static {
-        mapping.put(ValueType.FUNCTION, "function");
-        mapping.put(ValueType.CLOSURE, "function");
-        mapping.put(ValueType.INTEGER, "int");
-        mapping.put(ValueType.DOUBLE, "double");
-        mapping.put(ValueType.STRING, "string");
-        mapping.put(ValueType.BOOL, "boolean");
-        mapping.put(ValueType.ARRAY, "array");
-        mapping.put(ValueType.NULL, "null");
-        mapping.put(ValueType.RSON, "object");
-    }
+    private static final Map<ValueType, String> mapping = Map.of(
+            ValueType.FUNCTION, "function", ValueType.CLOSURE, "function",
+            ValueType.INTEGER, "int", ValueType.DOUBLE, "double",
+            ValueType.STRING, "string", ValueType.BOOL, "boolean",
+            ValueType.ARRAY, "array", ValueType.NULL, "null", ValueType.RSON, "object");
 
     public static String find(ValueType type) {
         return mapping.get(type);

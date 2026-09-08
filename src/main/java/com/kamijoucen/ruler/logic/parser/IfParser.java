@@ -1,12 +1,15 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.domain.ast.IfStatementNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.IfStatementNode;
+
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.util.Collections;
@@ -24,21 +27,21 @@ public class IfParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token ifToken = tokenStream.token();
 
         AssertUtil.assertToken(ifToken, TokenType.KEY_IF);
         tokenStream.nextToken();
 
-        BaseNode condition = manager.parseExpression();
+        BaseNode condition = Parser.parseExpression(state);
         BaseNode thenBlock;
 
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            thenBlock = Parsers.BLOCK_PARSER.parse(manager);
+            thenBlock = Parsers.BLOCK_PARSER.parse(state);
         } else if (tokenStream.token().type == TokenType.COLON) {
             tokenStream.nextToken();
-            BaseNode statement = manager.parseStatement();
+            BaseNode statement = Parser.parseStatement(state);
             thenBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
         } else {
             throw new SyntaxException("expected '{' or ':' after if condition\t token=" + tokenStream.token());
@@ -48,12 +51,12 @@ public class IfParser implements AtomParser {
         if (tokenStream.token().type == TokenType.KEY_ELSE) {
             Token token = tokenStream.nextToken();
             if (token.type == TokenType.LEFT_BRACE) {
-                elseBlock = Parsers.BLOCK_PARSER.parse(manager);
+                elseBlock = Parsers.BLOCK_PARSER.parse(state);
             } else if (token.type == TokenType.KEY_IF) {
                 // 支持else if的情况
-                elseBlock = parse(manager);
+                elseBlock = parse(state);
             } else {
-                BaseNode statement = manager.parseStatement();
+                BaseNode statement = Parser.parseStatement(state);
                 elseBlock = new BlockNode(Collections.singletonList(statement), statement.getLocation());
             }
         }

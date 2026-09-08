@@ -1,13 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.domain.ast.MatchCase;
-import com.kamijoucen.ruler.domain.ast.MatchNode;
-import com.kamijoucen.ruler.domain.ast.*;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
+
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.MatchCase;
+import com.kamijoucen.ruler.types.ast.MatchNode;
+import com.kamijoucen.ruler.types.ast.*;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.math.BigDecimal;
@@ -29,14 +32,14 @@ public class MatchParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token matchToken = tokenStream.token();
 
         AssertUtil.assertToken(matchToken, TokenType.KEY_MATCH);
         tokenStream.nextToken();
 
-        BaseNode scrutinee = manager.parseExpression();
+        BaseNode scrutinee = Parser.parseExpression(state);
 
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_BRACE);
         tokenStream.nextToken();
@@ -44,7 +47,7 @@ public class MatchParser implements AtomParser {
         List<MatchCase> cases = new ArrayList<>();
         while (tokenStream.token().type != TokenType.RIGHT_BRACE
                 && tokenStream.token().type != TokenType.EOF) {
-            MatchCase matchCase = parseCase(manager);
+            MatchCase matchCase = parseCase(state);
             cases.add(matchCase);
             // 支持同一行内多 case 用分号分隔
             if (tokenStream.token().type == TokenType.SEMICOLON) {
@@ -62,14 +65,14 @@ public class MatchParser implements AtomParser {
         return new MatchNode(scrutinee, cases, matchToken.location);
     }
 
-    private MatchCase parseCase(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
-        PatternNode pattern = parsePattern(manager);
+    private MatchCase parseCase(ParseState state) {
+        TokenStream tokenStream = state.tokens;
+        PatternNode pattern = parsePattern(state);
 
         BaseNode guard = null;
         if (tokenStream.token().type == TokenType.KEY_IF) {
             tokenStream.nextToken();
-            guard = manager.parseExpression();
+            guard = Parser.parseExpression(state);
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.ARROW);
@@ -77,18 +80,18 @@ public class MatchParser implements AtomParser {
 
         BaseNode body;
         if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-            body = Parsers.BLOCK_PARSER.parse(manager);
+            body = Parsers.BLOCK_PARSER.parse(state);
         } else {
-            BaseNode stmt = manager.parseStatement();
+            BaseNode stmt = Parser.parseStatement(state);
             body = new BlockNode(Collections.singletonList(stmt), stmt.getLocation());
         }
 
         return new MatchCase(pattern, guard, body);
     }
 
-    private PatternNode parsePattern(ParserManager manager) {
-        PatternNode left = parsePrimaryPattern(manager);
-        TokenStream tokenStream = manager.getTokenStream();
+    private PatternNode parsePattern(ParseState state) {
+        PatternNode left = parsePrimaryPattern(state);
+        TokenStream tokenStream = state.tokens;
         if (tokenStream.token().type != TokenType.PIPE) {
             return left;
         }
@@ -96,13 +99,13 @@ public class MatchParser implements AtomParser {
         alternatives.add(left);
         while (tokenStream.token().type == TokenType.PIPE) {
             tokenStream.nextToken();
-            alternatives.add(parsePrimaryPattern(manager));
+            alternatives.add(parsePrimaryPattern(state));
         }
         return new OrPatternNode(alternatives);
     }
 
-    private PatternNode parsePrimaryPattern(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    private PatternNode parsePrimaryPattern(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token token = tokenStream.token();
 
         // 负数字面量模式：仅当 `-` 紧跟 INTEGER 或 DOUBLE 时解析为负数字面量模式。
@@ -125,9 +128,9 @@ public class MatchParser implements AtomParser {
 
         switch (token.type) {
             case LEFT_SQUARE:
-                return parseArrayPattern(manager);
+                return parseArrayPattern(state);
             case LEFT_BRACE:
-                return parseObjectPattern(manager);
+                return parseObjectPattern(state);
             case INTEGER:
                 tokenStream.nextToken();
                 return new LiteralPatternNode(new IntegerNode(new BigInteger(token.name), token.location));
@@ -170,8 +173,8 @@ public class MatchParser implements AtomParser {
         }
     }
 
-    private PatternNode parseArrayPattern(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    private PatternNode parseArrayPattern(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token startToken = tokenStream.token();
         AssertUtil.assertToken(startToken, TokenType.LEFT_SQUARE);
         tokenStream.nextToken();
@@ -204,7 +207,7 @@ public class MatchParser implements AtomParser {
                 break;
             }
 
-            elements.add(parsePattern(manager));
+            elements.add(parsePattern(state));
 
             if (tokenStream.token().type == TokenType.COMMA) {
                 tokenStream.nextToken();
@@ -219,8 +222,8 @@ public class MatchParser implements AtomParser {
         return new ArrayPatternNode(elements, restPattern);
     }
 
-    private PatternNode parseObjectPattern(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    private PatternNode parseObjectPattern(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token startToken = tokenStream.token();
         AssertUtil.assertToken(startToken, TokenType.LEFT_BRACE);
         tokenStream.nextToken();
@@ -270,7 +273,7 @@ public class MatchParser implements AtomParser {
             AssertUtil.assertToken(tokenStream, TokenType.COLON);
             tokenStream.nextToken();
 
-            PatternNode fieldPattern = parsePattern(manager);
+            PatternNode fieldPattern = parsePattern(state);
             fields.add(new ObjectPatternField(fieldName, fieldPattern));
 
             if (tokenStream.token().type == TokenType.COMMA) {

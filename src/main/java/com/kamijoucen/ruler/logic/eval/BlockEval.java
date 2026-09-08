@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.NullValue;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.NullValue;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ public class BlockEval implements BaseEval<BlockNode> {
         List<BaseNode> blocks = node.getBlocks();
         BaseValue lastVal = NullValue.INSTANCE;
         for (BaseNode block : blocks) {
-            lastVal = block.eval(blockScope, context);
+            lastVal = EvalVisitor.evaluate(block, blockScope, context);
             if (context.isReturnFlag() || context.isBreakFlag() || context.isContinueFlag()) {
                 break;
             }

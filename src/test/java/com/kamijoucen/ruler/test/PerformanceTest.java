@@ -10,22 +10,22 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.RulerRunner;
 
 @State(Scope.Benchmark)
 @BenchmarkMode({Mode.AverageTime, Mode.Throughput})
 public class PerformanceTest {
 
-    public static final RulerConfigurationImpl configuration;
+    public static final RulerConfiguration configuration;
 
     public static final RulerRunner addTestRunner;
 
     static {
 
         final String addScript = "var i = 0; var j = 0; while i < 100 { i = i + 1; j = j + 1 + 2 + 3 + 4+ 5 + 6+ 7; } return j;";
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
         addTestRunner = Ruler.compile(addScript, configuration);
     }
 

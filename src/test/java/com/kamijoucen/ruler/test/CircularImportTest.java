@@ -1,18 +1,52 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.component.option.CustomImportLoader;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.spi.CustomImportLoader;
+import com.kamijoucen.ruler.types.spi.RulerFunction;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.module.ConfigModule;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.api.Ruler;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CircularImportTest {
 
     @Test
+    public void nestedIndependentRunHasItsOwnImportChain() {
+        RulerConfiguration configuration = new RulerConfiguration();
+        AtomicBoolean runNested = new AtomicBoolean(true);
+        configuration.getModules().register(ConfigModule.createScriptModule(
+                "/test/shared", "var value = RunNested();"));
+        configuration.registerGlobalFunction(new RulerFunction() {
+            @Override
+            public String getName() {
+                return "RunNested";
+            }
+
+            @Override
+            public Object call(RuntimeContext context, Scope scope, BaseValue self, Object... params) {
+                if (runNested.getAndSet(false)) {
+                    return Ruler.compile("import '/test/shared' shared; return shared.value;", configuration)
+                            .run().first().toInteger();
+                }
+                return 9L;
+            }
+        });
+
+        Assert.assertEquals(9L,
+                Ruler.compile("import '/test/shared' shared; return shared.value;", configuration)
+                        .run().first().toInteger());
+    }
+
+    @Test
     public void circularImportShouldFailFastTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        RulerConfiguration configuration = new RulerConfiguration();
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return path.startsWith("/test/");
@@ -41,8 +75,8 @@ public class CircularImportTest {
 
     @Test
     public void selfCircularImportShouldFailFastTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        RulerConfiguration configuration = new RulerConfiguration();
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return "/test/self".equals(path);
@@ -64,8 +98,8 @@ public class CircularImportTest {
 
     @Test
     public void circularImportFailureDoesNotPoisonNextImportTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        RulerConfiguration configuration = new RulerConfiguration();
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return path.startsWith("/test/");

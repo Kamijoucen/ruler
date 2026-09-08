@@ -1,11 +1,12 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.*;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.eval.EvalVisitor;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.*;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.*;
 
 import java.util.*;
 
@@ -30,7 +31,7 @@ public final class PatternMatcher {
                     throw new RulerRuntimeException("undefined variable in pattern: " + ((NameNode) literal).name.name);
                 }
             } else {
-                literalValue = literal.eval(scope, context);
+                literalValue = EvalVisitor.evaluate(literal, scope, context);
             }
             if (strictEqual(literalValue, value, context)) {
                 return Collections.emptyMap();

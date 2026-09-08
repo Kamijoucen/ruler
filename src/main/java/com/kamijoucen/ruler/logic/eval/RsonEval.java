@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.RsonNode;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.RsonNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.RsonValue;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.RsonValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ public class RsonEval implements BaseEval<RsonNode> {
         Map<String, BaseValue> fields = new HashMap<>();
         for (Map.Entry<String, BaseNode> entry : node.getProperties().entrySet()) {
             String name = entry.getKey();
-            BaseValue value = entry.getValue().eval(scope, context);
+            BaseValue value = EvalVisitor.evaluate(entry.getValue(), scope, context);
             fields.put(name, value);
         }
         return new RsonValue(fields);

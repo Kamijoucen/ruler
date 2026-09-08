@@ -1,10 +1,13 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.util.ArrayList;
@@ -21,8 +24,8 @@ public class BlockParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token lToken = tokenStream.token();
         AssertUtil.assertToken(lToken, TokenType.LEFT_BRACE);
         tokenStream.nextToken();
@@ -30,7 +33,7 @@ public class BlockParser implements AtomParser {
         List<BaseNode> blocks = new ArrayList<>();
         while (tokenStream.token().type != TokenType.EOF
                 && tokenStream.token().type != TokenType.RIGHT_BRACE) {
-            blocks.add(manager.parseStatement());
+            blocks.add(Parser.parseStatement(state));
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_BRACE);

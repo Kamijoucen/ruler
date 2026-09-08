@@ -18,7 +18,10 @@ Ruler 是一款轻量级、可嵌入的脚本引擎，适用于 Java 宿主环�
 ## 快速开始
 
 ```java
-var cfg = new RulerConfigurationImpl();
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+
+var cfg = new RulerConfiguration();
 
 // 单行表达式
 var runner = Ruler.compile("1 + 2 * 3", cfg);
@@ -36,7 +39,9 @@ param.put("score", 85);
 boolean pass = runner2.run(param).first().toBoolean();
 ```
 
-> `RulerRunner` 编译后可复用且线程安全，`RulerConfiguration` 建议作为进程级单例。
+> `RulerRunner` 编译后可复用，每次运行创建独立执行上下文。`RulerConfiguration` 是一个引擎的共享环境，请在运行前完成配置；需要隔离全局变量和模块时创建不同实例。共享环境中的可变值仍需要调用方协调并发访问。
+
+代码组织采用 `types` 定义数据、`logic` 实现处理逻辑。状态归属、目录约定和旧 Java API 的迁移方式见 [ARCHITECTURE.md](ARCHITECTURE.md)。
 
 ## 完整特性演示
 
@@ -289,7 +294,7 @@ java -jar ruler.jar -f=script.ruler -maxLoopNumber=100000 -maxStackDepth=500
 
 ### SPI 扩展点
 
-实现 `ConfigurationHook` 接口，在 `META-INF/services/com.kamijoucen.ruler.plugin.spi.ConfigurationHook` 注册。内置 `StdIoHook` 提供 `DeleteFile()`、`WriteNewText()`、`ReadAllText()` 等函数。
+实现 `ConfigurationHook` 接口，在 `META-INF/services/com.kamijoucen.ruler.types.spi.ConfigurationHook` 注册。内置 `StdIoHook` 注册 `io` 模块，提供 `DeleteFile()`、`WriteText()`、`ReadAll()`、`PrintList()`。例如：`import 'io' io; io.ReadAll('example.txt');`
 
 ## 构建
 
@@ -302,7 +307,7 @@ mvn -Dtest=BaseTest#arrayPushTest test
 ## 注意事项
 
 - 脚本异常以 Java 异常形式抛出，引擎内部不提供 `try/catch`
-- `RulerConfigurationImpl` 持有导入缓存，环境隔离需新建实例
+- `RulerConfiguration` 持有导入缓存，环境隔离需新建实例
 - 编译期类型检查仅针对已知类型，动态场景保留运行时容错
 - 语句末尾分号可选，换行即可作为语句结束；同一行多语句需用分号分隔
 - 自定义中缀运算符不能跨行，遇到换行自动截断为独立语句

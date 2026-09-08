@@ -1,23 +1,24 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.component.DefaultLexical;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.RulerRunner;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.logic.lexer.Lexer;
+import com.kamijoucen.ruler.types.lexer.LexerState;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.RulerRunner;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 public class LexicalEdgeCaseTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
     }
 
     private RulerRunner compile(String text) {
@@ -93,37 +94,37 @@ public class LexicalEdgeCaseTest {
 
     @Test
     public void testTokenLessThanOrEqual() {
-        DefaultLexical lexical = new DefaultLexical("a <= b", null, configuration);
-        while (lexical.nextToken().type != TokenType.IDENTIFIER) {
+        LexerState lexical = new LexerState("a <= b", null);
+        while (Lexer.nextToken(lexical).type != TokenType.IDENTIFIER) {
         }
-        Token token = lexical.nextToken();
+        Token token = Lexer.nextToken(lexical);
         Assert.assertEquals(TokenType.LE, token.type);
     }
 
     @Test
     public void testTokenGreaterThanOrEqual() {
-        DefaultLexical lexical = new DefaultLexical("a >= b", null, configuration);
-        while (lexical.nextToken().type != TokenType.IDENTIFIER) {
+        LexerState lexical = new LexerState("a >= b", null);
+        while (Lexer.nextToken(lexical).type != TokenType.IDENTIFIER) {
         }
-        Token token = lexical.nextToken();
+        Token token = Lexer.nextToken(lexical);
         Assert.assertEquals(TokenType.GE, token.type);
     }
 
     @Test
     public void testTokenArrow() {
-        DefaultLexical lexical = new DefaultLexical("a -> b", null, configuration);
-        while (lexical.nextToken().type != TokenType.IDENTIFIER) {
+        LexerState lexical = new LexerState("a -> b", null);
+        while (Lexer.nextToken(lexical).type != TokenType.IDENTIFIER) {
         }
-        Token token = lexical.nextToken();
+        Token token = Lexer.nextToken(lexical);
         Assert.assertEquals(TokenType.ARROW, token.type);
     }
 
     @Test
     public void testTokenAssign() {
-        DefaultLexical lexical = new DefaultLexical("a = b", null, configuration);
-        while (lexical.nextToken().type != TokenType.IDENTIFIER) {
+        LexerState lexical = new LexerState("a = b", null);
+        while (Lexer.nextToken(lexical).type != TokenType.IDENTIFIER) {
         }
-        Token token = lexical.nextToken();
+        Token token = Lexer.nextToken(lexical);
         Assert.assertEquals(TokenType.ASSIGN, token.type);
     }
 }

@@ -1,10 +1,13 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.ArrayNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.ArrayNode;
+
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 import java.util.ArrayList;
@@ -21,8 +24,8 @@ public class ArrayParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
 
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_SQUARE);
         Token lToken = tokenStream.token();
@@ -30,13 +33,13 @@ public class ArrayParser implements AtomParser {
 
         List<BaseNode> arrValues = new ArrayList<>();
         if (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
-            arrValues.add(manager.parseExpression());
+            arrValues.add(Parser.parseExpression(state));
         }
 
         while (tokenStream.token().type != TokenType.RIGHT_SQUARE) {
             AssertUtil.assertToken(tokenStream, TokenType.COMMA);
             tokenStream.nextToken();
-            arrValues.add(manager.parseExpression());
+            arrValues.add(Parser.parseExpression(state));
         }
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_SQUARE);

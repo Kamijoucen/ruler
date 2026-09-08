@@ -5,12 +5,12 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.component.CustomImportLoaderManagerImpl;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.RulerRunner;
-import com.kamijoucen.ruler.domain.parameter.RuleResultValue;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.module.ModuleState;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.RulerRunner;
+import com.kamijoucen.ruler.types.parameter.RuleResultValue;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
 import com.kamijoucen.ruler.test.option.FuncParamLengthTestFunction;
 import com.kamijoucen.ruler.test.option.TestImportLoader1;
 import com.kamijoucen.ruler.test.option.TestImportLoader2;
@@ -18,11 +18,11 @@ import com.kamijoucen.ruler.test.option.TestImportLoader3;
 
 public class BaseTest {
 
-    public RulerConfigurationImpl configuration;
+    public RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
         configuration.registerGlobalFunction(new FuncParamLengthTestFunction());
     }
 
@@ -275,28 +275,13 @@ public class BaseTest {
 
     @Test
     public void importLoaderSortTest() {
-        CustomImportLoaderManagerImpl loaderManager = new CustomImportLoaderManagerImpl() {
-            @Override
-            public String load(String path) {
-
-                for (int i = 0; i < super.loaders.size(); i++) {
-                    if (i == 0) {
-                        // 3 的优先级最高，数字最大，因此会排第一
-                        Assert.assertEquals("3", super.loaders.get(i).getLoader().load(null));
-                    } else if (i == 1) {
-                        Assert.assertEquals("2", super.loaders.get(i).getLoader().load(null));
-                    } else if (i == 2) {
-                        Assert.assertEquals("1", super.loaders.get(i).getLoader().load(null));
-                    }
-                }
-                return null;
-            }
-
-        };
-        loaderManager.registerCustomImportLoader(new TestImportLoader1());
-        loaderManager.registerCustomImportLoader(new TestImportLoader2());
-        loaderManager.registerCustomImportLoader(new TestImportLoader3());
-        loaderManager.load(null);
+        ModuleState modules = new ModuleState();
+        modules.registerLoader(new TestImportLoader1());
+        modules.registerLoader(new TestImportLoader2());
+        modules.registerLoader(new TestImportLoader3());
+        Assert.assertEquals("3", modules.getLoaders().get(0).load(null));
+        Assert.assertEquals("2", modules.getLoaders().get(1).load(null));
+        Assert.assertEquals("1", modules.getLoaders().get(2).load(null));
     }
 
     @Test

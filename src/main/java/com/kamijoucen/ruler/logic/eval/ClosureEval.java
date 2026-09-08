@@ -1,14 +1,14 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.ClosureDefineNode;
-import com.kamijoucen.ruler.domain.ast.NameNode;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.ClosureDefineNode;
+import com.kamijoucen.ruler.types.ast.NameNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ClosureValue;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.ClosureValue;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class ClosureEval implements BaseEval<ClosureDefineNode> {
             capScope = new Scope(null, false, context.getConfiguration().getGlobalScope(), null);
             if (CollectionUtil.isNotEmpty(node.getStaticCaptureVar())) {
                 for (BaseNode capNode : node.getStaticCaptureVar()) {
-                    BaseValue capValue = capNode.eval(scope, context);
+                    BaseValue capValue = EvalVisitor.evaluate(capNode, scope, context);
                     capScope.putLocal(((NameNode) capNode).name.name, capValue);
                 }
             }

@@ -5,7 +5,7 @@
             "type": "java",
             "name": "Main",
             "request": "launch",
-            "mainClass": "com.kamijoucen.ruler.service.Main",
+            "mainClass": "com.kamijoucen.ruler.cli.Main",
             "projectName": "ruler"
         },
         {

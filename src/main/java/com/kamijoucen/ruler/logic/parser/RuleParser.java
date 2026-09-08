@@ -1,13 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.domain.ast.RuleStatementNode;
-import com.kamijoucen.ruler.domain.ast.StringNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.RuleStatementNode;
+import com.kamijoucen.ruler.types.ast.StringNode;
+
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 /**
@@ -21,8 +24,8 @@ public class RuleParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
         Token ruleToken = tokenStream.token();
 
         AssertUtil.assertToken(ruleToken, TokenType.KEY_RULE);
@@ -34,7 +37,7 @@ public class RuleParser implements AtomParser {
         tokenStream.nextToken();
 
         // 解析规则代码块
-        BaseNode blockNode = Parsers.BLOCK_PARSER.parse(manager);
+        BaseNode blockNode = Parsers.BLOCK_PARSER.parse(state);
         if (!(blockNode instanceof BlockNode)) {
             throw new SyntaxException("expected block after rule");
         }

@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.service.RulerRunner;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
-import com.kamijoucen.ruler.domain.exception.IllegalOperationException;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.api.RulerRunner;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
+import com.kamijoucen.ruler.types.exception.IllegalOperationException;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ public class DateOperationTest {
 
     @Test
     public void dateEqualityTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile("$d1 == $d2", configuration);
         Map<String, Object> param = new HashMap<>();
         Date d = new Date(1609459200000L);
@@ -28,7 +28,7 @@ public class DateOperationTest {
 
     @Test
     public void dateStrictEqualityDifferentInstanceTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile("$d1 === $d2", configuration);
         Map<String, Object> param = new HashMap<>();
         param.put("d1", new Date(1609459200000L));
@@ -40,7 +40,7 @@ public class DateOperationTest {
 
     @Test(expected = IllegalOperationException.class)
     public void dateComparisonThrowsTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         RulerRunner runner = Ruler.compile("$d1 > $d2", configuration);
         Map<String, Object> param = new HashMap<>();
         param.put("d1", new Date(1609459200000L));
@@ -50,7 +50,7 @@ public class DateOperationTest {
 
     @Test
     public void dateParameterPassingAndReturnTest() {
-        RulerConfigurationImpl configuration = new RulerConfigurationImpl();
+        RulerConfiguration configuration = new RulerConfiguration();
         Date d = new Date(1609459200000L);
         RulerRunner runner = Ruler.compile("$d", configuration);
         Map<String, Object> param = new HashMap<>();

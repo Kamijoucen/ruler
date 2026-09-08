@@ -1,11 +1,11 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.logic.parser.TokenStream;
-import com.kamijoucen.ruler.domain.exception.NoImplException;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.parser.TokenStream;
+import com.kamijoucen.ruler.types.exception.NoImplException;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 
 public class AssertUtil {
 

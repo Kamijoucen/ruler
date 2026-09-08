@@ -1,9 +1,10 @@
 package com.kamijoucen.ruler.logic.operation;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.*;
+import com.kamijoucen.ruler.logic.eval.EvalVisitor;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.*;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class EqOperation implements BinaryOperation {
@@ -17,8 +18,8 @@ public class EqOperation implements BinaryOperation {
     @Override
     public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
             BaseValue... params) {
-        BaseValue lValue = lhs.eval(scope, context);
-        BaseValue rValue = rhs.eval(scope, context);
+        BaseValue lValue = EvalVisitor.evaluate(lhs, scope, context);
+        BaseValue rValue = EvalVisitor.evaluate(rhs, scope, context);
         return BoolValue.get(equal(lValue, rValue, context));
     }
 

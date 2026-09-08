@@ -1,8 +1,8 @@
 package com.kamijoucen.ruler.logic.util;
 
-import com.kamijoucen.ruler.domain.ast.ImportNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.value.ValueType;
+import com.kamijoucen.ruler.types.ast.ImportNode;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.value.ValueType;
 
 import java.util.HashSet;
 import java.util.List;

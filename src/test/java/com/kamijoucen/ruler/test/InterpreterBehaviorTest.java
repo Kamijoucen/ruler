@@ -1,15 +1,15 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.component.RulerCompiler;
-import com.kamijoucen.ruler.component.RulerInterpreter;
-import com.kamijoucen.ruler.component.option.CustomImportLoader;
-import com.kamijoucen.ruler.domain.exception.RulerRuntimeException;
-import com.kamijoucen.ruler.domain.module.RulerModule;
-import com.kamijoucen.ruler.domain.module.RulerScript;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.ClosureValue;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.logic.compiler.RulerCompiler;
+import com.kamijoucen.ruler.logic.eval.RulerInterpreter;
+import com.kamijoucen.ruler.types.spi.CustomImportLoader;
+import com.kamijoucen.ruler.types.exception.RulerRuntimeException;
+import com.kamijoucen.ruler.types.module.RulerModule;
+import com.kamijoucen.ruler.types.module.RulerScript;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.ClosureValue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,22 +19,20 @@ import java.util.List;
 
 public class InterpreterBehaviorTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
         configuration.registerGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
     }
 
     private RulerModule compileScriptModule(String code) {
-        return new RulerCompiler(new RulerScript("script", code), configuration)
-                .compileScript();
+        return RulerCompiler.compileScript(new RulerScript("script", code), configuration);
     }
 
     private RulerModule compileStatementModule(String code) {
-        return new RulerCompiler(new RulerScript("statement", code), configuration)
-                .compileStatement();
+        return RulerCompiler.compileStatement(new RulerScript("statement", code), configuration);
     }
 
     private Scope newRuntimeRootScope() {
@@ -51,11 +49,10 @@ public class InterpreterBehaviorTest {
 
     @Test
     public void runScriptSingleExpressionReturnsClosureWithoutConversion() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("fun(x) { return x + 1; }"), configuration);
+        RulerModule interpreterModule = compileScriptModule("fun(x) { return x + 1; }");
 
         List<Object> result =
-                interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
+                RulerInterpreter.runScriptWithoutGlobalImports(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(1, result.size());
         Assert.assertTrue(result.get(0) instanceof ClosureValue);
@@ -63,59 +60,53 @@ public class InterpreterBehaviorTest {
 
     @Test
     public void runScriptSingleExpressionImportsGlobalModuleByDefault() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("listUtil.Contains(2, [1, 2, 3])"), configuration);
+        RulerModule interpreterModule = compileScriptModule("listUtil.Contains(2, [1, 2, 3])");
 
-        List<Object> result = interpreter.runScript(Collections.emptyList(), newRuntimeRootScope());
+        List<Object> result = RulerInterpreter.runScript(interpreterModule, Collections.emptyList(), newRuntimeRootScope(), configuration);
 
         Assert.assertEquals(Collections.singletonList(Boolean.TRUE), result);
     }
 
     @Test(expected = RulerRuntimeException.class)
     public void runScriptSingleExpressionCanDisableGlobalModuleImport() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("listUtil.Contains(2, [1, 2, 3])"), configuration);
+        RulerModule interpreterModule = compileScriptModule("listUtil.Contains(2, [1, 2, 3])");
 
-        interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
+        RulerInterpreter.runScriptWithoutGlobalImports(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
     }
 
     @Test
     public void runImportModuleDropsLastExpression() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("var a = 1; a + 2;"), configuration);
+        RulerModule interpreterModule = compileScriptModule("var a = 1; a + 2;");
 
-        List<Object> result = interpreter.runImportModule(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = RulerInterpreter.runImportModule(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
     public void runImportModuleDropsLastVarDefinition() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("var answer = 42;"), configuration);
+        RulerModule interpreterModule = compileScriptModule("var answer = 42;");
 
-        List<Object> result = interpreter.runImportModule(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = RulerInterpreter.runImportModule(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertTrue(result.isEmpty());
     }
 
     @Test
     public void runImportModuleKeepsExplicitReturn() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("return 42;"), configuration);
+        RulerModule interpreterModule = compileScriptModule("return 42;");
 
-        List<Object> result = interpreter.runImportModule(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = RulerInterpreter.runImportModule(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(42)), result);
     }
 
     @Test
     public void runScriptReturnsClosureWithoutConversion() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("return fun() { return 1; };"), configuration);
+        RulerModule interpreterModule = compileScriptModule("return fun() { return 1; };");
 
         List<Object> result =
-                interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
+                RulerInterpreter.runScriptWithoutGlobalImports(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(1, result.size());
         Assert.assertTrue(result.get(0) instanceof ClosureValue);
@@ -123,11 +114,10 @@ public class InterpreterBehaviorTest {
 
     @Test
     public void runScriptTopLevelMultiReturnPreservesNullAndValues() {
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("return null, 1, 'ok';"), configuration);
+        RulerModule interpreterModule = compileScriptModule("return null, 1, 'ok';");
 
         List<Object> result =
-                interpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), newRuntimeContext());
+                RulerInterpreter.runScriptWithoutGlobalImports(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(3, result.size());
         Assert.assertNull(result.get(0));
@@ -139,15 +129,13 @@ public class InterpreterBehaviorTest {
     public void runScriptClearsReturnStateBetweenSharedContextRuns() {
         RuntimeContext runtimeContext = newRuntimeContext();
 
-        RulerInterpreter firstInterpreter =
-                new RulerInterpreter(compileScriptModule("return 7;"), configuration);
+        RulerModule firstInterpreterModule = compileScriptModule("return 7;");
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(7)),
-                firstInterpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), runtimeContext));
+                RulerInterpreter.runScriptWithoutGlobalImports(firstInterpreterModule, newRuntimeRootScope(), runtimeContext));
 
-        RulerInterpreter secondInterpreter =
-                new RulerInterpreter(compileScriptModule("var a = 1; a + 2;"), configuration);
+        RulerModule secondInterpreterModule = compileScriptModule("var a = 1; a + 2;");
         List<Object> result =
-                secondInterpreter.runScriptWithoutGlobalImports(newRuntimeRootScope(), runtimeContext);
+                RulerInterpreter.runScriptWithoutGlobalImports(secondInterpreterModule, newRuntimeRootScope(), runtimeContext);
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(3)), result);
         Assert.assertFalse(runtimeContext.isReturnFlag());
@@ -159,17 +147,14 @@ public class InterpreterBehaviorTest {
         Scope runScope = newShellRootScope();
         RuntimeContext runtimeContext = newRuntimeContext();
 
-        RulerInterpreter defineInterpreter =
-                new RulerInterpreter(compileStatementModule("fun f() { var x = 1; return x + 1; }"), configuration);
-        defineInterpreter.runStatement(runScope, runtimeContext);
+        RulerModule defineInterpreterModule = compileStatementModule("fun f() { var x = 1; return x + 1; }");
+        RulerInterpreter.runStatement(defineInterpreterModule, runScope, runtimeContext);
 
-        RulerInterpreter returnInterpreter =
-                new RulerInterpreter(compileStatementModule("return 42;"), configuration);
-        Assert.assertEquals(1, returnInterpreter.runStatement(runScope, runtimeContext).size());
+        RulerModule returnInterpreterModule = compileStatementModule("return 42;");
+        Assert.assertEquals(1, RulerInterpreter.runStatement(returnInterpreterModule, runScope, runtimeContext).size());
 
-        RulerInterpreter callInterpreter =
-                new RulerInterpreter(compileStatementModule("f();"), configuration);
-        List<Object> result = callInterpreter.runStatement(runScope, runtimeContext);
+        RulerModule callInterpreterModule = compileStatementModule("f();");
+        List<Object> result = RulerInterpreter.runStatement(callInterpreterModule, runScope, runtimeContext);
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);
         Assert.assertFalse(runtimeContext.isReturnFlag());
@@ -178,7 +163,7 @@ public class InterpreterBehaviorTest {
 
     @Test
     public void importExecutionDoesNotLeakReturnStateToCaller() {
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return "early_return".equals(path);
@@ -190,17 +175,16 @@ public class InterpreterBehaviorTest {
             }
         });
 
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("import 'early_return' mod; return 2;"), configuration);
+        RulerModule interpreterModule = compileScriptModule("import 'early_return' mod; return 2;");
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = RulerInterpreter.runScript(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);
     }
 
     @Test(expected = RulerRuntimeException.class)
     public void importModuleCannotReadCallerLocalVariable() {
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return "read_outer".equals(path);
@@ -212,16 +196,14 @@ public class InterpreterBehaviorTest {
             }
         });
 
-        RulerInterpreter interpreter = new RulerInterpreter(
-                compileScriptModule("var outer = 7; import 'read_outer' mod; return 0;"),
-                configuration);
+        RulerModule interpreterModule = compileScriptModule("var outer = 7; import 'read_outer' mod; return 0;");
 
-        interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        RulerInterpreter.runScript(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
     }
 
     @Test(expected = RulerRuntimeException.class)
     public void importModuleDoesNotAutoImportCallerGlobalModules() {
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return "needs_global".equals(path);
@@ -233,15 +215,14 @@ public class InterpreterBehaviorTest {
             }
         });
 
-        RulerInterpreter interpreter =
-                new RulerInterpreter(compileScriptModule("import 'needs_global' mod; return 0;"), configuration);
+        RulerModule interpreterModule = compileScriptModule("import 'needs_global' mod; return 0;");
 
-        interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        RulerInterpreter.runScript(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
     }
 
     @Test
     public void repeatedImportsReuseCompiledModuleButNotRuntimeState() {
-        configuration.getCustomImportLoadManager().registerCustomImportLoader(new CustomImportLoader() {
+        configuration.getModules().registerLoader(new CustomImportLoader() {
             @Override
             public boolean match(String path) {
                 return "counter_module".equals(path);
@@ -253,11 +234,9 @@ public class InterpreterBehaviorTest {
             }
         });
 
-        RulerInterpreter interpreter = new RulerInterpreter(
-                compileScriptModule("import 'counter_module' a; import 'counter_module' b; return a.count + b.count;"),
-                configuration);
+        RulerModule interpreterModule = compileScriptModule("import 'counter_module' a; import 'counter_module' b; return a.count + b.count;");
 
-        List<Object> result = interpreter.runScript(newRuntimeRootScope(), newRuntimeContext());
+        List<Object> result = RulerInterpreter.runScript(interpreterModule, newRuntimeRootScope(), newRuntimeContext());
 
         Assert.assertEquals(Collections.singletonList(java.math.BigInteger.valueOf(2)), result);
     }

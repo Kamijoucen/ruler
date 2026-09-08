@@ -1,8 +1,11 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 /**
@@ -16,13 +19,13 @@ public class ParenParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        TokenStream tokenStream = manager.getTokenStream();
+    public BaseNode parse(ParseState state) {
+        TokenStream tokenStream = state.tokens;
 
         AssertUtil.assertToken(tokenStream, TokenType.LEFT_PAREN);
         tokenStream.nextToken();
 
-        BaseNode ast = manager.parseExpression();
+        BaseNode ast = Parser.parseExpression(state);
 
         AssertUtil.assertToken(tokenStream, TokenType.RIGHT_PAREN);
         tokenStream.nextToken();

@@ -1,10 +1,10 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.service.RulerRunner;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.api.RulerRunner;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,11 +14,11 @@ import java.util.Map;
 
 public class StringInterpolationTest {
 
-    public RulerConfigurationImpl configuration;
+    public RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
     }
 
     public RulerRunner getExpressionRunner(String text) {

@@ -1,15 +1,15 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.domain.ast.RuleStatementNode;
-import com.kamijoucen.ruler.domain.ast.StringNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.RuleStatementNode;
+import com.kamijoucen.ruler.types.ast.StringNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
 import com.kamijoucen.ruler.logic.util.CollectionUtil;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.NullValue;
-import com.kamijoucen.ruler.domain.value.SubRuleValue;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.NullValue;
+import com.kamijoucen.ruler.types.value.SubRuleValue;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class RuleStatementEval implements BaseEval<RuleStatementNode> {
 
         BlockNode block = node.getBlock();
         List<BaseValue> returnValues = context.withIsolatedReturn(() -> {
-            block.eval(ruleScope, context);
+            EvalVisitor.evaluate(block, ruleScope, context);
             return context.getReturnSpace();
         });
 

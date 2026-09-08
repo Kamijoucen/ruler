@@ -1,13 +1,11 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.component.ImportCacheManager;
-import com.kamijoucen.ruler.domain.runtime.StackDepthCheckOperation;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.TypeScope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.IntegerValue;
-import com.kamijoucen.ruler.domain.value.NullValue;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.TypeScope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.IntegerValue;
+import com.kamijoucen.ruler.types.value.NullValue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,14 +21,8 @@ public class RuntimeContextTest {
 
     @Before
     public void init() {
-        RulerConfigurationImpl config = new RulerConfigurationImpl();
-        context = new RuntimeContext(
-                config.getEvalVisitor(),
-                config.getTypeCheckVisitor(),
-                new ImportCacheManager(),
-                new StackDepthCheckOperation(),
-                config
-        );
+        RulerConfiguration config = new RulerConfiguration();
+        context = new RuntimeContext(config);
     }
 
     @Test

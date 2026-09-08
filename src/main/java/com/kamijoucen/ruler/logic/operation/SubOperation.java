@@ -1,9 +1,9 @@
 package com.kamijoucen.ruler.logic.operation;
 
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.DoubleValue;
-import com.kamijoucen.ruler.domain.value.IntegerValue;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.DoubleValue;
+import com.kamijoucen.ruler.types.value.IntegerValue;
 import com.kamijoucen.ruler.logic.util.NumberUtil;
 
 public class SubOperation extends AbstractArithmeticOperation {

@@ -1,35 +1,19 @@
 package com.kamijoucen.ruler.logic.operation;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.VirtualNode;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.token.TokenType;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-
-import java.util.Objects;
+import com.kamijoucen.ruler.logic.eval.CallLogic;
+import com.kamijoucen.ruler.logic.eval.EvalVisitor;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
 
 public class CustomOperation implements BinaryOperation {
 
-    private BinaryOperation callOperation;
-
-    private void init(RuntimeContext context) {
-        if (callOperation == null) {
-            callOperation = context.getConfiguration().getBinaryOperationFactory()
-                    .findOperation(TokenType.CALL.name());
-            Objects.requireNonNull(callOperation);
-        }
-    }
-
     @Override
-    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context, BaseValue... params) {
-        init(context);
-
-        BaseValue lValue = lhs.eval(scope, context);
-        BaseValue rValue = rhs.eval(scope, context);
-
-        VirtualNode virtualNode = new VirtualNode(params[0]);
-        return callOperation.invoke(virtualNode, null, scope, context, lValue, rValue);
+    public BaseValue invoke(BaseNode lhs, BaseNode rhs, Scope scope, RuntimeContext context,
+                            BaseValue... params) {
+        BaseValue left = EvalVisitor.evaluate(lhs, scope, context);
+        BaseValue right = EvalVisitor.evaluate(rhs, scope, context);
+        return CallLogic.callValue(params[0], scope, context, left, right);
     }
-
 }

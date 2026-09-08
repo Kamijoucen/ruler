@@ -1,55 +1,61 @@
 package com.kamijoucen.ruler.logic.typecheck;
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.AssignNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.domain.ast.CallNode;
-import com.kamijoucen.ruler.domain.ast.ClosureDefineNode;
-import com.kamijoucen.ruler.domain.ast.DefaultParamValNode;
-import com.kamijoucen.ruler.domain.ast.DotNode;
-import com.kamijoucen.ruler.domain.ast.ForEachStatementNode;
-import com.kamijoucen.ruler.domain.ast.IfStatementNode;
-import com.kamijoucen.ruler.domain.ast.ImportNode;
-import com.kamijoucen.ruler.domain.ast.IndexNode;
-import com.kamijoucen.ruler.domain.ast.InfixDefinitionNode;
-import com.kamijoucen.ruler.domain.ast.MatchCase;
-import com.kamijoucen.ruler.domain.ast.MatchNode;
-import com.kamijoucen.ruler.domain.ast.RuleStatementNode;
-import com.kamijoucen.ruler.domain.ast.VariableDefineNode;
-import com.kamijoucen.ruler.domain.ast.WhileStatementNode;
-import com.kamijoucen.ruler.domain.ast.ArrayNode;
-import com.kamijoucen.ruler.domain.ast.BinaryOperationNode;
-import com.kamijoucen.ruler.domain.ast.BoolNode;
-import com.kamijoucen.ruler.domain.ast.BreakNode;
-import com.kamijoucen.ruler.domain.ast.ContinueNode;
-import com.kamijoucen.ruler.domain.ast.DoubleNode;
-import com.kamijoucen.ruler.domain.ast.IntegerNode;
-import com.kamijoucen.ruler.domain.ast.NameNode;
-import com.kamijoucen.ruler.domain.ast.NullNode;
-import com.kamijoucen.ruler.domain.ast.OutNameNode;
-import com.kamijoucen.ruler.domain.ast.ReturnNode;
-import com.kamijoucen.ruler.domain.ast.RsonNode;
-import com.kamijoucen.ruler.domain.ast.StringInterpolationNode;
-import com.kamijoucen.ruler.domain.ast.StringNode;
-import com.kamijoucen.ruler.domain.ast.TypeOfNode;
-import com.kamijoucen.ruler.domain.ast.UnaryOperationNode;
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.runtime.TypeScope;
-import com.kamijoucen.ruler.domain.token.TokenType;
-import com.kamijoucen.ruler.domain.type.ArrayType;
-import com.kamijoucen.ruler.domain.type.BoolType;
-import com.kamijoucen.ruler.domain.type.DoubleType;
-import com.kamijoucen.ruler.domain.type.IntegerType;
-import com.kamijoucen.ruler.domain.type.NullType;
-import com.kamijoucen.ruler.domain.type.RsonType;
-import com.kamijoucen.ruler.domain.type.RulerType;
-import com.kamijoucen.ruler.domain.type.StringType;
-import com.kamijoucen.ruler.domain.type.TypeKind;
-import com.kamijoucen.ruler.domain.type.UnknownType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.AssignNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.CallNode;
+import com.kamijoucen.ruler.types.ast.ClosureDefineNode;
+import com.kamijoucen.ruler.types.ast.DefaultParamValNode;
+import com.kamijoucen.ruler.types.ast.DotNode;
+import com.kamijoucen.ruler.types.ast.ForEachStatementNode;
+import com.kamijoucen.ruler.types.ast.IfStatementNode;
+import com.kamijoucen.ruler.types.ast.ImportNode;
+import com.kamijoucen.ruler.types.ast.IndexNode;
+import com.kamijoucen.ruler.types.ast.InfixDefinitionNode;
+import com.kamijoucen.ruler.types.ast.MatchCase;
+import com.kamijoucen.ruler.types.ast.MatchNode;
+import com.kamijoucen.ruler.types.ast.RuleStatementNode;
+import com.kamijoucen.ruler.types.ast.VariableDefineNode;
+import com.kamijoucen.ruler.types.ast.WhileStatementNode;
+import com.kamijoucen.ruler.types.ast.ArrayNode;
+import com.kamijoucen.ruler.types.ast.BinaryOperationNode;
+import com.kamijoucen.ruler.types.ast.BoolNode;
+import com.kamijoucen.ruler.types.ast.BreakNode;
+import com.kamijoucen.ruler.types.ast.ContinueNode;
+import com.kamijoucen.ruler.types.ast.DoubleNode;
+import com.kamijoucen.ruler.types.ast.IntegerNode;
+import com.kamijoucen.ruler.types.ast.NameNode;
+import com.kamijoucen.ruler.types.ast.NullNode;
+import com.kamijoucen.ruler.types.ast.OutNameNode;
+import com.kamijoucen.ruler.types.ast.ReturnNode;
+import com.kamijoucen.ruler.types.ast.RsonNode;
+import com.kamijoucen.ruler.types.ast.StringInterpolationNode;
+import com.kamijoucen.ruler.types.ast.StringNode;
+import com.kamijoucen.ruler.types.ast.TypeOfNode;
+import com.kamijoucen.ruler.types.ast.UnaryOperationNode;
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.runtime.TypeScope;
+import com.kamijoucen.ruler.types.token.TokenType;
+import com.kamijoucen.ruler.types.typing.ArrayType;
+import com.kamijoucen.ruler.types.typing.BoolType;
+import com.kamijoucen.ruler.types.typing.DoubleType;
+import com.kamijoucen.ruler.types.typing.IntegerType;
+import com.kamijoucen.ruler.types.typing.NullType;
+import com.kamijoucen.ruler.types.typing.RsonType;
+import com.kamijoucen.ruler.types.typing.RulerType;
+import com.kamijoucen.ruler.types.typing.StringType;
+import com.kamijoucen.ruler.types.typing.TypeKind;
+import com.kamijoucen.ruler.types.typing.UnknownType;
 import com.kamijoucen.ruler.logic.AbstractVisitor;
 
 public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
+
+    private static final TypeCheckVisitor INSTANCE = new TypeCheckVisitor();
+
+    public static RulerType check(BaseNode node, Scope scope, RuntimeContext context) {
+        return node.accept(INSTANCE, scope, context);
+    }
 
     private static final BinaryChecker binaryChecker = new BinaryChecker();
 
@@ -92,7 +98,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
     @Override
     public RulerType eval(BinaryOperationNode node, Scope scope, RuntimeContext context) {
         if (node.getOp() == TokenType.NOT) {
-            RulerType expType = node.getLhs().typeCheck(scope, context);
+            RulerType expType = TypeCheckVisitor.check(node.getLhs(), scope, context);
             if (expType.getKind() == TypeKind.UNKNOWN) {
                 return UnknownType.INSTANCE;
             }
@@ -108,7 +114,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(UnaryOperationNode node, Scope scope, RuntimeContext context) {
-        RulerType expType = node.getExp().typeCheck(scope, context);
+        RulerType expType = TypeCheckVisitor.check(node.getExp(), scope, context);
         if (expType.getKind() == TypeKind.UNKNOWN) {
             return UnknownType.INSTANCE;
         }
@@ -158,7 +164,7 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
         context.setTypeScope(new TypeScope(context.getTypeScope()));
         try {
             for (BaseNode block : node.getBlocks()) {
-                block.typeCheck(scope, context);
+                TypeCheckVisitor.check(block, scope, context);
             }
         } finally {
             context.setTypeScope(context.getTypeScope().getParent());
@@ -168,22 +174,22 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(IfStatementNode node, Scope scope, RuntimeContext context) {
-        RulerType condType = node.getCondition().typeCheck(scope, context);
+        RulerType condType = TypeCheckVisitor.check(node.getCondition(), scope, context);
         if (condType.isKnown() && condType.getKind() != TypeKind.BOOL) {
             throw new SyntaxException(
                     "condition of 'if' statement must be BOOL but got " + condType.getKind(),
                     node.getCondition().getLocation());
         }
-        node.getThenBlock().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getThenBlock(), scope, context);
         if (node.getElseBlock() != null) {
-            node.getElseBlock().typeCheck(scope, context);
+            TypeCheckVisitor.check(node.getElseBlock(), scope, context);
         }
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(AssignNode node, Scope scope, RuntimeContext context) {
-        RulerType rhs = node.getRhs().typeCheck(scope, context);
+        RulerType rhs = TypeCheckVisitor.check(node.getRhs(), scope, context);
         BaseNode lhs = node.getLhs();
         if (lhs instanceof NameNode) {
             context.getTypeScope().put(((NameNode) lhs).name.name, rhs);
@@ -193,25 +199,25 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(WhileStatementNode node, Scope scope, RuntimeContext context) {
-        RulerType condType = node.getCondition().typeCheck(scope, context);
+        RulerType condType = TypeCheckVisitor.check(node.getCondition(), scope, context);
         if (condType.isKnown() && condType.getKind() != TypeKind.BOOL) {
             throw new SyntaxException(
                     "condition of 'while' statement must be BOOL but got " + condType.getKind(),
                     node.getCondition().getLocation());
         }
-        node.getBlock().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getBlock(), scope, context);
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(ForEachStatementNode node, Scope scope, RuntimeContext context) {
-        node.getList().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getList(), scope, context);
         context.setTypeScope(new TypeScope(context.getTypeScope()));
         try {
             if (node.getLoopName() != null) {
                 context.getTypeScope().put(node.getLoopName().name, UnknownType.INSTANCE);
             }
-            node.getBlock().typeCheck(scope, context);
+            TypeCheckVisitor.check(node.getBlock(), scope, context);
         } finally {
             context.setTypeScope(context.getTypeScope().getParent());
         }
@@ -231,14 +237,14 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
     @Override
     public RulerType eval(CallNode node, Scope scope, RuntimeContext context) {
         for (BaseNode param : node.getParams()) {
-            param.typeCheck(scope, context);
+            TypeCheckVisitor.check(param, scope, context);
         }
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(IndexNode node, Scope scope, RuntimeContext context) {
-        node.getRhs().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getRhs(), scope, context);
         return UnknownType.INSTANCE;
     }
 
@@ -252,14 +258,14 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
         context.setTypeScope(new TypeScope(context.getTypeScope()));
         try {
             for (BaseNode param : node.getParam()) {
-                param.typeCheck(scope, context);
+                TypeCheckVisitor.check(param, scope, context);
                 if (param instanceof NameNode) {
                     context.getTypeScope().put(((NameNode) param).name.name, UnknownType.INSTANCE);
                 } else if (param instanceof DefaultParamValNode) {
                     context.getTypeScope().put(((DefaultParamValNode) param).getName().name.name, UnknownType.INSTANCE);
                 }
             }
-            node.getBlock().typeCheck(scope, context);
+            TypeCheckVisitor.check(node.getBlock(), scope, context);
         } finally {
             context.setTypeScope(context.getTypeScope().getParent());
         }
@@ -269,14 +275,14 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
     @Override
     public RulerType eval(ReturnNode node, Scope scope, RuntimeContext context) {
         for (BaseNode param : node.getParam()) {
-            param.typeCheck(scope, context);
+            TypeCheckVisitor.check(param, scope, context);
         }
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(VariableDefineNode node, Scope scope, RuntimeContext context) {
-        RulerType rhsType = node.getRhs().typeCheck(scope, context);
+        RulerType rhsType = TypeCheckVisitor.check(node.getRhs(), scope, context);
         BaseNode lhs = node.getLhs();
         if (lhs instanceof NameNode) {
             context.getTypeScope().put(((NameNode) lhs).name.name, rhsType);
@@ -291,34 +297,34 @@ public class TypeCheckVisitor extends AbstractVisitor<RulerType> {
 
     @Override
     public RulerType eval(RuleStatementNode node, Scope scope, RuntimeContext context) {
-        node.getAlias().typeCheck(scope, context);
-        node.getBlock().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getAlias(), scope, context);
+        TypeCheckVisitor.check(node.getBlock(), scope, context);
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(InfixDefinitionNode node, Scope scope, RuntimeContext context) {
-        node.getFunction().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getFunction(), scope, context);
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(DefaultParamValNode node, Scope scope, RuntimeContext context) {
-        node.getName().typeCheck(scope, context);
-        node.getExp().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getName(), scope, context);
+        TypeCheckVisitor.check(node.getExp(), scope, context);
         return UnknownType.INSTANCE;
     }
 
     @Override
     public RulerType eval(MatchNode node, Scope scope, RuntimeContext context) {
-        node.getScrutinee().typeCheck(scope, context);
+        TypeCheckVisitor.check(node.getScrutinee(), scope, context);
         for (MatchCase matchCase : node.getCases()) {
             context.setTypeScope(new TypeScope(context.getTypeScope()));
             try {
                 if (matchCase.getGuard() != null) {
-                    matchCase.getGuard().typeCheck(scope, context);
+                    TypeCheckVisitor.check(matchCase.getGuard(), scope, context);
                 }
-                matchCase.getBody().typeCheck(scope, context);
+                TypeCheckVisitor.check(matchCase.getBody(), scope, context);
             } finally {
                 context.setTypeScope(context.getTypeScope().getParent());
             }

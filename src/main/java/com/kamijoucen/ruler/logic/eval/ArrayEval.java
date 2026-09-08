@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.logic.eval;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.ArrayNode;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.ArrayNode;
 import com.kamijoucen.ruler.logic.BaseEval;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.ArrayValue;
-import com.kamijoucen.ruler.domain.value.BaseValue;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.ArrayValue;
+import com.kamijoucen.ruler.types.value.BaseValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +20,7 @@ public class ArrayEval implements BaseEval<ArrayNode> {
         }
         List<BaseValue> values = new ArrayList<>(nodes.size());
         for (BaseNode tempNode : nodes) {
-            values.add(tempNode.eval(scope, context));
+            values.add(EvalVisitor.evaluate(tempNode, scope, context));
         }
         return new ArrayValue(values);
     }

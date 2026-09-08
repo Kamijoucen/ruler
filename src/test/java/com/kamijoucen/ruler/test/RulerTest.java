@@ -1,15 +1,15 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.parameter.RulerParameter;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.domain.value.ValueType;
-import com.kamijoucen.ruler.logic.function.RulerFunction;
-import com.kamijoucen.ruler.service.Ruler;
-import com.kamijoucen.ruler.service.RulerRunner;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.parameter.RulerParameter;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.value.ValueType;
+import com.kamijoucen.ruler.types.spi.RulerFunction;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.api.RulerRunner;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +21,11 @@ import java.util.Map;
 
 public class RulerTest {
 
-    public RulerConfigurationImpl configuration;
+    public RulerConfiguration configuration;
 
     @Before
     public void begin() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
         configuration.registerGlobalImportPathModule("/ruler/std/util.txt", "util");
         configuration.registerGlobalImportPathModule("/ruler/std/collections.txt", "listUtil");
         configuration.registerGlobalImportScriptModule("var Ok = fun() { return 'OK!!!'; };", "ok");

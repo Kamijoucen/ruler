@@ -71,7 +71,7 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <mainClass>com.kamijoucen.ruler.service.Main</mainClass>
+                            <mainClass>com.kamijoucen.ruler.cli.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -85,7 +85,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.kamijoucen.ruler.service.Main</mainClass>
+                            <mainClass>com.kamijoucen.ruler.cli.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

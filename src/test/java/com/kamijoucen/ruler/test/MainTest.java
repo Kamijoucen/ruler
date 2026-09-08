@@ -1,7 +1,7 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.StartConfig;
-import com.kamijoucen.ruler.service.Main;
+import com.kamijoucen.ruler.types.config.StartConfig;
+import com.kamijoucen.ruler.cli.Main;
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;

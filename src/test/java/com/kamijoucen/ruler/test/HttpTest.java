@@ -1,12 +1,12 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.application.impl.RulerConfigurationImpl;
-import com.kamijoucen.ruler.domain.parameter.RulerResult;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
-import com.kamijoucen.ruler.logic.function.RulerFunction;
-import com.kamijoucen.ruler.service.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
+import com.kamijoucen.ruler.types.spi.RulerFunction;
+import com.kamijoucen.ruler.api.Ruler;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,11 +17,11 @@ import java.util.Map;
 
 public class HttpTest {
 
-    private RulerConfigurationImpl configuration;
+    private RulerConfiguration configuration;
 
     @Before
     public void init() {
-        configuration = new RulerConfigurationImpl();
+        configuration = new RulerConfiguration();
     }
 
     private RulerResult run(String text) {
@@ -101,8 +101,8 @@ public class HttpTest {
         }
     }
 
-    private RulerConfigurationImpl createMockConfig() {
-        RulerConfigurationImpl cfg = new RulerConfigurationImpl();
+    private RulerConfiguration createMockConfig() {
+        RulerConfiguration cfg = new RulerConfiguration();
         cfg.removeGlobalFunction("httpRequest");
         cfg.removeGlobalFunction("httpSend");
         cfg.registerGlobalFunction(new MockHttpRequest());
@@ -132,7 +132,7 @@ public class HttpTest {
 
     @Test
     public void httpModuleMockGetTest() {
-        RulerConfigurationImpl cfg = createMockConfig();
+        RulerConfiguration cfg = createMockConfig();
         String script = "import '/ruler/std/http.txt' http; var resp = http.get('https://api.example.com/users/1', null); return resp.body;";
         RulerResult r = Ruler.compile(script, cfg).run();
         Assert.assertEquals("{\"id\":1,\"name\":\"alice\"}", r.first().toString());
@@ -140,7 +140,7 @@ public class HttpTest {
 
     @Test
     public void httpModuleMockPostTest() {
-        RulerConfigurationImpl cfg = createMockConfig();
+        RulerConfiguration cfg = createMockConfig();
         String script = "import '/ruler/std/http.txt' http; var resp = http.post('https://api.example.com/users', {'Content-Type': 'application/json'}, '{\"name\":\"bob\"}'); return resp.body;";
         RulerResult r = Ruler.compile(script, cfg).run();
         Assert.assertEquals("{\"id\":2,\"name\":\"bob\"}", r.first().toString());
@@ -148,7 +148,7 @@ public class HttpTest {
 
     @Test
     public void httpModuleMockRequestTest() {
-        RulerConfigurationImpl cfg = createMockConfig();
+        RulerConfiguration cfg = createMockConfig();
         String script = "import '/ruler/std/http.txt' http; var resp = http.request({method: 'DELETE', url: 'https://api.example.com/items/1'}); return resp.body;";
         RulerResult r = Ruler.compile(script, cfg).run();
         String body = r.first().toString();
@@ -157,7 +157,7 @@ public class HttpTest {
 
     @Test
     public void httpModuleMockRequestJsonTest() {
-        RulerConfigurationImpl cfg = createMockConfig();
+        RulerConfiguration cfg = createMockConfig();
         String script = "import '/ruler/std/http.txt' http; var resp = http.requestJson({method: 'PATCH', url: 'https://api.example.com/patch', body: {name: 'new', age: 20}}); return resp.data;";
         RulerResult r = Ruler.compile(script, cfg).run();
         Map<String, Object> data = map(r);
@@ -166,7 +166,7 @@ public class HttpTest {
 
     @Test
     public void httpModuleMockRequestJsonPreservesOtherFieldsTest() {
-        RulerConfigurationImpl cfg = createMockConfig();
+        RulerConfiguration cfg = createMockConfig();
         String script = "import '/ruler/std/http.txt' http; var resp = http.requestJson({method: 'GET', url: 'https://api.example.com/users/1', headers: {'X-Custom': 'val'}}); return resp.status;";
         RulerResult r = Ruler.compile(script, cfg).run();
         Assert.assertEquals(200L, r.first().toInteger());

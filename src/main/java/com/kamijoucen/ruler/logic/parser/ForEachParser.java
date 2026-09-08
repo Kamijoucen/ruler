@@ -1,13 +1,16 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import java.util.Collections;
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.BlockNode;
-import com.kamijoucen.ruler.domain.ast.ForEachStatementNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import java.util.Collections;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.BlockNode;
+import com.kamijoucen.ruler.types.ast.ForEachStatementNode;
+
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 import com.kamijoucen.ruler.logic.util.AssertUtil;
 
 /**
@@ -21,11 +24,11 @@ public class ForEachParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        boolean prevInLoop = manager.isInLoop();
-        manager.setInLoop(true);
+    public BaseNode parse(ParseState state) {
+        boolean prevInLoop = state.inLoop;
+        state.inLoop = true;
         try {
-            TokenStream tokenStream = manager.getTokenStream();
+            TokenStream tokenStream = state.tokens;
             Token forToken = tokenStream.token();
             AssertUtil.assertToken(forToken, TokenType.KEY_FOR);
             tokenStream.nextToken();
@@ -40,15 +43,15 @@ public class ForEachParser implements AtomParser {
             tokenStream.nextToken();
 
             // 解析集合表达式
-            BaseNode arrayExp = manager.parseExpression();
+            BaseNode arrayExp = Parser.parseExpression(state);
 
             // 解析循环体
             BaseNode blockNode;
             if (tokenStream.token().type == TokenType.LEFT_BRACE) {
-                blockNode = Parsers.BLOCK_PARSER.parse(manager);
+                blockNode = Parsers.BLOCK_PARSER.parse(state);
             } else if (tokenStream.token().type == TokenType.COLON) {
                 tokenStream.nextToken();
-                BaseNode statement = manager.parseStatement();
+                BaseNode statement = Parser.parseStatement(state);
                 blockNode = new BlockNode(Collections.singletonList(statement), statement.getLocation());
             } else {
                 throw new SyntaxException("expected '{' or ':' after for condition\t token=" + tokenStream.token());
@@ -57,7 +60,7 @@ public class ForEachParser implements AtomParser {
             return new ForEachStatementNode(name, arrayExp, blockNode, forToken.location);
         } finally {
             // 无论是否解析异常，都需要恢复进入前的循环状态，避免污染后续解析
-            manager.setInLoop(prevInLoop);
+            state.inLoop = prevInLoop;
         }
     }
 }

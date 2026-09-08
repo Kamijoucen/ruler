@@ -1,6 +1,8 @@
 package com.kamijoucen.ruler.logic.parser;
 
-public class Parsers {
+public final class Parsers {
+
+    private Parsers() {}
 
     public static final ArrayParser ARRAY_PARSER = new ArrayParser();
     public static final BlockParser BLOCK_PARSER = new BlockParser();

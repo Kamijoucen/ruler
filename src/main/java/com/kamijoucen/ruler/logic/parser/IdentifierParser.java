@@ -1,12 +1,15 @@
 package com.kamijoucen.ruler.logic.parser;
 
-import com.kamijoucen.ruler.domain.ast.BaseNode;
-import com.kamijoucen.ruler.domain.ast.NameNode;
-import com.kamijoucen.ruler.domain.ast.OutNameNode;
+import com.kamijoucen.ruler.types.parser.ParseState;
+import com.kamijoucen.ruler.types.parser.TokenStream;
 
-import com.kamijoucen.ruler.domain.exception.SyntaxException;
-import com.kamijoucen.ruler.domain.token.Token;
-import com.kamijoucen.ruler.domain.token.TokenType;
+import com.kamijoucen.ruler.types.ast.BaseNode;
+import com.kamijoucen.ruler.types.ast.NameNode;
+import com.kamijoucen.ruler.types.ast.OutNameNode;
+
+import com.kamijoucen.ruler.types.exception.SyntaxException;
+import com.kamijoucen.ruler.types.token.Token;
+import com.kamijoucen.ruler.types.token.TokenType;
 
 /**
  * 标识符解析器，处理变量名、函数名等标识符
@@ -20,8 +23,8 @@ public class IdentifierParser implements AtomParser {
     }
 
     @Override
-    public BaseNode parse(ParserManager manager) {
-        Token token = manager.getTokenStream().token();
+    public BaseNode parse(ParseState state) {
+        Token token = state.tokens.token();
         BaseNode nameNode;
         if (token.type == TokenType.IDENTIFIER) {
             nameNode = new NameNode(token, token.location);
@@ -30,7 +33,7 @@ public class IdentifierParser implements AtomParser {
         } else {
             throw new SyntaxException("illegal identifier '" + token.name + "'", token.location);
         }
-        manager.getTokenStream().nextToken();
+        state.tokens.nextToken();
         return nameNode;
     }
 }

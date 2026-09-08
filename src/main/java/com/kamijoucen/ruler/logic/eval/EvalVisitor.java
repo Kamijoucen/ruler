@@ -1,12 +1,23 @@
 package com.kamijoucen.ruler.logic.eval;
 
 import com.kamijoucen.ruler.logic.AbstractVisitor;
-import com.kamijoucen.ruler.domain.ast.*;
-import com.kamijoucen.ruler.domain.runtime.RuntimeContext;
-import com.kamijoucen.ruler.domain.runtime.Scope;
-import com.kamijoucen.ruler.domain.value.BaseValue;
+import com.kamijoucen.ruler.types.ast.*;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.value.BaseValue;
 
 public class EvalVisitor extends AbstractVisitor<BaseValue> {
+
+    private static final EvalVisitor INSTANCE = new EvalVisitor();
+
+    public static BaseValue evaluate(BaseNode node, Scope scope, RuntimeContext context) {
+        return node.accept(INSTANCE, scope, context);
+    }
+
+    @Override
+    public BaseValue eval(VirtualNode node, Scope scope, RuntimeContext context) {
+        return node.getBaseValue();
+    }
 
     private static final NameEval nameEval = new NameEval();
     private static final OutNameEval outNameEval = new OutNameEval();
