@@ -1,19 +1,20 @@
 package com.kamijoucen.ruler.test;
 
-import com.kamijoucen.ruler.types.config.RulerConfiguration;
-import com.kamijoucen.ruler.types.parameter.RulerResult;
-import com.kamijoucen.ruler.types.runtime.RuntimeContext;
-import com.kamijoucen.ruler.types.runtime.Scope;
-import com.kamijoucen.ruler.types.value.BaseValue;
-import com.kamijoucen.ruler.types.spi.RulerFunction;
-import com.kamijoucen.ruler.api.Ruler;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.kamijoucen.ruler.api.Ruler;
+import com.kamijoucen.ruler.types.config.RulerConfiguration;
+import com.kamijoucen.ruler.types.parameter.RulerResult;
+import com.kamijoucen.ruler.types.runtime.RuntimeContext;
+import com.kamijoucen.ruler.types.runtime.Scope;
+import com.kamijoucen.ruler.types.spi.RulerFunction;
+import com.kamijoucen.ruler.types.value.BaseValue;
 
 public class HttpTest {
 

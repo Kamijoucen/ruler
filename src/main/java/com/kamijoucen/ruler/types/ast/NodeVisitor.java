@@ -1,6 +1,5 @@
 package com.kamijoucen.ruler.types.ast;
 
-import com.kamijoucen.ruler.types.ast.*;
 import com.kamijoucen.ruler.types.runtime.RuntimeContext;
 import com.kamijoucen.ruler.types.runtime.Scope;
 

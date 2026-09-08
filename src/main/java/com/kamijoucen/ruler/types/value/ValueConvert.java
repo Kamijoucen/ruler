@@ -1,7 +1,5 @@
 package com.kamijoucen.ruler.types.value;
 
-import com.kamijoucen.ruler.types.value.BaseValue;
-import com.kamijoucen.ruler.types.value.ValueType;
 
 public interface ValueConvert {
 
